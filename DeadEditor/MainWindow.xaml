@@ -1,0 +1,189 @@
+<Window x:Class="DeadEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DeadEditor"
+        mc:Ignorable="d"
+        Title="Dead Editor" Height="700" Width="1100">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Folder Selection and Library Root -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <!-- Source Folder -->
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Source:" VerticalAlignment="Center" Margin="0,0,10,0" Width="80"/>
+                <TextBox Grid.Column="1" x:Name="FolderPathTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
+                <Button Grid.Column="2" x:Name="BrowseButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseButton_Click"/>
+            </Grid>
+            <!-- Library Root -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Library Root:" VerticalAlignment="Center" Margin="0,0,10,0" Width="80"/>
+                <TextBox Grid.Column="1" x:Name="LibraryRootTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
+                <Button Grid.Column="2" x:Name="SetLibraryButton" Content="Set Library..." Width="100" Margin="10,0,0,0" Click="SetLibraryButton_Click"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Album Information Panel -->
+            <GroupBox Grid.Column="0" Header="ALBUM INFORMATION" Margin="0,0,10,0">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Artist:" Margin="0,0,0,5"/>
+                    <TextBox x:Name="ArtistTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <TextBlock Text="Date:" Margin="0,0,0,5"/>
+                    <TextBox x:Name="DateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <TextBlock Text="Venue:" Margin="0,0,0,5"/>
+                    <TextBox x:Name="VenueTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <TextBlock Text="City:" Margin="0,0,0,5"/>
+                    <TextBox x:Name="CityTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <TextBlock Text="State:" Margin="0,0,0,5"/>
+                    <TextBox x:Name="StateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <TextBlock Text="Official Release (optional):" Margin="0,0,0,5"/>
+                    <TextBox x:Name="OfficialReleaseTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <Separator Margin="0,10,0,10"/>
+
+                    <TextBlock Text="Album Title Preview:" Margin="0,0,0,5" FontWeight="Bold"/>
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Background="#F5F5F5">
+                        <TextBlock x:Name="AlbumPreviewTextBlock" TextWrapping="Wrap" MinHeight="40"/>
+                    </Border>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Track List and Editor -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Track List -->
+                <GroupBox Grid.Row="0" Header="TRACK LIST" Margin="0,0,0,10">
+                    <DataGrid x:Name="TracksDataGrid"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              SelectionMode="Single"
+                              SelectionChanged="TracksDataGrid_SelectionChanged"
+                              LoadingRow="TracksDataGrid_LoadingRow"
+                              Margin="5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="40" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Song" Binding="{Binding DisplayTitle}" Width="200" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Final Metadata (Preview)" Binding="{Binding PreviewMetadata}" Width="*" IsReadOnly="True"/>
+                            <DataGridCheckBoxColumn Header="→" Binding="{Binding HasSegue}" Width="40"/>
+                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+
+                <!-- Selected Track Editor -->
+                <GroupBox Grid.Row="1" Header="SELECTED TRACK" MinHeight="120">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="SelectedTitleTextBox" VerticalAlignment="Center" TextChanged="SelectedTrack_Changed"/>
+
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Segue:" VerticalAlignment="Center" Margin="20,0,10,0"/>
+                        <CheckBox Grid.Row="0" Grid.Column="3" x:Name="SelectedSegueCheckBox" VerticalAlignment="Center" Checked="SelectedTrack_Changed" Unchecked="SelectedTrack_Changed"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Date:" VerticalAlignment="Center" Margin="0,10,10,0"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="SelectedDateTextBox" VerticalAlignment="Center" Margin="0,10,0,0" TextChanged="SelectedTrack_Changed"/>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+            <Button x:Name="ReadButton" Content="Read from Files" Width="120" Height="30" Margin="5" Click="ReadButton_Click"/>
+            <Button x:Name="NormalizeButton" Content="Normalize All Songs" Width="150" Height="30" Margin="5" Click="NormalizeButton_Click"/>
+            <Button x:Name="ImportButton" Content="Import to Library" Width="140" Height="30" Margin="5" Click="ImportButton_Click" FontWeight="Bold"/>
+            <Button x:Name="BrowseLibraryButton" Content="Browse Library" Width="120" Height="30" Margin="5" Click="BrowseLibraryButton_Click" FontWeight="Bold"/>
+            <Button x:Name="WriteButton" Content="Write to Files" Width="120" Height="30" Margin="5" Click="WriteButton_Click"/>
+        </StackPanel>
+
+        <!-- Status Bar with Progress -->
+        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="0,1,0,0" Padding="5" Margin="0,10,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" x:Name="StatusTextBlock" Text="Ready" Margin="0,0,0,5"/>
+                <ProgressBar Grid.Row="1" x:Name="ProgressBar" Height="20" Visibility="Collapsed" Minimum="0" Maximum="100"/>
+            </Grid>
+        </Border>
+
+        <!-- Notification Panel -->
+        <Border x:Name="NotificationPanel"
+                Grid.Row="0" Grid.RowSpan="4"
+                Background="#E0FFFFFF"
+                Visibility="Collapsed"
+                MouseDown="NotificationPanel_MouseDown">
+            <Border Background="White"
+                    BorderBrush="Gray"
+                    BorderThickness="2"
+                    CornerRadius="5"
+                    MaxWidth="500"
+                    MaxHeight="300"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" x:Name="NotificationTitle" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <ScrollViewer Grid.Row="1" MaxHeight="150" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="NotificationMessage" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="NotificationYesButton" Content="Yes" Width="80" Height="30" Margin="5" Click="NotificationYes_Click" Visibility="Collapsed"/>
+                        <Button x:Name="NotificationNoButton" Content="No" Width="80" Height="30" Margin="5" Click="NotificationNo_Click" Visibility="Collapsed"/>
+                        <Button x:Name="NotificationOkButton" Content="OK" Width="80" Height="30" Margin="5" Click="NotificationOk_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Border>
+    </Grid>
+</Window>

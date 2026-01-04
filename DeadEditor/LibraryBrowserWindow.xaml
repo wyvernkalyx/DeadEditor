@@ -1,0 +1,81 @@
+<Window x:Class="DeadEditor.LibraryBrowserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Library Browser" Height="600" Width="900">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Library Path Display -->
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" Margin="0,0,0,10" CornerRadius="3">
+            <StackPanel>
+                <TextBlock Text="Library Location:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock x:Name="LibraryPathText" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Shows and Tracks -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Shows List -->
+            <GroupBox Grid.Column="0" Header="SHOWS IN LIBRARY" Margin="0,0,10,0">
+                <DataGrid x:Name="ShowsDataGrid"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          SelectionMode="Single"
+                          IsReadOnly="True"
+                          SelectionChanged="ShowsDataGrid_SelectionChanged"
+                          Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
+                        <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="*"/>
+                        <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="130"/>
+                        <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="70"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <!-- Tracks for Selected Show -->
+            <GroupBox Grid.Column="1" Header="TRACKS" x:Name="TracksGroupBox">
+                <Grid>
+                    <TextBlock x:Name="NoSelectionText"
+                               Text="Select a show to view tracks"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="Gray"
+                               FontStyle="Italic"/>
+                    <DataGrid x:Name="TracksDataGrid"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              SelectionMode="Single"
+                              IsReadOnly="True"
+                              Visibility="Collapsed"
+                              Margin="5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="35"/>
+                            <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button x:Name="OpenFolderButton" Content="Open in Explorer" Width="130" Height="30" Margin="5" Click="OpenFolderButton_Click"/>
+            <Button x:Name="RefreshButton" Content="Refresh" Width="100" Height="30" Margin="5" Click="RefreshButton_Click"/>
+            <Button x:Name="CloseButton" Content="Close" Width="100" Height="30" Margin="5" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

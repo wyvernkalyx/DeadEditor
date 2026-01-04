@@ -1,0 +1,388 @@
+{
+  "Songs": [
+    {
+      "OfficialTitle": "Alabama Getaway",
+      "Aliases": ["Alabama"]
+    },
+    {
+      "OfficialTitle": "Althea",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Around and Around",
+      "Aliases": ["Around & Around"]
+    },
+    {
+      "OfficialTitle": "Beat It On Down the Line",
+      "Aliases": ["Beat It On Down", "BIODTL"]
+    },
+    {
+      "OfficialTitle": "Bertha",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Big River",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Bird Song",
+      "Aliases": ["Birdsong"]
+    },
+    {
+      "OfficialTitle": "Black Peter",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Box of Rain",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Brokedown Palace",
+      "Aliases": ["Broke Down Palace"]
+    },
+    {
+      "OfficialTitle": "Brown-Eyed Women",
+      "Aliases": ["Brown Eyed Women", "BEW"]
+    },
+    {
+      "OfficialTitle": "Casey Jones",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Cassidy",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "China Cat Sunflower",
+      "Aliases": ["China Cat", "CCS"]
+    },
+    {
+      "OfficialTitle": "Cold Rain and Snow",
+      "Aliases": ["Cold Rain & Snow"]
+    },
+    {
+      "OfficialTitle": "Cumberland Blues",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Dancing in the Street",
+      "Aliases": ["Dancing In The Streets", "DITS"]
+    },
+    {
+      "OfficialTitle": "Dark Star",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Deal",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Dire Wolf",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Drums",
+      "Aliases": ["Drum Solo"]
+    },
+    {
+      "OfficialTitle": "El Paso",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Estimated Prophet",
+      "Aliases": ["Estimated"]
+    },
+    {
+      "OfficialTitle": "Eyes of the World",
+      "Aliases": ["Eyes", "EOTW"]
+    },
+    {
+      "OfficialTitle": "Fire on the Mountain",
+      "Aliases": ["Fire", "FOTM"]
+    },
+    {
+      "OfficialTitle": "Franklin's Tower",
+      "Aliases": ["Franklins Tower", "Franklin"]
+    },
+    {
+      "OfficialTitle": "Friend of the Devil",
+      "Aliases": ["FOTD", "Friend Of The Devil"]
+    },
+    {
+      "OfficialTitle": "Goin' Down the Road Feeling Bad",
+      "Aliases": ["GDTRFB", "Goin Down The Road", "Going Down The Road", "Going Down the Road Feeling Bad", "Goin' Down The Road"]
+    },
+    {
+      "OfficialTitle": "Good Lovin'",
+      "Aliases": ["Good Lovin", "Good Loving"]
+    },
+    {
+      "OfficialTitle": "Greatest Story Ever Told",
+      "Aliases": ["Greatest Story", "GSET"]
+    },
+    {
+      "OfficialTitle": "Half Step",
+      "Aliases": ["Half-Step", "Mississippi Half-Step Uptown Toodeloo"]
+    },
+    {
+      "OfficialTitle": "He's Gone",
+      "Aliases": ["Hes Gone", "He Is Gone"]
+    },
+    {
+      "OfficialTitle": "Help on the Way",
+      "Aliases": ["Help On The Way", "HOTW"]
+    },
+    {
+      "OfficialTitle": "Here Comes Sunshine",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "I Know You Rider",
+      "Aliases": ["Rider", "I Know You, Rider"]
+    },
+    {
+      "OfficialTitle": "I Need a Miracle",
+      "Aliases": ["Miracle", "INAM"]
+    },
+    {
+      "OfficialTitle": "Jack Straw",
+      "Aliases": ["Jackstraw"]
+    },
+    {
+      "OfficialTitle": "Johnny B. Goode",
+      "Aliases": ["Johnny B Goode", "JBG"]
+    },
+    {
+      "OfficialTitle": "Lazy Lightning",
+      "Aliases": ["Lazy Lightnin"]
+    },
+    {
+      "OfficialTitle": "Let It Grow",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Looks Like Rain",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Loser",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Lost Sailor",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Minglewood Blues",
+      "Aliases": ["All New Minglewood Blues", "New Minglewood Blues", "Minglewood"]
+    },
+    {
+      "OfficialTitle": "Mississippi Half-Step Uptown Toodeloo",
+      "Aliases": ["Half Step", "Mississippi Half Step"]
+    },
+    {
+      "OfficialTitle": "Morning Dew",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Music Never Stopped",
+      "Aliases": ["The Music Never Stopped", "TMNS"]
+    },
+    {
+      "OfficialTitle": "New Speedway Boogie",
+      "Aliases": ["Speedway Boogie"]
+    },
+    {
+      "OfficialTitle": "Not Fade Away",
+      "Aliases": ["NFA"]
+    },
+    {
+      "OfficialTitle": "One More Saturday Night",
+      "Aliases": ["Saturday Night", "OMSN"]
+    },
+    {
+      "OfficialTitle": "Peggy-O",
+      "Aliases": ["Peggy O", "Fennario"]
+    },
+    {
+      "OfficialTitle": "Playing in the Band",
+      "Aliases": ["Playin", "Playin'", "PITB", "Playin In The Band"]
+    },
+    {
+      "OfficialTitle": "Promised Land",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Ramble On Rose",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Ripple",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Saint of Circumstance",
+      "Aliases": ["St. Stephen"]
+    },
+    {
+      "OfficialTitle": "Samson and Delilah",
+      "Aliases": ["Samson & Delilah", "Samson"]
+    },
+    {
+      "OfficialTitle": "Scarlet Begonias",
+      "Aliases": ["Scarlet"]
+    },
+    {
+      "OfficialTitle": "Shakedown Street",
+      "Aliases": ["Shakedown"]
+    },
+    {
+      "OfficialTitle": "Ship of Fools",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Slipknot!",
+      "Aliases": ["Slipknot"]
+    },
+    {
+      "OfficialTitle": "Space",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "St. Stephen",
+      "Aliases": ["Saint Stephen", "St Stephen"]
+    },
+    {
+      "OfficialTitle": "Stella Blue",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Sugar Magnolia",
+      "Aliases": ["Sugar Mag", "Sunshine Daydream"]
+    },
+    {
+      "OfficialTitle": "Sugaree",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Sunrise",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Supplication",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Tennessee Jed",
+      "Aliases": ["Tennesee Jed"]
+    },
+    {
+      "OfficialTitle": "Terrapin Station",
+      "Aliases": ["Terrapin"]
+    },
+    {
+      "OfficialTitle": "The Other One",
+      "Aliases": ["Other One", "TOO"]
+    },
+    {
+      "OfficialTitle": "The Wheel",
+      "Aliases": ["Wheel"]
+    },
+    {
+      "OfficialTitle": "They Love Each Other",
+      "Aliases": ["TLEO"]
+    },
+    {
+      "OfficialTitle": "Throwing Stones",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Touch of Grey",
+      "Aliases": ["Touch Of Gray"]
+    },
+    {
+      "OfficialTitle": "Truckin'",
+      "Aliases": ["Truckin", "Trucking"]
+    },
+    {
+      "OfficialTitle": "Turn On Your Love Light",
+      "Aliases": ["Love Light", "Lovelight"]
+    },
+    {
+      "OfficialTitle": "U.S. Blues",
+      "Aliases": ["US Blues", "U S Blues"]
+    },
+    {
+      "OfficialTitle": "Uncle John's Band",
+      "Aliases": ["Uncle Johns Band", "UJB"]
+    },
+    {
+      "OfficialTitle": "Victim or the Crime",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Viola Lee Blues",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Wharf Rat",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Hard to Handle",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Me and Bobby McGee",
+      "Aliases": ["Me & Bobby McGee", "Bobby McGee"]
+    },
+    {
+      "OfficialTitle": "Ain't It Crazy",
+      "Aliases": ["Ain't It Crazy (The Rub)", "The Rub"]
+    },
+    {
+      "OfficialTitle": "Next Time You See Me",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Me and My Uncle",
+      "Aliases": ["Me & My Uncle"]
+    },
+    {
+      "OfficialTitle": "Mama Tried",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Doin' That Rag",
+      "Aliases": ["Doin That Rag", "Doing That Rag"]
+    },
+    {
+      "OfficialTitle": "Cosmic Charlie",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Cryptical Envelopment",
+      "Aliases": ["Cryptical"]
+    },
+    {
+      "OfficialTitle": "Mountains of the Moon",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Dupree's Diamond Blues",
+      "Aliases": ["Duprees Diamond Blues", "Dupree's", "Duprees"]
+    },
+    {
+      "OfficialTitle": "New Potato Caboose",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Sitting on Top of the World",
+      "Aliases": ["Sittin' on Top of the World", "Sitting On Top"]
+    },
+    {
+      "OfficialTitle": "He Was a Friend of Mine",
+      "Aliases": ["Friend of Mine"]
+    }
+  ]
+}
