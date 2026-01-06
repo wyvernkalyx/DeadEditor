@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using MessageBox = System.Windows.MessageBox;
 
 namespace DeadEditor;
@@ -12,12 +13,14 @@ public partial class LibraryBrowserWindow : Window
 {
     private readonly string _libraryRoot;
     private readonly MetadataService _metadataService;
+    private readonly MainWindow _mainWindow;
     private List<LibraryShow> _shows = new();
 
-    public LibraryBrowserWindow(string libraryRoot)
+    public LibraryBrowserWindow(string libraryRoot, MainWindow mainWindow)
     {
         InitializeComponent();
         _libraryRoot = libraryRoot;
+        _mainWindow = mainWindow;
         _metadataService = new MetadataService();
         LibraryPathText.Text = libraryRoot;
         LoadShows();
@@ -97,6 +100,28 @@ public partial class LibraryBrowserWindow : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void LoadShowButton_Click(object sender, RoutedEventArgs e)
+    {
+        LoadSelectedShow();
+    }
+
+    private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        LoadSelectedShow();
+    }
+
+    private void LoadSelectedShow()
+    {
+        if (ShowsDataGrid.SelectedItem is LibraryShow show)
+        {
+            // Load the show into the main window
+            _mainWindow.LoadShowFromLibrary(show.FolderPath);
+
+            // Close this browser window
+            Close();
+        }
     }
 
     private void ShowsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

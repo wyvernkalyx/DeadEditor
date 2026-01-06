@@ -142,6 +142,14 @@ namespace DeadEditor.Services
                         var dateFromAlbum = ExtractDateFromAlbum(album);
                         albumInfo.Date = dateFromAlbum ?? $"{file.Tag.Year}-01-01";
                     }
+
+                    // Read artwork from first track
+                    var pictures = file.Tag.Pictures;
+                    if (pictures.Length > 0)
+                    {
+                        albumInfo.ArtworkData = pictures[0].Data.Data;
+                        albumInfo.ArtworkMimeType = pictures[0].MimeType;
+                    }
                 }
             }
 
@@ -177,6 +185,24 @@ namespace DeadEditor.Services
                     if (DateTime.TryParse(album.Date, out var parsedDate))
                     {
                         file.Tag.Year = (uint)parsedDate.Year;
+                    }
+
+                    // Embed artwork in this track
+                    if (album.ArtworkData != null && album.ArtworkMimeType != null)
+                    {
+                        var picture = new TagLib.Picture
+                        {
+                            Type = TagLib.PictureType.FrontCover,
+                            MimeType = album.ArtworkMimeType,
+                            Data = album.ArtworkData,
+                            Description = "Front Cover"
+                        };
+                        file.Tag.Pictures = new[] { picture };
+                    }
+                    else
+                    {
+                        // Clear artwork if none is set
+                        file.Tag.Pictures = new TagLib.IPicture[0];
                     }
 
                     file.Save();

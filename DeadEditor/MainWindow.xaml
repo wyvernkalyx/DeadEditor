@@ -6,39 +6,36 @@
         xmlns:local="clr-namespace:DeadEditor"
         mc:Ignorable="d"
         Title="Dead Editor" Height="700" Width="1100">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Settings..." Click="SettingsMenuItem_Click"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Click="ExitMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
 
-        <!-- Folder Selection and Library Root -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,10">
-            <!-- Source Folder -->
-            <Grid Margin="0,0,0,5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Source:" VerticalAlignment="Center" Margin="0,0,10,0" Width="80"/>
-                <TextBox Grid.Column="1" x:Name="FolderPathTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
-                <Button Grid.Column="2" x:Name="BrowseButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseButton_Click"/>
-            </Grid>
-            <!-- Library Root -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Library Root:" VerticalAlignment="Center" Margin="0,0,10,0" Width="80"/>
-                <TextBox Grid.Column="1" x:Name="LibraryRootTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
-                <Button Grid.Column="2" x:Name="SetLibraryButton" Content="Set Library..." Width="100" Margin="10,0,0,0" Click="SetLibraryButton_Click"/>
-            </Grid>
-        </StackPanel>
+        <!-- Main Content -->
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+        <!-- Folder Selection -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Source:" VerticalAlignment="Center" Margin="0,0,10,0" Width="80"/>
+            <TextBox Grid.Column="1" x:Name="FolderPathTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
+            <Button Grid.Column="2" x:Name="BrowseButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseButton_Click"/>
+        </Grid>
 
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
@@ -49,7 +46,26 @@
 
             <!-- Album Information Panel -->
             <GroupBox Grid.Column="0" Header="ALBUM INFORMATION" Margin="0,0,10,0">
-                <StackPanel Margin="10">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="10">
+                    <!-- Artwork Display -->
+                    <Border BorderBrush="Gray" BorderThickness="1" Width="200" Height="200" Margin="0,0,0,15" HorizontalAlignment="Center">
+                        <Grid>
+                            <TextBlock x:Name="NoArtworkText" Text="No Artwork"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="Gray" FontStyle="Italic"/>
+                            <Image x:Name="ArtworkImage" Stretch="Uniform" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Artwork Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
+                        <Button x:Name="ChangeArtworkButton" Content="Change..." Width="80" Margin="0,0,5,0" Click="ChangeArtworkButton_Click"/>
+                        <Button x:Name="RemoveArtworkButton" Content="Remove" Width="80" Margin="5,0,0,0" Click="RemoveArtworkButton_Click"/>
+                    </StackPanel>
+
+                    <Separator Margin="0,0,0,15"/>
+
                     <TextBlock Text="Artist:" Margin="0,0,0,5"/>
                     <TextBox x:Name="ArtistTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
@@ -65,7 +81,7 @@
                     <TextBlock Text="State:" Margin="0,0,0,5"/>
                     <TextBox x:Name="StateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="Official Release (optional):" Margin="0,0,0,5"/>
+                    <TextBlock Text="Official Release (optional):" Margin="0,0,0,5" TextWrapping="Wrap"/>
                     <TextBox x:Name="OfficialReleaseTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
                     <Separator Margin="0,10,0,10"/>
@@ -74,7 +90,8 @@
                     <Border BorderBrush="Gray" BorderThickness="1" Padding="5" Background="#F5F5F5">
                         <TextBlock x:Name="AlbumPreviewTextBlock" TextWrapping="Wrap" MinHeight="40"/>
                     </Border>
-                </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
             </GroupBox>
 
             <!-- Track List and Editor -->
@@ -92,13 +109,19 @@
                               SelectionMode="Single"
                               SelectionChanged="TracksDataGrid_SelectionChanged"
                               LoadingRow="TracksDataGrid_LoadingRow"
+                              IsReadOnly="True"
                               Margin="5">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="40" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Song" Binding="{Binding DisplayTitle}" Width="200" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Final Metadata (Preview)" Binding="{Binding PreviewMetadata}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="40"/>
+                            <DataGridTextColumn Header="Song" Binding="{Binding DisplayTitle}" Width="200"/>
+                            <DataGridTextColumn Header="Final Metadata (Preview)" Binding="{Binding PreviewMetadata}" Width="*"/>
                             <DataGridCheckBoxColumn Header="→" Binding="{Binding HasSegue}" Width="40"/>
-                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
@@ -132,22 +155,68 @@
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
-            <Button x:Name="ReadButton" Content="Read from Files" Width="120" Height="30" Margin="5" Click="ReadButton_Click"/>
-            <Button x:Name="NormalizeButton" Content="Normalize All Songs" Width="150" Height="30" Margin="5" Click="NormalizeButton_Click"/>
-            <Button x:Name="ImportButton" Content="Import to Library" Width="140" Height="30" Margin="5" Click="ImportButton_Click" FontWeight="Bold"/>
-            <Button x:Name="BrowseLibraryButton" Content="Browse Library" Width="120" Height="30" Margin="5" Click="BrowseLibraryButton_Click" FontWeight="Bold"/>
-            <Button x:Name="WriteButton" Content="Write to Files" Width="120" Height="30" Margin="5" Click="WriteButton_Click"/>
+            <Button x:Name="ReadButton" Content="Read from Files" Height="32" Padding="15,5" Margin="5" Click="ReadButton_Click"/>
+            <Button x:Name="NormalizeButton" Content="Normalize All Songs" Height="32" Padding="15,5" Margin="5" Click="NormalizeButton_Click"/>
+            <Button x:Name="ImportButton" Content="Import to Library" Height="32" Padding="15,5" Margin="8,5" Click="ImportButton_Click" FontWeight="Bold" Background="#E3F2FD"/>
+            <Button x:Name="BrowseLibraryButton" Content="Browse Library" Height="32" Padding="15,5" Margin="8,5" Click="BrowseLibraryButton_Click" FontWeight="Bold" Background="#E3F2FD"/>
+            <Button x:Name="WriteButton" Content="Write to Files" Height="32" Padding="15,5" Margin="5" Click="WriteButton_Click"/>
         </StackPanel>
 
-        <!-- Status Bar with Progress -->
-        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="0,1,0,0" Padding="5" Margin="0,10,0,0">
+        <!-- Audio Player and Status Bar -->
+        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="0,1,0,0" Padding="10" Margin="0,10,0,0" Background="#F8F8F8">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" x:Name="StatusTextBlock" Text="Ready" Margin="0,0,0,5"/>
-                <ProgressBar Grid.Row="1" x:Name="ProgressBar" Height="20" Visibility="Collapsed" Minimum="0" Maximum="100"/>
+
+                <!-- Playback Controls -->
+                <Grid Grid.Row="0" Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Control Buttons -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Button x:Name="PreviousButton" Content="⏮" Width="40" Height="35" Margin="0,0,5,0" FontSize="16" Click="PreviousButton_Click" ToolTip="Previous Track"/>
+                        <Button x:Name="PlayPauseButton" Content="▶" Width="50" Height="35" Margin="0,0,5,0" FontSize="20" Click="PlayPauseButton_Click" FontWeight="Bold" ToolTip="Play/Pause"/>
+                        <Button x:Name="StopButton" Content="⏹" Width="40" Height="35" Margin="0,0,5,0" FontSize="16" Click="StopButton_Click" ToolTip="Stop"/>
+                        <Button x:Name="NextButton" Content="⏭" Width="40" Height="35" Margin="0,0,10,0" FontSize="16" Click="NextButton_Click" ToolTip="Next Track"/>
+                    </StackPanel>
+
+                    <!-- Now Playing Info -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                        <TextBlock x:Name="NowPlayingText" Text="No track playing" FontWeight="SemiBold" FontSize="13"/>
+                        <TextBlock x:Name="PlaybackTimeText" Text="00:00 / 00:00" FontSize="11" Foreground="Gray" Margin="0,2,0,0"/>
+                    </StackPanel>
+
+                    <!-- Volume Control -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="🔊" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <Slider x:Name="VolumeSlider" Width="80" Minimum="0" Maximum="100" Value="75" VerticalAlignment="Center"
+                                ValueChanged="VolumeSlider_ValueChanged" ToolTip="Volume"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Audio Scrubber (Progress Bar) -->
+                <Slider Grid.Row="1" x:Name="AudioScrubber" Minimum="0" Maximum="100" Value="0"
+                        Height="25" Margin="0,5,0,5"
+                        PreviewMouseDown="AudioScrubber_PreviewMouseDown"
+                        PreviewMouseUp="AudioScrubber_PreviewMouseUp"
+                        ToolTip="Seek"/>
+
+                <!-- Status and Import Progress -->
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name="StatusTextBlock" Text="Ready" FontSize="11" Margin="0,0,0,5"/>
+                    <ProgressBar Grid.Row="1" x:Name="ProgressBar" Height="18" Visibility="Collapsed" Minimum="0" Maximum="100"/>
+                </Grid>
             </Grid>
         </Border>
 
@@ -185,5 +254,6 @@
                 </Grid>
             </Border>
         </Border>
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>

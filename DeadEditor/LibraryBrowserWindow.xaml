@@ -35,6 +35,7 @@
                           SelectionMode="Single"
                           IsReadOnly="True"
                           SelectionChanged="ShowsDataGrid_SelectionChanged"
+                          MouseDoubleClick="ShowsDataGrid_MouseDoubleClick"
                           Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
@@ -73,6 +74,7 @@
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button x:Name="LoadShowButton" Content="Load Show" Width="100" Height="30" Margin="5" Click="LoadShowButton_Click" FontWeight="Bold"/>
             <Button x:Name="OpenFolderButton" Content="Open in Explorer" Width="130" Height="30" Margin="5" Click="OpenFolderButton_Click"/>
             <Button x:Name="RefreshButton" Content="Refresh" Width="100" Height="30" Margin="5" Click="RefreshButton_Click"/>
             <Button x:Name="CloseButton" Content="Close" Width="100" Height="30" Margin="5" Click="CloseButton_Click"/>

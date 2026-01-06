@@ -1,12 +1,16 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using MessageBox = System.Windows.MessageBox;
 using Color = System.Windows.Media.Color;
 using Brushes = System.Windows.Media.Brushes;
@@ -21,10 +25,15 @@ public partial class MainWindow : Window
     private readonly MetadataService _metadataService;
     private readonly NormalizationService _normalizationService;
     private readonly LibraryImportService _libraryImportService;
+    private readonly AudioPlayerService _audioPlayer;
+    private readonly DispatcherTimer _playbackTimer;
     private LibrarySettings _librarySettings;
     private List<TrackInfo> _tracks = new();
     private AlbumInfo? _albumInfo;
     private bool _isUpdating = false;
+    private bool _isScrubbingSeeking = false;
+    private int _currentTrackIndex = -1;
+    private bool _isManualTrackChange = false;
     private TaskCompletionSource<bool>? _notificationResult;
 
     public MainWindow()
@@ -34,9 +43,24 @@ public partial class MainWindow : Window
         _normalizationService = new NormalizationService();
         _libraryImportService = new LibraryImportService(_metadataService);
 
+        // Initialize audio player
+        _audioPlayer = new AudioPlayerService();
+        _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
+        _audioPlayer.PositionChanged += AudioPlayer_PositionChanged;
+
+        // Initialize playback timer for updating scrubber
+        _playbackTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(100)
+        };
+        _playbackTimer.Tick += PlaybackTimer_Tick;
+        _playbackTimer.Start();
+
         // Load library settings
         _librarySettings = LibrarySettings.Load();
-        LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
+
+        // Set initial volume
+        _audioPlayer.Volume = (float)(VolumeSlider.Value / 100.0);
     }
 
     private void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -107,6 +131,7 @@ public partial class MainWindow : Window
             StateTextBox.Text = _albumInfo.State ?? "";
             OfficialReleaseTextBox.Text = _albumInfo.OfficialRelease ?? "";
             UpdateAlbumPreview();
+            UpdateArtworkDisplay();
         }
 
         // Update track list and previews
@@ -321,21 +346,29 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SetLibraryButton_Click(object sender, RoutedEventArgs e)
+    private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        var folderDialog = new System.Windows.Forms.FolderBrowserDialog
-        {
-            Description = "Select Library Root Folder",
-            SelectedPath = _librarySettings.LibraryRootPath
-        };
+        var settingsWindow = new SettingsWindow(this, _librarySettings);
+        settingsWindow.Owner = this;
+        settingsWindow.ShowDialog();
+    }
 
-        if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        {
-            _librarySettings.LibraryRootPath = folderDialog.SelectedPath;
-            _librarySettings.Save();
-            LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
-            StatusTextBlock.Text = $"Library root set to: {_librarySettings.LibraryRootPath}";
-        }
+    private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        System.Windows.Application.Current.Shutdown();
+    }
+
+    // Helper methods for SettingsWindow
+    public void UpdateLibraryRootDisplay(string path)
+    {
+        StatusTextBlock.Text = string.IsNullOrEmpty(path)
+            ? "Library root cleared"
+            : $"Library root set to: {path}";
+    }
+
+    public void ClearCurrentView()
+    {
+        ClearView();
     }
 
     private async void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -450,9 +483,291 @@ public partial class MainWindow : Window
             return;
         }
 
-        var browserWindow = new LibraryBrowserWindow(_librarySettings.LibraryRootPath);
+        var browserWindow = new LibraryBrowserWindow(_librarySettings.LibraryRootPath, this);
         browserWindow.Owner = this;
         browserWindow.ShowDialog();
+    }
+
+    // Load show from library
+    public void LoadShowFromLibrary(string folderPath)
+    {
+        // Load the show just like loading from file browser
+        LoadFolder(folderPath);
+    }
+
+    // Artwork management
+    private void UpdateArtworkDisplay()
+    {
+        if (_albumInfo?.ArtworkData != null)
+        {
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.StreamSource = new MemoryStream(_albumInfo.ArtworkData);
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+
+                ArtworkImage.Source = bitmap;
+                ArtworkImage.Visibility = Visibility.Visible;
+                NoArtworkText.Visibility = Visibility.Collapsed;
+            }
+            catch
+            {
+                // If artwork fails to load, show no artwork
+                ArtworkImage.Source = null;
+                ArtworkImage.Visibility = Visibility.Collapsed;
+                NoArtworkText.Visibility = Visibility.Visible;
+            }
+        }
+        else
+        {
+            ArtworkImage.Source = null;
+            ArtworkImage.Visibility = Visibility.Collapsed;
+            NoArtworkText.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void ChangeArtworkButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_albumInfo == null) return;
+
+        var openFileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Select Album Artwork",
+            Filter = "Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All Files (*.*)|*.*",
+            Multiselect = false
+        };
+
+        if (openFileDialog.ShowDialog() == true)
+        {
+            try
+            {
+                // Read image file
+                var imageData = File.ReadAllBytes(openFileDialog.FileName);
+
+                // Determine MIME type
+                var extension = Path.GetExtension(openFileDialog.FileName).ToLower();
+                var mimeType = extension switch
+                {
+                    ".jpg" or ".jpeg" => "image/jpeg",
+                    ".png" => "image/png",
+                    _ => "image/jpeg"
+                };
+
+                // Store artwork in album info
+                _albumInfo.ArtworkData = imageData;
+                _albumInfo.ArtworkMimeType = mimeType;
+                _albumInfo.IsModified = true;
+
+                // Update display
+                UpdateArtworkDisplay();
+
+                StatusTextBlock.Text = "Artwork loaded";
+            }
+            catch (System.Exception ex)
+            {
+                StatusTextBlock.Text = $"Error loading artwork: {ex.Message}";
+            }
+        }
+    }
+
+    private void RemoveArtworkButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_albumInfo == null) return;
+
+        _albumInfo.ArtworkData = null;
+        _albumInfo.ArtworkMimeType = null;
+        _albumInfo.IsModified = true;
+
+        UpdateArtworkDisplay();
+        StatusTextBlock.Text = "Artwork removed";
+    }
+
+    // Audio Playback Methods
+    private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_audioPlayer.IsPlaying)
+        {
+            _audioPlayer.Pause();
+            PlayPauseButton.Content = "▶";
+        }
+        else
+        {
+            if (_audioPlayer.CurrentFilePath == null)
+            {
+                // No track loaded, start with first track or selected track
+                if (TracksDataGrid.SelectedIndex >= 0)
+                {
+                    PlayTrack(TracksDataGrid.SelectedIndex);
+                }
+                else if (_tracks.Count > 0)
+                {
+                    PlayTrack(0);
+                }
+            }
+            else
+            {
+                _audioPlayer.Play();
+                PlayPauseButton.Content = "⏸";
+            }
+        }
+    }
+
+    private void StopButton_Click(object sender, RoutedEventArgs e)
+    {
+        _isManualTrackChange = true; // Prevent auto-advance when user manually stops
+        _audioPlayer.Stop();
+        PlayPauseButton.Content = "▶";
+        AudioScrubber.Value = 0;
+        NowPlayingText.Text = "No track playing";
+        PlaybackTimeText.Text = "00:00 / 00:00";
+        _currentTrackIndex = -1;
+        _isManualTrackChange = false;
+    }
+
+    private void PreviousButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTrackIndex > 0)
+        {
+            PlayTrack(_currentTrackIndex - 1);
+        }
+    }
+
+    private void NextButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTrackIndex < _tracks.Count - 1)
+        {
+            PlayTrack(_currentTrackIndex + 1);
+        }
+    }
+
+    private void PlayTrack(int index)
+    {
+        if (index < 0 || index >= _tracks.Count) return;
+
+        var track = _tracks[index];
+
+        // Set flag to prevent auto-advance when changing tracks manually
+        _isManualTrackChange = true;
+        _currentTrackIndex = index;
+
+        try
+        {
+            _audioPlayer.LoadFile(track.FilePath);
+            _audioPlayer.Play();
+
+            PlayPauseButton.Content = "⏸";
+            NowPlayingText.Text = track.DisplayTitle;
+
+            // Select the track in the grid
+            TracksDataGrid.SelectedIndex = index;
+            TracksDataGrid.ScrollIntoView(track);
+
+            StatusTextBlock.Text = $"Playing: {track.DisplayTitle}";
+
+            // Clear the flag after a short delay to ensure PlaybackStopped event has processed
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _isManualTrackChange = false;
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+        catch (Exception ex)
+        {
+            StatusTextBlock.Text = $"Error playing track: {ex.Message}";
+            _isManualTrackChange = false;
+        }
+    }
+
+    private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_audioPlayer != null)
+        {
+            _audioPlayer.Volume = (float)(e.NewValue / 100.0);
+        }
+    }
+
+    private void AudioScrubber_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _isScrubbingSeeking = true;
+    }
+
+    private void AudioScrubber_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _isScrubbingSeeking = false;
+
+        // Seek to the new position
+        var totalSeconds = _audioPlayer.TotalDuration.TotalSeconds;
+        var newPosition = TimeSpan.FromSeconds((AudioScrubber.Value / 100.0) * totalSeconds);
+        _audioPlayer.Seek(newPosition);
+    }
+
+    private void PlaybackTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_audioPlayer.IsPlaying && !_isScrubbingSeeking)
+        {
+            _audioPlayer.UpdatePosition();
+
+            // Update scrubber
+            var totalSeconds = _audioPlayer.TotalDuration.TotalSeconds;
+            if (totalSeconds > 0)
+            {
+                var percentage = (_audioPlayer.CurrentPosition.TotalSeconds / totalSeconds) * 100.0;
+                AudioScrubber.Value = percentage;
+            }
+
+            // Update time display
+            var current = _audioPlayer.CurrentPosition.ToString(@"mm\:ss");
+            var total = _audioPlayer.TotalDuration.ToString(@"mm\:ss");
+            PlaybackTimeText.Text = $"{current} / {total}";
+        }
+    }
+
+    private void AudioPlayer_PositionChanged(object? sender, TimeSpan e)
+    {
+        // This event is fired from AudioPlayerService, but we update in the timer instead
+    }
+
+    private void AudioPlayer_PlaybackStopped(object? sender, EventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            // Don't auto-advance if we're manually changing tracks
+            if (_isManualTrackChange)
+            {
+                return;
+            }
+
+            PlayPauseButton.Content = "▶";
+
+            // Auto-play next track if available (only when track finishes naturally)
+            if (_currentTrackIndex < _tracks.Count - 1)
+            {
+                PlayTrack(_currentTrackIndex + 1);
+            }
+            else
+            {
+                // End of playlist
+                AudioScrubber.Value = 0;
+                NowPlayingText.Text = "Playlist finished";
+                PlaybackTimeText.Text = "00:00 / 00:00";
+                _currentTrackIndex = -1;
+            }
+        });
+    }
+
+    private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is DataGridRow row && row.Item is TrackInfo track)
+        {
+            int index = _tracks.IndexOf(track);
+            if (index >= 0)
+            {
+                PlayTrack(index);
+                e.Handled = true; // Prevent event from bubbling
+            }
+        }
     }
 
     // Notification system to replace MessageBox

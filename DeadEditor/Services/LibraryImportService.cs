@@ -42,7 +42,15 @@ namespace DeadEditor.Services
 
                 // Create folder structure: LibraryRoot\Year\Date - Venue, City, State\
                 var year = DateTime.Parse(date).Year.ToString();
-                var folderName = $"{date} - {albumInfo.Venue}, {albumInfo.City}, {albumInfo.State}";
+
+                // Build folder name with proper handling of empty fields
+                var venue = string.IsNullOrWhiteSpace(albumInfo.Venue) ? "Unknown Venue" : albumInfo.Venue;
+                var city = string.IsNullOrWhiteSpace(albumInfo.City) ? "Unknown City" : albumInfo.City;
+                var state = string.IsNullOrWhiteSpace(albumInfo.State) ? "" : albumInfo.State;
+
+                var folderName = string.IsNullOrWhiteSpace(state)
+                    ? $"{date} - {venue} - {city}"
+                    : $"{date} - {venue} - {city}, {state}";
 
                 // Sanitize folder name (remove invalid characters)
                 folderName = SanitizeFolderName(folderName);
@@ -104,6 +112,24 @@ namespace DeadEditor.Services
                                 file.Tag.Year = (uint)parsedDate.Year;
                             }
 
+                            // Embed artwork in this track
+                            if (albumInfo.ArtworkData != null && albumInfo.ArtworkMimeType != null)
+                            {
+                                var picture = new TagLib.Picture
+                                {
+                                    Type = TagLib.PictureType.FrontCover,
+                                    MimeType = albumInfo.ArtworkMimeType,
+                                    Data = albumInfo.ArtworkData,
+                                    Description = "Front Cover"
+                                };
+                                file.Tag.Pictures = new[] { picture };
+                            }
+                            else
+                            {
+                                // Clear artwork if none is set
+                                file.Tag.Pictures = new TagLib.IPicture[0];
+                            }
+
                             file.Save();
                         }
                     }
@@ -118,14 +144,44 @@ namespace DeadEditor.Services
 
         private string SanitizeFolderName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return "Unknown";
+
+            // Replace invalid path characters with underscore
             var invalid = Path.GetInvalidPathChars();
-            return string.Join("_", name.Split(invalid, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+            foreach (var c in invalid)
+            {
+                name = name.Replace(c, '_');
+            }
+
+            // Clean up multiple spaces and trim
+            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ").Trim();
+
+            // Remove leading/trailing periods and spaces
+            name = name.Trim('.', ' ');
+
+            return string.IsNullOrWhiteSpace(name) ? "Unknown" : name;
         }
 
         private string SanitizeFileName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return "Unknown.flac";
+
+            // Replace invalid filename characters with underscore
             var invalid = Path.GetInvalidFileNameChars();
-            return string.Join("_", name.Split(invalid, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+            foreach (var c in invalid)
+            {
+                name = name.Replace(c, '_');
+            }
+
+            // Clean up multiple spaces and trim
+            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ").Trim();
+
+            // Remove leading/trailing periods and spaces
+            name = name.Trim('.', ' ');
+
+            return string.IsNullOrWhiteSpace(name) ? "Unknown.flac" : name;
         }
 
         /// <summary>

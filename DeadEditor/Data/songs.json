@@ -383,6 +383,22 @@
     {
       "OfficialTitle": "He Was a Friend of Mine",
       "Aliases": ["Friend of Mine"]
+    },
+    {
+      "OfficialTitle": "C.C. Rider",
+      "Aliases": ["CC Rider", "See See Rider"]
+    },
+    {
+      "OfficialTitle": "Hell in a Bucket",
+      "Aliases": ["Hell In A Bucket"]
+    },
+    {
+      "OfficialTitle": "Might As Well",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Man Smart, Woman Smarter",
+      "Aliases": ["Man Smart Woman Smarter", "Man Smart"]
     }
   ]
 }

@@ -11,6 +11,10 @@ namespace DeadEditor.Models
         public string OfficialRelease { get; set; }    // e.g., "Dave's Picks Vol. 29" (optional)
         public bool IsModified { get; set; }
 
+        // Artwork data
+        public byte[]? ArtworkData { get; set; }       // Image bytes
+        public string? ArtworkMimeType { get; set; }   // "image/jpeg" or "image/png"
+
         // Computed property for album title
         public string AlbumTitle
         {
