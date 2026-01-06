@@ -4,80 +4,343 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Library Browser" Height="600" Width="900">
-    <Grid Margin="10">
+        Title="DeadEditor - Library" Height="800" Width="1200"
+        Background="#1E1E1E">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Library Path Display -->
-        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" Margin="0,0,0,10" CornerRadius="3">
-            <StackPanel>
-                <TextBlock Text="Library Location:" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock x:Name="LibraryPathText" TextWrapping="Wrap"/>
-            </StackPanel>
-        </Border>
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0" Background="#2D2D30" Foreground="#CCCCCC" FontSize="16">
+            <Menu.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                    <Setter Property="Background" Value="#2D2D30"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter Property="Background" Value="#094771"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Menu.Resources>
+            <MenuItem Header="_File" Foreground="#CCCCCC">
+                <MenuItem Header="_Import New Concert..." Click="ImportMenuItem_Click" FontSize="16"/>
+                <Separator/>
+                <MenuItem Header="_Settings" Click="SettingsMenuItem_Click" FontSize="16"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Click="ExitMenuItem_Click" FontSize="16"/>
+            </MenuItem>
+        </Menu>
 
-        <!-- Shows and Tracks -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="400"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Shows List -->
-            <GroupBox Grid.Column="0" Header="SHOWS IN LIBRARY" Margin="0,0,10,0">
-                <DataGrid x:Name="ShowsDataGrid"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          SelectionMode="Single"
-                          IsReadOnly="True"
-                          SelectionChanged="ShowsDataGrid_SelectionChanged"
-                          MouseDoubleClick="ShowsDataGrid_MouseDoubleClick"
-                          Margin="5">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
-                        <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="*"/>
-                        <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="130"/>
-                        <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="70"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
-
-            <!-- Tracks for Selected Show -->
-            <GroupBox Grid.Column="1" Header="TRACKS" x:Name="TracksGroupBox">
-                <Grid>
-                    <TextBlock x:Name="NoSelectionText"
-                               Text="Select a show to view tracks"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               Foreground="Gray"
-                               FontStyle="Italic"/>
-                    <DataGrid x:Name="TracksDataGrid"
-                              AutoGenerateColumns="False"
-                              CanUserAddRows="False"
-                              SelectionMode="Single"
-                              IsReadOnly="True"
-                              Visibility="Collapsed"
-                              Margin="5">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="35"/>
-                            <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
-                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </GroupBox>
+        <!-- Library List View -->
+        <Grid x:Name="LibraryView" Grid.Row="1" Visibility="Visible">
+            <DataGrid x:Name="ShowsDataGrid"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      SelectionMode="Single"
+                      IsReadOnly="True"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="None"
+                      Background="#252526"
+                      RowBackground="#252526"
+                      AlternatingRowBackground="#2D2D30"
+                      Foreground="#CCCCCC"
+                      BorderThickness="0"
+                      Margin="20"
+                      MouseDoubleClick="ShowsDataGrid_MouseDoubleClick">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#2D2D30"/>
+                        <Setter Property="Foreground" Value="#808080"/>
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="16,16"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="BorderBrush" Value="#3F3F46"/>
+                    </Style>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="MinHeight" Value="52"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#37373D"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#094771"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="16,16"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="#CCCCCC"/>
+                        <Setter Property="FontSize" Value="18"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150"/>
+                    <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="*"/>
+                    <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="280"/>
+                    <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="110"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
 
-        <!-- Action Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-            <Button x:Name="LoadShowButton" Content="Load Show" Width="100" Height="30" Margin="5" Click="LoadShowButton_Click" FontWeight="Bold"/>
-            <Button x:Name="OpenFolderButton" Content="Open in Explorer" Width="130" Height="30" Margin="5" Click="OpenFolderButton_Click"/>
-            <Button x:Name="RefreshButton" Content="Refresh" Width="100" Height="30" Margin="5" Click="RefreshButton_Click"/>
-            <Button x:Name="CloseButton" Content="Close" Width="100" Height="30" Margin="5" Click="CloseButton_Click"/>
-        </StackPanel>
+        <!-- Concert Detail View -->
+        <Grid x:Name="ConcertView" Grid.Row="1" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Back Button and Edit Button -->
+            <Border Grid.Row="0" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,0,0,1" Padding="20,14">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="BackButton" Content="← Back to Library" Click="BackButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            Padding="15,10" FontSize="16" Margin="0,0,10,0"/>
+                    <Button x:Name="EditMetadataButton" Content="Edit Metadata..." Click="EditMetadataButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            Padding="15,10" FontSize="16"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Concert Content -->
+            <Grid Grid.Row="1" Margin="30,30,30,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="340"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Album Artwork and Info -->
+                <StackPanel Grid.Column="0" Margin="0,0,30,0">
+                    <!-- Artwork with placeholder -->
+                    <Border Background="#2D2D30" CornerRadius="8" Margin="0,0,0,25">
+                        <Grid Width="300" Height="300">
+                            <!-- Placeholder -->
+                            <Grid x:Name="ArtworkPlaceholder">
+                                <Grid.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#3E3E42" Offset="0"/>
+                                        <GradientStop Color="#2D2D30" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Grid.Background>
+                                <Viewbox Width="140" Height="140">
+                                    <TextBlock Text="🎵" Foreground="#787878" FontSize="100"/>
+                                </Viewbox>
+                            </Grid>
+                            <!-- Actual artwork -->
+                            <Image x:Name="AlbumArtwork" Stretch="UniformToFill"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Concert Info -->
+                    <TextBlock x:Name="VenueText"
+                               FontWeight="SemiBold"
+                               FontSize="26"
+                               TextWrapping="Wrap"
+                               Foreground="#FFFFFF"
+                               Margin="0,0,0,10"/>
+                    <TextBlock x:Name="LocationText"
+                               FontSize="18"
+                               Foreground="#9CDCFE"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,6"/>
+                    <TextBlock x:Name="DateText"
+                               FontSize="18"
+                               Foreground="#B5CEA8"
+                               Margin="0,0,0,18"/>
+                    <TextBlock x:Name="TrackCountText"
+                               FontSize="16"
+                               Foreground="#808080"/>
+                </StackPanel>
+
+                <!-- Right: Track List -->
+                <Border Grid.Column="1"
+                        Background="#252526"
+                        CornerRadius="8"
+                        BorderBrush="#3F3F46"
+                        BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Header -->
+                        <Border Grid.Row="0"
+                                Background="#2D2D30"
+                                BorderBrush="#3F3F46"
+                                BorderThickness="0,0,0,1"
+                                Padding="18,16">
+                            <TextBlock Text="TRACKS"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="#CCCCCC"/>
+                        </Border>
+
+                        <!-- Track List -->
+                        <DataGrid Grid.Row="1"
+                                  x:Name="TracksDataGrid"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  SelectionMode="Single"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="None"
+                                  Background="#252526"
+                                  RowBackground="#252526"
+                                  AlternatingRowBackground="#2D2D30"
+                                  Foreground="#CCCCCC"
+                                  BorderThickness="0"
+                                  Margin="5"
+                                  LoadingRow="TracksDataGrid_LoadingRow">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#252526"/>
+                                    <Setter Property="Foreground" Value="#808080"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Padding" Value="14,12"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#3F3F46"/>
+                                </Style>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="MinHeight" Value="42"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#37373D"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#094771"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Padding" Value="14,12"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                                    <Setter Property="FontSize" Value="16"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="60"/>
+                                <DataGridTextColumn Header="Title" Binding="{Binding PreviewMetadata}" Width="*"/>
+                                <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Status Bar / Player Controls -->
+        <Border Grid.Row="2" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Padding="20,18">
+            <Grid>
+                <!-- Library View Status -->
+                <TextBlock x:Name="StatusText" Text="Double-click a concert to open" FontSize="16" Foreground="#808080"
+                           Visibility="Visible"/>
+
+                <!-- Concert View Player -->
+                <Grid x:Name="PlayerControls" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Now Playing Info -->
+                    <StackPanel Grid.Row="0" Margin="0,0,0,14">
+                        <TextBlock x:Name="NowPlayingText"
+                                   Text="No track playing"
+                                   FontWeight="SemiBold"
+                                   FontSize="17"
+                                   Foreground="#FFFFFF"/>
+                        <TextBlock x:Name="NowPlayingDetails"
+                                   Text=""
+                                   FontSize="15"
+                                   Foreground="#808080"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+
+                    <!-- Playback Controls -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Transport Buttons -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,25,0">
+                            <Button x:Name="PreviousButton" Content="⏮" Width="60" Height="46" Margin="0,0,10,0"
+                                    Click="PreviousButton_Click" IsEnabled="False"
+                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"/>
+                            <Button x:Name="PlayPauseButton" Content="▶" Width="70" Height="46" Margin="0,0,10,0"
+                                    Click="PlayPauseButton_Click" FontWeight="Bold" IsEnabled="False"
+                                    Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB" FontSize="22"/>
+                            <Button x:Name="StopButton" Content="⏹" Width="60" Height="46" Margin="0,0,10,0"
+                                    Click="StopButton_Click" IsEnabled="False"
+                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"/>
+                            <Button x:Name="NextButton" Content="⏭" Width="60" Height="46"
+                                    Click="NextButton_Click" IsEnabled="False"
+                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"/>
+                        </StackPanel>
+
+                        <!-- Scrubber -->
+                        <Grid Grid.Column="1" Margin="25,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="CurrentTimeText" Grid.Column="0"
+                                       Text="0:00" VerticalAlignment="Center"
+                                       Margin="0,0,15,0" Foreground="#CCCCCC" FontSize="15"/>
+                            <Slider x:Name="AudioScrubber" Grid.Column="1"
+                                    Minimum="0" Maximum="100"
+                                    VerticalAlignment="Center"
+                                    ValueChanged="AudioScrubber_ValueChanged"
+                                    PreviewMouseDown="AudioScrubber_PreviewMouseDown"
+                                    PreviewMouseUp="AudioScrubber_PreviewMouseUp"
+                                    Foreground="#0E639C" Background="#3E3E42"/>
+                            <TextBlock x:Name="TotalTimeText" Grid.Column="2"
+                                       Text="0:00" VerticalAlignment="Center"
+                                       Margin="15,0,0,0" Foreground="#CCCCCC" FontSize="15"/>
+                        </Grid>
+
+                        <!-- Volume Control -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="25,0,0,0">
+                            <TextBlock Text="🔊" VerticalAlignment="Center"
+                                       Margin="0,0,14,0" FontSize="20"/>
+                            <Slider x:Name="VolumeSlider" Width="140"
+                                    Minimum="0" Maximum="100" Value="75"
+                                    VerticalAlignment="Center"
+                                    ValueChanged="VolumeSlider_ValueChanged"
+                                    Foreground="#0E639C" Background="#3E3E42"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

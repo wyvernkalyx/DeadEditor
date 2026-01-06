@@ -17,6 +17,10 @@ namespace DeadEditor.Models
         public string DisplayTitle =>
             NormalizedTitle ?? Title;
 
+        // Computed property for segue display in library browser
+        public string Segue =>
+            HasSegue ? ">" : "";
+
         // Method to get final metadata title with date and segue
         public string GetFinalMetadataTitle(string fallbackDate)
         {

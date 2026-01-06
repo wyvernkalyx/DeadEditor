@@ -49,6 +49,10 @@
       "Aliases": []
     },
     {
+      "OfficialTitle": "Candyman",
+      "Aliases": []
+    },
+    {
       "OfficialTitle": "Cassidy",
       "Aliases": []
     },
@@ -306,7 +310,7 @@
     },
     {
       "OfficialTitle": "Turn On Your Love Light",
-      "Aliases": ["Love Light", "Lovelight"]
+      "Aliases": ["Love Light", "Lovelight", "Turn On Your Lovelight"]
     },
     {
       "OfficialTitle": "U.S. Blues",
@@ -357,6 +361,10 @@
       "Aliases": ["Doin That Rag", "Doing That Rag"]
     },
     {
+      "OfficialTitle": "Don't Ease Me In",
+      "Aliases": ["Don't Ease Me In", "Dont Ease Me In", "DEMI"]
+    },
+    {
       "OfficialTitle": "Cosmic Charlie",
       "Aliases": []
     },
@@ -381,8 +389,40 @@
       "Aliases": ["Sittin' on Top of the World", "Sitting On Top"]
     },
     {
+      "OfficialTitle": "All Along the Watchtower",
+      "Aliases": ["Watchtower"]
+    },
+    {
+      "OfficialTitle": "China Doll",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Crazy Fingers",
+      "Aliases": []
+    },
+    {
+      "OfficialTitle": "Foolish Heart",
+      "Aliases": []
+    },
+    {
       "OfficialTitle": "He Was a Friend of Mine",
       "Aliases": ["Friend of Mine"]
+    },
+    {
+      "OfficialTitle": "Queen Jane Approximately",
+      "Aliases": ["Queen Jane Approximate"]
+    },
+    {
+      "OfficialTitle": "Smokestack Lightning",
+      "Aliases": ["Smokestack Lightnin", "Smokestack Lightnin'"]
+    },
+    {
+      "OfficialTitle": "Walkin' Blues",
+      "Aliases": ["Walkin Blues", "Walking Blues"]
+    },
+    {
+      "OfficialTitle": "We Can Run",
+      "Aliases": []
     },
     {
       "OfficialTitle": "C.C. Rider",

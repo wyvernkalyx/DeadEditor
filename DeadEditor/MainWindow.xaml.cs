@@ -25,15 +25,10 @@ public partial class MainWindow : Window
     private readonly MetadataService _metadataService;
     private readonly NormalizationService _normalizationService;
     private readonly LibraryImportService _libraryImportService;
-    private readonly AudioPlayerService _audioPlayer;
-    private readonly DispatcherTimer _playbackTimer;
     private LibrarySettings _librarySettings;
     private List<TrackInfo> _tracks = new();
     private AlbumInfo? _albumInfo;
     private bool _isUpdating = false;
-    private bool _isScrubbingSeeking = false;
-    private int _currentTrackIndex = -1;
-    private bool _isManualTrackChange = false;
     private TaskCompletionSource<bool>? _notificationResult;
 
     public MainWindow()
@@ -43,24 +38,8 @@ public partial class MainWindow : Window
         _normalizationService = new NormalizationService();
         _libraryImportService = new LibraryImportService(_metadataService);
 
-        // Initialize audio player
-        _audioPlayer = new AudioPlayerService();
-        _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
-        _audioPlayer.PositionChanged += AudioPlayer_PositionChanged;
-
-        // Initialize playback timer for updating scrubber
-        _playbackTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(100)
-        };
-        _playbackTimer.Tick += PlaybackTimer_Tick;
-        _playbackTimer.Start();
-
         // Load library settings
         _librarySettings = LibrarySettings.Load();
-
-        // Set initial volume
-        _audioPlayer.Volume = (float)(VolumeSlider.Value / 100.0);
     }
 
     private void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -86,10 +65,13 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void LoadFolder(string folderPath)
+    public async void LoadFolder(string folderPath)
     {
         try
         {
+            // Update the text box with the folder path
+            FolderPathTextBox.Text = folderPath;
+
             StatusTextBlock.Text = "Reading files...";
 
             // Read tracks
@@ -196,7 +178,7 @@ public partial class MainWindow : Window
     {
         if (row.Item is TrackInfo track)
         {
-            // Highlight rows with unmatched songs (yellow background)
+            // Highlight rows with unmatched songs (darker yellow for dark theme)
             if (string.IsNullOrEmpty(track.NormalizedTitle) && !string.IsNullOrEmpty(track.Title))
             {
                 // Only highlight after normalization has been attempted
@@ -205,16 +187,19 @@ public partial class MainWindow : Window
 
                 if (normalizationAttempted)
                 {
-                    row.Background = new SolidColorBrush(Color.FromRgb(255, 255, 200)); // Light yellow
+                    row.Background = new SolidColorBrush(Color.FromRgb(80, 60, 0)); // Dark yellow/gold for unmatched songs
+                    row.Foreground = new SolidColorBrush(Color.FromRgb(255, 220, 100)); // Bright yellow text
                 }
                 else
                 {
-                    row.Background = Brushes.White;
+                    row.Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)); // Dark background
+                    row.Foreground = Brushes.White;
                 }
             }
             else
             {
-                row.Background = Brushes.White;
+                row.Background = new SolidColorBrush(Color.FromRgb(30, 30, 30)); // Dark background
+                row.Foreground = Brushes.White;
             }
         }
     }
@@ -241,6 +226,9 @@ public partial class MainWindow : Window
             selectedTrack.PerformanceDate = SelectedDateTextBox.Text;
             selectedTrack.HasSegue = SelectedSegueCheckBox.IsChecked ?? false;
             selectedTrack.IsModified = true;
+
+            // Update the preview metadata to reflect the changes
+            UpdateTrackPreviews();
 
             // Refresh the DataGrid to show changes
             TracksDataGrid.Items.Refresh();
@@ -348,14 +336,22 @@ public partial class MainWindow : Window
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        var settingsWindow = new SettingsWindow(this, _librarySettings);
-        settingsWindow.Owner = this;
-        settingsWindow.ShowDialog();
+        // Settings is now accessible from LibraryBrowserWindow
+        // This menu item should be removed from MainWindow
+        MessageBox.Show("Settings can be accessed from the main Library window.", "Information",
+            MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        System.Windows.Application.Current.Shutdown();
+        // Just close this window, don't shut down the whole application
+        this.Close();
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Close the import window without importing
+        this.Close();
     }
 
     // Helper methods for SettingsWindow
@@ -475,25 +471,6 @@ public partial class MainWindow : Window
         StatusTextBlock.Text = "Ready";
     }
 
-    private async void BrowseLibraryButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (string.IsNullOrEmpty(_librarySettings.LibraryRootPath))
-        {
-            await ShowNotificationAsync("Library Not Set", "Please set the Library Root folder first.");
-            return;
-        }
-
-        var browserWindow = new LibraryBrowserWindow(_librarySettings.LibraryRootPath, this);
-        browserWindow.Owner = this;
-        browserWindow.ShowDialog();
-    }
-
-    // Load show from library
-    public void LoadShowFromLibrary(string folderPath)
-    {
-        // Load the show just like loading from file browser
-        LoadFolder(folderPath);
-    }
 
     // Artwork management
     private void UpdateArtworkDisplay()
@@ -585,190 +562,6 @@ public partial class MainWindow : Window
         StatusTextBlock.Text = "Artwork removed";
     }
 
-    // Audio Playback Methods
-    private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_audioPlayer.IsPlaying)
-        {
-            _audioPlayer.Pause();
-            PlayPauseButton.Content = "▶";
-        }
-        else
-        {
-            if (_audioPlayer.CurrentFilePath == null)
-            {
-                // No track loaded, start with first track or selected track
-                if (TracksDataGrid.SelectedIndex >= 0)
-                {
-                    PlayTrack(TracksDataGrid.SelectedIndex);
-                }
-                else if (_tracks.Count > 0)
-                {
-                    PlayTrack(0);
-                }
-            }
-            else
-            {
-                _audioPlayer.Play();
-                PlayPauseButton.Content = "⏸";
-            }
-        }
-    }
-
-    private void StopButton_Click(object sender, RoutedEventArgs e)
-    {
-        _isManualTrackChange = true; // Prevent auto-advance when user manually stops
-        _audioPlayer.Stop();
-        PlayPauseButton.Content = "▶";
-        AudioScrubber.Value = 0;
-        NowPlayingText.Text = "No track playing";
-        PlaybackTimeText.Text = "00:00 / 00:00";
-        _currentTrackIndex = -1;
-        _isManualTrackChange = false;
-    }
-
-    private void PreviousButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTrackIndex > 0)
-        {
-            PlayTrack(_currentTrackIndex - 1);
-        }
-    }
-
-    private void NextButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTrackIndex < _tracks.Count - 1)
-        {
-            PlayTrack(_currentTrackIndex + 1);
-        }
-    }
-
-    private void PlayTrack(int index)
-    {
-        if (index < 0 || index >= _tracks.Count) return;
-
-        var track = _tracks[index];
-
-        // Set flag to prevent auto-advance when changing tracks manually
-        _isManualTrackChange = true;
-        _currentTrackIndex = index;
-
-        try
-        {
-            _audioPlayer.LoadFile(track.FilePath);
-            _audioPlayer.Play();
-
-            PlayPauseButton.Content = "⏸";
-            NowPlayingText.Text = track.DisplayTitle;
-
-            // Select the track in the grid
-            TracksDataGrid.SelectedIndex = index;
-            TracksDataGrid.ScrollIntoView(track);
-
-            StatusTextBlock.Text = $"Playing: {track.DisplayTitle}";
-
-            // Clear the flag after a short delay to ensure PlaybackStopped event has processed
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                _isManualTrackChange = false;
-            }), System.Windows.Threading.DispatcherPriority.Background);
-        }
-        catch (Exception ex)
-        {
-            StatusTextBlock.Text = $"Error playing track: {ex.Message}";
-            _isManualTrackChange = false;
-        }
-    }
-
-    private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        if (_audioPlayer != null)
-        {
-            _audioPlayer.Volume = (float)(e.NewValue / 100.0);
-        }
-    }
-
-    private void AudioScrubber_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        _isScrubbingSeeking = true;
-    }
-
-    private void AudioScrubber_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        _isScrubbingSeeking = false;
-
-        // Seek to the new position
-        var totalSeconds = _audioPlayer.TotalDuration.TotalSeconds;
-        var newPosition = TimeSpan.FromSeconds((AudioScrubber.Value / 100.0) * totalSeconds);
-        _audioPlayer.Seek(newPosition);
-    }
-
-    private void PlaybackTimer_Tick(object? sender, EventArgs e)
-    {
-        if (_audioPlayer.IsPlaying && !_isScrubbingSeeking)
-        {
-            _audioPlayer.UpdatePosition();
-
-            // Update scrubber
-            var totalSeconds = _audioPlayer.TotalDuration.TotalSeconds;
-            if (totalSeconds > 0)
-            {
-                var percentage = (_audioPlayer.CurrentPosition.TotalSeconds / totalSeconds) * 100.0;
-                AudioScrubber.Value = percentage;
-            }
-
-            // Update time display
-            var current = _audioPlayer.CurrentPosition.ToString(@"mm\:ss");
-            var total = _audioPlayer.TotalDuration.ToString(@"mm\:ss");
-            PlaybackTimeText.Text = $"{current} / {total}";
-        }
-    }
-
-    private void AudioPlayer_PositionChanged(object? sender, TimeSpan e)
-    {
-        // This event is fired from AudioPlayerService, but we update in the timer instead
-    }
-
-    private void AudioPlayer_PlaybackStopped(object? sender, EventArgs e)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            // Don't auto-advance if we're manually changing tracks
-            if (_isManualTrackChange)
-            {
-                return;
-            }
-
-            PlayPauseButton.Content = "▶";
-
-            // Auto-play next track if available (only when track finishes naturally)
-            if (_currentTrackIndex < _tracks.Count - 1)
-            {
-                PlayTrack(_currentTrackIndex + 1);
-            }
-            else
-            {
-                // End of playlist
-                AudioScrubber.Value = 0;
-                NowPlayingText.Text = "Playlist finished";
-                PlaybackTimeText.Text = "00:00 / 00:00";
-                _currentTrackIndex = -1;
-            }
-        });
-    }
-
-    private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is DataGridRow row && row.Item is TrackInfo track)
-        {
-            int index = _tracks.IndexOf(track);
-            if (index >= 0)
-            {
-                PlayTrack(index);
-                e.Handled = true; // Prevent event from bubbling
-            }
-        }
-    }
 
     // Notification system to replace MessageBox
     private Task<bool> ShowNotificationAsync(string title, string message, bool showYesNo = false)
