@@ -293,16 +293,72 @@
                         <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,25,0">
                             <Button x:Name="PreviousButton" Content="⏮" Width="60" Height="46" Margin="0,0,10,0"
                                     Click="PreviousButton_Click" IsEnabled="False"
-                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"/>
+                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"
+                                    BorderThickness="1" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#4E4E52"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#2E2E32"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                             <Button x:Name="PlayPauseButton" Content="▶" Width="70" Height="46" Margin="0,0,10,0"
                                     Click="PlayPauseButton_Click" FontWeight="Bold" IsEnabled="False"
-                                    Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB" FontSize="22"/>
+                                    Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB" FontSize="22"
+                                    BorderThickness="1" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#1177BB"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#0A4A75"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                             <Button x:Name="StopButton" Content="⏹" Width="60" Height="46" Margin="0,0,10,0"
                                     Click="StopButton_Click" IsEnabled="False"
-                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"/>
+                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"
+                                    BorderThickness="1" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#4E4E52"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#2E2E32"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                             <Button x:Name="NextButton" Content="⏭" Width="60" Height="46"
                                     Click="NextButton_Click" IsEnabled="False"
-                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"/>
+                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"
+                                    BorderThickness="1" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#4E4E52"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#2E2E32"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                         </StackPanel>
 
                         <!-- Scrubber -->

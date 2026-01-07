@@ -15,6 +15,10 @@ namespace DeadEditor.Models
         public byte[]? ArtworkData { get; set; }       // Image bytes
         public string? ArtworkMimeType { get; set; }   // "image/jpeg" or "image/png"
 
+        // Info file data
+        public string? InfoFileContent { get; set; }   // Content of .txt info files found in folder
+        public string? InfoFileName { get; set; }      // Name of the info file
+
         // Computed property for album title
         public string AlbumTitle
         {

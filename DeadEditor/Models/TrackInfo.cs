@@ -32,7 +32,13 @@ namespace DeadEditor.Models
                 title = title + " >";
             }
 
-            return $"{title} ({date})";
+            // Only add date if it's not empty
+            if (!string.IsNullOrEmpty(date))
+            {
+                return $"{title} ({date})";
+            }
+
+            return title;
         }
     }
 }

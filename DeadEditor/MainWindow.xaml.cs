@@ -114,6 +114,9 @@ public partial class MainWindow : Window
             OfficialReleaseTextBox.Text = _albumInfo.OfficialRelease ?? "";
             UpdateAlbumPreview();
             UpdateArtworkDisplay();
+
+            // Enable View Info button if info file content exists
+            ViewInfoButton.IsEnabled = !string.IsNullOrEmpty(_albumInfo.InfoFileContent);
         }
 
         // Update track list and previews
@@ -352,6 +355,42 @@ public partial class MainWindow : Window
     {
         // Close the import window without importing
         this.Close();
+    }
+
+    private void ViewInfoButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_albumInfo == null || string.IsNullOrEmpty(_albumInfo.InfoFileContent))
+            return;
+
+        // Create and show a non-modal window to display the info file
+        var infoWindow = new Window
+        {
+            Title = $"Info File: {_albumInfo.InfoFileName ?? "Unknown"}",
+            Width = 800,
+            Height = 600,
+            Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(30, 30, 30)),
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Topmost = true  // Keep on top so you can see it while editing
+        };
+
+        var textBox = new System.Windows.Controls.TextBox
+        {
+            Text = _albumInfo.InfoFileContent,
+            IsReadOnly = true,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+            FontFamily = new System.Windows.Media.FontFamily("Consolas"),
+            FontSize = 14,
+            Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White),
+            Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(30, 30, 30)),
+            BorderThickness = new Thickness(0),
+            Padding = new Thickness(10),
+            TextWrapping = TextWrapping.NoWrap
+        };
+
+        infoWindow.Content = textBox;
+        infoWindow.Show();  // Non-modal - you can interact with main window while it's open
     }
 
     // Helper methods for SettingsWindow

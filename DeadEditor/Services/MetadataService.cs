@@ -153,6 +153,23 @@ namespace DeadEditor.Services
                 }
             }
 
+            // Look for .txt info files in the folder
+            try
+            {
+                var txtFiles = Directory.GetFiles(folderPath, "*.txt");
+                if (txtFiles.Length > 0)
+                {
+                    // Take the first .txt file found
+                    var infoFile = txtFiles[0];
+                    albumInfo.InfoFileName = Path.GetFileName(infoFile);
+                    albumInfo.InfoFileContent = File.ReadAllText(infoFile);
+                }
+            }
+            catch
+            {
+                // Silently ignore errors reading info files
+            }
+
             return albumInfo;
         }
 
@@ -248,8 +265,11 @@ namespace DeadEditor.Services
 
         private string CleanTitle(string title)
         {
+            // Remove leading track numbers like "01 ", "1. ", "001-", etc.
+            var cleaned = Regex.Replace(title, @"^\d+[\s\.\-_]+", "");
+
             // Remove date suffix and segue marker - matches format: "Song (yyyy-MM-dd)"
-            var cleaned = Regex.Replace(title, @"\s*→?\s*\(\d{4}-\d{2}-\d{2}\)\s*$", "");
+            cleaned = Regex.Replace(cleaned, @"\s*→?\s*\(\d{4}-\d{2}-\d{2}\)\s*$", "");
 
             // Also handle format: "Song (Live at Venue, City, State, M/D/YYYY)"
             cleaned = Regex.Replace(cleaned, @"\s*\(Live at [^)]+\)\s*$", "", RegexOptions.IgnoreCase);

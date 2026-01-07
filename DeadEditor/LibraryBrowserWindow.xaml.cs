@@ -125,17 +125,36 @@ public partial class LibraryBrowserWindow : Window
             {
                 var folderName = Path.GetFileName(showFolder);
 
-                // Expected format: "yyyy-MM-dd - Venue, City, State"
-                var parts = folderName.Split(new[] { " - " }, 2, StringSplitOptions.None);
+                // Expected formats:
+                // "yyyy-MM-dd - Venue - City, State"
+                // "yyyy-MM-dd - Venue, City, State"
+                var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
 
-                if (parts.Length == 2)
+                string date = "";
+                string venue = "";
+                string city = "";
+                string state = "";
+
+                if (parts.Length >= 2)
                 {
-                    var date = parts[0];
-                    var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
+                    date = parts[0];
 
-                    var venue = venueParts.Length > 0 ? venueParts[0] : "";
-                    var city = venueParts.Length > 1 ? venueParts[1] : "";
-                    var state = venueParts.Length > 2 ? venueParts[2] : "";
+                    // Try format: "Date - Venue - City, State"
+                    if (parts.Length == 3)
+                    {
+                        venue = parts[1];
+                        var locationParts = parts[2].Split(new[] { ", " }, StringSplitOptions.None);
+                        city = locationParts.Length > 0 ? locationParts[0] : "";
+                        state = locationParts.Length > 1 ? locationParts[1] : "";
+                    }
+                    // Try format: "Date - Venue, City, State"
+                    else if (parts.Length == 2)
+                    {
+                        var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
+                        venue = venueParts.Length > 0 ? venueParts[0] : "";
+                        city = venueParts.Length > 1 ? venueParts[1] : "";
+                        state = venueParts.Length > 2 ? venueParts[2] : "";
+                    }
 
                     var flacFiles = Directory.GetFiles(showFolder, "*.flac");
 
@@ -145,7 +164,9 @@ public partial class LibraryBrowserWindow : Window
                         Venue = venue,
                         City = city,
                         State = state,
-                        Location = venueParts.Length > 1 ? string.Join(", ", venueParts.Skip(1)) : "",
+                        Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state)
+                            ? $"{city}, {state}"
+                            : city + state,
                         TrackCount = flacFiles.Length,
                         FolderPath = showFolder
                     });
@@ -361,14 +382,18 @@ public partial class LibraryBrowserWindow : Window
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_audioPlayer.IsPlaying)
+        // Use button content as the source of truth for current state
+        // This prevents the double-click issue caused by state checking
+        if (PlayPauseButton.Content.ToString() == "⏸")
         {
+            // Currently playing - pause it
             _audioPlayer.Pause();
             PlayPauseButton.Content = "▶";
             _updateTimer?.Stop();
         }
         else
         {
+            // Currently paused or stopped - resume or start playing
             if (_currentTrackIndex >= 0 && _currentTrackIndex < _currentTracks.Count)
             {
                 _audioPlayer.Play();
