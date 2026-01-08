@@ -16,6 +16,22 @@
 
 ---
 
+## Next Session Focus
+
+### Studio Albums Support
+**Priority:** High
+**Status:** Planned for next session
+**Description:** Add support for studio albums (non-live recordings) with proper metadata handling.
+
+**Considerations:**
+- Different metadata structure (no venue, date may be release date vs performance date)
+- Album name/title field
+- Track ordering and album artwork
+- Differentiate between live recordings and studio albums in library browser
+- Import workflow adjustments for studio releases
+
+---
+
 ## Potential Future Enhancements
 
 ### 1. Additional Song Coverage
@@ -23,7 +39,7 @@
 **Status:** Ongoing as needed
 **Description:** Continue adding songs/aliases as you encounter unmatched tracks in your taper collection.
 
-**Current Coverage:** 593 songs with aliases and fuzzy matching (max 2 char typos)
+**Current Coverage:** 598 songs with aliases and fuzzy matching (max 2 char typos)
 
 ---
 
