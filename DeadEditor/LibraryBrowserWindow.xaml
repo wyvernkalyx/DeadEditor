@@ -9,6 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -36,8 +37,48 @@
             </MenuItem>
         </Menu>
 
+        <!-- Search Bar -->
+        <Border Grid.Row="1" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,0,0,1" Padding="20,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Search:" Foreground="#CCCCCC" FontSize="14"
+                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                <TextBox Grid.Column="1" x:Name="QuickSearchTextBox"
+                         Height="32" FontSize="14"
+                         Background="#3C3C3C" Foreground="#CCCCCC"
+                         BorderBrush="#555555" BorderThickness="1"
+                         Padding="8,6"
+                         TextChanged="QuickSearchTextBox_TextChanged"
+                         ToolTip="Quick search: date, venue, or location only. For song searches, use Advanced Search."/>
+
+                <Button Grid.Column="2" x:Name="ClearSearchButton" Content="✕" Width="32" Height="32"
+                        Margin="8,0,0,0" Click="ClearSearchButton_Click"
+                        Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                        FontSize="14" FontWeight="Bold"
+                        ToolTip="Clear search"
+                        Visibility="Collapsed"/>
+
+                <Button Grid.Column="3" x:Name="AdvancedSearchButton" Content="Advanced Search..." Width="150" Height="32"
+                        Margin="12,0,0,0" Click="AdvancedSearchButton_Click"
+                        Background="#094771" Foreground="#FFFFFF" BorderBrush="#0E639C"
+                        FontSize="13" FontWeight="SemiBold"/>
+
+                <TextBlock Grid.Column="4" x:Name="SearchResultTextBlock" Text=""
+                           Foreground="#888888" FontSize="13"
+                           VerticalAlignment="Center" Margin="15,0,0,0"/>
+            </Grid>
+        </Border>
+
         <!-- Library List View -->
-        <Grid x:Name="LibraryView" Grid.Row="1" Visibility="Visible">
+        <Grid x:Name="LibraryView" Grid.Row="2" Visibility="Visible">
             <DataGrid x:Name="ShowsDataGrid"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
@@ -98,7 +139,7 @@
         </Grid>
 
         <!-- Concert Detail View -->
-        <Grid x:Name="ConcertView" Grid.Row="1" Visibility="Collapsed">
+        <Grid x:Name="ConcertView" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -254,7 +295,7 @@
         </Grid>
 
         <!-- Status Bar / Player Controls -->
-        <Border Grid.Row="2" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Padding="20,18">
+        <Border Grid.Row="3" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Padding="20,18">
             <Grid>
                 <!-- Library View Status -->
                 <TextBlock x:Name="StatusText" Text="Double-click a concert to open" FontSize="16" Foreground="#808080"

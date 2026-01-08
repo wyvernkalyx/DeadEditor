@@ -1,0 +1,194 @@
+<Window x:Class="DeadEditor.AdvancedSearchDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Advanced Search" Height="550" Width="700"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize"
+        MinHeight="500" MinWidth="650">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="Advanced Concert Search" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <!-- Search Criteria -->
+        <TabControl Grid.Row="1">
+            <!-- Song Search Tab -->
+            <TabItem Header="Contains Songs">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,15">
+                        <Run Text="Find concerts containing " Foreground="Gray"/>
+                        <Run Text="ALL" FontWeight="Bold" Foreground="Black"/>
+                        <Run Text=" of the selected songs (in any order)" Foreground="Gray"/>
+                    </TextBlock>
+
+                    <!-- Song Filter -->
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Filter:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBox Grid.Column="1" x:Name="SongFilterTextBox" Height="28"
+                                 TextChanged="SongFilterTextBox_TextChanged"
+                                 ToolTip="Type to filter song list"/>
+                        <Button Grid.Column="2" x:Name="ClearFilterButton" Content="✕" Width="28" Height="28"
+                                Margin="5,0,0,0" Click="ClearFilterButton_Click"
+                                ToolTip="Clear filter" Visibility="Collapsed"/>
+                    </Grid>
+
+                    <Border Grid.Row="2" BorderBrush="#CCCCCC" BorderThickness="1" Background="White">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel x:Name="SongCheckListPanel" Margin="10"/>
+                        </ScrollViewer>
+                    </Border>
+
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button x:Name="SelectAllButton" Content="Select All" Width="100" Height="30"
+                                Margin="0,0,10,0" Click="SelectAllButton_Click"/>
+                        <Button x:Name="ClearAllButton" Content="Clear All" Width="100" Height="30"
+                                Click="ClearAllButton_Click"/>
+                        <TextBlock x:Name="SelectedSongsCount" Text="" VerticalAlignment="Center"
+                                   Margin="15,0,0,0" Foreground="Gray" FontStyle="Italic"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Exclude Songs Tab -->
+            <TabItem Header="Exclude Songs">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,15">
+                        <Run Text="Find concerts that " Foreground="Gray"/>
+                        <Run Text="DO NOT" FontWeight="Bold" Foreground="#D32F2F"/>
+                        <Run Text=" contain any of the selected songs" Foreground="Gray"/>
+                    </TextBlock>
+
+                    <!-- Song Filter -->
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Filter:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBox Grid.Column="1" x:Name="ExcludeSongFilterTextBox" Height="28"
+                                 TextChanged="ExcludeSongFilterTextBox_TextChanged"
+                                 ToolTip="Type to filter song list"/>
+                        <Button Grid.Column="2" x:Name="ClearExcludeFilterButton" Content="✕" Width="28" Height="28"
+                                Margin="5,0,0,0" Click="ClearExcludeFilterButton_Click"
+                                ToolTip="Clear filter" Visibility="Collapsed"/>
+                    </Grid>
+
+                    <Border Grid.Row="2" BorderBrush="#CCCCCC" BorderThickness="1" Background="White">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel x:Name="ExcludeSongCheckListPanel" Margin="10"/>
+                        </ScrollViewer>
+                    </Border>
+
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button x:Name="ExcludeSelectAllButton" Content="Select All" Width="100" Height="30"
+                                Margin="0,0,10,0" Click="ExcludeSelectAllButton_Click"/>
+                        <Button x:Name="ExcludeClearAllButton" Content="Clear All" Width="100" Height="30"
+                                Click="ExcludeClearAllButton_Click"/>
+                        <TextBlock x:Name="ExcludedSongsCount" Text="" VerticalAlignment="Center"
+                                   Margin="15,0,0,0" Foreground="Gray" FontStyle="Italic"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Song Sequence Tab -->
+            <TabItem Header="Song Sequence">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,15">
+                        <Run Text="Find concerts with songs in a " Foreground="Gray"/>
+                        <Run Text="specific order" FontWeight="Bold" Foreground="Black"/>
+                        <Run Text=" (e.g., China Cat > I Know You Rider)" Foreground="Gray"/>
+                    </TextBlock>
+
+                    <!-- Song selector -->
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Add Song:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <ComboBox Grid.Column="1" x:Name="SequenceSongComboBox" Height="30"/>
+                        <Button Grid.Column="2" x:Name="AddToSequenceButton" Content="Add →" Width="80" Height="30"
+                                Margin="10,0,0,0" Click="AddToSequenceButton_Click"/>
+                    </Grid>
+
+                    <!-- Current sequence -->
+                    <Border Grid.Row="2" BorderBrush="#CCCCCC" BorderThickness="1" Background="#F9F9F9">
+                        <Grid>
+                            <ListBox x:Name="SequenceListBox" BorderThickness="0" Background="Transparent"
+                                     Margin="5">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Index}" FontWeight="Bold"
+                                                       Foreground="#666" Margin="0,0,10,0"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Song}"/>
+                                            <Button Grid.Column="2" Content="✕" Width="24" Height="24"
+                                                    Tag="{Binding Song}" Click="RemoveFromSequence_Click"
+                                                    Background="#FFEBEE" FontWeight="Bold"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock x:Name="SequenceEmptyText"
+                                       Text="No sequence defined. Add songs above to build a sequence."
+                                       Foreground="Gray" FontStyle="Italic"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Visibility="Visible"/>
+                        </Grid>
+                    </Border>
+
+                    <Button Grid.Row="3" x:Name="ClearSequenceButton" Content="Clear Sequence" Width="120" Height="30"
+                            Margin="0,10,0,0" HorizontalAlignment="Left" Click="ClearSequenceButton_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button x:Name="SearchButton" Content="Search" Width="110" Height="35"
+                    Margin="0,0,10,0" Click="SearchButton_Click" IsDefault="True"
+                    FontSize="13" FontWeight="SemiBold" Background="#094771" Foreground="White"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="110" Height="35"
+                    Click="CancelButton_Click" IsCancel="True" FontSize="13"/>
+        </StackPanel>
+    </Grid>
+</Window>

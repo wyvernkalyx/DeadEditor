@@ -18,14 +18,20 @@ public partial class LibraryBrowserWindow : Window
 {
     private readonly LibrarySettings _librarySettings;
     private readonly MetadataService _metadataService;
+    private readonly NormalizationService _normalizationService;
     private readonly AudioPlayerService _audioPlayer;
     private List<LibraryShow> _shows = new();
+    private List<LibraryShow> _allShows = new();  // Unfiltered list for search
     private List<TrackInfo> _currentTracks = new();
     private LibraryShow? _currentShow = null;
     private int _currentTrackIndex = -1;
     private DispatcherTimer? _updateTimer;
     private bool _isScrubbing = false;
     private bool _isManualTrackChange = false;
+    private string _quickSearchText = "";
+    private List<string> _advancedSearchSongs = new();
+    private List<string> _advancedSearchExcludedSongs = new();
+    private List<string> _advancedSearchSequence = new();
 
     public LibraryBrowserWindow()
     {
@@ -33,6 +39,7 @@ public partial class LibraryBrowserWindow : Window
 
         _librarySettings = LibrarySettings.Load();
         _metadataService = new MetadataService();
+        _normalizationService = new NormalizationService();
         _audioPlayer = new AudioPlayerService();
 
         // Set up audio player events
@@ -105,6 +112,7 @@ public partial class LibraryBrowserWindow : Window
     private void LoadShows()
     {
         _shows.Clear();
+        _allShows.Clear();
 
         if (string.IsNullOrEmpty(_librarySettings.LibraryRootPath) ||
             !Directory.Exists(_librarySettings.LibraryRootPath))
@@ -158,7 +166,7 @@ public partial class LibraryBrowserWindow : Window
 
                     var flacFiles = Directory.GetFiles(showFolder, "*.flac");
 
-                    _shows.Add(new LibraryShow
+                    _allShows.Add(new LibraryShow
                     {
                         Date = date,
                         Venue = venue,
@@ -175,10 +183,10 @@ public partial class LibraryBrowserWindow : Window
         }
 
         // Sort by date descending
-        _shows = _shows.OrderByDescending(s => s.Date).ToList();
+        _allShows = _allShows.OrderByDescending(s => s.Date).ToList();
 
-        ShowsDataGrid.ItemsSource = _shows;
-        StatusText.Text = $"{_shows.Count} concerts in library";
+        // Apply any active search filters
+        ApplySearchFilter();
     }
 
     private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -518,7 +526,7 @@ public partial class LibraryBrowserWindow : Window
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        var settingsWindow = new SettingsWindow(this, _librarySettings);
+        var settingsWindow = new SettingsWindow(this, _librarySettings, _normalizationService);
         settingsWindow.Owner = this;
         settingsWindow.ShowDialog();
 
@@ -568,6 +576,340 @@ public partial class LibraryBrowserWindow : Window
         _audioPlayer?.Dispose();
         _updateTimer?.Stop();
         base.OnClosing(e);
+    }
+
+    // Search functionality
+    private bool _isUpdatingSearchBox = false;
+    private void QuickSearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        if (_isUpdatingSearchBox) return; // Prevent recursive calls
+
+        _quickSearchText = QuickSearchTextBox.Text?.Trim() ?? "";
+        ClearSearchButton.Visibility = string.IsNullOrEmpty(_quickSearchText) ? Visibility.Collapsed : Visibility.Visible;
+        ApplySearchFilter();
+    }
+
+    private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
+    {
+        _isUpdatingSearchBox = true;
+        QuickSearchTextBox.Text = "";
+        QuickSearchTextBox.IsReadOnly = false;
+        _quickSearchText = "";
+        _advancedSearchSongs.Clear();
+        _advancedSearchExcludedSongs.Clear();
+        _advancedSearchSequence.Clear();
+        ClearSearchButton.Visibility = Visibility.Collapsed;
+        _isUpdatingSearchBox = false;
+        ApplySearchFilter();
+    }
+
+    private void AdvancedSearchButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new AdvancedSearchDialog(_normalizationService);
+        dialog.Owner = this;
+
+        if (dialog.ShowDialog() == true)
+        {
+            // Apply advanced search criteria
+            _advancedSearchSongs = dialog.SelectedSongs;
+            _advancedSearchExcludedSongs = dialog.ExcludedSongs;
+            _advancedSearchSequence = dialog.SongSequence;
+
+            ApplySearchFilter();
+
+            // Update UI to show advanced search is active
+            if (_advancedSearchSongs.Any() || _advancedSearchExcludedSongs.Any() || _advancedSearchSequence.Any())
+            {
+                var displayText = "";
+
+                // Show song list
+                if (_advancedSearchSongs.Any())
+                {
+                    if (_advancedSearchSongs.Count == 1)
+                    {
+                        displayText = _advancedSearchSongs[0];
+                    }
+                    else if (_advancedSearchSongs.Count <= 3)
+                    {
+                        displayText = string.Join(", ", _advancedSearchSongs);
+                    }
+                    else
+                    {
+                        displayText = $"{string.Join(", ", _advancedSearchSongs.Take(2))}, and {_advancedSearchSongs.Count - 2} more";
+                    }
+                }
+
+                // Show excluded songs
+                if (_advancedSearchExcludedSongs.Any())
+                {
+                    string excludeText;
+                    if (_advancedSearchExcludedSongs.Count == 1)
+                    {
+                        excludeText = $"NOT {_advancedSearchExcludedSongs[0]}";
+                    }
+                    else if (_advancedSearchExcludedSongs.Count <= 3)
+                    {
+                        excludeText = $"NOT ({string.Join(", ", _advancedSearchExcludedSongs)})";
+                    }
+                    else
+                    {
+                        excludeText = $"NOT ({string.Join(", ", _advancedSearchExcludedSongs.Take(2))}, and {_advancedSearchExcludedSongs.Count - 2} more)";
+                    }
+
+                    if (!string.IsNullOrEmpty(displayText))
+                    {
+                        displayText += " " + excludeText;
+                    }
+                    else
+                    {
+                        displayText = excludeText;
+                    }
+                }
+
+                // Show sequence
+                if (_advancedSearchSequence.Any())
+                {
+                    var sequenceText = string.Join(" > ", _advancedSearchSequence);
+                    if (!string.IsNullOrEmpty(displayText))
+                    {
+                        displayText += " | Sequence: " + sequenceText;
+                    }
+                    else
+                    {
+                        displayText = "Sequence: " + sequenceText;
+                    }
+                }
+
+                _isUpdatingSearchBox = true;
+                QuickSearchTextBox.Text = displayText;
+                QuickSearchTextBox.IsReadOnly = true;
+                ClearSearchButton.Visibility = Visibility.Visible;
+                _isUpdatingSearchBox = false;
+            }
+        }
+    }
+
+    private void ApplySearchFilter()
+    {
+        if (_allShows.Count == 0)
+        {
+            _shows = new List<LibraryShow>();
+            ShowsDataGrid.ItemsSource = _shows;
+            StatusText.Text = "No concerts in library";
+            return;
+        }
+
+        // Start with all shows
+        var filtered = _allShows.AsEnumerable();
+
+        // Apply quick search filter
+        if (!string.IsNullOrEmpty(_quickSearchText))
+        {
+            var searchLower = _quickSearchText.ToLowerInvariant();
+            filtered = filtered.Where(show =>
+                show.Date.ToLowerInvariant().Contains(searchLower) ||
+                show.Venue.ToLowerInvariant().Contains(searchLower) ||
+                show.City.ToLowerInvariant().Contains(searchLower) ||
+                show.State.ToLowerInvariant().Contains(searchLower) ||
+                show.Location.ToLowerInvariant().Contains(searchLower)
+            );
+        }
+
+        // Apply advanced search filters (song-based searches require loading tracks)
+        if (_advancedSearchSongs.Any() || _advancedSearchExcludedSongs.Any() || _advancedSearchSequence.Any())
+        {
+            // Force immediate evaluation to avoid lazy enumeration issues
+            var filteredList = filtered.ToList();
+            var matchingShows = new List<LibraryShow>();
+
+            var matchCount = 0;
+            var totalChecked = 0;
+
+            foreach (var show in filteredList)
+            {
+                totalChecked++;
+                if (ShowMatchesSongCriteria(show))
+                {
+                    matchCount++;
+                    matchingShows.Add(show);
+                }
+            }
+
+            _shows = matchingShows;
+
+            // Log summary
+            var logPath = Path.Combine(Path.GetTempPath(), "deadedit_search_debug.txt");
+            try
+            {
+                File.AppendAllText(logPath,
+                    $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] === SEARCH SUMMARY ===\n" +
+                    $"Total concerts checked: {totalChecked}\n" +
+                    $"Concerts with matching songs: {matchCount}\n" +
+                    $"Final result count: {_shows.Count}\n" +
+                    $"_allShows count: {_allShows.Count}\n\n");
+            }
+            catch { }
+        }
+        else
+        {
+            _shows = filtered.ToList();
+        }
+
+        ShowsDataGrid.ItemsSource = _shows;
+
+        // Update status
+        if (_shows.Count != _allShows.Count)
+        {
+            SearchResultTextBlock.Text = $"Showing {_shows.Count} of {_allShows.Count} concerts";
+
+            if (_shows.Count == 0 && !string.IsNullOrEmpty(_quickSearchText) && !_advancedSearchSongs.Any() && !_advancedSearchExcludedSongs.Any() && !_advancedSearchSequence.Any())
+            {
+                StatusText.Text = $"No concerts match '{_quickSearchText}'. Quick search only searches date, venue, and location. Use Advanced Search to search by songs.";
+            }
+            else
+            {
+                StatusText.Text = $"{_shows.Count} concerts match search";
+            }
+        }
+        else
+        {
+            SearchResultTextBlock.Text = "";
+            StatusText.Text = $"{_shows.Count} concerts in library";
+        }
+    }
+
+    private bool ShowMatchesSongCriteria(LibraryShow show)
+    {
+        try
+        {
+            // Load tracks for this show
+            var tracks = _metadataService.ReadFolder(show.FolderPath);
+
+            // Normalize the tracks
+            _normalizationService.NormalizeAll(tracks);
+
+            // Check if show contains required songs
+            if (_advancedSearchSongs.Any())
+            {
+                // Get normalized titles, filtering out empty ones
+                var normalizedTitles = tracks
+                    .Where(t => !string.IsNullOrWhiteSpace(t.NormalizedTitle))
+                    .Select(t => t.NormalizedTitle!)
+                    .ToList();
+
+                // DEBUG: Log first show's details to help diagnose
+                if (show == _allShows.FirstOrDefault())
+                {
+                    var logPath = Path.Combine(Path.GetTempPath(), "deadedit_search_debug.txt");
+                    try
+                    {
+                        File.WriteAllText(logPath,
+                            $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] === SONG SEARCH DEBUG ===\n" +
+                            $"Show: {show.Date} - {show.Venue}\n" +
+                            $"Required songs: {string.Join(", ", _advancedSearchSongs)}\n" +
+                            $"Total tracks: {tracks.Count}\n" +
+                            $"Normalized titles found: {normalizedTitles.Count}\n" +
+                            $"Titles: {string.Join(", ", normalizedTitles.Take(20))}\n" +
+                            $"Log saved to: {logPath}\n");
+                        System.Diagnostics.Debug.WriteLine($"Search debug log: {logPath}");
+                    }
+                    catch { }
+                }
+
+                foreach (var requiredSong in _advancedSearchSongs)
+                {
+                    // Check if any normalized title matches the required song (case-insensitive)
+                    bool found = normalizedTitles.Any(title =>
+                        title.Equals(requiredSong, StringComparison.OrdinalIgnoreCase));
+
+                    // DEBUG: Log comparison details for first show
+                    if (show == _allShows.FirstOrDefault())
+                    {
+                        var logPath = Path.Combine(Path.GetTempPath(), "deadedit_search_debug.txt");
+                        try
+                        {
+                            File.AppendAllText(logPath,
+                                $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] === COMPARISON DEBUG ===\n" +
+                                $"Looking for: '{requiredSong}' (length: {requiredSong.Length})\n" +
+                                $"Found: {found}\n" +
+                                $"Checking against: {string.Join(" | ", normalizedTitles.Select(t => $"'{t}' (len:{t.Length})"))}\n\n");
+                        }
+                        catch { }
+                    }
+
+                    if (!found)
+                    {
+                        return false; // Missing required song
+                    }
+                }
+            }
+
+            // Check for excluded songs
+            if (_advancedSearchExcludedSongs.Any())
+            {
+                // Get normalized titles, filtering out empty ones
+                var normalizedTitles = tracks
+                    .Where(t => !string.IsNullOrWhiteSpace(t.NormalizedTitle))
+                    .Select(t => t.NormalizedTitle!)
+                    .ToList();
+
+                // If the show contains ANY excluded song, reject it
+                foreach (var excludedSong in _advancedSearchExcludedSongs)
+                {
+                    bool found = normalizedTitles.Any(title =>
+                        title.Equals(excludedSong, StringComparison.OrdinalIgnoreCase));
+
+                    if (found)
+                    {
+                        return false; // Show contains an excluded song
+                    }
+                }
+            }
+
+            // Check song sequence
+            if (_advancedSearchSequence.Any())
+            {
+                if (!ShowContainsSequence(tracks, _advancedSearchSequence))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // Log error for debugging
+            System.Diagnostics.Debug.WriteLine($"Error checking show {show.Date}: {ex.Message}");
+            return false; // Error loading tracks
+        }
+    }
+
+    private bool ShowContainsSequence(List<TrackInfo> tracks, List<string> sequence)
+    {
+        if (sequence.Count == 0) return true;
+
+        var normalizedTitles = tracks.Select(t => t.NormalizedTitle?.ToLowerInvariant() ?? "").ToList();
+
+        // Look for consecutive songs in order
+        for (int i = 0; i <= normalizedTitles.Count - sequence.Count; i++)
+        {
+            bool matchFound = true;
+            for (int j = 0; j < sequence.Count; j++)
+            {
+                if (normalizedTitles[i + j] != sequence[j].ToLowerInvariant())
+                {
+                    matchFound = false;
+                    break;
+                }
+            }
+            if (matchFound)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

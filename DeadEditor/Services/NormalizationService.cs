@@ -27,11 +27,32 @@ namespace DeadEditor.Services
             }
             else
             {
-                _database = new SongDatabase { Songs = new List<SongEntry>() };
+                _database = new SongDatabase { Songs = new List<SongEntry>(), Artists = new List<ArtistEntry>() };
             }
 
             // Build lookup dictionary
             _aliasLookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            // Load from new artist-based structure first
+            if (_database?.Artists != null)
+            {
+                foreach (var artist in _database.Artists)
+                {
+                    foreach (var song in artist.Songs ?? new List<SongEntry>())
+                    {
+                        // Add official title as its own lookup
+                        _aliasLookup[song.OfficialTitle] = song.OfficialTitle;
+
+                        // Add all aliases
+                        foreach (var alias in song.Aliases ?? new List<string>())
+                        {
+                            _aliasLookup[alias] = song.OfficialTitle;
+                        }
+                    }
+                }
+            }
+
+            // Load from legacy Songs structure (backward compatibility)
             if (_database?.Songs != null)
             {
                 foreach (var song in _database.Songs)
@@ -202,20 +223,73 @@ namespace DeadEditor.Services
         /// </summary>
         public List<string> GetAllTitles()
         {
-            return _database?.Songs?.Select(s => s.OfficialTitle).OrderBy(t => t).ToList() ?? new List<string>();
+            var titles = new List<string>();
+
+            // Get titles from new artist-based structure
+            if (_database?.Artists != null)
+            {
+                foreach (var artist in _database.Artists)
+                {
+                    titles.AddRange(artist.Songs?.Select(s => s.OfficialTitle) ?? new List<string>());
+                }
+            }
+
+            // Get titles from legacy structure
+            if (_database?.Songs != null)
+            {
+                titles.AddRange(_database.Songs.Select(s => s.OfficialTitle));
+            }
+
+            return titles.Distinct().OrderBy(t => t).ToList();
         }
 
         /// <summary>
-        /// Adds a new song to the database
+        /// Gets all artist names
+        /// </summary>
+        public List<string> GetAllArtists()
+        {
+            return _database?.Artists?.Select(a => a.Name).OrderBy(n => n).ToList() ?? new List<string>();
+        }
+
+        /// <summary>
+        /// Adds a new song to the database (legacy method - uses first artist or creates one)
         /// </summary>
         public void AddSong(string officialTitle, List<string>? aliases = null)
         {
-            if (_database?.Songs == null) return;
+            AddSong(officialTitle, aliases, "Grateful Dead");
+        }
 
-            if (_database.Songs.Any(s => s.OfficialTitle.Equals(officialTitle, StringComparison.OrdinalIgnoreCase)))
+        /// <summary>
+        /// Adds a new song to the database for a specific artist
+        /// </summary>
+        public void AddSong(string officialTitle, List<string>? aliases, string artistName)
+        {
+            if (_database == null) return;
+
+            // Ensure Artists list exists
+            if (_database.Artists == null)
+            {
+                _database.Artists = new List<ArtistEntry>();
+            }
+
+            // Find or create artist
+            var artist = _database.Artists.FirstOrDefault(a => a.Name.Equals(artistName, StringComparison.OrdinalIgnoreCase));
+            if (artist == null)
+            {
+                artist = new ArtistEntry
+                {
+                    Name = artistName,
+                    Songs = new List<SongEntry>()
+                };
+                _database.Artists.Add(artist);
+            }
+
+            // Check if song already exists for this artist
+            if (artist.Songs.Any(s => s.OfficialTitle.Equals(officialTitle, StringComparison.OrdinalIgnoreCase)))
                 return;
 
-            _database.Songs.Add(new SongEntry
+            // Add song
+            artist.Songs.Add(new SongEntry
             {
                 OfficialTitle = officialTitle,
                 Aliases = aliases ?? new List<string>()

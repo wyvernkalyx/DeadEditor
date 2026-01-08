@@ -1,4 +1,5 @@
 using DeadEditor.Models;
+using DeadEditor.Services;
 using System;
 using System.IO;
 using System.Windows;
@@ -8,13 +9,15 @@ namespace DeadEditor
     public partial class SettingsWindow : Window
     {
         private LibrarySettings _librarySettings;
-        private MainWindow _mainWindow;
+        private LibraryBrowserWindow _libraryWindow;
+        private NormalizationService _normalizationService;
 
-        public SettingsWindow(MainWindow mainWindow, LibrarySettings librarySettings)
+        public SettingsWindow(LibraryBrowserWindow libraryWindow, LibrarySettings librarySettings, NormalizationService normalizationService)
         {
             InitializeComponent();
-            _mainWindow = mainWindow;
+            _libraryWindow = libraryWindow;
             _librarySettings = librarySettings;
+            _normalizationService = normalizationService;
 
             // Load current settings
             LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
@@ -34,8 +37,8 @@ namespace DeadEditor
                 _librarySettings.Save();
                 LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
 
-                // Update main window
-                _mainWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);
+                // Update library window
+                _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);
             }
         }
 
@@ -90,16 +93,16 @@ namespace DeadEditor
                     }
                 }
 
-                // 2. Clear the current view in main window
-                _mainWindow.ClearCurrentView();
+                // 2. Clear the current view in library window
+                _libraryWindow.ClearCurrentView();
 
                 // 3. Reset library settings
                 _librarySettings.LibraryRootPath = "";
                 _librarySettings.Save();
                 LibraryRootTextBox.Text = "";
 
-                // Update main window
-                _mainWindow.UpdateLibraryRootDisplay("");
+                // Update library window
+                _libraryWindow.UpdateLibraryRootDisplay("");
 
                 System.Windows.MessageBox.Show(
                     $"Successfully reset all data!\n\n" +
@@ -118,6 +121,20 @@ namespace DeadEditor
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        private void AddSongButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new AddSongDialog(_normalizationService);
+            dialog.Owner = this;
+            dialog.ShowDialog();
+        }
+
+        private void ManageSongsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ManageSongsDialog(_normalizationService);
+            dialog.Owner = this;
+            dialog.ShowDialog();
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

@@ -29,6 +29,21 @@
 
             <Separator Margin="0,0,0,20"/>
 
+            <!-- Song Database Section -->
+            <TextBlock Text="Song Database" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+            <TextBlock Text="Add songs to the database without recompiling the application."
+                       TextWrapping="Wrap" Margin="0,0,0,10" Foreground="Gray"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <Button x:Name="AddSongButton" Content="Add Song..." Width="150" Height="35"
+                        HorizontalAlignment="Left" Click="AddSongButton_Click"
+                        Background="#E3F2FD" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                <Button x:Name="ManageSongsButton" Content="Manage Songs..." Width="150" Height="35"
+                        HorizontalAlignment="Left" Click="ManageSongsButton_Click"
+                        Background="#E8F5E9" FontWeight="SemiBold"/>
+            </StackPanel>
+
+            <Separator Margin="0,0,0,20"/>
+
             <!-- Reset Data Section -->
             <TextBlock Text="Data Management" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
             <TextBlock Text="Reset all library data and settings. All files will be moved to the Recycle Bin."

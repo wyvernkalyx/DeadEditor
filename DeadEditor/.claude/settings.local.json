@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m \"Update TODO.md with session 2026-01-07 accomplishments and next steps\")",
+      "Bash(python migrate_songs.py)",
+      "Bash(dotnet build DeadEditor.csproj)",
+      "Bash(start dotnet run --project DeadEditor.csproj)",
+      "Bash(tasklist)",
+      "Bash(findstr /I \"DeadEditor\")",
+      "Bash(tasklist /FI \"IMAGENAME eq DeadEditor.exe\")",
+      "Bash(wmic process where \"name=''DeadEditor.exe''\" get ProcessId,CreationDate)",
+      "Bash(binDebugnet8.0-windowsDeadEditor.exe)",
+      "Bash(\"bin\\Debug\\net8.0-windows\\DeadEditor.exe\")",
+      "Bash(\"d:\\Projects\\DeadEditor\\DeadEditor\\bin\\Debug\\net8.0-windows\\DeadEditor.exe\")",
+      "Bash(git add -A)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
