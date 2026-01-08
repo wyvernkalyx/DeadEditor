@@ -1,18 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git commit -m \"Update TODO.md with session 2026-01-07 accomplishments and next steps\")",
-      "Bash(python migrate_songs.py)",
-      "Bash(dotnet build DeadEditor.csproj)",
-      "Bash(start dotnet run --project DeadEditor.csproj)",
-      "Bash(tasklist)",
-      "Bash(findstr /I \"DeadEditor\")",
-      "Bash(tasklist /FI \"IMAGENAME eq DeadEditor.exe\")",
-      "Bash(wmic process where \"name=''DeadEditor.exe''\" get ProcessId,CreationDate)",
-      "Bash(binDebugnet8.0-windowsDeadEditor.exe)",
-      "Bash(\"bin\\Debug\\net8.0-windows\\DeadEditor.exe\")",
-      "Bash(\"d:\\Projects\\DeadEditor\\DeadEditor\\bin\\Debug\\net8.0-windows\\DeadEditor.exe\")",
-      "Bash(git add -A)"
+      "Bash(git push)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nUpdate TODO.md with session 2026-01-08 accomplishments and next steps\n\nUpdated TODO.md to reflect:\n- Latest commit c6f4801\n- 598 songs in database (594 Grateful Dead, 4 NRPS)\n- Advanced Search functionality with 3 tabs\n- Song database management features\n- Critical bug fixes (LINQ lazy evaluation, TextChanged recursion, multi-song collection)\n- All new files and dialogs added\n- Fixed minor UI issue note (main window opens in background)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

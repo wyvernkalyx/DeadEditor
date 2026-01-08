@@ -1,15 +1,18 @@
 # DeadEditor - Pending Tasks
 
-## Current Status (2026-01-07)
+## Current Status (2026-01-08)
 
-**Latest Commit:** `6e3aca8` - "Add info file viewer, fuzzy matching, and extensive song database improvements"
+**Latest Commit:** `c6f4801` - "Fix song search bugs and add exclude functionality"
 
-### App is working well!
+### App is working excellently!
 - ✅ Importing random files successfully
-- ✅ 593 songs in database with fuzzy matching
+- ✅ 598 songs in database (594 Grateful Dead, 4 NRPS) with fuzzy matching
 - ✅ Info file viewer working for reference during imports
 - ✅ Track number normalization working
-- ✅ All major bugs from previous sessions resolved
+- ✅ **Advanced Search** - Search by songs (contains ANY/ALL), song sequences, and excluded songs (NOT)
+- ✅ **Song Database Management** - Add/manage songs on-the-fly without recompiling
+- ✅ **Artist-based Organization** - Songs organized by artist with migration script
+- ✅ All major bugs from previous sessions resolved (including critical search bugs)
 
 ---
 
@@ -30,10 +33,11 @@
 
 **Potential Ideas:**
 - Batch import multiple concerts at once
-- Search/filter in library browser
+- ✅ ~~Search/filter in library browser~~ - **COMPLETED** (Quick search + Advanced Search)
 - Export concert metadata to CSV/JSON
 - Dark/light theme toggle
 - Keyboard shortcuts for common actions
+- Fix: Main window opens in background at startup (minor UI issue)
 
 ---
 
@@ -49,7 +53,48 @@
 
 ---
 
-## Recently Completed (Session 2026-01-07)
+## Recently Completed (Session 2026-01-08)
+
+### Major Features Added:
+- ✅ **Advanced Search Dialog** - Comprehensive search with 3 tabs:
+  - "Contains Songs" - Find shows with ALL selected songs (in any order)
+  - "Exclude Songs" - Find shows WITHOUT specific songs (NOT queries)
+  - "Song Sequence" - Find shows with songs in specific order (e.g., "China Cat > I Know You Rider")
+- ✅ **Song Filter** - Real-time filtering in song selection (handles 600+ songs easily)
+- ✅ **Add Song Dialog** - Add songs on-the-fly without recompiling, with artist support
+- ✅ **Manage Songs Dialog** - Browse all 598 songs, view aliases, filter by artist, export to text
+- ✅ **Artist-based Database** - Songs organized by artist (Grateful Dead, NRPS, etc.)
+- ✅ **Quick Search** - Search by date, venue, location directly from library browser
+- ✅ **Search Display** - Shows actual song names in search box (e.g., "Dark Star, Althea NOT I Know You Rider")
+
+### Critical Bug Fixes:
+- ✅ **LINQ Lazy Evaluation Bug** - Fixed song searches returning 0 results inconsistently
+  - Root cause: `Where()` clause was re-evaluated multiple times with captured variables
+  - Solution: Replace lazy LINQ with immediate `foreach` evaluation
+- ✅ **TextChanged Recursion Bug** - Fixed duplicate searches triggered by programmatic text box updates
+  - Solution: Added `_isUpdatingSearchBox` flag to prevent recursive calls
+- ✅ **Multi-song Collection Bug** - Fixed advanced search only collecting visible filtered songs
+  - Solution: Collect from `_allSongCheckBoxes` instead of `SongCheckListPanel.Children`
+
+### UI Improvements:
+- ✅ Smart search box display showing 1-3 song names, then "and X more"
+- ✅ Excluded songs shown with "NOT" prefix for clarity
+- ✅ Select All/Clear All buttons respect filtering
+- ✅ Song count indicators ("5 songs selected", "2 songs excluded")
+- ✅ Filter clear button (X) appears when typing
+
+### Technical Improvements:
+- ✅ Database migration script (`migrate_songs.py`) - Converted 598 songs to artist-based structure
+- ✅ Backward compatibility - Reads both new artist-based and legacy song structures
+- ✅ `ExcludedSongs` property and filter logic in `ShowMatchesSongCriteria()`
+- ✅ Prevented lazy LINQ enumeration issues with explicit list building
+
+**Commit:** `c6f4801` - "Fix song search bugs and add exclude functionality"
+**Files Changed:** 19 files (+10,261 insertions, -623 deletions)
+
+---
+
+## Previously Completed (Session 2026-01-07)
 
 ### Major Features Added:
 - ✅ **Info File Viewer** - Auto-import .txt files, non-modal window with always-on-top for copy/paste during import
@@ -106,20 +151,24 @@ dotnet build DeadEditor.csproj
 dotnet run --project DeadEditor.csproj
 ```
 
-### Key Files Modified This Session:
-- `Data/songs.json` - Now contains 593 songs with aliases
-- `Services/NormalizationService.cs` - Added fuzzy matching with Levenshtein distance
-- `Services/MetadataService.cs` - Auto-imports .txt info files, strips track numbers
-- `Models/AlbumInfo.cs` - Added InfoFileContent and InfoFileName properties
-- `Models/TrackInfo.cs` - Fixed empty parentheses in date display
-- `MainWindow.xaml.cs` - Added View Info File button and handler
-- `LibraryBrowserWindow.xaml.cs` - Improved pause button logic
+### Key Files Modified This Session (2026-01-08):
+- `AdvancedSearchDialog.xaml/.xaml.cs` - **NEW** - 3-tab search dialog with filtering
+- `AddSongDialog.xaml/.xaml.cs` - **NEW** - On-the-fly song addition with artist support
+- `ManageSongsDialog.xaml/.xaml.cs` - **NEW** - Browse/export 598 songs
+- `ConcertDetailWindow.xaml/.xaml.cs` - **NEW** - Detailed concert view
+- `LibraryBrowserWindow.xaml.cs` - Fixed LINQ lazy evaluation, added search functionality
+- `Services/NormalizationService.cs` - Added artist-based database support, AddSong() method
+- `Models/SongDatabase.cs` - Added ArtistEntry class for organization
+- `Data/songs.json` - Now 598 songs organized by artist
+- `migrate_songs.py` - **NEW** - Python script to migrate database structure
 
 ### Database Coverage:
-- **Total Songs:** 593
+- **Total Songs:** 598 (594 Grateful Dead, 4 NRPS)
+- **Organization:** Artist-based with backward compatibility
 - **Includes:** Grateful Dead core repertoire, NRPS songs, covers, jams, tuning, intro, feedback
 - **Fuzzy Matching:** Handles up to 2 character typos automatically
 - **Common Aliases:** Handles variations like "Dnacing", "Wkae", "Monkey &", etc.
+- **Management:** Add/edit songs via UI without recompiling
 
 ---
 
