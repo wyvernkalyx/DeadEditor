@@ -42,36 +42,82 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Search:" Foreground="#CCCCCC" FontSize="14"
+                <TextBlock Grid.Column="0" Text="Show:" Foreground="#CCCCCC" FontSize="14"
                            VerticalAlignment="Center" Margin="0,0,10,0"/>
 
-                <TextBox Grid.Column="1" x:Name="QuickSearchTextBox"
+                <ComboBox Grid.Column="1" x:Name="TypeFilterComboBox" Width="200" Height="32"
+                          FontSize="14" FontWeight="SemiBold" SelectedIndex="0"
+                          Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                          SelectionChanged="TypeFilterComboBox_SelectionChanged">
+                    <ComboBox.Resources>
+                        <!-- Override system colors for the popup -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2D2D30"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#2D2D30"/>
+
+                        <!-- Style for ComboBox items in the dropdown -->
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ComboBoxItem">
+                                        <Border Name="Border" Background="{TemplateBinding Background}"
+                                                BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsHighlighted" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#094771"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ComboBox.Resources>
+                    <ComboBoxItem Content="All" Tag="All" Background="#2D2D30"/>
+                    <ComboBoxItem Content="🎸 Audience Recordings" Tag="Live" Background="#2D2D30"/>
+                    <ComboBoxItem Content="📀 Official Releases" Tag="OfficialRelease" Background="#2D2D30"/>
+                    <ComboBoxItem Content="💿 Studio Albums" Tag="Studio" Background="#2D2D30"/>
+                </ComboBox>
+
+                <TextBlock Grid.Column="2" Text="Search:" Foreground="#CCCCCC" FontSize="14"
+                           VerticalAlignment="Center" Margin="20,0,10,0"/>
+
+                <TextBox Grid.Column="3" x:Name="QuickSearchTextBox"
                          Height="32" FontSize="14"
                          Background="#3C3C3C" Foreground="#CCCCCC"
                          BorderBrush="#555555" BorderThickness="1"
                          Padding="8,6"
                          TextChanged="QuickSearchTextBox_TextChanged"
-                         ToolTip="Quick search: date, venue, or location only. For song searches, use Advanced Search."/>
+                         ToolTip="Quick search: date, venue, location, album name, year, edition, or official release. For song searches, use Advanced Search."/>
 
-                <Button Grid.Column="2" x:Name="ClearSearchButton" Content="✕" Width="32" Height="32"
+                <Button Grid.Column="4" x:Name="ClearSearchButton" Content="✕" Width="32" Height="32"
                         Margin="8,0,0,0" Click="ClearSearchButton_Click"
                         Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
                         FontSize="14" FontWeight="Bold"
                         ToolTip="Clear search"
                         Visibility="Collapsed"/>
 
-                <Button Grid.Column="3" x:Name="AdvancedSearchButton" Content="Advanced Search..." Width="150" Height="32"
+                <Button Grid.Column="5" x:Name="AdvancedSearchButton" Content="Advanced Search..." Width="150" Height="32"
                         Margin="12,0,0,0" Click="AdvancedSearchButton_Click"
                         Background="#094771" Foreground="#FFFFFF" BorderBrush="#0E639C"
                         FontSize="13" FontWeight="SemiBold"/>
 
-                <TextBlock Grid.Column="4" x:Name="SearchResultTextBlock" Text=""
+                <TextBlock Grid.Column="6" x:Name="SearchResultTextBlock" Text=""
                            Foreground="#888888" FontSize="13"
                            VerticalAlignment="Center" Margin="15,0,0,0"/>
             </Grid>
@@ -130,10 +176,12 @@
                     </Style>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150"/>
-                    <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="*"/>
-                    <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="280"/>
-                    <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="110"/>
+                    <DataGridTextColumn Header="" Binding="{Binding TypeIcon}" Width="50"/>
+                    <DataGridTextColumn Header="Date / Album" Binding="{Binding PrimaryInfo}" Width="200"/>
+                    <DataGridTextColumn Header="Venue / Year" Binding="{Binding SecondaryInfo}" Width="*"/>
+                    <DataGridTextColumn Header="Location / Edition" Binding="{Binding TertiaryInfo}" Width="220"/>
+                    <DataGridTextColumn Header="Official Release" Binding="{Binding OfficialRelease}" Width="200"/>
+                    <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="90"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -182,7 +230,7 @@
                                 </Viewbox>
                             </Grid>
                             <!-- Actual artwork -->
-                            <Image x:Name="AlbumArtwork" Stretch="UniformToFill"/>
+                            <Image x:Name="AlbumArtwork" Stretch="Uniform"/>
                         </Grid>
                     </Border>
 
@@ -201,6 +249,11 @@
                     <TextBlock x:Name="DateText"
                                FontSize="18"
                                Foreground="#B5CEA8"
+                               Margin="0,0,0,6"/>
+                    <TextBlock x:Name="BoxSetText"
+                               FontSize="16"
+                               Foreground="#D7BA7D"
+                               Visibility="Collapsed"
                                Margin="0,0,0,18"/>
                     <TextBlock x:Name="TrackCountText"
                                FontSize="16"

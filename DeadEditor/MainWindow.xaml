@@ -92,6 +92,7 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="ReadButton" Content="Read from Files" Height="35" Padding="15,5" Margin="0,0,8,0" Click="ReadButton_Click" FontSize="16"/>
                 <Button x:Name="NormalizeButton" Content="Normalize All Songs" Height="35" Padding="15,5" Margin="0,0,8,0" Click="NormalizeButton_Click" FontSize="16"/>
+                <Button x:Name="RenumberButton" Content="Renumber Tracks" Height="35" Padding="15,5" Margin="0,0,8,0" Click="RenumberButton_Click" FontSize="16"/>
                 <Button x:Name="WriteButton" Content="Write to Files" Height="35" Padding="15,5" Margin="0,0,8,0" Click="WriteButton_Click" FontSize="16"/>
                 <Button x:Name="ViewInfoButton" Content="View Info File" Height="35" Padding="15,5" Margin="0,0,8,0" Click="ViewInfoButton_Click" FontSize="16" IsEnabled="False"/>
                 <Button x:Name="ImportButton" Content="Import to Library" Height="35" Padding="15,5" Margin="0,0,8,0" Click="ImportButton_Click" FontWeight="Bold" FontSize="16"/>
@@ -128,23 +129,97 @@
 
                     <Separator Margin="0,0,0,15"/>
 
+                    <!-- Album Type Selection -->
+                    <TextBlock Text="Album Type:" Margin="0,0,0,5" FontWeight="Bold" FontSize="14"/>
+                    <Border BorderBrush="#555555" BorderThickness="1" Padding="10" Background="#2D2D30" Margin="0,0,0,15">
+                        <StackPanel>
+                            <RadioButton x:Name="LiveRecordingRadio" GroupName="AlbumType"
+                                         IsChecked="True" Margin="0,0,0,8" Checked="AlbumType_Changed"
+                                         Foreground="#FFFFFF" FontSize="13">
+                                <RadioButton.Content>
+                                    <StackPanel>
+                                        <TextBlock Text="Live (Audience Recording)" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="Taper recordings from concerts" FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </RadioButton.Content>
+                            </RadioButton>
+                            <RadioButton x:Name="OfficialReleaseRadio" GroupName="AlbumType"
+                                         Margin="0,0,0,8" Checked="AlbumType_Changed"
+                                         Foreground="#FFFFFF" FontSize="13">
+                                <RadioButton.Content>
+                                    <StackPanel>
+                                        <TextBlock Text="Official Release" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="Dave's Picks, Dick's Picks, Road Trips, etc." FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </RadioButton.Content>
+                            </RadioButton>
+                            <RadioButton x:Name="StudioAlbumRadio" GroupName="AlbumType"
+                                         Margin="0,0,0,8" Checked="AlbumType_Changed"
+                                         Foreground="#FFFFFF" FontSize="13">
+                                <RadioButton.Content>
+                                    <StackPanel>
+                                        <TextBlock Text="Studio Album" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="Workingman's Dead, American Beauty, etc." FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </RadioButton.Content>
+                            </RadioButton>
+                            <RadioButton x:Name="BoxSetRadio" GroupName="AlbumType"
+                                         Margin="0,0,0,0" Checked="AlbumType_Changed"
+                                         Foreground="#FFFFFF" FontSize="13">
+                                <RadioButton.Content>
+                                    <StackPanel>
+                                        <TextBlock Text="Box Set" FontWeight="SemiBold" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="Digital downloads, physical box sets" FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </RadioButton.Content>
+                            </RadioButton>
+                        </StackPanel>
+                    </Border>
+
                     <TextBlock Text="Artist:" Margin="0,0,0,5"/>
                     <TextBox x:Name="ArtistTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="Date:" Margin="0,0,0,5"/>
+                    <!-- Studio Album Fields -->
+                    <TextBlock x:Name="AlbumNameLabel" Text="Album Name:" Margin="0,0,0,5" Visibility="Collapsed"/>
+                    <TextBox x:Name="AlbumNameTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"/>
+
+                    <TextBlock x:Name="ReleaseYearLabel" Text="Release Year:" Margin="0,0,0,5" Visibility="Collapsed"/>
+                    <TextBox x:Name="ReleaseYearTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"/>
+
+                    <TextBlock x:Name="EditionLabel" Text="Edition/Remaster (optional):" Margin="0,0,0,5" Visibility="Collapsed"/>
+                    <TextBox x:Name="EditionTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"
+                             ToolTip="e.g., '2025 Remaster', 'Deluxe Edition', 'Expanded Edition'"/>
+
+                    <!-- Album Lookup Buttons (Studio Albums Only) -->
+                    <Button x:Name="LookupAlbumButton" Content="🔍 Fingerprint Lookup" Margin="0,0,0,10"
+                            Height="35" Click="LookupAlbumButton_Click" Visibility="Collapsed"
+                            ToolTip="Use audio fingerprinting to automatically identify this album"/>
+
+                    <Button x:Name="ManualSearchButton" Content="🔎 Manual Search" Margin="0,0,0,15"
+                            Height="35" Click="ManualSearchButton_Click" Visibility="Collapsed"
+                            ToolTip="Search MusicBrainz by album name and artist"/>
+
+
+                    <!-- Live Recording Fields -->
+                    <TextBlock x:Name="DateLabel" Text="Date:" Margin="0,0,0,5"/>
                     <TextBox x:Name="DateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="Venue:" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="VenueLabel" Text="Venue:" Margin="0,0,0,5"/>
                     <TextBox x:Name="VenueTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="City:" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="CityLabel" Text="City:" Margin="0,0,0,5"/>
                     <TextBox x:Name="CityTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="State:" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="StateLabel" Text="State:" Margin="0,0,0,5"/>
                     <TextBox x:Name="StateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="Official Release (optional):" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="OfficialReleaseLabel" Text="Official Release (optional):" Margin="0,0,0,5" TextWrapping="Wrap"/>
                     <TextBox x:Name="OfficialReleaseTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+
+                    <!-- Box Set Fields -->
+                    <TextBlock x:Name="BoxSetNameLabel" Text="Box Set Name (optional):" Margin="0,0,0,5" Visibility="Collapsed" TextWrapping="Wrap"/>
+                    <TextBox x:Name="BoxSetNameTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"
+                             ToolTip="e.g., 'Enjoying the Ride', 'Digital Album Live'"/>
 
                     <Separator Margin="0,10,0,10"/>
 

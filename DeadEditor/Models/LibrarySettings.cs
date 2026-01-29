@@ -5,7 +5,21 @@ namespace DeadEditor.Models
 {
     public class LibrarySettings
     {
-        public string LibraryRootPath { get; set; } = "";
+        public string LibraryRootPath { get; set; } = "";              // Path to audience recordings (also used for box sets)
+        public string OfficialReleasesPath { get; set; } = "";         // Path to official releases
+        public string PrimaryArtistName { get; set; } = "Grateful Dead"; // Primary artist for MusicBrainz filtering
+        public string? LastBoxSetName { get; set; }                    // Remember last box set name for faster imports
+
+        // Window positions
+        public double? MainWindowLeft { get; set; }
+        public double? MainWindowTop { get; set; }
+        public double? MainWindowWidth { get; set; }
+        public double? MainWindowHeight { get; set; }
+
+        public double? LibraryWindowLeft { get; set; }
+        public double? LibraryWindowTop { get; set; }
+        public double? LibraryWindowWidth { get; set; }
+        public double? LibraryWindowHeight { get; set; }
 
         private static readonly string SettingsPath = Path.Combine(
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData),

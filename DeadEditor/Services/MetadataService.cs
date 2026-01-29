@@ -10,16 +10,19 @@ namespace DeadEditor.Services
     public class MetadataService
     {
         /// <summary>
-        /// Reads metadata from all FLAC files in a folder
+        /// Reads metadata from all audio files (FLAC/MP3) in a folder
         /// </summary>
         public List<TrackInfo> ReadFolder(string folderPath)
         {
             var tracks = new List<TrackInfo>();
-            var flacFiles = Directory.GetFiles(folderPath, "*.flac")
+
+            // Get all supported audio files (FLAC and MP3)
+            var audioFiles = Directory.GetFiles(folderPath, "*.flac")
+                                     .Concat(Directory.GetFiles(folderPath, "*.mp3"))
                                      .OrderBy(f => f)
                                      .ToList();
 
-            foreach (var filePath in flacFiles)
+            foreach (var filePath in audioFiles)
             {
                 try
                 {
@@ -32,6 +35,7 @@ namespace DeadEditor.Services
                             FilePath = filePath,
                             FileName = Path.GetFileName(filePath),
                             TrackNumber = (int)file.Tag.Track,
+                            DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
                             Title = rawTitle,
                             Duration = file.Properties.Duration.ToString(@"mm\:ss"),
                             IsModified = false
@@ -44,8 +48,9 @@ namespace DeadEditor.Services
                         track.PerformanceDate = ExtractDateFromTitle(track.Title)
                                                ?? ExtractDateFromAlbum(file.Tag.Album);
 
-                        // Clean the title (remove date suffix and segue markers)
-                        track.Title = CleanTitle(track.Title);
+                        // DON'T clean the title here - keep original metadata in Title field
+                        // Cleaning will happen during normalization for matching purposes
+                        // track.Title = CleanTitle(track.Title);  // REMOVED - this was destroying original metadata
 
                         tracks.Add(track);
                     }
@@ -121,6 +126,13 @@ namespace DeadEditor.Services
                 Artist = "Grateful Dead"
             };
 
+            // Try to parse folder name for official release info
+            // Common patterns:
+            // "Artist - Date - Official Release Name"
+            // "Date - Venue - City, State - Official Release"
+            var folderName = Path.GetFileName(folderPath);
+            ParseFolderName(folderName, albumInfo);
+
             var firstFile = tracks.FirstOrDefault()?.FilePath;
             if (firstFile != null)
             {
@@ -174,7 +186,7 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Writes metadata to all FLAC files
+        /// Writes metadata to all audio files (FLAC/MP3)
         /// </summary>
         public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
         {
@@ -185,6 +197,10 @@ namespace DeadEditor.Services
                     // Build the final title with date
                     var date = track.PerformanceDate ?? album.Date;
                     var title = track.NormalizedTitle ?? track.Title;
+
+                    // Remove any existing date suffix to prevent duplicates
+                    // Pattern matches: " (yyyy-MM-dd)" or " (yyyy-MM-dd) (yyyy-MM-dd)" etc.
+                    title = Regex.Replace(title, @"\s*\(\d{4}-\d{2}-\d{2}\)(\s*\(\d{4}-\d{2}-\d{2}\))*\s*$", "");
 
                     // Add segue marker BEFORE the date
                     if (track.HasSegue)
@@ -197,6 +213,7 @@ namespace DeadEditor.Services
                     file.Tag.Performers = new[] { album.Artist };
                     file.Tag.AlbumArtists = new[] { album.Artist };
                     file.Tag.Track = (uint)track.TrackNumber;
+                    file.Tag.Disc = (uint)track.DiscNumber;
 
                     // Parse year from date
                     if (DateTime.TryParse(album.Date, out var parsedDate))
@@ -236,9 +253,40 @@ namespace DeadEditor.Services
 
         private string? ExtractDateFromTitle(string title)
         {
-            // Match pattern: "Song Name (yyyy-MM-dd)"
-            var match = Regex.Match(title, @"\((\d{4}-\d{2}-\d{2})\)\s*$");
+            // Match pattern: "Song (Filler: yyyy-MM-dd - Venue, City, State)"
+            var match = Regex.Match(title, @"\(Filler:\s*(\d{4}-\d{2}-\d{2})\s*-", RegexOptions.IgnoreCase);
             if (match.Success) return match.Groups[1].Value;
+
+            // Match pattern: "Song Name (yyyy-MM-dd)"
+            match = Regex.Match(title, @"\((\d{4}-\d{2}-\d{2})\)\s*$");
+            if (match.Success) return match.Groups[1].Value;
+
+            // Match pattern: "Song (yyyy-MM-dd - Location)" (date with location)
+            match = Regex.Match(title, @"\((\d{4}-\d{2}-\d{2})\s*-");
+            if (match.Success) return match.Groups[1].Value;
+
+            // Match pattern: "Song (M/D/YY Venue..." or "(MM/DD/YYYY Venue..." (bonus tracks with parentheses)
+            match = Regex.Match(title, @"\((\d{1,2}/\d{1,2}/\d{2,4})\s+");
+            if (match.Success)
+            {
+                // Convert M/D/YY or M/D/YYYY to yyyy-MM-dd
+                if (DateTime.TryParse(match.Groups[1].Value, out var date))
+                {
+                    return date.ToString("yyyy-MM-dd");
+                }
+            }
+
+            // Match pattern: "Song [M/D/YY, Venue" or "[MM/DD/YYYY, Venue" (bonus tracks with brackets)
+            // Also handles: "Song [Venue M/D/YY]" format
+            match = Regex.Match(title, @"\[.*?(\d{1,2}/\d{1,2}/\d{2,4}).*?\]");
+            if (match.Success)
+            {
+                // Convert M/D/YY or M/D/YYYY to yyyy-MM-dd
+                if (DateTime.TryParse(match.Groups[1].Value, out var date))
+                {
+                    return date.ToString("yyyy-MM-dd");
+                }
+            }
 
             // Match pattern: "Song (Live at Venue, City, State, M/D/YYYY)" or "M/DD/YYYY"
             match = Regex.Match(title, @"(\d{1,2}/\d{1,2}/\d{4})\)");
@@ -271,11 +319,14 @@ namespace DeadEditor.Services
             // Remove date suffix and segue marker - matches format: "Song (yyyy-MM-dd)"
             cleaned = Regex.Replace(cleaned, @"\s*→?\s*\(\d{4}-\d{2}-\d{2}\)\s*$", "");
 
-            // Also handle format: "Song (Live at Venue, City, State, M/D/YYYY)"
-            cleaned = Regex.Replace(cleaned, @"\s*\(Live at [^)]+\)\s*$", "", RegexOptions.IgnoreCase);
+            // Handle format: "Song (yyyy-MM-dd - Location)" (date with location)
+            cleaned = Regex.Replace(cleaned, @"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$", "");
 
-            // Handle format: "Song [Live at Venue, City, State, M/D/YYYY]" with square brackets
-            cleaned = Regex.Replace(cleaned, @"\s*\[Live at [^\]]+\]\s*$", "", RegexOptions.IgnoreCase);
+            // Also handle format: "Song (Live at Venue, City, State, M/D/YYYY)" or "(Live in ...)"
+            cleaned = Regex.Replace(cleaned, @"\s*\(Live (?:at|in) [^)]+\)\s*$", "", RegexOptions.IgnoreCase);
+
+            // Handle format: "Song [Live at Venue, City, State, M/D/YYYY]" or "[Live in ...]" with square brackets
+            cleaned = Regex.Replace(cleaned, @"\s*\[Live (?:at|in) [^\]]+\]\s*$", "", RegexOptions.IgnoreCase);
 
             // Handle segue markers like ">" or "->" or "[>]"
             cleaned = Regex.Replace(cleaned, @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$", "");
@@ -286,36 +337,174 @@ namespace DeadEditor.Services
             return cleaned.TrimEnd('→', ' ', '-', '–', '>', '[', ']');
         }
 
+        private void ParseFolderName(string folderName, AlbumInfo info)
+        {
+            if (string.IsNullOrEmpty(folderName)) return;
+
+            // GENERIC APPROACH: Extract dates, official release, and location info from any folder pattern
+            // Handles patterns like:
+            // - "Artist - Date - Venue - City, State - Release"
+            // - "Artist - Date1, Date2 - City, State - Venue - Release"
+            // - "Date - Venue - City, State - Release"
+            // - etc.
+
+            // Step 1: Extract and remove official release name first (most distinctive pattern)
+            // Handle variations like "Road Trips Vol. 3 No. 4" or "Road Trips, Vol. 3 No. 4" (with comma)
+            var releaseMatch = Regex.Match(
+                folderName,
+                @"((?:Dave's Picks|Dick's Picks|Road Trips|Download Series|Spring \d{4}|Here Comes Sunshine)\s*,?\s*Vol(?:ume|\.)?\s+\d+(?:\s+No\.\s+\d+)?)",
+                RegexOptions.IgnoreCase);
+
+            string remainingText = folderName;
+            if (releaseMatch.Success)
+            {
+                info.OfficialRelease = releaseMatch.Groups[1].Value.Trim();
+                // Remove the release name from the string to simplify further parsing
+                remainingText = folderName.Substring(0, releaseMatch.Index).Trim();
+                // Remove trailing " - " or similar
+                remainingText = Regex.Replace(remainingText, @"\s*-\s*$", "");
+            }
+
+            // Step 2: Extract date(s) - support single or multiple dates
+            // Patterns: "1973-11-30" or "1973-11-30, 1973-12-02" or "1973-11-30 - 1973-12-02"
+            var datePattern = @"(\d{4}-\d{2}-\d{2}(?:\s*[,\-]\s*\d{4}-\d{2}-\d{2})*)";
+            var dateMatch = Regex.Match(remainingText, datePattern);
+            if (dateMatch.Success)
+            {
+                var dateString = dateMatch.Groups[1].Value.Trim();
+                // If multiple dates, take the first one for album-level date
+                var dates = Regex.Matches(dateString, @"\d{4}-\d{2}-\d{2}");
+                if (dates.Count > 0)
+                {
+                    info.Date = dates[0].Value;
+                }
+                // Remove the date(s) from remaining text
+                remainingText = remainingText.Replace(dateMatch.Groups[1].Value, "").Trim();
+            }
+
+            // Step 3: Remove artist name from the beginning if present
+            remainingText = Regex.Replace(remainingText, @"^Grateful Dead\s*-?\s*", "", RegexOptions.IgnoreCase).Trim();
+            remainingText = Regex.Replace(remainingText, @"^New Riders of the Purple Sage\s*-?\s*", "", RegexOptions.IgnoreCase).Trim();
+            remainingText = Regex.Replace(remainingText, @"^[^-]+-\s*", "").Trim(); // Remove any other artist name
+
+            // Clean up any leading/trailing dashes
+            remainingText = remainingText.Trim('-', ' ');
+
+            // Step 4: Parse venue/city/state from remaining text
+            // Now remainingText should contain location info in some form
+            // Common patterns: "Venue - City, State", "City, State - Venue", "Boston Music Hall - Boston, MA"
+
+            if (!string.IsNullOrEmpty(remainingText))
+            {
+                // Pattern A: "Venue - City, State" (most common for official releases)
+                var patternA = Regex.Match(remainingText, @"^(.+?)\s*-\s*([^,]+),\s*(.+)$");
+                if (patternA.Success)
+                {
+                    info.Venue = patternA.Groups[1].Value.Trim();
+                    info.City = patternA.Groups[2].Value.Trim();
+                    info.State = patternA.Groups[3].Value.Trim();
+                }
+                // Pattern B: "City, State - Venue"
+                else
+                {
+                    var patternB = Regex.Match(remainingText, @"^([^,]+),\s*([^-]+?)\s*-\s*(.+)$");
+                    if (patternB.Success)
+                    {
+                        info.City = patternB.Groups[1].Value.Trim();
+                        info.State = patternB.Groups[2].Value.Trim();
+                        info.Venue = patternB.Groups[3].Value.Trim();
+                    }
+                    // Pattern C: Just "City, State" or just "Venue"
+                    else
+                    {
+                        var parts = remainingText.Split(new[] { " - ", ", " }, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 1)
+                        {
+                            info.Venue = parts[0].Trim();
+                        }
+                        else if (parts.Length == 2)
+                        {
+                            // Could be "City, State" or "Venue - City"
+                            info.City = parts[0].Trim();
+                            info.State = parts[1].Trim();
+                        }
+                        else if (parts.Length >= 3)
+                        {
+                            // "Venue, City, State" or "City, State, Extra"
+                            info.Venue = parts[0].Trim();
+                            info.City = parts[1].Trim();
+                            info.State = parts[2].Trim();
+                        }
+                    }
+                }
+            }
+        }
+
         private void ParseAlbumTitle(string album, AlbumInfo info)
         {
-            // Pattern 1: "yyyy-MM-dd - Venue - City, State" or with " : Release"
-            var match = Regex.Match(
+            // Pattern 1: Check for Box Set format first: ": Box Set Name" (NO space before colon)
+            // Box Set: "1972-09-15 - Boston Music Hall - Boston, MA: Enjoying the Ride"
+            // Use negative lookbehind (?<!\s) to ensure NO space before the colon
+            var boxSetMatch = Regex.Match(
                 album,
-                @"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([A-Z]{2})(?:\s*:\s*(.+))?$");
+                @"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:\s]+)(?<!\s):\s*(.+)$");
 
-            if (match.Success)
+            if (boxSetMatch.Success)
             {
-                info.Date = match.Groups[1].Value;
-                info.Venue = match.Groups[2].Value.Trim();
-                info.City = match.Groups[3].Value.Trim();
-                info.State = match.Groups[4].Value.Trim();
-                if (match.Groups[5].Success)
-                {
-                    info.OfficialRelease = match.Groups[5].Value.Trim();
-                }
+                // Box Set format (no space before colon)
+                info.Date = boxSetMatch.Groups[1].Value;
+                info.Venue = boxSetMatch.Groups[2].Value.Trim();
+                info.City = boxSetMatch.Groups[3].Value.Trim();
+                info.State = boxSetMatch.Groups[4].Value.Trim();
+                info.BoxSetName = boxSetMatch.Groups[5].Value.Trim();
+                info.Type = AlbumType.BoxSet;
                 return;
             }
 
-            // Pattern 2: "Venue, City, State (M/D/YY & M/D/YY) [Live]" or similar
-            match = Regex.Match(album, @"^([^,]+),\s*([^,]+),\s*([A-Z]{2})\s*\(([^)]+)\)");
-            if (match.Success)
+            // Pattern 2: Check for Official Release format: " : Release Name" (space before colon)
+            // Official Release: "1972-09-15 - Boston Music Hall - Boston, MA : Dave's Picks Vol. 1"
+            var officialMatch = Regex.Match(
+                album,
+                @"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:]+?)\s:\s*(.+)$");
+
+            if (officialMatch.Success)
             {
-                info.Venue = match.Groups[1].Value.Trim();
-                info.City = match.Groups[2].Value.Trim();
-                info.State = match.Groups[3].Value.Trim();
+                // Official Release format (space before colon)
+                info.Date = officialMatch.Groups[1].Value;
+                info.Venue = officialMatch.Groups[2].Value.Trim();
+                info.City = officialMatch.Groups[3].Value.Trim();
+                info.State = officialMatch.Groups[4].Value.Trim();
+                info.OfficialRelease = officialMatch.Groups[5].Value.Trim();
+                info.Type = AlbumType.Live;
+                return;
+            }
+
+            // Pattern 3: Basic live recording format (no colon)
+            // Live: "1972-09-15 - Boston Music Hall - Boston, MA"
+            var liveMatch = Regex.Match(
+                album,
+                @"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*(.+)$");
+
+            if (liveMatch.Success)
+            {
+                info.Date = liveMatch.Groups[1].Value;
+                info.Venue = liveMatch.Groups[2].Value.Trim();
+                info.City = liveMatch.Groups[3].Value.Trim();
+                info.State = liveMatch.Groups[4].Value.Trim();
+                info.Type = AlbumType.Live;
+                return;
+            }
+
+            // Pattern 4: "Venue, City, State (M/D/YY & M/D/YY) [Live]" or similar
+            var altMatch = Regex.Match(album, @"^([^,]+),\s*([^,]+),\s*([A-Z]{2})\s*\(([^)]+)\)");
+            if (altMatch.Success)
+            {
+                info.Venue = altMatch.Groups[1].Value.Trim();
+                info.City = altMatch.Groups[2].Value.Trim();
+                info.State = altMatch.Groups[3].Value.Trim();
 
                 // Extract first date from the date range
-                var dateStr = match.Groups[4].Value;
+                var dateStr = altMatch.Groups[4].Value;
                 var dateMatch = Regex.Match(dateStr, @"(\d{1,2}/\d{1,2}/\d{2,4})");
                 if (dateMatch.Success)
                 {

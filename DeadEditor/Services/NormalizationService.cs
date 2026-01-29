@@ -81,8 +81,138 @@ namespace DeadEditor.Services
                 .Replace("//", "")  // Remove tape change/splice markers
                 .Trim();
 
-            // Direct lookup
+            // Normalize apostrophes (convert curly/typographic apostrophes to regular ones)
+            cleaned = cleaned
+                .Replace("'", "'")  // Curly apostrophe to straight
+                .Replace("'", "'")  // Another variant
+                .Replace("`", "'"); // Backtick to apostrophe
+
+            // Strip common metadata patterns before matching
+            // This ensures we clean the title thoroughly before any lookups
+
+            // Remove (Filler: yyyy-MM-dd - Venue, City, State) pattern
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(Filler:\s*\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove (M/D/YY Venue, City, State) or (MM/DD/YYYY Venue, City, State) pattern
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(\d{1,2}/\d{1,2}/\d{2,4}\s+[^)]+\)\s*$",
+                "").Trim();
+
+            // Remove (yyyy-MM-dd - Location) pattern
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
+                "").Trim();
+
+            // Remove (yyyy-MM-dd) pattern
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(\d{4}-\d{2}-\d{2}\)\s*$",
+                "").Trim();
+
+            // Remove (YYYY Remaster), (YYYY Remastered), (Remaster), (Remastered) patterns
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\((?:\d{4}\s+)?Remastere?d?\)\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove [YYYY Remaster], [Remaster] patterns
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove [M/D/YY, Venue pattern
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$",
+                "").Trim();
+
+            // Remove [Live in...] or [Live at...] patterns (square brackets)
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\[Live (?:at|in) [^\]]+\]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove (Live at...) or (Live in...) patterns (parentheses)
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(Live (?:at|in) [^)]+\)\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove [Venue, Location M/D/YY] or [Kiel Opera House, St. Louis, MO 10/24/70] patterns
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$",
+                "").Trim();
+
+            // Remove segue markers at the end: >, ->, →, [>]
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
+                "").Trim();
+
+            // Direct lookup after all cleaning
             if (_aliasLookup.TryGetValue(cleaned, out var official))
+            {
+                return official;
+            }
+
+            // Try stripping date/venue info for matching (but don't change the actual title)
+            // Pattern: "Song [M/D/YY, Venue" or "[MM/DD/YYYY, Venue" (for bonus tracks from different dates)
+            var withoutDateVenue = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$",
+                "").Trim();
+
+            if (withoutDateVenue != cleaned && _aliasLookup.TryGetValue(withoutDateVenue, out official))
+            {
+                return official;
+            }
+
+            // Try stripping [Live in...] or [Live at...] patterns for matching
+            var withoutLiveInfo = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\[Live (?:at|in) [^\]]+\]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            if (withoutLiveInfo != cleaned && _aliasLookup.TryGetValue(withoutLiveInfo, out official))
+            {
+                return official;
+            }
+
+            // Try stripping (yyyy-MM-dd - Location) pattern AND segue markers for matching
+            var withoutDateLocation = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
+                "").Trim();
+            // Also remove segue marker after stripping date
+            withoutDateLocation = System.Text.RegularExpressions.Regex.Replace(
+                withoutDateLocation,
+                @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
+                "").Trim();
+
+            if (withoutDateLocation != cleaned && _aliasLookup.TryGetValue(withoutDateLocation, out official))
+            {
+                return official;
+            }
+
+            // Try stripping (yyyy-MM-dd) pattern AND segue markers for matching
+            var withoutDateOnly = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*\(\d{4}-\d{2}-\d{2}\)\s*$",
+                "").Trim();
+            // Also remove segue marker after stripping date
+            withoutDateOnly = System.Text.RegularExpressions.Regex.Replace(
+                withoutDateOnly,
+                @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
+                "").Trim();
+
+            if (withoutDateOnly != cleaned && _aliasLookup.TryGetValue(withoutDateOnly, out official))
             {
                 return official;
             }

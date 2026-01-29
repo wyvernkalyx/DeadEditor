@@ -21,13 +21,15 @@ namespace DeadEditor
 
             // Load current settings
             LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
+            OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
+            PrimaryArtistTextBox.Text = _librarySettings.PrimaryArtistName;
         }
 
         private void BrowseLibraryButton_Click(object sender, RoutedEventArgs e)
         {
             var folderDialog = new System.Windows.Forms.FolderBrowserDialog
             {
-                Description = "Select Library Root Folder",
+                Description = "Select Library Root Folder (Audience Recordings)",
                 SelectedPath = _librarySettings.LibraryRootPath
             };
 
@@ -38,6 +40,25 @@ namespace DeadEditor
                 LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
 
                 // Update library window
+                _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);
+            }
+        }
+
+        private void BrowseOfficialReleasesButton_Click(object sender, RoutedEventArgs e)
+        {
+            var folderDialog = new System.Windows.Forms.FolderBrowserDialog
+            {
+                Description = "Select Official Releases Folder (Dave's Picks, Road Trips, etc.)",
+                SelectedPath = _librarySettings.OfficialReleasesPath
+            };
+
+            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _librarySettings.OfficialReleasesPath = folderDialog.SelectedPath;
+                _librarySettings.Save();
+                OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
+
+                // Update library window to reload with new path
                 _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);
             }
         }
@@ -93,13 +114,43 @@ namespace DeadEditor
                     }
                 }
 
-                // 2. Clear the current view in library window
+                // 2. Delete official releases contents (move to recycle bin)
+                if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) &&
+                    Directory.Exists(_librarySettings.OfficialReleasesPath))
+                {
+                    var directories = Directory.GetDirectories(_librarySettings.OfficialReleasesPath);
+                    var files = Directory.GetFiles(_librarySettings.OfficialReleasesPath);
+
+                    // Move directories to recycle bin
+                    foreach (var dir in directories)
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(
+                            dir,
+                            Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                            Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                        deletedItems++;
+                    }
+
+                    // Move files to recycle bin
+                    foreach (var file in files)
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                            file,
+                            Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                            Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                        deletedItems++;
+                    }
+                }
+
+                // 3. Clear the current view in library window
                 _libraryWindow.ClearCurrentView();
 
-                // 3. Reset library settings
+                // 4. Reset library settings
                 _librarySettings.LibraryRootPath = "";
+                _librarySettings.OfficialReleasesPath = "";
                 _librarySettings.Save();
                 LibraryRootTextBox.Text = "";
+                OfficialReleasesTextBox.Text = "";
 
                 // Update library window
                 _libraryWindow.UpdateLibraryRootDisplay("");
@@ -112,6 +163,10 @@ namespace DeadEditor
                     "Reset Complete",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
+
+                // Close this settings window and bring focus back to library window
+                this.Close();
+                _libraryWindow.Activate();
             }
             catch (Exception ex)
             {
@@ -139,6 +194,10 @@ namespace DeadEditor
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            // Save primary artist setting
+            _librarySettings.PrimaryArtistName = PrimaryArtistTextBox.Text;
+            _librarySettings.Save();
+
             this.Close();
         }
     }

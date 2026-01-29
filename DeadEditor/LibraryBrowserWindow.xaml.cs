@@ -52,8 +52,39 @@ public partial class LibraryBrowserWindow : Window
         };
         _updateTimer.Tick += UpdateTimer_Tick;
 
+        // Restore window position
+        RestoreWindowPosition();
+
+        // Save window position when closing
+        Closing += LibraryBrowserWindow_Closing;
+
         // Load shows
         LoadShows();
+    }
+
+    private void RestoreWindowPosition()
+    {
+        if (_librarySettings.LibraryWindowLeft.HasValue && _librarySettings.LibraryWindowTop.HasValue)
+        {
+            Left = _librarySettings.LibraryWindowLeft.Value;
+            Top = _librarySettings.LibraryWindowTop.Value;
+        }
+
+        if (_librarySettings.LibraryWindowWidth.HasValue && _librarySettings.LibraryWindowHeight.HasValue)
+        {
+            Width = _librarySettings.LibraryWindowWidth.Value;
+            Height = _librarySettings.LibraryWindowHeight.Value;
+        }
+    }
+
+    private void LibraryBrowserWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        // Save window position
+        _librarySettings.LibraryWindowLeft = Left;
+        _librarySettings.LibraryWindowTop = Top;
+        _librarySettings.LibraryWindowWidth = Width;
+        _librarySettings.LibraryWindowHeight = Height;
+        _librarySettings.Save();
     }
 
     // Media key support - hook into Windows message pump
@@ -114,79 +145,324 @@ public partial class LibraryBrowserWindow : Window
         _shows.Clear();
         _allShows.Clear();
 
-        if (string.IsNullOrEmpty(_librarySettings.LibraryRootPath) ||
-            !Directory.Exists(_librarySettings.LibraryRootPath))
+        // Load audience recordings from LibraryRootPath
+        if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) &&
+            Directory.Exists(_librarySettings.LibraryRootPath))
+        {
+            LoadAudienceRecordings();
+        }
+
+        // Load official releases from OfficialReleasesPath
+        if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) &&
+            Directory.Exists(_librarySettings.OfficialReleasesPath))
+        {
+            LoadOfficialReleases();
+        }
+
+        // Check if we loaded anything
+        if (_allShows.Count == 0)
         {
             ShowsDataGrid.ItemsSource = _shows;
-            StatusText.Text = "No library path set. Go to File > Settings to configure.";
+            StatusText.Text = "No library paths set or no shows found. Go to File > Settings to configure.";
             return;
         }
 
-        // Scan year folders
-        var yearFolders = Directory.GetDirectories(_librarySettings.LibraryRootPath);
+        // Sort by type first (Live, Official Release, Studio), then by date/name
+        _allShows = _allShows
+            .OrderBy(s => s.Type)
+            .ThenByDescending(s => s.Type == AlbumType.Live ? s.Date : s.AlbumName)
+            .ToList();
 
-        foreach (var yearFolder in yearFolders)
+        // Apply any active search filters
+        ApplySearchFilter();
+    }
+
+    private void LoadAudienceRecordings()
+    {
+
+        // Scan year folders and special folders (like "Studio Albums")
+        var topLevelFolders = Directory.GetDirectories(_librarySettings.LibraryRootPath);
+
+        foreach (var topFolder in topLevelFolders)
         {
-            var showFolders = Directory.GetDirectories(yearFolder);
+            var topFolderName = Path.GetFileName(topFolder);
 
-            foreach (var showFolder in showFolders)
+            // Check if this is the "Studio Albums" folder
+            if (topFolderName.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase))
             {
-                var folderName = Path.GetFileName(showFolder);
+                // Load studio albums
+                var albumFolders = Directory.GetDirectories(topFolder);
 
-                // Expected formats:
-                // "yyyy-MM-dd - Venue - City, State"
-                // "yyyy-MM-dd - Venue, City, State"
-                var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
-
-                string date = "";
-                string venue = "";
-                string city = "";
-                string state = "";
-
-                if (parts.Length >= 2)
+                foreach (var albumFolder in albumFolders)
                 {
-                    date = parts[0];
+                    var folderName = Path.GetFileName(albumFolder);
+                    var audioFiles = Directory.GetFiles(albumFolder, "*.flac")
+                                        .Concat(Directory.GetFiles(albumFolder, "*.mp3"))
+                                        .ToArray();
 
-                    // Try format: "Date - Venue - City, State"
-                    if (parts.Length == 3)
+                    // Expected format: "Album Name (Year)" or just "Album Name"
+                    string albumName = folderName;
+                    int? releaseYear = null;
+                    string edition = "";
+
+                    // Try to parse year from parentheses
+                    var yearMatch = System.Text.RegularExpressions.Regex.Match(
+                        folderName, @"^(.+?)\s*\((\d{4})\)\s*$");
+
+                    if (yearMatch.Success)
                     {
-                        venue = parts[1];
-                        var locationParts = parts[2].Split(new[] { ", " }, StringSplitOptions.None);
-                        city = locationParts.Length > 0 ? locationParts[0] : "";
-                        state = locationParts.Length > 1 ? locationParts[1] : "";
-                    }
-                    // Try format: "Date - Venue, City, State"
-                    else if (parts.Length == 2)
-                    {
-                        var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
-                        venue = venueParts.Length > 0 ? venueParts[0] : "";
-                        city = venueParts.Length > 1 ? venueParts[1] : "";
-                        state = venueParts.Length > 2 ? venueParts[2] : "";
+                        albumName = yearMatch.Groups[1].Value.Trim();
+                        if (int.TryParse(yearMatch.Groups[2].Value, out var year))
+                        {
+                            releaseYear = year;
+                        }
                     }
 
-                    var flacFiles = Directory.GetFiles(showFolder, "*.flac");
+                    // Try to read Edition from first audio file's album tag
+                    if (audioFiles.Length > 0)
+                    {
+                        try
+                        {
+                            using (var tagFile = TagLib.File.Create(audioFiles[0]))
+                            {
+                                var album = tagFile.Tag.Album ?? "";
+                                // Check for edition in brackets like "Album Name (Year) [Edition]"
+                                var editionMatch = System.Text.RegularExpressions.Regex.Match(
+                                    album, @"\[([^\]]+)\]\s*$");
+                                if (editionMatch.Success)
+                                {
+                                    edition = editionMatch.Groups[1].Value.Trim();
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore errors reading tags
+                        }
+                    }
 
                     _allShows.Add(new LibraryShow
                     {
-                        Date = date,
-                        Venue = venue,
-                        City = city,
-                        State = state,
-                        Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state)
-                            ? $"{city}, {state}"
-                            : city + state,
-                        TrackCount = flacFiles.Length,
-                        FolderPath = showFolder
+                        Type = AlbumType.Studio,
+                        AlbumName = albumName,
+                        ReleaseYear = releaseYear,
+                        Edition = edition,
+                        TrackCount = audioFiles.Length,
+                        FolderPath = albumFolder
                     });
+                }
+            }
+            else
+            {
+                // Load live recordings from year folders
+                var showFolders = Directory.GetDirectories(topFolder);
+
+                foreach (var showFolder in showFolders)
+                {
+                    var folderName = Path.GetFileName(showFolder);
+
+                    // Expected formats:
+                    // "yyyy-MM-dd - Venue - City, State"
+                    // "yyyy-MM-dd - Venue, City, State"
+                    var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
+
+                    string date = "";
+                    string venue = "";
+                    string city = "";
+                    string state = "";
+
+                    if (parts.Length >= 2)
+                    {
+                        date = parts[0];
+
+                        // Try format: "Date - Venue - City, State"
+                        if (parts.Length == 3)
+                        {
+                            venue = parts[1];
+                            var locationParts = parts[2].Split(new[] { ", " }, StringSplitOptions.None);
+                            city = locationParts.Length > 0 ? locationParts[0] : "";
+                            state = locationParts.Length > 1 ? locationParts[1] : "";
+                        }
+                        // Try format: "Date - Venue, City, State"
+                        else if (parts.Length == 2)
+                        {
+                            var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
+                            venue = venueParts.Length > 0 ? venueParts[0] : "";
+                            city = venueParts.Length > 1 ? venueParts[1] : "";
+                            state = venueParts.Length > 2 ? venueParts[2] : "";
+                        }
+
+                        var audioFiles = Directory.GetFiles(showFolder, "*.flac")
+                                            .Concat(Directory.GetFiles(showFolder, "*.mp3"))
+                                            .ToArray();
+
+                        // Try to read OfficialRelease or BoxSet name from first audio file's album tag
+                        string officialRelease = "";
+                        string boxSetName = "";
+                        AlbumType albumType = AlbumType.Live;
+
+                        if (audioFiles.Length > 0)
+                        {
+                            try
+                            {
+                                using (var tagFile = TagLib.File.Create(audioFiles[0]))
+                                {
+                                    var album = tagFile.Tag.Album ?? "";
+
+                                    // Check for Box Set format first: "Date - Venue - City, State: Box Set Name" (no space before colon)
+                                    var boxSetMatch = System.Text.RegularExpressions.Regex.Match(
+                                        album, @":\s*([^:]+)$");
+
+                                    // Check if there's a space before the colon (Official Release) or not (Box Set)
+                                    var spaceBeforeColonMatch = System.Text.RegularExpressions.Regex.Match(
+                                        album, @"\s:\s*(.+)$");
+
+                                    if (spaceBeforeColonMatch.Success)
+                                    {
+                                        // Official Release format: "... : Release Name" (space before colon)
+                                        officialRelease = spaceBeforeColonMatch.Groups[1].Value.Trim();
+                                        albumType = AlbumType.Live;
+                                    }
+                                    else if (boxSetMatch.Success)
+                                    {
+                                        // Box Set format: "...: Box Set Name" (no space before colon)
+                                        boxSetName = boxSetMatch.Groups[1].Value.Trim();
+                                        albumType = AlbumType.BoxSet;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // Ignore errors reading tags
+                            }
+                        }
+
+                        _allShows.Add(new LibraryShow
+                        {
+                            Type = albumType,
+                            Date = date,
+                            Venue = venue,
+                            City = city,
+                            State = state,
+                            Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state)
+                                ? $"{city}, {state}"
+                                : city + state,
+                            OfficialRelease = albumType == AlbumType.Live ? officialRelease : boxSetName,
+                            TrackCount = audioFiles.Length,
+                            FolderPath = showFolder
+                        });
+                    }
                 }
             }
         }
 
-        // Sort by date descending
-        _allShows = _allShows.OrderByDescending(s => s.Date).ToList();
+    }
 
-        // Apply any active search filters
-        ApplySearchFilter();
+    private void LoadOfficialReleases()
+    {
+        // Scan for series folders (Dave's Picks, Road Trips, Dick's Picks, etc.)
+        var seriesFolders = Directory.GetDirectories(_librarySettings.OfficialReleasesPath);
+
+        foreach (var seriesFolder in seriesFolders)
+        {
+            var releaseFolders = Directory.GetDirectories(seriesFolder);
+
+            foreach (var releaseFolder in releaseFolders)
+            {
+                var folderName = Path.GetFileName(releaseFolder);
+                var audioFiles = Directory.GetFiles(releaseFolder, "*.flac")
+                                    .Concat(Directory.GetFiles(releaseFolder, "*.mp3"))
+                                    .ToArray();
+
+                if (audioFiles.Length == 0) continue;
+
+                // Extract dates and venues from all tracks
+                var dates = new HashSet<string>();
+                var venues = new HashSet<string>();
+                string officialRelease = "";
+
+                foreach (var audioFile in audioFiles)
+                {
+                    try
+                    {
+                        using (var tagFile = TagLib.File.Create(audioFile))
+                        {
+                            var title = tagFile.Tag.Title ?? "";
+                            var album = tagFile.Tag.Album ?? "";
+
+                            // Extract official release from album tag if not already set
+                            if (string.IsNullOrEmpty(officialRelease))
+                            {
+                                // Look for patterns like "Dave's Picks Volume 38", "Road Trips, Vol. 3 No. 4"
+                                var releaseMatch = System.Text.RegularExpressions.Regex.Match(
+                                    album,
+                                    @"((?:Dave's Picks|Dick's Picks|Road Trips|Download Series)\s*,?\s*Vol(?:ume|\.)?\s+\d+(?:\s+No\.\s+\d+)?)",
+                                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                                if (releaseMatch.Success)
+                                {
+                                    officialRelease = releaseMatch.Groups[1].Value.Trim();
+                                }
+                            }
+
+                            // Extract date from title (various formats)
+                            var dateMatch = System.Text.RegularExpressions.Regex.Match(
+                                title, @"(\d{4}-\d{2}-\d{2})");
+                            if (dateMatch.Success)
+                            {
+                                dates.Add(dateMatch.Groups[1].Value);
+                            }
+
+                            // Extract venue from title patterns like:
+                            // "Song (Live at Venue, City, State, Date)"
+                            // "Song (Filler: Date - Venue, City, State)"
+                            var venueMatch = System.Text.RegularExpressions.Regex.Match(
+                                title, @"Live (?:at|in) ([^,]+),");
+                            if (venueMatch.Success)
+                            {
+                                venues.Add(venueMatch.Groups[1].Value.Trim());
+                            }
+                            else
+                            {
+                                // Try "Filler: Date - Venue, ..." pattern
+                                venueMatch = System.Text.RegularExpressions.Regex.Match(
+                                    title, @"Filler:\s*\d{4}-\d{2}-\d{2}\s*-\s*([^,]+),");
+                                if (venueMatch.Success)
+                                {
+                                    venues.Add(venueMatch.Groups[1].Value.Trim());
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore errors reading individual files
+                    }
+                }
+
+                // Use folder name as fallback for official release
+                if (string.IsNullOrEmpty(officialRelease))
+                {
+                    officialRelease = folderName;
+                }
+
+                // Create LibraryShow entry
+                _allShows.Add(new LibraryShow
+                {
+                    Type = AlbumType.OfficialRelease,
+                    OfficialRelease = officialRelease,
+                    Date = dates.Count > 0 ? dates.OrderBy(d => d).First() : "",  // First date
+                    ContainsDates = dates.OrderBy(d => d).ToList(),
+                    ContainsVenues = venues.OrderBy(v => v).ToList(),
+                    TrackCount = audioFiles.Length,
+                    FolderPath = releaseFolder,
+                    // For display purposes, use first date/venue if available
+                    Venue = venues.FirstOrDefault() ?? "",
+                    City = "",
+                    State = "",
+                    Location = venues.Count > 0 ? string.Join(", ", venues) : ""
+                });
+            }
+        }
     }
 
     private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -204,10 +480,33 @@ public partial class LibraryBrowserWindow : Window
             // Save reference to current show
             _currentShow = show;
 
-            // Load concert info
-            VenueText.Text = show.Venue;
-            LocationText.Text = show.Location;
-            DateText.Text = show.Date;
+            // Load info based on album type
+            if (show.Type == AlbumType.Studio)
+            {
+                // Studio album - show album name and year
+                VenueText.Text = show.AlbumName;
+                LocationText.Text = show.ReleaseYear.HasValue ? $"Released {show.ReleaseYear.Value}" : "Studio Album";
+                DateText.Text = "";
+                BoxSetText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // Live recording - show venue, location, and date
+                VenueText.Text = show.Venue;
+                LocationText.Text = show.Location;
+                DateText.Text = show.Date;
+
+                // Show box set name if this is a box set
+                if (show.Type == AlbumType.BoxSet && !string.IsNullOrEmpty(show.OfficialRelease))
+                {
+                    BoxSetText.Text = $"Box Set: {show.OfficialRelease}";
+                    BoxSetText.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    BoxSetText.Visibility = Visibility.Collapsed;
+                }
+            }
 
             // Load artwork - try file first, then embedded in FLAC
             var artworkPath = Path.Combine(show.FolderPath, "cover.jpg");
@@ -228,13 +527,15 @@ public partial class LibraryBrowserWindow : Window
             }
             else
             {
-                // Try to extract embedded artwork from first FLAC file
-                var flacFiles = Directory.GetFiles(show.FolderPath, "*.flac");
-                if (flacFiles.Length > 0)
+                // Try to extract embedded artwork from first audio file
+                var audioFiles = Directory.GetFiles(show.FolderPath, "*.flac")
+                                    .Concat(Directory.GetFiles(show.FolderPath, "*.mp3"))
+                                    .ToArray();
+                if (audioFiles.Length > 0)
                 {
                     try
                     {
-                        var tagFile = TagLib.File.Create(flacFiles[0]);
+                        var tagFile = TagLib.File.Create(audioFiles[0]);
                         if (tagFile.Tag.Pictures != null && tagFile.Tag.Pictures.Length > 0)
                         {
                             var picture = tagFile.Tag.Pictures[0];
@@ -273,7 +574,15 @@ public partial class LibraryBrowserWindow : Window
             // Update preview metadata for each track
             foreach (var track in _currentTracks)
             {
-                track.PreviewMetadata = track.GetFinalMetadataTitle(show.Date);
+                // Studio albums don't append dates to track titles
+                if (show.Type == AlbumType.Studio)
+                {
+                    track.PreviewMetadata = track.GetFinalMetadataTitle(null);
+                }
+                else
+                {
+                    track.PreviewMetadata = track.GetFinalMetadataTitle(show.Date);
+                }
             }
 
             TracksDataGrid.ItemsSource = _currentTracks;
@@ -554,6 +863,9 @@ public partial class LibraryBrowserWindow : Window
         importWindow.LoadFolder(_currentShow.FolderPath);
         importWindow.ShowDialog();
 
+        // Reload the library list to reflect any metadata changes (e.g., box set names)
+        LoadShows();
+
         // Reload the concert view after editing to reflect any changes
         OpenConcertView(_currentShow);
     }
@@ -605,7 +917,7 @@ public partial class LibraryBrowserWindow : Window
 
     private void AdvancedSearchButton_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new AdvancedSearchDialog(_normalizationService);
+        var dialog = new AdvancedSearchDialog(_normalizationService, _metadataService, _librarySettings, this);
         dialog.Owner = this;
 
         if (dialog.ShowDialog() == true)
@@ -689,18 +1001,47 @@ public partial class LibraryBrowserWindow : Window
         }
     }
 
+    private void TypeFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // Only apply filter if we're fully initialized
+        if (_allShows == null) return;
+
+        // Apply filter when selection changes
+        ApplySearchFilter();
+    }
+
     private void ApplySearchFilter()
     {
-        if (_allShows.Count == 0)
+        if (_allShows == null || _allShows.Count == 0)
         {
             _shows = new List<LibraryShow>();
-            ShowsDataGrid.ItemsSource = _shows;
-            StatusText.Text = "No concerts in library";
+            if (ShowsDataGrid != null)
+            {
+                ShowsDataGrid.ItemsSource = _shows;
+            }
+            if (StatusText != null)
+            {
+                StatusText.Text = "No concerts in library";
+            }
             return;
         }
 
         // Start with all shows
         var filtered = _allShows.AsEnumerable();
+
+        // Apply type filter from dropdown
+        if (TypeFilterComboBox != null && TypeFilterComboBox.SelectedItem is ComboBoxItem selectedItem)
+        {
+            var filterTag = selectedItem.Tag?.ToString() ?? "All";
+            if (filterTag != "All")
+            {
+                filtered = filtered.Where(show =>
+                    (filterTag == "Live" && show.Type == AlbumType.Live) ||
+                    (filterTag == "OfficialRelease" && show.Type == AlbumType.OfficialRelease) ||
+                    (filterTag == "Studio" && show.Type == AlbumType.Studio)
+                );
+            }
+        }
 
         // Apply quick search filter
         if (!string.IsNullOrEmpty(_quickSearchText))
@@ -711,7 +1052,14 @@ public partial class LibraryBrowserWindow : Window
                 show.Venue.ToLowerInvariant().Contains(searchLower) ||
                 show.City.ToLowerInvariant().Contains(searchLower) ||
                 show.State.ToLowerInvariant().Contains(searchLower) ||
-                show.Location.ToLowerInvariant().Contains(searchLower)
+                show.Location.ToLowerInvariant().Contains(searchLower) ||
+                show.AlbumName.ToLowerInvariant().Contains(searchLower) ||
+                show.Edition.ToLowerInvariant().Contains(searchLower) ||
+                show.OfficialRelease.ToLowerInvariant().Contains(searchLower) ||
+                (show.ReleaseYear.HasValue && show.ReleaseYear.Value.ToString().Contains(searchLower)) ||
+                // Search within multi-date/multi-venue arrays for official releases
+                show.ContainsDates.Any(d => d.ToLowerInvariant().Contains(searchLower)) ||
+                show.ContainsVenues.Any(v => v.ToLowerInvariant().Contains(searchLower))
             );
         }
 
@@ -911,15 +1259,84 @@ public partial class LibraryBrowserWindow : Window
 
         return false;
     }
+
+    // Method to navigate to an album by its folder path (used by track search)
+    public void NavigateToAlbumByPath(string albumPath)
+    {
+        // Find the matching album in our current shows list
+        var matchingShow = _allShows.FirstOrDefault(show =>
+            show.FolderPath.Equals(albumPath, StringComparison.OrdinalIgnoreCase));
+
+        if (matchingShow != null)
+        {
+            // Open the album view
+            OpenConcertView(matchingShow);
+        }
+        else
+        {
+            // Album not in current list, need to reload library to find it
+            LoadShows();
+            matchingShow = _allShows.FirstOrDefault(show =>
+                show.FolderPath.Equals(albumPath, StringComparison.OrdinalIgnoreCase));
+
+            if (matchingShow != null)
+            {
+                OpenConcertView(matchingShow);
+            }
+        }
+    }
 }
 
 public class LibraryShow
 {
+    // Album type (defaults to Live)
+    public AlbumType Type { get; set; } = AlbumType.Live;
+
+    // Live recording properties
     public string Date { get; set; } = "";
     public string Venue { get; set; } = "";
     public string City { get; set; } = "";
     public string State { get; set; } = "";
     public string Location { get; set; } = "";
+    public string OfficialRelease { get; set; } = "";
+
+    // Multi-date/multi-venue support for official releases
+    public List<string> ContainsDates { get; set; } = new List<string>();      // All dates in this release
+    public List<string> ContainsVenues { get; set; } = new List<string>();     // All venues in this release
+
+    // Studio album properties
+    public string AlbumName { get; set; } = "";
+    public int? ReleaseYear { get; set; }
+    public string Edition { get; set; } = "";
+
+    // Common properties
     public int TrackCount { get; set; }
     public string FolderPath { get; set; } = "";
+
+    // Smart display properties that adapt based on type
+    public string TypeIcon => Type == AlbumType.Studio ? "💿" :
+                              Type == AlbumType.OfficialRelease ? "📀" : "🎸";
+
+    public string PrimaryInfo =>
+        Type == AlbumType.Studio ? AlbumName :
+        Type == AlbumType.OfficialRelease ? OfficialRelease :
+        Date;
+
+    public string SecondaryInfo =>
+        Type == AlbumType.Studio ? (ReleaseYear.HasValue ? ReleaseYear.Value.ToString() : "") :
+        Type == AlbumType.OfficialRelease ? (ContainsDates.Count > 1 ? string.Join(", ", ContainsDates) : Date) :
+        Venue;
+
+    public string TertiaryInfo =>
+        Type == AlbumType.Studio ? Edition :
+        Type == AlbumType.OfficialRelease ? (ContainsVenues.Count > 1 ? string.Join(", ", ContainsVenues) : Venue) :
+        Location;
+
+    // For backwards compatibility and display
+    public string DisplayTitle =>
+        Type == AlbumType.Studio
+            ? (ReleaseYear.HasValue ? $"{AlbumName} ({ReleaseYear.Value})" : AlbumName)
+            : Date;
+
+    public bool IsStudioAlbum => Type == AlbumType.Studio;
 }

@@ -1,8 +1,13 @@
 using DeadEditor.Services;
+using DeadEditor.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using MessageBox = System.Windows.MessageBox;
 using CheckBox = System.Windows.Controls.CheckBox;
 using Button = System.Windows.Controls.Button;
@@ -12,6 +17,9 @@ namespace DeadEditor
     public partial class AdvancedSearchDialog : Window
     {
         private readonly NormalizationService _normalizationService;
+        private readonly MetadataService _metadataService;
+        private readonly LibrarySettings _librarySettings;
+        private readonly LibraryBrowserWindow? _libraryBrowserWindow;
         private List<SongCheckItem> _songCheckItems = new();
         private List<SequenceItem> _sequenceItems = new();
         private List<CheckBox> _allSongCheckBoxes = new();
@@ -23,10 +31,16 @@ namespace DeadEditor
         public List<string> ExcludedSongs { get; private set; } = new();
         public List<string> SongSequence { get; private set; } = new();
 
-        public AdvancedSearchDialog(NormalizationService normalizationService)
+        public AdvancedSearchDialog(NormalizationService normalizationService,
+                                     MetadataService metadataService,
+                                     LibrarySettings librarySettings,
+                                     LibraryBrowserWindow? libraryBrowserWindow = null)
         {
             InitializeComponent();
             _normalizationService = normalizationService;
+            _metadataService = metadataService;
+            _librarySettings = librarySettings;
+            _libraryBrowserWindow = libraryBrowserWindow;
             LoadSongs();
         }
 
@@ -290,6 +304,149 @@ namespace DeadEditor
             DialogResult = false;
             Close();
         }
+
+        // Track Search Tab Methods
+        private void TrackSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var searchDate = TrackDateTextBox.Text?.Trim();
+            var searchVenue = TrackVenueTextBox.Text?.Trim();
+
+            if (string.IsNullOrEmpty(searchDate) && string.IsNullOrEmpty(searchVenue))
+            {
+                MessageBox.Show("Please enter a date or venue to search.", "No Search Criteria",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var results = SearchTracksInLibrary(searchDate, searchVenue);
+
+            if (results.Count > 0)
+            {
+                TrackResultsDataGrid.ItemsSource = results;
+                TrackResultsDataGrid.Visibility = Visibility.Visible;
+                TrackResultsEmptyText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TrackResultsDataGrid.ItemsSource = null;
+                TrackResultsDataGrid.Visibility = Visibility.Collapsed;
+                TrackResultsEmptyText.Text = "No tracks found matching your search criteria.";
+                TrackResultsEmptyText.Visibility = Visibility.Visible;
+            }
+        }
+
+        private List<TrackSearchResult> SearchTracksInLibrary(string? searchDate, string? searchVenue)
+        {
+            var results = new List<TrackSearchResult>();
+
+            // Search audience recordings
+            if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) && Directory.Exists(_librarySettings.LibraryRootPath))
+            {
+                SearchInFolder(_librarySettings.LibraryRootPath, AlbumType.Live, searchDate, searchVenue, results);
+            }
+
+            // Search official releases
+            if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) && Directory.Exists(_librarySettings.OfficialReleasesPath))
+            {
+                SearchInFolder(_librarySettings.OfficialReleasesPath, AlbumType.OfficialRelease, searchDate, searchVenue, results);
+            }
+
+            // Search studio albums
+            var studioAlbumsPath = Path.Combine(_librarySettings.LibraryRootPath, "Studio Albums");
+            if (Directory.Exists(studioAlbumsPath))
+            {
+                SearchInFolder(studioAlbumsPath, AlbumType.Studio, searchDate, searchVenue, results);
+            }
+
+            return results;
+        }
+
+        private void SearchInFolder(string rootPath, AlbumType albumType, string? searchDate, string? searchVenue, List<TrackSearchResult> results)
+        {
+            try
+            {
+                var albumFolders = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
+
+                foreach (var albumFolder in albumFolders)
+                {
+                    var audioFiles = Directory.GetFiles(albumFolder, "*.flac")
+                        .Concat(Directory.GetFiles(albumFolder, "*.mp3"))
+                        .ToList();
+
+                    if (audioFiles.Count == 0) continue;
+
+                    // Read tracks from this album
+                    var tracks = _metadataService.ReadFolder(albumFolder);
+                    var folderName = Path.GetFileName(albumFolder);
+
+                    foreach (var track in tracks)
+                    {
+                        bool matches = false;
+
+                        // Check if track matches search criteria
+                        if (!string.IsNullOrEmpty(searchDate))
+                        {
+                            // For live albums, check album date
+                            if (albumType == AlbumType.Live && folderName.Contains(searchDate))
+                            {
+                                matches = true;
+                            }
+                            // For all albums, check embedded dates in track titles
+                            else if (TrackContainsDate(track.Title, searchDate))
+                            {
+                                matches = true;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(searchVenue) && !matches)
+                        {
+                            // Check if venue appears in folder name or track title
+                            if (folderName.IndexOf(searchVenue, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                track.Title.IndexOf(searchVenue, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                matches = true;
+                            }
+                        }
+
+                        if (matches)
+                        {
+                            results.Add(new TrackSearchResult
+                            {
+                                TrackTitle = track.Title,
+                                AlbumTitle = folderName,
+                                AlbumType = albumType.ToString(),
+                                AlbumPath = albumFolder
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but continue searching
+                System.Diagnostics.Debug.WriteLine($"Error searching folder {rootPath}: {ex.Message}");
+            }
+        }
+
+        private bool TrackContainsDate(string trackTitle, string searchDate)
+        {
+            // Look for patterns like (yyyy-MM-dd) or [yyyy-MM-dd] in the title
+            var datePattern = @"[\(\[]" + Regex.Escape(searchDate) + @"[\)\]]";
+            return Regex.IsMatch(trackTitle, datePattern);
+        }
+
+        private void TrackResultsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (TrackResultsDataGrid.SelectedItem is TrackSearchResult result)
+            {
+                // Close this dialog
+                DialogResult = false;
+                Close();
+
+                // Navigate to the album in the library browser
+                _libraryBrowserWindow?.NavigateToAlbumByPath(result.AlbumPath);
+            }
+        }
     }
 
     public class SongCheckItem
@@ -302,5 +459,13 @@ namespace DeadEditor
     {
         public int Index { get; set; }
         public string Song { get; set; } = "";
+    }
+
+    public class TrackSearchResult
+    {
+        public string TrackTitle { get; set; } = "";
+        public string AlbumTitle { get; set; } = "";
+        public string AlbumType { get; set; } = "";
+        public string AlbumPath { get; set; } = "";
     }
 }

@@ -16,9 +16,9 @@
         <StackPanel Grid.Row="0">
             <TextBlock Text="Library Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
 
-            <!-- Library Root Path -->
-            <TextBlock Text="Library Root Path:" Margin="0,0,0,5"/>
-            <Grid Margin="0,0,0,20">
+            <!-- Library Root Path (Audience Recordings) -->
+            <TextBlock Text="Library Root Path (Audience Recordings):" Margin="0,0,0,5"/>
+            <Grid Margin="0,0,0,15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -26,6 +26,23 @@
                 <TextBox Grid.Column="0" x:Name="LibraryRootTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
                 <Button Grid.Column="1" x:Name="BrowseLibraryButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseLibraryButton_Click"/>
             </Grid>
+
+            <!-- Official Releases Path -->
+            <TextBlock Text="Official Releases Path (Dave's Picks, Road Trips, etc.):" Margin="0,0,0,5"/>
+            <Grid Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="OfficialReleasesTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
+                <Button Grid.Column="1" x:Name="BrowseOfficialReleasesButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseOfficialReleasesButton_Click"/>
+            </Grid>
+
+            <!-- Primary Artist Name -->
+            <TextBlock Text="Primary Artist Name:" Margin="0,0,0,5"/>
+            <TextBlock Text="(Leave empty to show all artists from MusicBrainz matches)"
+                       FontSize="11" Foreground="Gray" Margin="0,0,0,5"/>
+            <TextBox x:Name="PrimaryArtistTextBox" Margin="0,0,0,20"/>
 
             <Separator Margin="0,0,0,20"/>
 

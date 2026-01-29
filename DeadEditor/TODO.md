@@ -1,34 +1,119 @@
 # DeadEditor - Pending Tasks
 
-## Current Status (2026-01-08)
+## Current Status (2026-01-29)
 
-**Latest Commit:** `c6f4801` - "Fix song search bugs and add exclude functionality"
+**Latest Commit:** `dc2af2b` - "Add studio albums as next session focus in TODO.md"
 
-### App is working excellently!
-- ✅ Importing random files successfully
-- ✅ 598 songs in database (594 Grateful Dead, 4 NRPS) with fuzzy matching
-- ✅ Info file viewer working for reference during imports
-- ✅ Track number normalization working
-- ✅ **Advanced Search** - Search by songs (contains ANY/ALL), song sequences, and excluded songs (NOT)
-- ✅ **Song Database Management** - Add/manage songs on-the-fly without recompiling
-- ✅ **Artist-based Organization** - Songs organized by artist with migration script
-- ✅ All major bugs from previous sessions resolved (including critical search bugs)
+### Session 2026-01-29 - COMPLETED
+
+**Focus:** Implementing Box Set support for managing multi-concert collections (e.g., "Enjoying the Ride" digital box set)
+
+#### Completed This Session:
+- ✅ **Box Set Type Support** - Added AlbumType.BoxSet with dedicated UI fields
+- ✅ **Box Set Name Memory** - Remembers last used box set name for faster multi-concert imports
+- ✅ **Box Set Detection** - Automatically detects box sets from metadata when editing existing concerts
+- ✅ **Library Display** - Box set names appear in "Official Release" column
+- ✅ **Concert Detail Panel** - Shows "Box Set: Enjoying the Ride" in library browser
+- ✅ **Automatic Library Refresh** - Library updates immediately after editing metadata
+- ✅ **MusicBrainz Manual Search** - Added manual album search dialog with year filter
+- ✅ **MusicBrainz Always-Show Selector** - Always shows release selector for user confirmation
+- ✅ **Double Date Bug Fix** - Fixed duplicate dates in song titles (e.g., "Jack Straw (1978-05-13) (1978-05-13)")
+
+#### Key Features Added:
+
+**1. Box Set Import Workflow:**
+- Select "Box Set" album type in import window
+- "Box Set Name (optional)" field appears
+- Name is remembered for next import (stored in settings.json)
+- Album title format: `"Date - Venue - City, State: Box Set Name"` (no space before colon)
+
+**2. Box Set Metadata Detection:**
+- Distinguishes between Box Set (`: `) and Official Release (` : `) formats via regex
+- `ParseAlbumTitle()` correctly identifies box sets from existing metadata
+- Library browser reads album tags to detect box set type
+
+**3. Library Display:**
+- Box set names show in "Official Release" column in main library grid
+- Concert detail panel shows "Box Set: Enjoying the Ride" below the date
+- Gold color (#D7BA7D) for box set text
+
+**4. MusicBrainz Enhancements:**
+- Manual search dialog with Album Name, Artist, and Year (optional) fields
+- Always shows release selector even for single results
+- Both fingerprinting and manual search workflows supported
+
+#### Bug Fixes:
+- ✅ Fixed box set name not being saved during import (was checking `AlbumType.Studio` instead of `AlbumType.BoxSet`)
+- ✅ Fixed duplicate dates in WriteMetadata - strips existing dates before adding new one
+- ✅ Fixed library not refreshing after editing concerts - added `LoadShows()` call
+- ✅ Fixed ParseAlbumTitle regex to properly distinguish box sets from official releases using negative lookbehind
+
+#### Known Issues to Address Next Session:
+- ⚠️ **Auto-select Box Set radio on new import** - When importing a new concert after remembering a box set name, the Box Set radio button should be auto-selected but currently isn't working reliably
+- ⚠️ **Investigate box set name field visibility** - Need to verify pre-fill logic when loading new folders
 
 ---
 
-## Next Session Focus
+## Next Session Priorities
 
-### Studio Albums Support
+### 1. Fix Auto-Select Box Set Radio Button (URGENT)
 **Priority:** High
-**Status:** Planned for next session
-**Description:** Add support for studio albums (non-live recordings) with proper metadata handling.
+**Status:** Partially implemented, needs debugging
+**Issue:** When importing a new concert from a remembered box set, the box set name is pre-filled but the Box Set radio button isn't automatically selected
+**Location:** MainWindow.xaml.cs lines 246-260
+**Current Behavior:** Box set name shows in preview, but radio shows "Live (Audience Recording)"
+**Expected Behavior:** Box Set radio should be auto-selected when box set name is remembered
 
-**Considerations:**
-- Different metadata structure (no venue, date may be release date vs performance date)
-- Album name/title field
-- Track ordering and album artwork
-- Differentiate between live recordings and studio albums in library browser
-- Import workflow adjustments for studio releases
+### 2. Complete Three Album Type Testing
+**Priority:** High
+**Status:** Ready to test
+- Test importing a Live recording
+- Test importing a Studio album
+- Test importing an Official Release
+- Test importing a Box Set (multiple concerts)
+
+### 3. Track-Level Search (Previously Planned)
+**Priority:** Medium (deferred from previous session)
+**Description:** Enhanced Advanced Search for hybrid albums with embedded dates
+- Parse embedded dates from track titles
+- Show search results with album context
+- Open containing album folder when clicked
+
+---
+
+## Technical Details
+
+### Files Modified This Session (2026-01-29):
+- `Models/LibrarySettings.cs` - Added `LastBoxSetName` property
+- `Models/AlbumInfo.cs` - Box set name format in AlbumTitle property
+- `MainWindow.xaml` - Added ManualSearchButton for MusicBrainz
+- `MainWindow.xaml.cs` - Box set save logic, auto-select logic (needs fixing)
+- `LibraryBrowserWindow.xaml` - Added BoxSetText display field
+- `LibraryBrowserWindow.xaml.cs` - Box set detection, library auto-refresh, concert detail display
+- `Services/MetadataService.cs` - Fixed ParseAlbumTitle regex, duplicate date removal
+- `Services/MusicBrainzService.cs` - Added SearchReleasesByNameAsync() method
+- `AlbumSearchDialog.xaml/.xaml.cs` - **NEW** - Manual MusicBrainz search dialog
+
+### Box Set Metadata Format:
+**Album Tag Format:**
+- Box Set: `"1972-09-15 - Boston Music Hall - Boston, MA: Enjoying the Ride"` (no space before colon)
+- Official Release: `"1972-09-15 - Boston Music Hall - Boston, MA : Dave's Picks Vol. 1"` (space before colon)
+- Live Recording: `"1972-09-15 - Boston Music Hall - Boston, MA"` (no colon)
+
+**Regex Patterns:**
+- Box Set: `@"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:\s]+)(?<!\s):\s*(.+)$"`
+  - Uses negative lookbehind `(?<!\s)` to ensure no space before colon
+- Official Release: `@"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:]+?)\s:\s*(.+)$"`
+  - Uses `\s:` to require space before colon
+
+### Settings Storage:
+```json
+{
+  "LastBoxSetName": "Enjoying the Ride",
+  "LibraryRootPath": "D:/Projects/library",
+  ...
+}
+```
 
 ---
 
@@ -37,33 +122,22 @@
 ### 1. Additional Song Coverage
 **Priority:** Low
 **Status:** Ongoing as needed
-**Description:** Continue adding songs/aliases as you encounter unmatched tracks in your taper collection.
-
-**Current Coverage:** 598 songs with aliases and fuzzy matching (max 2 char typos)
-
----
+**Current Coverage:** 598 songs with aliases and fuzzy matching
 
 ### 2. UI/UX Improvements
 **Priority:** Low
-**Status:** Ideas for future consideration
-
-**Potential Ideas:**
+**Ideas:**
 - Batch import multiple concerts at once
-- ✅ ~~Search/filter in library browser~~ - **COMPLETED** (Quick search + Advanced Search)
 - Export concert metadata to CSV/JSON
 - Dark/light theme toggle
 - Keyboard shortcuts for common actions
-- Fix: Main window opens in background at startup (minor UI issue)
-
----
+- Fix: Main window opens in background at startup
 
 ### 3. Advanced Features
 **Priority:** Low
-**Status:** Future consideration
-
 **Ideas:**
 - Duplicate concert detection (same date/venue)
-- Show statistics (most played songs, venue counts, etc.)
+- Show statistics (most played songs, venue counts)
 - Integration with online databases (archive.org, etree.org)
 - Automated backup/sync functionality
 
@@ -72,119 +146,19 @@
 ## Recently Completed (Session 2026-01-08)
 
 ### Major Features Added:
-- ✅ **Advanced Search Dialog** - Comprehensive search with 3 tabs:
-  - "Contains Songs" - Find shows with ALL selected songs (in any order)
-  - "Exclude Songs" - Find shows WITHOUT specific songs (NOT queries)
-  - "Song Sequence" - Find shows with songs in specific order (e.g., "China Cat > I Know You Rider")
-- ✅ **Song Filter** - Real-time filtering in song selection (handles 600+ songs easily)
-- ✅ **Add Song Dialog** - Add songs on-the-fly without recompiling, with artist support
-- ✅ **Manage Songs Dialog** - Browse all 598 songs, view aliases, filter by artist, export to text
-- ✅ **Artist-based Database** - Songs organized by artist (Grateful Dead, NRPS, etc.)
-- ✅ **Quick Search** - Search by date, venue, location directly from library browser
-- ✅ **Search Display** - Shows actual song names in search box (e.g., "Dark Star, Althea NOT I Know You Rider")
+- ✅ **Advanced Search Dialog** - 3-tab search (Contains, Exclude, Sequence)
+- ✅ **Song Filter** - Real-time filtering in song selection
+- ✅ **Add Song Dialog** - Add songs on-the-fly with artist support
+- ✅ **Manage Songs Dialog** - Browse 598 songs, export to text
+- ✅ **Artist-based Database** - Songs organized by artist
+- ✅ **Quick Search** - Search by date, venue, location
 
 ### Critical Bug Fixes:
-- ✅ **LINQ Lazy Evaluation Bug** - Fixed song searches returning 0 results inconsistently
-  - Root cause: `Where()` clause was re-evaluated multiple times with captured variables
-  - Solution: Replace lazy LINQ with immediate `foreach` evaluation
-- ✅ **TextChanged Recursion Bug** - Fixed duplicate searches triggered by programmatic text box updates
-  - Solution: Added `_isUpdatingSearchBox` flag to prevent recursive calls
-- ✅ **Multi-song Collection Bug** - Fixed advanced search only collecting visible filtered songs
-  - Solution: Collect from `_allSongCheckBoxes` instead of `SongCheckListPanel.Children`
-
-### UI Improvements:
-- ✅ Smart search box display showing 1-3 song names, then "and X more"
-- ✅ Excluded songs shown with "NOT" prefix for clarity
-- ✅ Select All/Clear All buttons respect filtering
-- ✅ Song count indicators ("5 songs selected", "2 songs excluded")
-- ✅ Filter clear button (X) appears when typing
-
-### Technical Improvements:
-- ✅ Database migration script (`migrate_songs.py`) - Converted 598 songs to artist-based structure
-- ✅ Backward compatibility - Reads both new artist-based and legacy song structures
-- ✅ `ExcludedSongs` property and filter logic in `ShowMatchesSongCriteria()`
-- ✅ Prevented lazy LINQ enumeration issues with explicit list building
+- ✅ **LINQ Lazy Evaluation Bug** - Fixed inconsistent search results
+- ✅ **TextChanged Recursion Bug** - Fixed duplicate searches
+- ✅ **Multi-song Collection Bug** - Fixed advanced search collection
 
 **Commit:** `c6f4801` - "Fix song search bugs and add exclude functionality"
-**Files Changed:** 19 files (+10,261 insertions, -623 deletions)
-
----
-
-## Previously Completed (Session 2026-01-07)
-
-### Major Features Added:
-- ✅ **Info File Viewer** - Auto-import .txt files, non-modal window with always-on-top for copy/paste during import
-- ✅ **Fuzzy Matching** - Levenshtein distance algorithm handles typos automatically (max 2 chars or 20% string length)
-- ✅ **Song Database Expansion** - Expanded from 110 to 593 songs
-- ✅ **Track Number Stripping** - Remove "01 ", "02 " prefixes from titles during normalization
-- ✅ **Tape Marker Removal** - Strip "//" markers from song titles
-- ✅ **NRPS Songs** - Added New Riders of the Purple Sage songs (Tuning, Truck Driving Man, Whatcha Gonna Do, etc.)
-- ✅ **Empty Parentheses Fix** - Only show date when present (no more empty "()")
-
-### Bug Fixes:
-- ✅ Fixed Peggy-O normalization (box-drawing character ─ support)
-- ✅ Fixed library location display showing only state instead of "City, State"
-- ✅ Fixed folder name parsing for multiple formats
-- ✅ Fixed pause button double-click issue and improved UI styling
-- ✅ Strip leading track numbers from titles
-- ✅ Handle multiple dash character types (en-dash, em-dash, box-drawing)
-
-### Technical Improvements:
-- ✅ Enhanced NormalizationService with Levenshtein distance
-- ✅ Updated MetadataService to auto-import .txt files
-- ✅ Added InfoFileContent and InfoFileName properties to AlbumInfo
-- ✅ Improved CleanTitle regex patterns
-- ✅ Made info viewer non-modal with Topmost property
-
-**Commit:** `6e3aca8` - "Add info file viewer, fuzzy matching, and extensive song database improvements"
-**Files Changed:** 9 files (+1029 insertions, -574 deletions)
-
----
-
-## Previously Completed (Session 2026-01-06)
-
-- ✅ Edit Metadata functionality - Edit already-imported concerts
-- ✅ Media key support - Keyboard play/pause/stop/next/previous buttons
-- ✅ Improved concert view - Full metadata display (title with segue and date)
-- ✅ Fixed segue display in library browser
-- ✅ Expanded song database from 102 to 110 songs
-- ✅ Real-time preview updates when editing track metadata
-
-**Commit:** `20eec7b` - "Add Edit Metadata, media keys, expanded song database, and UI improvements"
-
----
-
-## Technical Notes for Next Session
-
-### Building and Running:
-```bash
-# Kill all background processes first
-taskkill //F //IM DeadEditor.exe //T
-taskkill //F //IM dotnet.exe //T
-
-# Build and run
-dotnet build DeadEditor.csproj
-dotnet run --project DeadEditor.csproj
-```
-
-### Key Files Modified This Session (2026-01-08):
-- `AdvancedSearchDialog.xaml/.xaml.cs` - **NEW** - 3-tab search dialog with filtering
-- `AddSongDialog.xaml/.xaml.cs` - **NEW** - On-the-fly song addition with artist support
-- `ManageSongsDialog.xaml/.xaml.cs` - **NEW** - Browse/export 598 songs
-- `ConcertDetailWindow.xaml/.xaml.cs` - **NEW** - Detailed concert view
-- `LibraryBrowserWindow.xaml.cs` - Fixed LINQ lazy evaluation, added search functionality
-- `Services/NormalizationService.cs` - Added artist-based database support, AddSong() method
-- `Models/SongDatabase.cs` - Added ArtistEntry class for organization
-- `Data/songs.json` - Now 598 songs organized by artist
-- `migrate_songs.py` - **NEW** - Python script to migrate database structure
-
-### Database Coverage:
-- **Total Songs:** 598 (594 Grateful Dead, 4 NRPS)
-- **Organization:** Artist-based with backward compatibility
-- **Includes:** Grateful Dead core repertoire, NRPS songs, covers, jams, tuning, intro, feedback
-- **Fuzzy Matching:** Handles up to 2 character typos automatically
-- **Common Aliases:** Handles variations like "Dnacing", "Wkae", "Monkey &", etc.
-- **Management:** Add/edit songs via UI without recompiling
 
 ---
 
@@ -202,8 +176,7 @@ When starting a new session:
 
 3. **Kill any background processes:**
    ```bash
-   taskkill //F //IM DeadEditor.exe //T
-   taskkill //F //IM dotnet.exe //T
+   taskkill //F //IM DeadEditor.exe
    ```
 
 4. **Build and test:**
@@ -212,4 +185,12 @@ When starting a new session:
    dotnet run --project DeadEditor.csproj
    ```
 
-5. **Continue testing** with your taper collection and add songs/aliases as needed
+5. **Focus on:** Fixing auto-select Box Set radio button issue (see Next Session Priorities)
+
+---
+
+## Database Coverage (As of 2026-01-08)
+- **Total Songs:** 598 (594 Grateful Dead, 4 NRPS)
+- **Organization:** Artist-based with backward compatibility
+- **Fuzzy Matching:** Handles up to 2 character typos automatically
+- **Management:** Add/edit songs via UI without recompiling

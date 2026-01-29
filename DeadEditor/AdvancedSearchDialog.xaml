@@ -180,6 +180,76 @@
                             Margin="0,10,0,0" HorizontalAlignment="Left" Click="ClearSequenceButton_Click"/>
                 </Grid>
             </TabItem>
+
+            <!-- Track Search Tab (by Date/Venue) -->
+            <TabItem Header="Search Tracks">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,20">
+                        <Run Text="Search for individual tracks by date or venue" Foreground="Gray"/>
+                        <LineBreak/>
+                        <Run Text="(finds live tracks in studio albums, official releases, and live recordings)"
+                             Foreground="Gray" FontSize="11"/>
+                    </TextBlock>
+
+                    <!-- Search Criteria -->
+                    <Grid Grid.Row="1" Margin="0,0,0,15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Date -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Date:" VerticalAlignment="Center" Margin="0,0,10,8"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TrackDateTextBox" Height="28" Margin="0,0,0,8"
+                                 ToolTip="Enter date (yyyy-MM-dd, e.g., 1972-05-04)"/>
+
+                        <!-- Venue -->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Venue:" VerticalAlignment="Center" Margin="0,0,10,8"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="TrackVenueTextBox" Height="28" Margin="0,0,0,8"
+                                 ToolTip="Enter venue name (e.g., Bickershaw Festival)"/>
+
+                        <!-- Search Button -->
+                        <Button Grid.Row="2" Grid.Column="1" x:Name="TrackSearchButton" Content="Search Tracks"
+                                Width="150" Height="35" HorizontalAlignment="Left" Margin="0,10,0,0"
+                                Click="TrackSearchButton_Click"
+                                FontWeight="SemiBold" Background="#094771" Foreground="White"/>
+                    </Grid>
+
+                    <!-- Results -->
+                    <Border Grid.Row="2" BorderBrush="#CCCCCC" BorderThickness="1" Background="White">
+                        <Grid>
+                            <DataGrid x:Name="TrackResultsDataGrid" AutoGenerateColumns="False"
+                                      IsReadOnly="True" SelectionMode="Single"
+                                      HeadersVisibility="Column" GridLinesVisibility="None"
+                                      Background="White" BorderThickness="0"
+                                      MouseDoubleClick="TrackResultsDataGrid_MouseDoubleClick">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Track" Binding="{Binding TrackTitle}" Width="*"/>
+                                    <DataGridTextColumn Header="Album" Binding="{Binding AlbumTitle}" Width="300"/>
+                                    <DataGridTextColumn Header="Type" Binding="{Binding AlbumType}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <TextBlock x:Name="TrackResultsEmptyText"
+                                       Text="No results. Enter a date or venue and click Search Tracks."
+                                       Foreground="Gray" FontStyle="Italic"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Visibility="Visible"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
         </TabControl>
 
         <!-- Buttons -->
