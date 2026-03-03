@@ -73,7 +73,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 |---------|------|------|--------|-----------------|--------|
 | Live Recording radio | RadioButton | `LiveRecordingRadio` | Sets `_albumInfo.Type = AlbumType.Live`, shows live fields | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
 | Official Release radio | RadioButton | `OfficialReleaseRadio` | Sets `_albumInfo.Type = AlbumType.OfficialRelease`, shows official release field | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
-| Studio Album radio | RadioButton | `StudioAlbumRadio` | Sets `_albumInfo.Type = AlbumType.Studio`, shows studio fields + MusicBrainz buttons | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
+| Studio Album radio | RadioButton | `StudioAlbumRadio` | Sets `_albumInfo.Type = AlbumType.Studio`, shows studio album fields | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
 | Box Set radio | RadioButton | `BoxSetRadio` | Sets `_albumInfo.Type = AlbumType.BoxSet`, shows box set name field, pre-fills last used box set name | `AlbumType_Changed` → `UpdateFieldVisibility()` | Partial (auto-select logic needs testing) |
 
 #### Common Fields
@@ -82,6 +82,15 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 |---------|------|------|--------|-----------------|--------|
 | Artist | TextBox | `ArtistTextBox` | Updates `_albumInfo.Artist`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
 
+#### MusicBrainz Lookup (Available for all album types)
+
+| Element | Type | Name | Action | API/Service Call | Status |
+|---------|------|------|--------|-----------------|--------|
+| Fingerprint Lookup | Button | `LookupAlbumButton` | Uses audio fingerprinting (AcoustID) to lookup album, shows ReleaseSelectorDialog, downloads artwork | `_musicBrainzService.LookupAllReleasesAsync(_tracks)` | Working (requires fpcalc.exe) |
+| Manual Search | Button | `ManualSearchButton` | Opens AlbumSearchDialog, searches MusicBrainz by name/artist/year, shows ReleaseSelectorDialog | `_musicBrainzService.SearchReleasesByNameAsync(...)` | Working |
+
+**Note:** MusicBrainz is a user-populated database that contains entries for all types of recordings (live concerts, studio albums, official releases, box sets). Both lookup methods are available regardless of album type selected.
+
 #### Studio Album Fields (Collapsed unless Studio Album type selected)
 
 | Element | Type | Name | Action | API/Service Call | Status |
@@ -89,8 +98,6 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Album Name | TextBox | `AlbumNameTextBox` | Updates `_albumInfo.AlbumName`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
 | Release Year | TextBox | `ReleaseYearTextBox` | Parses int, updates `_albumInfo.ReleaseYear`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
 | Edition/Remaster | TextBox | `EditionTextBox` | Updates `_albumInfo.Edition` (optional), triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| Fingerprint Lookup | Button | `LookupAlbumButton` | Uses audio fingerprinting (AcoustID) to lookup album, shows ReleaseSelectorDialog, downloads artwork | `_musicBrainzService.LookupAllReleasesAsync(_tracks)` | Working (requires fpcalc.exe) |
-| Manual Search | Button | `ManualSearchButton` | Opens AlbumSearchDialog, searches MusicBrainz by name/artist/year, shows ReleaseSelectorDialog | `_musicBrainzService.SearchReleasesByNameAsync(...)` | Working |
 
 #### Live Recording Fields (Collapsed for Studio Album type)
 

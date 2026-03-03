@@ -244,8 +244,11 @@ public partial class MainWindow : Window
         ReleaseYearTextBox.Visibility = isStudio ? Visibility.Visible : Visibility.Collapsed;
         EditionLabel.Visibility = isStudio ? Visibility.Visible : Visibility.Collapsed;
         EditionTextBox.Visibility = isStudio ? Visibility.Visible : Visibility.Collapsed;
-        LookupAlbumButton.Visibility = isStudio ? Visibility.Visible : Visibility.Collapsed;
-        ManualSearchButton.Visibility = isStudio ? Visibility.Visible : Visibility.Collapsed;
+
+        // MusicBrainz buttons - always visible for all album types
+        // (MusicBrainz is user-populated and contains entries for live concerts, studio albums, official releases, and box sets)
+        LookupAlbumButton.Visibility = Visibility.Visible;
+        ManualSearchButton.Visibility = Visibility.Visible;
 
         // Live recording fields (show for Live, OfficialRelease, and BoxSet)
         DateLabel.Visibility = !isStudio ? Visibility.Visible : Visibility.Collapsed;
