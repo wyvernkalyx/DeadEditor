@@ -38,16 +38,46 @@ public partial class MainWindow : Window
         _metadataService = new MetadataService();
         _normalizationService = new NormalizationService();
         _libraryImportService = new LibraryImportService(_metadataService);
-        _musicBrainzService = new MusicBrainzService("asa4wLQhwJ");
 
         // Load library settings
         _librarySettings = LibrarySettings.Load();
+
+        // Initialize MusicBrainz service with library settings (for fpcalc.exe path)
+        _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
 
         // Restore window position
         RestoreWindowPosition();
 
         // Save window position when closing
         Closing += MainWindow_Closing;
+
+        // Check fpcalc.exe configuration on startup
+        Loaded += MainWindow_Loaded;
+    }
+
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Check if fpcalc.exe is configured and exists
+        bool fpcalcConfigured = !string.IsNullOrEmpty(_librarySettings.FpcalcPath) &&
+                               File.Exists(_librarySettings.FpcalcPath);
+
+        // Show warning if not configured and user hasn't dismissed it
+        if (!fpcalcConfigured && !_librarySettings.DismissedFpcalcWarning)
+        {
+            var result = MessageBox.Show(
+                "MusicBrainz fingerprinting requires fpcalc.exe (Chromaprint).\n\n" +
+                "Without it, automatic album identification for studio albums will not work.\n\n" +
+                "Please download it from https://acoustid.org/chromaprint\n" +
+                "and set the path in Settings.\n\n" +
+                "Click OK to dismiss this warning.",
+                "fpcalc.exe Not Configured",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            // Mark warning as dismissed
+            _librarySettings.DismissedFpcalcWarning = true;
+            _librarySettings.Save();
+        }
     }
 
     private void RestoreWindowPosition()

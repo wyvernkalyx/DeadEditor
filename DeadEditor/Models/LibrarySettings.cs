@@ -7,8 +7,10 @@ namespace DeadEditor.Models
     {
         public string LibraryRootPath { get; set; } = "";              // Path to audience recordings (also used for box sets)
         public string OfficialReleasesPath { get; set; } = "";         // Path to official releases
+        public string FpcalcPath { get; set; } = "";                   // Path to fpcalc.exe (Chromaprint) for MusicBrainz fingerprinting
         public string PrimaryArtistName { get; set; } = "Grateful Dead"; // Primary artist for MusicBrainz filtering
         public string? LastBoxSetName { get; set; }                    // Remember last box set name for faster imports
+        public bool DismissedFpcalcWarning { get; set; } = false;      // User has dismissed the fpcalc.exe startup warning
 
         // Window positions
         public double? MainWindowLeft { get; set; }

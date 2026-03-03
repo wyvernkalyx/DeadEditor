@@ -21,6 +21,91 @@ Live music metadata suffers from:
 
 ---
 
+## Documentation Handbook
+
+**RULE:** Before modifying any file, check this table and read the relevant documentation file first. **The documentation is the spec — code must match the doc.**
+
+### Documentation Lookup Table
+
+| Working on... | Read first | Lines | Purpose |
+|--------------|------------|-------|---------|
+| **Windows** | | | |
+| `MainWindow.xaml/.cs` | [documentation/01-main-window.md](documentation/01-main-window.md) | ~8,000 words | Import workflow, playback controls, drag-drop |
+| `LibraryBrowserWindow.xaml/.cs` | [documentation/02-library-browser.md](documentation/02-library-browser.md) | ~9,000 words | Library grid, quick search, concert playback |
+| `AdvancedSearchDialog.xaml/.cs` | [documentation/03-advanced-search-dialog.md](documentation/03-advanced-search-dialog.md) | ~9,500 words | 3-tab search (Contains/Exclude/Sequence) |
+| **Dialogs** | | | |
+| `AddSongDialog.xaml/.cs` | [documentation/04-add-song-dialog.md](documentation/04-add-song-dialog.md) | ~7,600 words | Add songs to database with artist support |
+| `ManageSongsDialog.xaml/.cs` | [documentation/05-manage-songs-dialog.md](documentation/05-manage-songs-dialog.md) | ~8,200 words | Browse songs, filter, export to text |
+| `SettingsWindow.xaml/.cs` | [documentation/06-settings-window.md](documentation/06-settings-window.md) | ~9,800 words | Configure library paths, primary artist, reset data |
+| `ReleaseSelectorDialog.xaml/.cs` | [documentation/07-release-selector-dialog.md](documentation/07-release-selector-dialog.md) | ~7,400 words | Select from multiple MusicBrainz releases |
+| `AlbumSearchDialog.xaml/.cs` | [documentation/08-album-search-dialog.md](documentation/08-album-search-dialog.md) | ~7,000 words | Manual MusicBrainz search by name |
+| `EditMetadataWindow.xaml/.cs` | *Not yet documented* | - | Edit concert metadata after import |
+| `InfoFileViewer.xaml/.cs` | *Not yet documented* | - | Display .txt info files |
+| **Services** | | | |
+| `MetadataService.cs` | [documentation/11-metadata-service.md](documentation/11-metadata-service.md) | ~8,000 words | ID3 tags, ParseAlbumTitle regex, box set vs official release |
+| `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
+| `LibraryImportService.cs` | [documentation/13-library-import-service.md](documentation/13-library-import-service.md) | ~5,000 words | Two-path library system, folder creation, metadata preservation |
+| `MusicBrainzService.cs` | [documentation/14-musicbrainz-service.md](documentation/14-musicbrainz-service.md) | ~9,500 words | AcoustID fingerprinting, fpcalc.exe, MusicBrainz API, rate limiting |
+| **Models** | | | |
+| `AlbumInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § AlbumInfo | ~11,000 words | Album metadata, type-based polymorphism, AlbumTitle format |
+| `TrackInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § TrackInfo | ~11,000 words | Track metadata, segue notation, GetFinalMetadataTitle |
+| `LibrarySettings.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § LibrarySettings | ~11,000 words | User settings, two-path system, window positions |
+| `SongDatabase.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § SongDatabase | ~11,000 words | Song database structure, artist-based organization |
+| **Data Files** | | | |
+| `Data/songs.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § songs.json | ~11,000 words | JSON schema, examples, 598 songs across 2 artists |
+| `%APPDATA%/DeadEditor/settings.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § settings.json | ~11,000 words | Settings JSON schema, all 12 keys with defaults |
+
+### Documentation-First Development Workflow
+
+**ALWAYS follow this workflow when making changes:**
+
+1. **DOCUMENT** → Update the doc first if requirements change
+   - If changing behavior, update the relevant documentation file BEFORE writing code
+   - Document the new business rules, method signatures, parameters, error handling
+   - Include examples showing the new behavior
+
+2. **IMPLEMENT** → Write code to match the doc
+   - Code must implement EXACTLY what the documentation specifies
+   - Method signatures, parameters, return values must match documented spec
+   - Business rules in code must match documented business rules
+
+3. **TEST** → Verify the doc's spec is met
+   - Test that implementation matches all documented behavior
+   - Verify all documented edge cases are handled
+   - Check that error handling matches documented error scenarios
+
+4. **VERIFY** → If implementation forced doc changes, update the doc
+   - If you discover the doc was wrong during implementation, update the doc
+   - If you find new edge cases, document them
+   - If error handling differs, update the documentation to match reality
+
+5. **COMMIT** → Code + docs ship together
+   - Never commit code without updating relevant documentation
+   - Commit message should reference both code and doc changes
+   - Documentation and code must stay in sync
+
+### Quick Reference: Finding Documentation
+
+**By Feature:**
+- Import workflow → [01-main-window.md](documentation/01-main-window.md)
+- Library browsing → [02-library-browser.md](documentation/02-library-browser.md)
+- Advanced search → [03-advanced-search-dialog.md](documentation/03-advanced-search-dialog.md)
+- Song database management → [04-add-song-dialog.md](documentation/04-add-song-dialog.md), [05-manage-songs-dialog.md](documentation/05-manage-songs-dialog.md)
+- MusicBrainz integration → [14-musicbrainz-service.md](documentation/14-musicbrainz-service.md), [07-release-selector-dialog.md](documentation/07-release-selector-dialog.md), [08-album-search-dialog.md](documentation/08-album-search-dialog.md)
+
+**By Business Logic:**
+- Album title format (box set vs official release) → [15-data-model.md](documentation/15-data-model.md) § AlbumInfo, [11-metadata-service.md](documentation/11-metadata-service.md) § ParseAlbumTitle
+- Song normalization & fuzzy matching → [12-normalization-service.md](documentation/12-normalization-service.md)
+- Folder structure & two-path system → [13-library-import-service.md](documentation/13-library-import-service.md)
+- Segue notation → [15-data-model.md](documentation/15-data-model.md) § TrackInfo
+- Track numbering scheme → [15-data-model.md](documentation/15-data-model.md) § TrackInfo
+
+**By Data Structure:**
+- JSON schemas → [15-data-model.md](documentation/15-data-model.md) (songs.json + settings.json)
+- All model classes → [15-data-model.md](documentation/15-data-model.md)
+
+---
+
 ## Technology Stack
 
 ### Platform
@@ -441,6 +526,10 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 ## Conventions for AI Assistants
 
 ### When Modifying Code
+
+**CRITICAL:** Before modifying ANY file, read the relevant documentation from the [Documentation Handbook](#documentation-handbook) first.
+
+**Code Standards:**
 - Preserve existing patterns (MVVM-like with code-behind)
 - Use `Newtonsoft.Json` for JSON operations (already in project)
 - Follow nullable reference type conventions
@@ -450,13 +539,32 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
   - Bad: `if (artist == "Grateful Dead")`
   - Good: Use `PrimaryArtistName` from settings or artist-agnostic logic
 
+**Documentation-First Workflow:**
+1. **Check [Documentation Lookup Table](#documentation-lookup-table)** - Find the relevant doc file
+2. **Read the documentation** - Understand the current spec
+3. **Update documentation FIRST** if changing behavior
+4. **Write code to match the doc** - Code implements the spec
+5. **Update doc if implementation reveals issues** - Keep docs in sync
+6. **Commit code + docs together** - Never commit one without the other
+
 ### When Adding Features
+
+**CRITICAL:** Follow the [Documentation-First Development Workflow](#documentation-first-development-workflow) for all new features.
+
+**Feature Design:**
 - Consider both Live and Official Release workflows
 - Test with real concert data
 - Update song database if new songs discovered
 - Add to TODO.md with session notes
 - Consider impact on existing imports (backward compatibility)
 - Ensure feature works for any artist, not just Grateful Dead
+
+**Documentation Requirements:**
+- Document new methods in relevant doc file (signature, parameters, return value, business logic)
+- Document new business rules and validation logic
+- Include examples showing the new behavior
+- Document error handling and edge cases
+- Update related doc sections if feature affects existing behavior
 
 ### When Writing Commits
 - Reference specific issues/features
@@ -467,6 +575,26 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 
 ## End of Document
 
-**Last Updated:** 2026-01-25
-**Current Commit:** dc2af2b
+**Last Updated:** 2026-03-01
+**Current Commit:** 006d170
 **Song Database:** 598 songs (594 Grateful Dead, 4 NRPS)
+**Documentation:** 15 comprehensive documentation files covering all windows, dialogs, services, and data models
+
+## Development Environment
+- OS: Windows 10.0.26200
+- Shell: Git Bash
+- Path format: Windows (use forward slashes in Git Bash)
+- File system: Case-insensitive
+- Line endings: CRLF (configure Git autocrlf)
+
+## Playwright MCP Guide
+
+File paths:
+- Screenshots: `./CCimages/screenshots/`
+- PDFs: `./CCimages/pdfs/`
+
+Browser version fix:
+- Error: "Executable doesn't exist at chromium-XXXX" → Version mismatch
+- v1.0.12+ uses Playwright 1.57.0, requires chromium-1200 with `chrome-win64/` structure
+- Quick fix: `npx playwright@latest install chromium`
+- Manual symlink (if needed): `cd ~/AppData/Local/ms-playwright && cmd //c "mklink /J chromium-1200 chromium-1181"`

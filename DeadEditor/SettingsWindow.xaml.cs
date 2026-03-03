@@ -22,6 +22,7 @@ namespace DeadEditor
             // Load current settings
             LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
             OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
+            FpcalcPathTextBox.Text = _librarySettings.FpcalcPath;
             PrimaryArtistTextBox.Text = _librarySettings.PrimaryArtistName;
         }
 
@@ -60,6 +61,28 @@ namespace DeadEditor
 
                 // Update library window to reload with new path
                 _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);
+            }
+        }
+
+        private void BrowseFpcalcButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new System.Windows.Forms.OpenFileDialog
+            {
+                Title = "Select fpcalc.exe (Chromaprint)",
+                Filter = "Executable Files|*.exe",
+                FileName = !string.IsNullOrEmpty(_librarySettings.FpcalcPath) ? Path.GetFileName(_librarySettings.FpcalcPath) : "fpcalc.exe",
+                InitialDirectory = !string.IsNullOrEmpty(_librarySettings.FpcalcPath) ? Path.GetDirectoryName(_librarySettings.FpcalcPath) : ""
+            };
+
+            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _librarySettings.FpcalcPath = fileDialog.FileName;
+                _librarySettings.Save();
+                FpcalcPathTextBox.Text = _librarySettings.FpcalcPath;
+
+                // Reset dismissed warning flag so user knows fingerprinting is now available
+                _librarySettings.DismissedFpcalcWarning = false;
+                _librarySettings.Save();
             }
         }
 

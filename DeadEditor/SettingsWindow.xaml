@@ -38,6 +38,19 @@
                 <Button Grid.Column="1" x:Name="BrowseOfficialReleasesButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseOfficialReleasesButton_Click"/>
             </Grid>
 
+            <!-- fpcalc.exe Path (MusicBrainz Fingerprinting) -->
+            <TextBlock Text="fpcalc.exe Path (MusicBrainz Fingerprinting):" Margin="0,0,0,5"/>
+            <TextBlock Text="Required for MusicBrainz audio fingerprinting. Download from https://acoustid.org/chromaprint"
+                       FontSize="11" Foreground="Gray" Margin="0,0,0,5"/>
+            <Grid Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="FpcalcPathTextBox" VerticalAlignment="Center" IsReadOnly="True"/>
+                <Button Grid.Column="1" x:Name="BrowseFpcalcButton" Content="Browse..." Width="100" Margin="10,0,0,0" Click="BrowseFpcalcButton_Click"/>
+            </Grid>
+
             <!-- Primary Artist Name -->
             <TextBlock Text="Primary Artist Name:" Margin="0,0,0,5"/>
             <TextBlock Text="(Leave empty to show all artists from MusicBrainz matches)"

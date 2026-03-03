@@ -13,10 +13,12 @@ namespace DeadEditor.Services
     {
         private readonly string _acoustIdApiKey;
         private readonly HttpClient _httpClient;
+        private readonly LibrarySettings _librarySettings;
 
-        public MusicBrainzService(string acoustIdApiKey)
+        public MusicBrainzService(string acoustIdApiKey, LibrarySettings librarySettings)
         {
             _acoustIdApiKey = acoustIdApiKey;
+            _librarySettings = librarySettings;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "DeadEditor/1.0 (https://github.com/yourrepo)");
         }
@@ -262,58 +264,26 @@ namespace DeadEditor.Services
         {
             try
             {
-                // Use fpcalc.exe (Chromaprint) to generate fingerprint
-                var fpcalcPath = "fpcalc.exe";
-
-                // Try to find fpcalc in various locations
-                if (!File.Exists(fpcalcPath))
+                // Validate fpcalc path is configured
+                if (string.IsNullOrEmpty(_librarySettings.FpcalcPath))
                 {
-                    // Try walking up from bin\Debug\net8.0-windows to find D:\Projects\fpcalc.exe
-                    var currentDir = AppDomain.CurrentDomain.BaseDirectory;
-                    Console.WriteLine($"Starting from: {currentDir}");
-
-                    // Walk up directories until we find fpcalc.exe or run out of parents
-                    var dir = new DirectoryInfo(currentDir);
-                    while (dir != null && dir.Parent != null)
-                    {
-                        var testPath = Path.Combine(dir.FullName, "fpcalc.exe");
-                        Console.WriteLine($"Checking: {testPath}");
-
-                        if (File.Exists(testPath))
-                        {
-                            fpcalcPath = testPath;
-                            Console.WriteLine($"Found fpcalc.exe at: {testPath}");
-                            break;
-                        }
-
-                        dir = dir.Parent;
-                    }
+                    throw new InvalidOperationException("fpcalc.exe path not configured. Please set the path in Settings.");
                 }
 
-                // Try system PATH
-                if (!File.Exists(fpcalcPath))
+                // Validate fpcalc.exe exists at configured path
+                if (!File.Exists(_librarySettings.FpcalcPath))
                 {
-                    fpcalcPath = FindInPath("fpcalc.exe");
+                    throw new FileNotFoundException($"fpcalc.exe not found at configured path: {_librarySettings.FpcalcPath}. Please verify the path in Settings.");
                 }
 
-                if (string.IsNullOrEmpty(fpcalcPath) || !File.Exists(fpcalcPath))
-                {
-                    Console.WriteLine("ERROR: fpcalc.exe not found - audio fingerprinting unavailable");
-                    Console.WriteLine($"Searched locations:");
-                    Console.WriteLine($"  - Current directory");
-                    Console.WriteLine($"  - Parent directories from {AppDomain.CurrentDomain.BaseDirectory}");
-                    Console.WriteLine($"  - System PATH");
-                    return null;
-                }
-
-                Console.WriteLine($"Using fpcalc at: {fpcalcPath}");
+                Console.WriteLine($"Using fpcalc at: {_librarySettings.FpcalcPath}");
 
                 // Run fpcalc to get fingerprint
                 var process = new System.Diagnostics.Process
                 {
                     StartInfo = new System.Diagnostics.ProcessStartInfo
                     {
-                        FileName = fpcalcPath,
+                        FileName = _librarySettings.FpcalcPath,
                         Arguments = $"\"{filePath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -340,22 +310,8 @@ namespace DeadEditor.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error generating fingerprint: {ex.Message}");
-                return null;
+                throw; // Re-throw to allow caller to handle
             }
-        }
-
-        private string? FindInPath(string fileName)
-        {
-            var paths = Environment.GetEnvironmentVariable("PATH")?.Split(Path.PathSeparator) ?? Array.Empty<string>();
-            foreach (var path in paths)
-            {
-                var fullPath = Path.Combine(path, fileName);
-                if (File.Exists(fullPath))
-                {
-                    return fullPath;
-                }
-            }
-            return null;
         }
 
         private async Task<string?> QueryAcoustIdAsync(string fingerprint, string filePath)
