@@ -309,11 +309,23 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
        - User clicks "Select" or double-clicks row
      - If user cancels → Status: "Album lookup cancelled", workflow ends
      - If user selects release:
-       - Fills Album Name, Release Year, Artist fields (line 348-376)
-       - Downloads artwork from `selectedRelease.ArtworkUrl` (line 353-369)
-         - Stores in `_albumInfo.ArtworkData` as byte array
-         - Sets `_albumInfo.ArtworkMimeType = "image/jpeg"`
-         - `UpdateArtworkDisplay()` renders artwork
+       - **Universal fields (all album types):**
+         - Updates `Artist` field (always visible)
+         - Updates `ReleaseYear` (stored in model for all types)
+         - Downloads artwork from `selectedRelease.ArtworkUrl`
+           - Stores in `_albumInfo.ArtworkData` as byte array
+           - Sets `_albumInfo.ArtworkMimeType = "image/jpeg"`
+           - `UpdateArtworkDisplay()` renders artwork
+       - **Album-type-specific fields:**
+         - **Studio Album:** Populates `AlbumName`, `ReleaseYear`, `Edition` (if present) fields
+         - **Box Set:** Populates `BoxSetName` with MusicBrainz title
+         - **Official Release:** Populates `OfficialRelease` with MusicBrainz title
+         - **Live Recording:** No auto-fill (user manually enters Date/Venue/City/State)
+       - **Track data (if available):**
+         - MusicBrainz track titles shown in "Final Metadata Preview" column
+         - File-based titles remain in "Song" column
+         - User compares both and can manually edit as needed
+       - Refreshes all visible UI fields
        - `UpdateAlbumPreview()` updates preview
        - Status: "Album identified: [Title] ([Year])"
    - **On failure (0 releases or error):**

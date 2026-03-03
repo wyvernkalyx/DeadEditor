@@ -530,6 +530,33 @@ namespace DeadEditor.Services
                         format = media[0]["format"]?.ToString();
                     }
 
+                    // Extract track listings from media
+                    List<MusicBrainzTrack>? tracks = null;
+                    if (media != null && media.Count > 0)
+                    {
+                        tracks = new List<MusicBrainzTrack>();
+                        foreach (var medium in media)
+                        {
+                            var trackList = medium["tracks"] as JArray;
+                            if (trackList != null)
+                            {
+                                foreach (var track in trackList)
+                                {
+                                    var position = track["position"]?.ToObject<int>() ?? 0;
+                                    var trackTitle = track["title"]?.ToString() ?? "";
+                                    var length = track["length"]?.ToObject<int?>();
+
+                                    tracks.Add(new MusicBrainzTrack
+                                    {
+                                        Position = position,
+                                        Title = trackTitle,
+                                        Length = length
+                                    });
+                                }
+                            }
+                        }
+                    }
+
                     // Get artwork
                     string? artworkUrl = null;
                     if (!string.IsNullOrEmpty(releaseGroupId))
@@ -546,7 +573,8 @@ namespace DeadEditor.Services
                         Format = format,
                         ReleaseId = releaseId,
                         ArtworkUrl = artworkUrl,
-                        Artist = artist
+                        Artist = artist,
+                        Tracks = tracks
                     });
                 }
 
@@ -639,6 +667,33 @@ namespace DeadEditor.Services
                         format = media[0]["format"]?.ToString();
                     }
 
+                    // Extract track listings from media
+                    List<MusicBrainzTrack>? tracks = null;
+                    if (media != null && media.Count > 0)
+                    {
+                        tracks = new List<MusicBrainzTrack>();
+                        foreach (var medium in media)
+                        {
+                            var trackList = medium["tracks"] as JArray;
+                            if (trackList != null)
+                            {
+                                foreach (var track in trackList)
+                                {
+                                    var position = track["position"]?.ToObject<int>() ?? 0;
+                                    var trackTitle = track["title"]?.ToString() ?? "";
+                                    var length = track["length"]?.ToObject<int?>();
+
+                                    tracks.Add(new MusicBrainzTrack
+                                    {
+                                        Position = position,
+                                        Title = trackTitle,
+                                        Length = length
+                                    });
+                                }
+                            }
+                        }
+                    }
+
                     // Get artwork URL
                     string? artworkUrl = null;
                     if (!string.IsNullOrEmpty(releaseGroupId))
@@ -655,7 +710,8 @@ namespace DeadEditor.Services
                         Format = format,
                         ReleaseId = releaseId,
                         ArtworkUrl = artworkUrl,
-                        Artist = artistCredit
+                        Artist = artistCredit,
+                        Tracks = tracks
                     });
                 }
 

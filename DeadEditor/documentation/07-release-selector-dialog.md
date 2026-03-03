@@ -228,14 +228,22 @@ A centered modal dialog (700x500px, resizable) with **dark theme (#1E1E1E backgr
 ```csharp
 public class ReleaseOption
 {
-    public string Title { get; set; }          // Album title
-    public string? Year { get; set; }          // Release year
-    public string? Label { get; set; }         // Record label
-    public string? Country { get; set; }       // Release country
-    public string? Format { get; set; }        // CD, Vinyl, Digital, etc.
-    public string ReleaseId { get; set; }      // MusicBrainz release ID (GUID)
-    public string? ArtworkUrl { get; set; }    // Album artwork URL (not displayed)
-    public string Artist { get; set; }         // Artist name
+    public string Title { get; set; }                 // Album title
+    public string? Year { get; set; }                 // Release year
+    public string? Label { get; set; }                // Record label
+    public string? Country { get; set; }              // Release country
+    public string? Format { get; set; }               // CD, Vinyl, Digital, etc.
+    public string ReleaseId { get; set; }             // MusicBrainz release ID (GUID)
+    public string? ArtworkUrl { get; set; }           // Album artwork URL (not displayed)
+    public string Artist { get; set; }                // Artist name
+    public List<MusicBrainzTrack>? Tracks { get; set; }  // Track listings from MusicBrainz (optional)
+}
+
+public class MusicBrainzTrack
+{
+    public int Position { get; set; }       // Track number (1-based)
+    public string Title { get; set; }       // Track title from MusicBrainz
+    public int? Length { get; set; }        // Duration in milliseconds (optional)
 }
 ```
 

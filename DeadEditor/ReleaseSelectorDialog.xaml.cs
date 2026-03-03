@@ -62,5 +62,13 @@ namespace DeadEditor
         public string ReleaseId { get; set; } = "";
         public string? ArtworkUrl { get; set; }
         public string Artist { get; set; } = "";
+        public List<MusicBrainzTrack>? Tracks { get; set; }  // Track listings from MusicBrainz (optional)
+    }
+
+    public class MusicBrainzTrack
+    {
+        public int Position { get; set; }        // Track number (1-based)
+        public string Title { get; set; } = "";  // Track title from MusicBrainz
+        public int? Length { get; set; }         // Duration in milliseconds (optional)
     }
 }

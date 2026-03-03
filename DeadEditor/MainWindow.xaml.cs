@@ -375,14 +375,47 @@ public partial class MainWindow : Window
 
                 if (selectedRelease != null)
                 {
-                    // Fill in the fields
                     _isUpdating = true;
 
-                    AlbumNameTextBox.Text = selectedRelease.Title;
-                    ReleaseYearTextBox.Text = selectedRelease.Year ?? "";
+                    // Universal fields (all album types)
                     ArtistTextBox.Text = selectedRelease.Artist;
+                    _albumInfo.Artist = selectedRelease.Artist;
 
-                    // Download and set artwork if available
+                    // Store release year for all types
+                    if (int.TryParse(selectedRelease.Year, out var year))
+                    {
+                        _albumInfo.ReleaseYear = year;
+                    }
+
+                    // Album-type-specific field population
+                    switch (_albumInfo.Type)
+                    {
+                        case AlbumType.Studio:
+                            // Studio Album: populate AlbumName, ReleaseYear, Edition fields
+                            AlbumNameTextBox.Text = selectedRelease.Title;
+                            ReleaseYearTextBox.Text = selectedRelease.Year ?? "";
+                            _albumInfo.AlbumName = selectedRelease.Title;
+                            break;
+
+                        case AlbumType.BoxSet:
+                            // Box Set: populate BoxSetName with MusicBrainz title
+                            BoxSetNameTextBox.Text = selectedRelease.Title;
+                            _albumInfo.BoxSetName = selectedRelease.Title;
+                            break;
+
+                        case AlbumType.OfficialRelease:
+                            // Official Release: populate OfficialRelease with MusicBrainz title
+                            OfficialReleaseTextBox.Text = selectedRelease.Title;
+                            _albumInfo.OfficialRelease = selectedRelease.Title;
+                            break;
+
+                        case AlbumType.Live:
+                            // Live Recording: no auto-fill (user manually enters Date/Venue/City/State)
+                            // MusicBrainz title available but not populated - user controls this data
+                            break;
+                    }
+
+                    // Download and set artwork if available (universal for all types)
                     if (!string.IsNullOrEmpty(selectedRelease.ArtworkUrl))
                     {
                         try
@@ -401,14 +434,17 @@ public partial class MainWindow : Window
                         }
                     }
 
-                    _albumInfo.AlbumName = selectedRelease.Title;
-                    if (int.TryParse(selectedRelease.Year, out var year))
+                    // Apply MusicBrainz track titles to preview column (if available)
+                    if (selectedRelease.Tracks != null && selectedRelease.Tracks.Count > 0)
                     {
-                        _albumInfo.ReleaseYear = year;
+                        for (int i = 0; i < Math.Min(_tracks.Count, selectedRelease.Tracks.Count); i++)
+                        {
+                            var mbTrack = selectedRelease.Tracks[i];
+                            _tracks[i].PreviewMetadata = mbTrack.Title;
+                        }
                     }
-                    _albumInfo.Artist = selectedRelease.Artist;
-                    _albumInfo.IsModified = true;
 
+                    _albumInfo.IsModified = true;
                     _isUpdating = false;
 
                     UpdateAlbumPreview();
@@ -496,14 +532,47 @@ public partial class MainWindow : Window
                     var selectedRelease = selectorDialog.SelectedRelease;
                     if (selectedRelease != null)
                     {
-                        // Fill in the fields (same logic as fingerprint lookup)
                         _isUpdating = true;
 
-                        AlbumNameTextBox.Text = selectedRelease.Title;
-                        ReleaseYearTextBox.Text = selectedRelease.Year ?? "";
+                        // Universal fields (all album types)
                         ArtistTextBox.Text = selectedRelease.Artist;
+                        _albumInfo.Artist = selectedRelease.Artist;
 
-                        // Download artwork
+                        // Store release year for all types
+                        if (int.TryParse(selectedRelease.Year, out var year))
+                        {
+                            _albumInfo.ReleaseYear = year;
+                        }
+
+                        // Album-type-specific field population
+                        switch (_albumInfo.Type)
+                        {
+                            case AlbumType.Studio:
+                                // Studio Album: populate AlbumName, ReleaseYear, Edition fields
+                                AlbumNameTextBox.Text = selectedRelease.Title;
+                                ReleaseYearTextBox.Text = selectedRelease.Year ?? "";
+                                _albumInfo.AlbumName = selectedRelease.Title;
+                                break;
+
+                            case AlbumType.BoxSet:
+                                // Box Set: populate BoxSetName with MusicBrainz title
+                                BoxSetNameTextBox.Text = selectedRelease.Title;
+                                _albumInfo.BoxSetName = selectedRelease.Title;
+                                break;
+
+                            case AlbumType.OfficialRelease:
+                                // Official Release: populate OfficialRelease with MusicBrainz title
+                                OfficialReleaseTextBox.Text = selectedRelease.Title;
+                                _albumInfo.OfficialRelease = selectedRelease.Title;
+                                break;
+
+                            case AlbumType.Live:
+                                // Live Recording: no auto-fill (user manually enters Date/Venue/City/State)
+                                // MusicBrainz title available but not populated - user controls this data
+                                break;
+                        }
+
+                        // Download and set artwork if available (universal for all types)
                         if (!string.IsNullOrEmpty(selectedRelease.ArtworkUrl))
                         {
                             try
@@ -522,14 +591,17 @@ public partial class MainWindow : Window
                             }
                         }
 
-                        _albumInfo.AlbumName = selectedRelease.Title;
-                        if (int.TryParse(selectedRelease.Year, out var year))
+                        // Apply MusicBrainz track titles to preview column (if available)
+                        if (selectedRelease.Tracks != null && selectedRelease.Tracks.Count > 0)
                         {
-                            _albumInfo.ReleaseYear = year;
+                            for (int i = 0; i < Math.Min(_tracks.Count, selectedRelease.Tracks.Count); i++)
+                            {
+                                var mbTrack = selectedRelease.Tracks[i];
+                                _tracks[i].PreviewMetadata = mbTrack.Title;
+                            }
                         }
-                        _albumInfo.Artist = selectedRelease.Artist;
-                        _albumInfo.IsModified = true;
 
+                        _albumInfo.IsModified = true;
                         _isUpdating = false;
 
                         UpdateAlbumPreview();

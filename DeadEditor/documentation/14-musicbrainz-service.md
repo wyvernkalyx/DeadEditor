@@ -162,8 +162,9 @@ public async Task<List<ReleaseOption>?> GetAllReleasesAsync(string recordingId)
 
 1. **Query MusicBrainz** for recording details (line 614):
    ```
-   /ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json
+   /ws/2/recording/{recordingId}?inc=releases+release-groups+artists+recordings&fmt=json
    ```
+   - Now includes `recordings` to fetch track listings
 2. **Extract artist credit** from recording (line 627)
 3. **Filter releases** (line 635-656):
    - **Status = "Official"** (line 645-649)
@@ -172,6 +173,10 @@ public async Task<List<ReleaseOption>?> GetAllReleasesAsync(string recordingId)
 4. **Extract metadata for each release** (line 657-704):
    - Title, year (from date), country, label, format (CD/Vinyl/etc.)
    - Get cover art URL → `GetCoverArtUrlAsync()` (line 690)
+   - **Extract track listings** from `media[].tracks[]` array:
+     * Track position (1-based track number)
+     * Track title
+     * Track length (duration in milliseconds, optional)
 5. **Remove duplicates** (line 707-711):
    - Group by `{Title, Year}`
    - Sort by year
