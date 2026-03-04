@@ -91,25 +91,36 @@ public string? Normalize(string title)
 
 **Rationale:** Different text sources use different apostrophe characters.
 
-#### Stage 3: Metadata Stripping (line 93-157)
+#### Stage 3: Date Normalization and Metadata Stripping (line 93-157)
 
-**Patterns Removed (in order):**
+**Date Convention:** All dates normalized to `(yyyy-MM-dd)` format. Venue info stripped, dates preserved and normalized.
+
+**Patterns Processed (in order):**
 
 1. **Filler Pattern** (line 94-97):
    - Regex: `@"\s*\(Filler:\s*\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$"`
    - Example: "Song (Filler: 1972-05-04 - Olympia Theatre)"
+   - **Action:** Strip entirely (filler metadata, not part of title)
 
-2. **US Date with Venue in Parentheses** (line 100-103):
-   - Regex: `@"\s*\(\d{1,2}/\d{1,2}/\d{2,4}\s+[^)]+\)\s*$"`
-   - Example: "Song (5/7/77 Barton Hall)"
+2. **Slash Date with Venue in Parentheses** (line 100-115):
+   - Patterns matched:
+     * `(yyyy/MM/dd Venue)` → `(yyyy-MM-dd)`
+     * `(M/d/yy Venue)` → `(yyyy-MM-dd)`
+     * `(MM/DD/YYYY Venue)` → `(yyyy-MM-dd)`
+   - Example: "Drums (1971/07/02 Filmore West)" → "Drums (1971-07-02)"
+   - Example: "Not Fade Away (5/7/77 Barton Hall)" → "Not Fade Away (1977-05-07)"
+   - Example: "Good Loving' (1971/07/02)" → "Good Loving' (1971-07-02)"
+   - **Action:** Parse date, strip venue, convert to yyyy-MM-dd, re-add to title
 
-3. **ISO Date with Location** (line 106-109):
+3. **Dash Date with Location** (line 117-120):
    - Regex: `@"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$"`
-   - Example: "Song (1972-05-04 - Boston)"
+   - Example: "Song (1972-05-04 - Boston)" → "Song (1972-05-04)"
+   - **Action:** Already yyyy-MM-dd format, just strip venue suffix
 
-4. **ISO Date Only** (line 112-115):
+4. **Dash Date Only** (line 123-126):
    - Regex: `@"\s*\(\d{4}-\d{2}-\d{2}\)\s*$"`
    - Example: "Song (1972-05-04)"
+   - **Action:** Already normalized, no change needed
 
 5. **Remaster Tags in Parentheses** (line 118-121):
    - Regex: `@"\s*\((?:\d{4}\s+)?Remastere?d?\)\s*$"`
@@ -512,6 +523,62 @@ File.WriteAllText(path, json);
 **Formatting:** `Formatting.Indented` - Human-readable JSON with indentation
 
 **Error Handling:** Unhandled (caller must catch IOException, UnauthorizedAccessException, etc.)
+
+---
+
+### NormalizeDateInTitle
+
+**Signature:**
+```csharp
+private string NormalizeDateInTitle(string title)
+```
+
+**Purpose:** Parse slash-formatted dates in parenthetical suffixes, strip venue info, convert to yyyy-MM-dd format.
+
+**Parameters:**
+- `title` (string) - Track title with potential date suffix
+
+**Return Value:** `string` - Title with normalized date or unchanged if no date found
+
+**Business Logic:**
+
+1. **Match slash date pattern** (regex):
+   ```regex
+   \s*\((\d{1,2}/\d{1,2}/\d{2,4})(?:\s+[^)]+)?\)\s*$
+   ```
+   - Captures: `(M/d/yy)`, `(MM/DD/YYYY)`, `(yyyy/MM/dd)`
+   - Optional venue info after date: `(?:\s+[^)]+)?`
+
+2. **Parse date components**:
+   - Split on `/` → 3 parts: part1, part2, part3
+   - Detect format:
+     * If part1 length == 4 → `yyyy/MM/dd` format
+     * Else → `M/d/yy` or `MM/DD/YYYY` format
+
+3. **Convert to yyyy-MM-dd**:
+   - `yyyy/MM/dd` format:
+     * year = part1, month = part2, day = part3
+   - `M/d/yy` format:
+     * month = part1, day = part2, year = part3
+     * If year < 100, add 1900 or 2000 (assumes 1970-2069 range)
+
+4. **Reconstruct title**:
+   - Extract base title (before date parentheses)
+   - Append normalized date: `{baseTitle} ({yyyy-MM-dd})`
+
+**Examples:**
+- `"Drums (1971/07/02 Filmore West)"` → `"Drums (1971-07-02)"`
+- `"Not Fade Away (5/7/77 Barton Hall)"` → `"Not Fade Away (1977-05-07)"`
+- `"Good Loving' (1971/07/02)"` → `"Good Loving' (1971-07-02)"`
+- `"Song Title"` → `"Song Title"` (no change)
+
+**Error Handling:**
+- Invalid date parsing → return original title unchanged
+- Date components out of range → return original title unchanged
+
+**Year Inference Rules (2-digit years):**
+- 70-99 → 1970-1999
+- 00-69 → 2000-2069
 
 ---
 

@@ -96,23 +96,14 @@ namespace DeadEditor.Services
                 @"\s*\(Filler:\s*\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
                 "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
 
-            // Remove (M/D/YY Venue, City, State) or (MM/DD/YYYY Venue, City, State) pattern
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\(\d{1,2}/\d{1,2}/\d{2,4}\s+[^)]+\)\s*$",
-                "").Trim();
+            // Normalize slash-formatted dates: (M/d/yy Venue) → (yyyy-MM-dd)
+            cleaned = NormalizeDateInTitle(cleaned);
 
-            // Remove (yyyy-MM-dd - Location) pattern
+            // Remove venue suffix from dash-formatted dates: (yyyy-MM-dd - Location) → (yyyy-MM-dd)
             cleaned = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
-                @"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
-                "").Trim();
-
-            // Remove (yyyy-MM-dd) pattern
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\(\d{4}-\d{2}-\d{2}\)\s*$",
-                "").Trim();
+                @"\s*\((\d{4}-\d{2}-\d{2})\s*-\s*[^)]+\)\s*$",
+                " ($1)").Trim();
 
             // Remove (YYYY Remaster), (YYYY Remastered), (Remaster), (Remastered) patterns
             cleaned = System.Text.RegularExpressions.Regex.Replace(
@@ -427,6 +418,69 @@ namespace DeadEditor.Services
 
             SaveDatabase();
             LoadDatabase(); // Reload to update lookup
+        }
+
+        /// <summary>
+        /// Normalize slash-formatted dates in parenthetical suffixes to yyyy-MM-dd format
+        /// </summary>
+        private string NormalizeDateInTitle(string title)
+        {
+            // Match pattern: (M/d/yy Venue) or (yyyy/MM/dd Venue) or (MM/DD/YYYY Venue)
+            var match = System.Text.RegularExpressions.Regex.Match(
+                title,
+                @"\s*\((\d{1,2}/\d{1,2}/\d{2,4})(?:\s+[^)]+)?\)\s*$");
+
+            if (!match.Success)
+                return title;  // No slash date found, return unchanged
+
+            try
+            {
+                // Extract the date string (without venue)
+                var dateString = match.Groups[1].Value;
+                var parts = dateString.Split('/');
+
+                if (parts.Length != 3)
+                    return title;  // Invalid format
+
+                int year, month, day;
+
+                // Detect format: yyyy/MM/dd vs M/d/yy
+                if (parts[0].Length == 4)
+                {
+                    // yyyy/MM/dd format
+                    year = int.Parse(parts[0]);
+                    month = int.Parse(parts[1]);
+                    day = int.Parse(parts[2]);
+                }
+                else
+                {
+                    // M/d/yy or MM/DD/YYYY format
+                    month = int.Parse(parts[0]);
+                    day = int.Parse(parts[1]);
+                    year = int.Parse(parts[2]);
+
+                    // Handle 2-digit years (70-99 → 1970-1999, 00-69 → 2000-2069)
+                    if (year < 100)
+                    {
+                        year += (year >= 70) ? 1900 : 2000;
+                    }
+                }
+
+                // Validate date components
+                if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100)
+                    return title;  // Invalid date, return unchanged
+
+                // Extract base title (everything before the date parentheses)
+                var baseTitle = title.Substring(0, match.Index).Trim();
+
+                // Reconstruct with normalized date
+                return $"{baseTitle} ({year:D4}-{month:D2}-{day:D2})";
+            }
+            catch
+            {
+                // Any parsing error, return original
+                return title;
+            }
         }
 
         private void SaveDatabase()
