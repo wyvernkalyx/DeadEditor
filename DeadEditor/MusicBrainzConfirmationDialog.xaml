@@ -1,0 +1,89 @@
+<Window x:Class="DeadEditor.MusicBrainzConfirmationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MusicBrainz Match Details" Height="550" Width="600"
+        WindowStartupLocation="CenterOwner"
+        Background="#1E1E1E"
+        Foreground="White"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="MusicBrainz Match Details"
+                   FontSize="18" FontWeight="Bold" Margin="0,0,0,5"/>
+        <TextBlock Grid.Row="1" Text="Review what will be imported from MusicBrainz"
+                   FontSize="12" Foreground="#CCCCCC" Margin="0,0,0,20"/>
+
+        <!-- Release Information -->
+        <GroupBox Grid.Row="2" Header="Release Information" Margin="0,0,0,15"
+                  Foreground="White" BorderBrush="#555555">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TitleTextBlock" TextWrapping="Wrap" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Artist:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ArtistTextBlock" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Year:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" x:Name="YearTextBlock" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Label:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" x:Name="LabelTextBlock" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Country:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="4" Grid.Column="1" x:Name="CountryTextBlock" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Format:" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="5" Grid.Column="1" x:Name="FormatTextBlock" Margin="0,0,0,5"/>
+            </Grid>
+        </GroupBox>
+
+        <!-- Fields That Will Be Updated -->
+        <GroupBox Grid.Row="3" Header="Fields That Will Be Updated" Margin="0,0,0,15"
+                  Foreground="White" BorderBrush="#555555">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="FieldUpdatesPanel" Margin="10">
+                    <!-- Dynamically populated based on album type -->
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+
+        <!-- Track Information -->
+        <Border Grid.Row="4" Background="#2D2D30" BorderBrush="#555555" BorderThickness="1" Padding="10" Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock x:Name="TrackInfoTextBlock" TextWrapping="Wrap" FontSize="12"/>
+                <TextBlock Text="Your original file-based track titles will remain in the Song column for comparison"
+                           TextWrapping="Wrap" FontSize="11" Foreground="#CCCCCC" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="ApplyButton" Content="Apply Changes" Width="120" Height="35" Margin="0,0,10,0"
+                    Background="#2E7D32" Foreground="White" Click="ApplyButton_Click" IsDefault="True"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="100" Height="35"
+                    Background="#555555" Foreground="White" Click="CancelButton_Click" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

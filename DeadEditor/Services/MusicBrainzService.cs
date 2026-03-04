@@ -485,7 +485,7 @@ namespace DeadEditor.Services
         {
             try
             {
-                var url = $"https://musicbrainz.org/ws/2/release-group/{releaseGroupId}?inc=releases+artists&fmt=json";
+                var url = $"https://musicbrainz.org/ws/2/release-group/{releaseGroupId}?inc=releases+artists+recordings&fmt=json";
 
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
@@ -595,7 +595,7 @@ namespace DeadEditor.Services
             try
             {
                 // Query MusicBrainz API for recording details
-                var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json";
+                var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists+recordings&fmt=json";
 
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();

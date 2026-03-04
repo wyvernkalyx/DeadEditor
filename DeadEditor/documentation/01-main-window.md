@@ -309,25 +309,38 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
        - User clicks "Select" or double-clicks row
      - If user cancels → Status: "Album lookup cancelled", workflow ends
      - If user selects release:
-       - **Universal fields (all album types):**
-         - Updates `Artist` field (always visible)
-         - Updates `ReleaseYear` (stored in model for all types)
-         - Downloads artwork from `selectedRelease.ArtworkUrl`
-           - Stores in `_albumInfo.ArtworkData` as byte array
-           - Sets `_albumInfo.ArtworkMimeType = "image/jpeg"`
-           - `UpdateArtworkDisplay()` renders artwork
-       - **Album-type-specific fields:**
-         - **Studio Album:** Populates `AlbumName`, `ReleaseYear`, `Edition` (if present) fields
-         - **Box Set:** Populates `BoxSetName` with MusicBrainz title
-         - **Official Release:** Populates `OfficialRelease` with MusicBrainz title
-         - **Live Recording:** No auto-fill (user manually enters Date/Venue/City/State)
-       - **Track data (if available):**
-         - MusicBrainz track titles shown in "Final Metadata Preview" column
-         - File-based titles remain in "Song" column
-         - User compares both and can manually edit as needed
-       - Refreshes all visible UI fields
-       - `UpdateAlbumPreview()` updates preview
-       - Status: "Album identified: [Title] ([Year])"
+       - Shows **MusicBrainz Confirmation Dialog** with details of what will be populated:
+         - Release details: Title, Artist, Year, Label, Country, Format
+         - Fields that will be updated (varies by album type):
+           * **Studio Album**: Album Name, Release Year, Artist, Artwork, Track Titles
+           * **Box Set**: Box Set Name, Artist, Year, Artwork, Track Titles
+           * **Official Release**: Official Release, Artist, Year, Artwork, Track Titles
+           * **Live Recording**: Artist, Year, Artwork, Track Titles (Date/Venue/City/State remain unchanged)
+         - Track count: "X MusicBrainz tracks will populate preview column"
+         - Buttons: "Apply Changes" (accept) or "Cancel" (reject)
+       - If user clicks "Apply Changes":
+         - **Universal fields (all album types):**
+           - Updates `Artist` field (always visible)
+           - Updates `ReleaseYear` (stored in model for all types)
+           - Downloads artwork from `selectedRelease.ArtworkUrl`
+             - Stores in `_albumInfo.ArtworkData` as byte array
+             - Sets `_albumInfo.ArtworkMimeType = "image/jpeg"`
+             - `UpdateArtworkDisplay()` renders artwork
+         - **Album-type-specific fields:**
+           - **Studio Album:** Populates `AlbumName`, `ReleaseYear`, `Edition` (if present) fields
+           - **Box Set:** Populates `BoxSetName` with MusicBrainz title
+           - **Official Release:** Populates `OfficialRelease` with MusicBrainz title
+           - **Live Recording:** No auto-fill (user manually enters Date/Venue/City/State)
+         - **Track data (if available):**
+           - MusicBrainz track titles shown in "Final Metadata Preview" column
+           - File-based titles remain in "Song" column
+           - User compares both and can manually edit as needed
+         - Refreshes all visible UI fields
+         - `UpdateAlbumPreview()` updates preview
+         - Status: "Album identified: [Title] ([Year])"
+       - If user clicks "Cancel":
+         - No changes applied
+         - Status: "MusicBrainz update cancelled"
    - **On failure (0 releases or error):**
      - Shows "Not Found" notification: "Could not identify this album using audio fingerprinting. Please enter the information manually."
      - Status: "Album lookup failed"

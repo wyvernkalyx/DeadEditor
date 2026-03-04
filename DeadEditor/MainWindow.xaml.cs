@@ -375,6 +375,19 @@ public partial class MainWindow : Window
 
                 if (selectedRelease != null)
                 {
+                    // Show confirmation dialog with details of what will be populated
+                    var confirmDialog = new MusicBrainzConfirmationDialog(selectedRelease, _albumInfo.Type, _tracks.Count)
+                    {
+                        Owner = this
+                    };
+
+                    if (confirmDialog.ShowDialog() != true)
+                    {
+                        // User cancelled confirmation
+                        StatusTextBlock.Text = "MusicBrainz update cancelled";
+                        return;
+                    }
+
                     _isUpdating = true;
 
                     // Universal fields (all album types)
@@ -532,6 +545,19 @@ public partial class MainWindow : Window
                     var selectedRelease = selectorDialog.SelectedRelease;
                     if (selectedRelease != null)
                     {
+                        // Show confirmation dialog with details of what will be populated
+                        var confirmDialog = new MusicBrainzConfirmationDialog(selectedRelease, _albumInfo.Type, _tracks.Count)
+                        {
+                            Owner = this
+                        };
+
+                        if (confirmDialog.ShowDialog() != true)
+                        {
+                            // User cancelled confirmation
+                            StatusTextBlock.Text = "MusicBrainz update cancelled";
+                            return;
+                        }
+
                         _isUpdating = true;
 
                         // Universal fields (all album types)

@@ -160,32 +160,32 @@ public async Task<List<ReleaseOption>?> GetAllReleasesAsync(string recordingId)
 
 **Business Logic:**
 
-1. **Query MusicBrainz** for recording details (line 614):
+1. **Query MusicBrainz** for recording details (line 598):
    ```
    /ws/2/recording/{recordingId}?inc=releases+release-groups+artists+recordings&fmt=json
    ```
-   - Now includes `recordings` to fetch track listings
-2. **Extract artist credit** from recording (line 627)
-3. **Filter releases** (line 635-656):
-   - **Status = "Official"** (line 645-649)
-   - **Primary type = "Album"** or null (line 651-655)
+   - Includes `recordings` to fetch track listings
+2. **Extract artist credit** from recording (line 611)
+3. **Filter releases** (line 619-639):
+   - **Status = "Official"** (line 629-633)
+   - **Primary type = "Album"** or null (line 635-639)
    - Skip compilations, singles, bootlegs
-4. **Extract metadata for each release** (line 657-704):
+4. **Extract metadata for each release** (line 641-715):
    - Title, year (from date), country, label, format (CD/Vinyl/etc.)
-   - Get cover art URL → `GetCoverArtUrlAsync()` (line 690)
-   - **Extract track listings** from `media[].tracks[]` array:
+   - Get cover art URL → `GetCoverArtUrlAsync()` (line 701)
+   - **Extract track listings** from `media[].tracks[]` array (line 670-695):
      * Track position (1-based track number)
      * Track title
      * Track length (duration in milliseconds, optional)
-5. **Remove duplicates** (line 707-711):
+5. **Remove duplicates** (line 718-723):
    - Group by `{Title, Year}`
    - Sort by year
 
 **Error Handling:**
-- Returns `null` if no releases found (line 625)
-- Catches exceptions and returns `null` (line 717-721)
+- Returns `null` if no releases found (line 608)
+- Catches exceptions and returns `null` (line 729-733)
 
-**Console Logging:** Logs artist, release count, and filtering decisions (lines 629-655)
+**Console Logging:** Logs artist, release count, and filtering decisions (lines 613-639)
 
 ---
 
@@ -325,12 +325,13 @@ private async Task<List<ReleaseOption>?> GetReleasesForReleaseGroupAsync(string 
 
 **Business Logic:**
 
-1. **Query MusicBrainz** for release-group details (line 532):
+1. **Query MusicBrainz** for release-group details (line 488):
    ```
-   /ws/2/release-group/{releaseGroupId}?inc=releases+artists&fmt=json
+   /ws/2/release-group/{releaseGroupId}?inc=releases+artists+recordings&fmt=json
    ```
-2. **Extract album title** from release-group (line 545)
-3. **For each release** (line 547-595):
+   - Includes `recordings` to fetch track listings
+2. **Extract album title** from release-group (line 501)
+3. **For each release** (line 503-579):
    - **Filter to official releases** (line 549-550)
    - Extract metadata: title, date, country, release ID
    - Extract year from date (line 557-561)
