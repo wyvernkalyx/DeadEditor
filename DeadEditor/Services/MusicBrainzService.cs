@@ -485,7 +485,7 @@ namespace DeadEditor.Services
         {
             try
             {
-                var url = $"https://musicbrainz.org/ws/2/release-group/{releaseGroupId}?inc=releases+artists+recordings&fmt=json";
+                var url = $"https://musicbrainz.org/ws/2/release-group/{releaseGroupId}?inc=releases+artists&fmt=json";
 
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
@@ -530,33 +530,6 @@ namespace DeadEditor.Services
                         format = media[0]["format"]?.ToString();
                     }
 
-                    // Extract track listings from media
-                    List<MusicBrainzTrack>? tracks = null;
-                    if (media != null && media.Count > 0)
-                    {
-                        tracks = new List<MusicBrainzTrack>();
-                        foreach (var medium in media)
-                        {
-                            var trackList = medium["tracks"] as JArray;
-                            if (trackList != null)
-                            {
-                                foreach (var track in trackList)
-                                {
-                                    var position = track["position"]?.ToObject<int>() ?? 0;
-                                    var trackTitle = track["title"]?.ToString() ?? "";
-                                    var length = track["length"]?.ToObject<int?>();
-
-                                    tracks.Add(new MusicBrainzTrack
-                                    {
-                                        Position = position,
-                                        Title = trackTitle,
-                                        Length = length
-                                    });
-                                }
-                            }
-                        }
-                    }
-
                     // Get artwork
                     string? artworkUrl = null;
                     if (!string.IsNullOrEmpty(releaseGroupId))
@@ -574,7 +547,7 @@ namespace DeadEditor.Services
                         ReleaseId = releaseId,
                         ArtworkUrl = artworkUrl,
                         Artist = artist,
-                        Tracks = tracks
+                        Tracks = null  // Tracks will be fetched separately via GetReleaseTracksAsync()
                     });
                 }
 
@@ -595,7 +568,7 @@ namespace DeadEditor.Services
             try
             {
                 // Query MusicBrainz API for recording details
-                var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists+recordings&fmt=json";
+                var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json";
 
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
@@ -667,33 +640,6 @@ namespace DeadEditor.Services
                         format = media[0]["format"]?.ToString();
                     }
 
-                    // Extract track listings from media
-                    List<MusicBrainzTrack>? tracks = null;
-                    if (media != null && media.Count > 0)
-                    {
-                        tracks = new List<MusicBrainzTrack>();
-                        foreach (var medium in media)
-                        {
-                            var trackList = medium["tracks"] as JArray;
-                            if (trackList != null)
-                            {
-                                foreach (var track in trackList)
-                                {
-                                    var position = track["position"]?.ToObject<int>() ?? 0;
-                                    var trackTitle = track["title"]?.ToString() ?? "";
-                                    var length = track["length"]?.ToObject<int?>();
-
-                                    tracks.Add(new MusicBrainzTrack
-                                    {
-                                        Position = position,
-                                        Title = trackTitle,
-                                        Length = length
-                                    });
-                                }
-                            }
-                        }
-                    }
-
                     // Get artwork URL
                     string? artworkUrl = null;
                     if (!string.IsNullOrEmpty(releaseGroupId))
@@ -711,7 +657,7 @@ namespace DeadEditor.Services
                         ReleaseId = releaseId,
                         ArtworkUrl = artworkUrl,
                         Artist = artistCredit,
-                        Tracks = tracks
+                        Tracks = null  // Tracks will be fetched separately via GetReleaseTracksAsync()
                     });
                 }
 
@@ -792,6 +738,67 @@ namespace DeadEditor.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error querying MusicBrainz: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets track listings for a specific release ID
+        /// </summary>
+        public async Task<List<MusicBrainzTrack>?> GetReleaseTracksAsync(string releaseId)
+        {
+            try
+            {
+                Console.WriteLine($"=== Getting track data for release {releaseId} ===");
+
+                // Query MusicBrainz API for release details with recordings
+                var url = $"https://musicbrainz.org/ws/2/release/{releaseId}?inc=recordings+artists&fmt=json";
+
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                var data = JObject.Parse(json);
+
+                // Extract media array
+                var media = data["media"] as JArray;
+                if (media == null || media.Count == 0)
+                {
+                    Console.WriteLine("No media found for this release");
+                    return null;
+                }
+
+                var tracks = new List<MusicBrainzTrack>();
+
+                // Extract tracks from all media (discs)
+                foreach (var medium in media)
+                {
+                    var trackList = medium["tracks"] as JArray;
+                    if (trackList != null)
+                    {
+                        foreach (var track in trackList)
+                        {
+                            var position = track["position"]?.ToObject<int>() ?? 0;
+                            var trackTitle = track["title"]?.ToString() ?? "";
+                            var length = track["length"]?.ToObject<int?>();
+
+                            tracks.Add(new MusicBrainzTrack
+                            {
+                                Position = position,
+                                Title = trackTitle,
+                                Length = length
+                            });
+                        }
+                    }
+                }
+
+                Console.WriteLine($"Found {tracks.Count} tracks for this release");
+
+                return tracks.Count > 0 ? tracks : null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting release tracks: {ex.Message}");
                 return null;
             }
         }

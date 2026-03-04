@@ -162,9 +162,10 @@ public async Task<List<ReleaseOption>?> GetAllReleasesAsync(string recordingId)
 
 1. **Query MusicBrainz** for recording details (line 598):
    ```
-   /ws/2/recording/{recordingId}?inc=releases+release-groups+artists+recordings&fmt=json
+   /ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json
    ```
-   - Includes `recordings` to fetch track listings
+   - Does NOT include `recordings` (invalid parameter for recording endpoint)
+   - Returns release summaries only (no track data)
 2. **Extract artist credit** from recording (line 611)
 3. **Filter releases** (line 619-639):
    - **Status = "Official"** (line 629-633)
@@ -172,14 +173,14 @@ public async Task<List<ReleaseOption>?> GetAllReleasesAsync(string recordingId)
    - Skip compilations, singles, bootlegs
 4. **Extract metadata for each release** (line 641-715):
    - Title, year (from date), country, label, format (CD/Vinyl/etc.)
+   - Release ID (for later track data fetching)
    - Get cover art URL → `GetCoverArtUrlAsync()` (line 701)
-   - **Extract track listings** from `media[].tracks[]` array (line 670-695):
-     * Track position (1-based track number)
-     * Track title
-     * Track length (duration in milliseconds, optional)
+   - **Track data NOT included** (must be fetched separately per release)
 5. **Remove duplicates** (line 718-723):
    - Group by `{Title, Year}`
    - Sort by year
+
+**Note:** Track listings are NOT available from this endpoint. After the user selects a release, call `GetReleaseTracksAsync()` to fetch track data for that specific release.
 
 **Error Handling:**
 - Returns `null` if no releases found (line 608)
@@ -327,9 +328,10 @@ private async Task<List<ReleaseOption>?> GetReleasesForReleaseGroupAsync(string 
 
 1. **Query MusicBrainz** for release-group details (line 488):
    ```
-   /ws/2/release-group/{releaseGroupId}?inc=releases+artists+recordings&fmt=json
+   /ws/2/release-group/{releaseGroupId}?inc=releases+artists&fmt=json
    ```
-   - Includes `recordings` to fetch track listings
+   - Does NOT include `recordings` (invalid parameter for release-group endpoint)
+   - Returns release summaries only (no track data)
 2. **Extract album title** from release-group (line 501)
 3. **For each release** (line 503-579):
    - **Filter to official releases** (line 549-550)
@@ -339,7 +341,10 @@ private async Task<List<ReleaseOption>?> GetReleasesForReleaseGroupAsync(string 
    - Extract format from `media` array (CD/Vinyl/Digital) (line 570-575)
    - Get cover art URL → `GetCoverArtUrlAsync()` (line 577-582)
    - Create `ReleaseOption` object (line 584-594)
+   - **Track data NOT included** (must be fetched separately per release)
 4. **Return release options** or null
+
+**Note:** Track listings are NOT available from this endpoint. After the user selects a release, call `GetReleaseTracksAsync()` to fetch track data for that specific release.
 
 **Error Handling:**
 - Returns `null` if no releases found (line 542)
@@ -384,6 +389,58 @@ private async Task<AlbumLookupResult?> QueryMusicBrainzAsync(string recordingId)
 - Returns `AlbumLookupResult` (single album) instead of `List<ReleaseOption>`
 - Auto-selects "primary" release (original album, usually)
 - No filtering or duplicate removal
+
+---
+
+### GetReleaseTracksAsync
+
+**Signature:**
+```csharp
+public async Task<List<MusicBrainzTrack>?> GetReleaseTracksAsync(string releaseId)
+```
+
+**Purpose:** Get track listings for a specific release ID.
+
+**Parameters:**
+- `releaseId` (string) - MusicBrainz release ID (MBID)
+
+**Return Value:** `List<MusicBrainzTrack>?` - Track listings or null if none found
+
+**Business Logic:**
+
+1. **Query MusicBrainz** for release details:
+   ```
+   /ws/2/release/{releaseId}?inc=recordings+artists&fmt=json
+   ```
+   - `inc=recordings` requests full track data for this specific release
+   - This is the ONLY correct endpoint for fetching track listings
+2. **Extract media array** from response
+3. **For each medium** (disc):
+   - Extract `tracks[]` array
+   - For each track:
+     * Extract position (track number, 1-based)
+     * Extract title
+     * Extract length (duration in milliseconds, optional)
+4. **Return List<MusicBrainzTrack>** with all tracks from all media
+
+**Usage Pattern:**
+1. User performs fingerprint or manual search → gets list of `ReleaseOption` objects
+2. User selects a release from `ReleaseSelectorDialog`
+3. **Call `GetReleaseTracksAsync(selectedRelease.ReleaseId)`** to fetch track data
+4. Update `selectedRelease.Tracks` with the result
+5. Pass to `MusicBrainzConfirmationDialog` for display
+
+**Why This Approach:**
+- `/ws/2/recording/{id}` and `/ws/2/release-group/{id}` return **release summaries** (no track data)
+- `/ws/2/release/{id}?inc=recordings` returns **full release** with complete track listings
+- Only fetch tracks for the release the user actually selects (more efficient)
+
+**Error Handling:**
+- Returns `null` if release not found
+- Returns `null` if no media/tracks in response
+- Catches exceptions and returns `null`
+
+**Rate Limiting:** This is a MusicBrainz API call - observe 1 request per second limit
 
 ---
 

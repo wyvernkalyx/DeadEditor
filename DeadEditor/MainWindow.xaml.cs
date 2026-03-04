@@ -375,6 +375,11 @@ public partial class MainWindow : Window
 
                 if (selectedRelease != null)
                 {
+                    // Fetch track data for the selected release
+                    StatusTextBlock.Text = "Fetching track data...";
+                    var tracks = await _musicBrainzService.GetReleaseTracksAsync(selectedRelease.ReleaseId);
+                    selectedRelease.Tracks = tracks;  // Update the release with track data
+
                     // Show confirmation dialog with details of what will be populated
                     var confirmDialog = new MusicBrainzConfirmationDialog(selectedRelease, _albumInfo.Type, _tracks.Count)
                     {
@@ -545,6 +550,11 @@ public partial class MainWindow : Window
                     var selectedRelease = selectorDialog.SelectedRelease;
                     if (selectedRelease != null)
                     {
+                        // Fetch track data for the selected release
+                        StatusTextBlock.Text = "Fetching track data...";
+                        var tracks = await _musicBrainzService.GetReleaseTracksAsync(selectedRelease.ReleaseId);
+                        selectedRelease.Tracks = tracks;  // Update the release with track data
+
                         // Show confirmation dialog with details of what will be populated
                         var confirmDialog = new MusicBrainzConfirmationDialog(selectedRelease, _albumInfo.Type, _tracks.Count)
                         {
