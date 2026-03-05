@@ -32,6 +32,12 @@ public partial class MainWindow : Window
     private bool _isUpdating = false;
     private TaskCompletionSource<bool>? _notificationResult;
 
+    // Audio playback
+    private readonly AudioPlayerService _audioPlayer;
+    private readonly DispatcherTimer _playbackTimer;
+    private int _currentTrackIndex = -1;
+    private bool _isScrubbing = false;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -44,6 +50,15 @@ public partial class MainWindow : Window
 
         // Initialize MusicBrainz service with library settings (for fpcalc.exe path)
         _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
+
+        // Initialize audio player
+        _audioPlayer = new AudioPlayerService();
+        _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
+
+        // Initialize playback timer
+        _playbackTimer = new DispatcherTimer();
+        _playbackTimer.Interval = TimeSpan.FromMilliseconds(100);
+        _playbackTimer.Tick += PlaybackTimer_Tick;
 
         // Restore window position
         RestoreWindowPosition();
@@ -97,6 +112,10 @@ public partial class MainWindow : Window
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        // Stop playback and cleanup audio resources
+        StopPlaybackAndCleanup();
+        _audioPlayer.Dispose();
+
         // Save window position
         _librarySettings.MainWindowLeft = Left;
         _librarySettings.MainWindowTop = Top;
@@ -132,6 +151,9 @@ public partial class MainWindow : Window
     {
         try
         {
+            // Stop any ongoing playback when loading new folder
+            StopPlaybackAndCleanup();
+
             // Update the text box with the folder path
             FolderPathTextBox.Text = folderPath;
 
@@ -458,7 +480,9 @@ public partial class MainWindow : Window
                         for (int i = 0; i < Math.Min(_tracks.Count, selectedRelease.Tracks.Count); i++)
                         {
                             var mbTrack = selectedRelease.Tracks[i];
-                            _tracks[i].PreviewMetadata = mbTrack.Title;
+                            // Normalize any slash dates in MusicBrainz track titles before applying
+                            var normalizedTitle = _normalizationService.NormalizeDateInTitle(mbTrack.Title);
+                            _tracks[i].PreviewMetadata = normalizedTitle;
                         }
                     }
 
@@ -636,7 +660,9 @@ public partial class MainWindow : Window
                             for (int i = 0; i < Math.Min(_tracks.Count, selectedRelease.Tracks.Count); i++)
                             {
                                 var mbTrack = selectedRelease.Tracks[i];
-                                _tracks[i].PreviewMetadata = mbTrack.Title;
+                                // Normalize any slash dates in MusicBrainz track titles before applying
+                                var normalizedTitle = _normalizationService.NormalizeDateInTitle(mbTrack.Title);
+                                _tracks[i].PreviewMetadata = normalizedTitle;
                             }
                         }
 
@@ -740,6 +766,19 @@ public partial class MainWindow : Window
     private void TracksDataGrid_LoadingRow(object? sender, System.Windows.Controls.DataGridRowEventArgs e)
     {
         UpdateRowBackground(e.Row);
+
+        // Add double-click handler for track playback
+        e.Row.MouseDoubleClick += (s, args) =>
+        {
+            if (TracksDataGrid.SelectedItem is TrackInfo track)
+            {
+                int index = _tracks.IndexOf(track);
+                if (index >= 0)
+                {
+                    PlayTrack(index);
+                }
+            }
+        };
     }
 
     private void UpdateRowBackground(DataGridRow row)
@@ -1323,4 +1362,176 @@ public partial class MainWindow : Window
             _notificationResult?.SetResult(false);
         }
     }
+
+    #region Audio Playback
+
+    private void PreviousTrackButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTrackIndex > 0)
+        {
+            PlayTrack(_currentTrackIndex - 1);
+        }
+    }
+
+    private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_audioPlayer.IsPlaying)
+        {
+            _audioPlayer.Pause();
+            _playbackTimer.Stop();
+            PlayPauseButton.Content = "▶ Play";
+        }
+        else if (_currentTrackIndex >= 0)
+        {
+            _audioPlayer.Play();
+            _playbackTimer.Start();
+            PlayPauseButton.Content = "⏸ Pause";
+        }
+        else if (_tracks.Count > 0)
+        {
+            // No track selected, play first track
+            PlayTrack(0);
+        }
+    }
+
+    private void StopButton_Click(object sender, RoutedEventArgs e)
+    {
+        _audioPlayer.Stop();
+        _playbackTimer.Stop();
+        _currentTrackIndex = -1;
+
+        PlayPauseButton.Content = "▶ Play";
+        PlayPauseButton.IsEnabled = _tracks.Count > 0;
+        StopButton.IsEnabled = false;
+        ProgressSlider.IsEnabled = false;
+        ProgressSlider.Value = 0;
+
+        NowPlayingText.Text = "No track playing";
+        TrackInfoText.Text = "";
+        CurrentTimeText.Text = "0:00";
+
+        UpdateNavigationButtons();
+    }
+
+    private void NextTrackButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentTrackIndex < _tracks.Count - 1)
+        {
+            PlayTrack(_currentTrackIndex + 1);
+        }
+    }
+
+    private void PlayTrack(int index)
+    {
+        if (index < 0 || index >= _tracks.Count)
+            return;
+
+        var track = _tracks[index];
+
+        try
+        {
+            _audioPlayer.LoadFile(track.FilePath);
+            _audioPlayer.Volume = (float)(VolumeSlider.Value / 100.0);
+            _audioPlayer.Play();
+
+            _currentTrackIndex = index;
+            _playbackTimer.Start();
+
+            // Update UI
+            PlayPauseButton.Content = "⏸ Pause";
+            PlayPauseButton.IsEnabled = true;
+            StopButton.IsEnabled = true;
+            ProgressSlider.IsEnabled = true;
+            ProgressSlider.Maximum = _audioPlayer.TotalDuration.TotalSeconds;
+
+            // Update now playing text
+            string displayTitle = !string.IsNullOrEmpty(track.NormalizedTitle)
+                ? track.NormalizedTitle
+                : track.Title;
+            NowPlayingText.Text = $"♪ {displayTitle}";
+            TrackInfoText.Text = $"Track {index + 1} of {_tracks.Count}";
+
+            // Update time display
+            TotalTimeText.Text = FormatTime(_audioPlayer.TotalDuration);
+            CurrentTimeText.Text = "0:00";
+
+            UpdateNavigationButtons();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error playing track: {ex.Message}", "Playback Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void PlaybackTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_audioPlayer.IsPlaying && !_isScrubbing)
+        {
+            ProgressSlider.Value = _audioPlayer.CurrentPosition.TotalSeconds;
+            CurrentTimeText.Text = FormatTime(_audioPlayer.CurrentPosition);
+        }
+    }
+
+    private void AudioPlayer_PlaybackStopped(object? sender, EventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            // Auto-advance to next track if not at end
+            if (_currentTrackIndex < _tracks.Count - 1)
+            {
+                PlayTrack(_currentTrackIndex + 1);
+            }
+            else
+            {
+                // End of playlist
+                StopButton_Click(this, new RoutedEventArgs());
+            }
+        });
+    }
+
+    private void ProgressSlider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _isScrubbing = true;
+    }
+
+    private void ProgressSlider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _isScrubbing = false;
+        if (_audioPlayer.IsPlaying || _currentTrackIndex >= 0)
+        {
+            _audioPlayer.Seek(TimeSpan.FromSeconds(ProgressSlider.Value));
+        }
+    }
+
+    private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_audioPlayer != null)
+        {
+            _audioPlayer.Volume = (float)(e.NewValue / 100.0);
+        }
+    }
+
+    private void UpdateNavigationButtons()
+    {
+        PreviousTrackButton.IsEnabled = _currentTrackIndex > 0;
+        NextTrackButton.IsEnabled = _currentTrackIndex < _tracks.Count - 1;
+    }
+
+    private void StopPlaybackAndCleanup()
+    {
+        _audioPlayer.Stop();
+        _playbackTimer.Stop();
+        _currentTrackIndex = -1;
+    }
+
+    private string FormatTime(TimeSpan time)
+    {
+        if (time.TotalHours >= 1)
+        {
+            return time.ToString(@"h\:mm\:ss");
+        }
+        return time.ToString(@"m\:ss");
+    }
+
+    #endregion
 }

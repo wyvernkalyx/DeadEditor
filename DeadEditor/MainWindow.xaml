@@ -236,6 +236,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Track List -->
@@ -325,7 +326,7 @@
                 </GroupBox>
 
                 <!-- Selected Track Editor -->
-                <GroupBox Grid.Row="1" Header="SELECTED TRACK" MinHeight="120">
+                <GroupBox Grid.Row="1" Header="SELECTED TRACK" MinHeight="120" Margin="0,0,0,10">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -346,6 +347,51 @@
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Date:" VerticalAlignment="Center" Margin="0,10,10,0"/>
                         <TextBox Grid.Row="1" Grid.Column="1" x:Name="SelectedDateTextBox" VerticalAlignment="Center" Margin="0,10,0,0" TextChanged="SelectedTrack_Changed"/>
+                    </Grid>
+                </GroupBox>
+
+                <!-- Audio Playback Controls -->
+                <GroupBox Grid.Row="2" Header="PLAYBACK" MinHeight="140">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Transport Controls -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <Button x:Name="PreviousTrackButton" Content="⏮ Previous" Width="100" Height="35" Margin="5" Click="PreviousTrackButton_Click" IsEnabled="False" FontSize="14"/>
+                            <Button x:Name="PlayPauseButton" Content="▶ Play" Width="100" Height="35" Margin="5" Click="PlayPauseButton_Click" IsEnabled="False" FontSize="14" FontWeight="SemiBold"/>
+                            <Button x:Name="StopButton" Content="⏹ Stop" Width="100" Height="35" Margin="5" Click="StopButton_Click" IsEnabled="False" FontSize="14"/>
+                            <Button x:Name="NextTrackButton" Content="⏭ Next" Width="100" Height="35" Margin="5" Click="NextTrackButton_Click" IsEnabled="False" FontSize="14"/>
+                        </StackPanel>
+
+                        <!-- Now Playing Info -->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <TextBlock x:Name="NowPlayingText" Text="No track playing" FontSize="14" Foreground="#CCCCCC" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TrackInfoText" Text="" FontSize="12" Foreground="#999999" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Progress and Volume -->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" x:Name="CurrentTimeText" Text="0:00" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#CCCCCC"/>
+                            <Slider Grid.Column="1" x:Name="ProgressSlider" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center"
+                                    PreviewMouseDown="ProgressSlider_PreviewMouseDown"
+                                    PreviewMouseUp="ProgressSlider_PreviewMouseUp"
+                                    IsEnabled="False"/>
+                            <TextBlock Grid.Column="2" x:Name="TotalTimeText" Text="0:00" FontSize="12" VerticalAlignment="Center" Margin="10,0,20,0" Foreground="#CCCCCC"/>
+                            <TextBlock Grid.Column="3" Text="Volume:" FontSize="12" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="#CCCCCC"/>
+                            <Slider Grid.Column="4" x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="75" VerticalAlignment="Center" ValueChanged="VolumeSlider_ValueChanged"/>
+                        </Grid>
                     </Grid>
                 </GroupBox>
             </Grid>

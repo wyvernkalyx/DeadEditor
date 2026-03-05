@@ -432,7 +432,7 @@ namespace DeadEditor.Services
         /// <summary>
         /// Normalize slash-formatted dates in parenthetical suffixes to yyyy-MM-dd format
         /// </summary>
-        private string NormalizeDateInTitle(string title)
+        public string NormalizeDateInTitle(string title)
         {
             // Match pattern: (M/d/yy Venue) or (yyyy/MM/dd Venue) or (MM/DD/YYYY Venue)
             var match = System.Text.RegularExpressions.Regex.Match(

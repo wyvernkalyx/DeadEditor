@@ -26,8 +26,14 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 - Track List (DataGrid in upper GroupBox) showing:
   - Track #, Song, Final Metadata Preview, Segue checkbox (→), Duration
   - Rows highlight in dark yellow/gold when song not in database
-- Selected Track Editor (lower GroupBox):
+  - Double-click track to play audio
+- Selected Track Editor (middle GroupBox):
   - Title textbox, Segue checkbox, Performance Date textbox
+- Audio Playback Controls (lower GroupBox):
+  - Transport buttons (Previous, Play/Pause, Stop, Next)
+  - Now playing display with track info
+  - Progress slider with time display
+  - Volume slider
 
 **Bottom Section:**
 - Status bar with text and progress bar (hidden by default)
@@ -143,6 +149,45 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Title | TextBox | `SelectedTitleTextBox` | Updates selected track's `Title` property, refreshes preview | `SelectedTrack_Changed` → `UpdateTrackPreviews()` | Working |
 | Segue checkbox | CheckBox | `SelectedSegueCheckBox` | Updates selected track's `HasSegue` property, refreshes preview | `SelectedTrack_Changed` → `UpdateTrackPreviews()` | Working |
 | Performance Date | TextBox | `SelectedDateTextBox` | Updates selected track's `PerformanceDate` property (for live tracks in studio albums) | `SelectedTrack_Changed` → `UpdateTrackPreviews()` | Working |
+
+### Audio Playback Controls Section
+
+Allows users to audition tracks while reviewing metadata before import. Uses the same `AudioPlayerService` as LibraryBrowserWindow for consistent playback behavior.
+
+#### Transport Controls
+
+| Element | Type | Name | Action | API/Service Call | Status |
+|---------|------|------|--------|-----------------|--------|
+| Previous button | Button | `PreviousTrackButton` | Plays previous track in list, disabled if at first track | `PreviousTrackButton_Click` → `PlayTrack(_currentTrackIndex - 1)` | Working |
+| Play/Pause button | Button | `PlayPauseButton` | Toggles playback, content toggles between "▶ Play" and "⏸ Pause" | `PlayPauseButton_Click` checks `_audioPlayer.IsPlaying` | Working |
+| Stop button | Button | `StopButton` | Stops playback, resets UI, disables until next play | `StopButton_Click` → `_audioPlayer.Stop()` | Working |
+| Next button | Button | `NextTrackButton` | Plays next track in list, disabled if at last track | `NextTrackButton_Click` → `PlayTrack(_currentTrackIndex + 1)` | Working |
+
+#### Now Playing Display
+
+| Element | Type | Name | Action | API/Service Call | Status |
+|---------|------|------|--------|-----------------|--------|
+| Now playing text | TextBlock | `NowPlayingText` | Shows "♪ [Song Title]" or "No track playing" | Updated in `PlayTrack()` | Working |
+| Track info | TextBlock | `TrackInfoText` | Shows "Track X of Y" | Updated in `PlayTrack()` | Working |
+
+#### Playback Progress Controls
+
+| Element | Type | Name | Action | API/Service Call | Status |
+|---------|------|------|--------|-----------------|--------|
+| Current time | TextBlock | `CurrentTimeText` | Shows current playback position (M:SS format) | Updated by `_playbackTimer` every 100ms | Working |
+| Progress slider | Slider | `ProgressSlider` | Shows/seeks playback position, uses `_isScrubbing` flag | `PreviewMouseUp` → `_audioPlayer.Seek()` | Working |
+| Total time | TextBlock | `TotalTimeText` | Shows total track duration (M:SS format) | Set in `PlayTrack()` from `_audioPlayer.TotalDuration` | Working |
+| Volume slider | Slider | `VolumeSlider` | Adjusts volume 0-100%, default 75% | `VolumeSlider_ValueChanged` → `_audioPlayer.Volume` | Working |
+
+#### Playback Behavior
+
+- **Track Selection:** Double-clicking a track in the DataGrid or selecting and clicking Play starts playback
+- **Auto-advance:** When a track finishes, automatically plays next track (if not last)
+- **Cleanup:** Playback stops automatically when:
+  - User selects new folder (LoadFolder)
+  - User closes window (Window_Closing)
+  - User clicks Import to Library
+- **Background operation:** Playback continues while user edits metadata, normalizes songs, etc.
 
 ### Status Bar Section
 
