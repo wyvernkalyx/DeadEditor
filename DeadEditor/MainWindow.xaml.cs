@@ -467,6 +467,9 @@ public partial class MainWindow : Window
 
                     UpdateAlbumPreview();
 
+                    // Refresh DataGrid to show updated track data (Bug fix: grid wasn't refreshing)
+                    TracksDataGrid.Items.Refresh();
+
                     StatusTextBlock.Text = $"Album identified: {selectedRelease.Title} ({selectedRelease.Year})";
                 }
             }
@@ -641,6 +644,9 @@ public partial class MainWindow : Window
                         _isUpdating = false;
 
                         UpdateAlbumPreview();
+
+                        // Refresh DataGrid to show updated track data (Bug fix: grid wasn't refreshing)
+                        TracksDataGrid.Items.Refresh();
 
                         StatusTextBlock.Text = $"Album selected: {selectedRelease.Title} ({selectedRelease.Year})";
                     }

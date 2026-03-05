@@ -198,8 +198,10 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
    - `NormalizeButton_Click` fires (line 670)
    - If no tracks → shows "No Files" notification, exits
    - `_normalizationService.NormalizeAll(_tracks)` fuzzy-matches all song titles
-     - Tries exact match first (canonical title or alias)
+     - **First:** Normalizes slash-formatted dates in `track.Title` (e.g., "(1971/07/02 Filmore West)" → "(1971-07-02)")
+     - **Then:** Tries exact match first (canonical title or alias)
      - Falls back to Levenshtein distance (max 2 characters or 20% of string length)
+     - Sets `track.Title` with normalized date format (if date found)
      - Sets `track.NormalizedTitle` for matched songs, leaves empty for unmatched
    - `UpdateTrackPreviews()` refreshes preview metadata column (line 684)
    - `TracksDataGrid.Items.Refresh()` re-renders grid (line 687)
@@ -335,6 +337,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
            - MusicBrainz track titles shown in "Final Metadata Preview" column
            - File-based titles remain in "Song" column
            - User compares both and can manually edit as needed
+           - `TracksDataGrid.Items.Refresh()` called to force grid re-render
          - Refreshes all visible UI fields
          - `UpdateAlbumPreview()` updates preview
          - Status: "Album identified: [Title] ([Year])"

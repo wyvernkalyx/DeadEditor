@@ -332,6 +332,15 @@ public int NormalizeAll(List<TrackInfo> tracks)
 int matched = 0;
 foreach (var track in tracks)
 {
+    // First, normalize any slash-formatted dates in the title
+    // This ensures dates like "(1971/07/02 Filmore West)" become "(1971-07-02)"
+    var dateNormalizedTitle = NormalizeDateInTitle(track.Title);
+    if (dateNormalizedTitle != track.Title)
+    {
+        track.Title = dateNormalizedTitle;  // Update the title with normalized date
+    }
+
+    // Then normalize the song name for matching
     var normalized = Normalize(track.Title);
     if (normalized != null)
     {
@@ -342,9 +351,11 @@ foreach (var track in tracks)
 return matched;
 ```
 
-**Side Effects:** Modifies `track.NormalizedTitle` for each successful match
+**Side Effects:**
+- Modifies `track.Title` to normalize slash-formatted dates to yyyy-MM-dd format
+- Modifies `track.NormalizedTitle` for each successful match
 
-**Use Case:** MainWindow calls this after loading folder to normalize all tracks at once.
+**Use Case:** MainWindow calls this after loading folder to normalize all tracks at once. Also called when user clicks "Normalize All Songs" button.
 
 ---
 
