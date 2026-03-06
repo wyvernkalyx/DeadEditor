@@ -13,6 +13,7 @@ namespace DeadEditor.Models
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
         public bool IsModified { get; set; }           // Has user made changes?
         public string PreviewMetadata { get; set; }    // Preview of final metadata to be written
+        public bool HasMusicBrainzData { get; set; }   // Track has MusicBrainz data in PreviewMetadata (should not be overwritten by normalization)
 
         // Computed property for display in grid (shows normalized if available)
         public string DisplayTitle =>

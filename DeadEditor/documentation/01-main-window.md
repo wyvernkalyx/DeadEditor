@@ -249,6 +249,9 @@ Allows users to audition tracks while reviewing metadata before import. Uses the
      - Sets `track.Title` with normalized date format (if date found)
      - Sets `track.NormalizedTitle` for matched songs, leaves empty for unmatched
    - `UpdateTrackPreviews()` refreshes preview metadata column (line 684)
+     - **Important:** Preserves MusicBrainz data in Preview column
+     - Only updates Preview for tracks where `HasMusicBrainzData == false`
+     - Tracks with MusicBrainz data keep their Preview values unchanged
    - `TracksDataGrid.Items.Refresh()` re-renders grid (line 687)
    - `UpdateAllRowBackgrounds()` highlights unmatched songs in yellow/gold (line 690)
    - Status: "Normalized X of Y songs"
@@ -381,8 +384,10 @@ Allows users to audition tracks while reviewing metadata before import. Uses the
          - **Track data (if available):**
            - MusicBrainz track titles shown in "Final Metadata Preview" column
            - File-based titles remain in "Song" column
+           - Sets `HasMusicBrainzData = true` flag to preserve MusicBrainz data
            - User compares both and can manually edit as needed
            - `TracksDataGrid.Items.Refresh()` called to force grid re-render
+           - **Important:** Subsequent "Normalize All Songs" will NOT overwrite Preview column for tracks with MusicBrainz data
          - Refreshes all visible UI fields
          - `UpdateAlbumPreview()` updates preview
          - Status: "Album identified: [Title] ([Year])"

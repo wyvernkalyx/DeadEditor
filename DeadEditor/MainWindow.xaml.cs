@@ -238,6 +238,10 @@ public partial class MainWindow : Window
 
         foreach (var track in _tracks)
         {
+            // Skip tracks with MusicBrainz data - preserve their Preview column
+            if (track.HasMusicBrainzData)
+                continue;
+
             // Studio albums don't append dates to track titles
             if (_albumInfo.Type == AlbumType.Studio)
             {
@@ -483,6 +487,7 @@ public partial class MainWindow : Window
                             // Normalize any slash dates in MusicBrainz track titles before applying
                             var normalizedTitle = _normalizationService.NormalizeDateInTitle(mbTrack.Title);
                             _tracks[i].PreviewMetadata = normalizedTitle;
+                            _tracks[i].HasMusicBrainzData = true;  // Mark as having MusicBrainz data to prevent overwriting
                         }
                     }
 
@@ -663,6 +668,7 @@ public partial class MainWindow : Window
                                 // Normalize any slash dates in MusicBrainz track titles before applying
                                 var normalizedTitle = _normalizationService.NormalizeDateInTitle(mbTrack.Title);
                                 _tracks[i].PreviewMetadata = normalizedTitle;
+                                _tracks[i].HasMusicBrainzData = true;  // Mark as having MusicBrainz data to prevent overwriting
                             }
                         }
 
