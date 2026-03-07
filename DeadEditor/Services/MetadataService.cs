@@ -30,13 +30,17 @@ namespace DeadEditor.Services
                     {
                         var rawTitle = file.Tag.Title ?? Path.GetFileNameWithoutExtension(filePath);
 
+                        // Parse title to separate song name from trailing date
+                        var (songName, extractedDate) = ParseTitleAndDate(rawTitle);
+
                         var track = new TrackInfo
                         {
                             FilePath = filePath,
                             FileName = Path.GetFileName(filePath),
                             TrackNumber = (int)file.Tag.Track,
                             DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
-                            Title = rawTitle,
+                            SongName = songName,
+                            TrackDate = extractedDate ?? "",  // Use extracted date or empty string
                             Duration = file.Properties.Duration.ToString(@"mm\:ss"),
                             IsModified = false
                         };
@@ -44,9 +48,11 @@ namespace DeadEditor.Services
                         // Check for existing segue markers before cleaning
                         track.HasSegue = HasSegueMarker(rawTitle);
 
-                        // Try to extract date from existing title if in format "Song (yyyy-MM-dd)"
-                        track.PerformanceDate = ExtractDateFromTitle(track.Title)
-                                               ?? ExtractDateFromAlbum(file.Tag.Album);
+                        // If no date was extracted from title, try album metadata
+                        if (string.IsNullOrEmpty(track.TrackDate))
+                        {
+                            track.TrackDate = ExtractDateFromAlbum(file.Tag.Album) ?? "";
+                        }
 
                         // DON'T clean the title here - keep original metadata in Title field
                         // Cleaning will happen during normalization for matching purposes
@@ -196,7 +202,7 @@ namespace DeadEditor.Services
                 {
                     // Build the final title with date
                     var date = track.PerformanceDate ?? album.Date;
-                    var title = track.NormalizedTitle ?? track.Title;
+                    var title = track.SongName ?? track.Title;
 
                     // Remove any existing date suffix to prevent duplicates
                     // Pattern matches: " (yyyy-MM-dd)" or " (yyyy-MM-dd) (yyyy-MM-dd)" etc.
@@ -249,6 +255,31 @@ namespace DeadEditor.Services
         {
             // Check for common segue markers: >, ->, →, [>], etc.
             return Regex.IsMatch(title, @"[-–]?>|→|\[>\]");
+        }
+
+        /// <summary>
+        /// Parses a title to separate the song name from any trailing date in parentheses.
+        /// Prevents date doubling when re-importing files with existing formatted metadata.
+        /// </summary>
+        /// <param name="title">Full title from ID3 tag, e.g. "Bertha (1971-04-27)"</param>
+        /// <returns>Tuple of (songName, date). Date is null if no date found.</returns>
+        private (string songName, string? date) ParseTitleAndDate(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return (title, null);
+
+            // Match trailing date in format (yyyy-MM-dd) at end of title
+            // Handles: "Bertha (1971-04-27)", "Not Fade Away / Goin' Down (1971-04-05)"
+            var match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})\)\s*$");
+            if (match.Success)
+            {
+                var songName = match.Groups[1].Value.Trim();
+                var date = match.Groups[2].Value;
+                return (songName, date);
+            }
+
+            // No date found - return original title
+            return (title, null);
         }
 
         private string? ExtractDateFromTitle(string title)
