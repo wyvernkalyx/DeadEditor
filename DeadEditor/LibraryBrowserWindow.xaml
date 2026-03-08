@@ -338,7 +338,7 @@
                             </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="60"/>
-                                <DataGridTextColumn Header="Title" Binding="{Binding PreviewMetadata}" Width="*"/>
+                                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
                                 <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="100"/>
                             </DataGrid.Columns>
                         </DataGrid>
