@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeadEditor"
         mc:Ignorable="d"
-        Title="Dead Editor - Import" Height="700" Width="1100"
-        Background="#1E1E1E">
+        Title="Dead Editor - Import" Height="750" Width="1200"
+        Background="#1E1E1E"
+        Closing="MainWindow_Closing">
     <Window.Resources>
+        <!-- Dark Theme Styles -->
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="#CCCCCC"/>
         </Style>
@@ -16,27 +18,135 @@
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="BorderBrush" Value="#555555"/>
             <Setter Property="CaretBrush" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="4"/>
         </Style>
-        <Style TargetType="GroupBox">
-            <Setter Property="Foreground" Value="#CCCCCC"/>
-            <Setter Property="BorderBrush" Value="#555555"/>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#999999"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="0,0,0,2"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="Background" Value="#3E3E42"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
             <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Background" Value="#0E639C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#1177BB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#0E7A0D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#13A10E"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="1"
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Name="ContentSite"
+                                                      Grid.Column="0"
+                                                      IsHitTestVisible="False"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                      Margin="6,3,6,3"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left"
+                                                      TextBlock.Foreground="#FFFFFF"/>
+                                    <Path Name="Arrow"
+                                          Grid.Column="1"
+                                          Fill="#FFFFFF"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                </Grid>
+                            </ToggleButton>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                            Background="#2D2D30"
+                                            BorderThickness="1"
+                                            BorderBrush="#555555"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#2D2D30"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#094771"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#0E639C"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="DataGrid">
             <Setter Property="Background" Value="#252526"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
             <Setter Property="BorderBrush" Value="#555555"/>
-            <Setter Property="RowBackground" Value="#252526"/>
-            <Setter Property="AlternatingRowBackground" Value="#2D2D30"/>
+            <Setter Property="RowBackground" Value="#1E1E1E"/>
+            <Setter Property="AlternatingRowBackground" Value="#252526"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#3F3F46"/>
         </Style>
     </Window.Resources>
-    <DockPanel>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <!-- Menu Bar -->
-        <Menu DockPanel.Dock="Top" Background="#2D2D30" Foreground="#FFFFFF" FontSize="16">
+        <Menu Grid.Row="0" Background="#2D2D30" Foreground="#FFFFFF" FontSize="14">
             <Menu.Resources>
                 <Style TargetType="MenuItem">
                     <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -44,253 +154,190 @@
                     <Style.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
                             <Setter Property="Background" Value="#094771"/>
-                            <Setter Property="Foreground" Value="#FFFFFF"/>
-                        </Trigger>
-                        <Trigger Property="IsSubmenuOpen" Value="True">
-                            <Setter Property="Background" Value="#094771"/>
-                            <Setter Property="Foreground" Value="#FFFFFF"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-                <Style TargetType="Separator">
-                    <Setter Property="Background" Value="#555555"/>
-                </Style>
             </Menu.Resources>
-            <MenuItem Header="_File" Foreground="#FFFFFF">
-                <MenuItem Header="_Settings..." Click="SettingsMenuItem_Click" FontSize="16" Foreground="#FFFFFF" Background="#2D2D30"/>
-                <Separator Background="#555555"/>
-                <MenuItem Header="E_xit" Click="ExitMenuItem_Click" FontSize="16" Foreground="#FFFFFF" Background="#2D2D30"/>
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" Click="ExitMenuItem_Click"/>
             </MenuItem>
         </Menu>
 
-        <!-- Main Content -->
-        <Grid Margin="10">
+        <Grid Grid.Row="1" Margin="10">
             <Grid.RowDefinitions>
+                <!-- Folder Bar -->
                 <RowDefinition Height="Auto"/>
+                <!-- Action Bar -->
+                <RowDefinition Height="Auto"/>
+                <!-- Album Info Bar -->
+                <RowDefinition Height="Auto"/>
+                <!-- Main Content (Track List + Artwork) -->
                 <RowDefinition Height="*"/>
+                <!-- Playback Bar -->
+                <RowDefinition Height="Auto"/>
+                <!-- Status Bar -->
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-        <!-- Top Controls -->
-        <Grid Grid.Row="0" Margin="0,0,0,10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <!-- Source Selection -->
+            <!-- ===== SECTION 1: FOLDER BAR ===== -->
             <Grid Grid.Row="0" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" x:Name="BrowseButton" Content="Select Folder..." Width="150" Height="35" Margin="0,0,10,0" Click="BrowseButton_Click" FontSize="16"/>
-                <TextBox Grid.Column="1" x:Name="FolderPathTextBox" VerticalAlignment="Center" IsReadOnly="True" FontSize="16"/>
+                <Button Grid.Column="0" x:Name="BrowseButton" Content="Select Folder..."
+                        Width="140" Height="32" Margin="0,0,10,0"
+                        Click="BrowseButton_Click" FontSize="14"/>
+                <TextBox Grid.Column="1" x:Name="FolderPathTextBox"
+                         VerticalAlignment="Center" IsReadOnly="True"
+                         FontFamily="Consolas" FontSize="13" Background="#2D2D30"/>
             </Grid>
 
-            <!-- Action Buttons -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button x:Name="ReadButton" Content="Read from Files" Height="35" Padding="15,5" Margin="0,0,8,0" Click="ReadButton_Click" FontSize="16"/>
-                <Button x:Name="NormalizeButton" Content="Normalize All Songs" Height="35" Padding="15,5" Margin="0,0,8,0" Click="NormalizeButton_Click" FontSize="16"/>
-                <Button x:Name="RenumberButton" Content="Renumber Tracks" Height="35" Padding="15,5" Margin="0,0,8,0" Click="RenumberButton_Click" FontSize="16"/>
-                <Button x:Name="WriteButton" Content="Write to Files" Height="35" Padding="15,5" Margin="0,0,8,0" Click="WriteButton_Click" FontSize="16"/>
-                <Button x:Name="ViewInfoButton" Content="View Info File" Height="35" Padding="15,5" Margin="0,0,8,0" Click="ViewInfoButton_Click" FontSize="16" IsEnabled="False"/>
-                <Button x:Name="ImportButton" Content="Import to Library" Height="35" Padding="15,5" Margin="0,0,8,0" Click="ImportButton_Click" FontWeight="Bold" FontSize="16"/>
-                <Button x:Name="CancelButton" Content="Cancel" Height="35" Padding="15,5" Margin="0,0,0,0" Click="CancelButton_Click" FontSize="16"/>
-            </StackPanel>
-        </Grid>
+            <!-- ===== SECTION 2: ACTION BAR ===== -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Main Content Area -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="350"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <!-- Left: Action Buttons -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button x:Name="ReadButton" Content="Read" Height="32"
+                            Click="ReadButton_Click" Margin="0,0,6,0" FontSize="13"
+                            ToolTip="Read metadata from audio files"/>
+                    <Button x:Name="MusicBrainzButton" Content="🔎 MusicBrainz" Height="32"
+                            Style="{StaticResource AccentButton}"
+                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="13"
+                            ToolTip="Lookup album on MusicBrainz"/>
+                    <Button x:Name="NormalizeButton" Content="✨ Normalize" Height="32"
+                            Style="{StaticResource AccentButton}"
+                            Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="13"
+                            ToolTip="Normalize all song titles"/>
+                    <Button x:Name="RenumberButton" Content="Renumber" Height="32"
+                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="13"
+                            ToolTip="Renumber tracks sequentially"/>
+                    <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
+                            Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="13"
+                            IsEnabled="False"
+                            ToolTip="View info file"/>
+                </StackPanel>
 
-            <!-- Album Information Panel -->
-            <GroupBox Grid.Column="0" Header="ALBUM INFORMATION" Margin="0,0,10,0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Margin="10">
-                    <!-- Artwork Display -->
-                    <Border BorderBrush="Gray" BorderThickness="1" Width="200" Height="200" Margin="0,0,0,15" HorizontalAlignment="Center">
-                        <Grid>
-                            <TextBlock x:Name="NoArtworkText" Text="No Artwork"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       Foreground="Gray" FontStyle="Italic"/>
-                            <Image x:Name="ArtworkImage" Stretch="Uniform" Visibility="Collapsed"/>
-                        </Grid>
-                    </Border>
+                <!-- Center: Status Text -->
+                <TextBlock Grid.Column="1" x:Name="StatusTextBlock"
+                           Text="Ready" FontSize="13"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="#CCCCCC"/>
 
-                    <!-- Artwork Buttons -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
-                        <Button x:Name="ChangeArtworkButton" Content="Change..." Width="80" Margin="0,0,5,0" Click="ChangeArtworkButton_Click"/>
-                        <Button x:Name="RemoveArtworkButton" Content="Remove" Width="80" Margin="5,0,0,0" Click="RemoveArtworkButton_Click"/>
-                    </StackPanel>
+                <!-- Right: Write/Import Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button x:Name="WriteButton" Content="Write to Files" Height="32"
+                            Click="WriteButton_Click" Margin="0,0,6,0" FontSize="13"
+                            ToolTip="Write metadata to audio files"/>
+                    <Button x:Name="ImportButton" Content="Import to Library" Height="32"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="ImportButton_Click" Margin="0,0,6,0" FontSize="13"
+                            ToolTip="Import to library"/>
+                    <Button x:Name="CancelButton" Content="Cancel" Height="32"
+                            Click="CancelButton_Click" FontSize="13"
+                            ToolTip="Close window"/>
+                </StackPanel>
+            </Grid>
 
-                    <Separator Margin="0,0,0,15"/>
+            <!-- ===== SECTION 3: ALBUM INFO BAR ===== -->
+            <Border Grid.Row="2" BorderBrush="#555555" BorderThickness="1"
+                    Background="#2D2D30" Padding="10" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                    <!-- Album Type Selection -->
-                    <TextBlock Text="Album Type:" Margin="0,0,0,5" FontWeight="Bold" FontSize="14"/>
-                    <Border BorderBrush="#555555" BorderThickness="1" Padding="10" Background="#2D2D30" Margin="0,0,0,15">
-                        <StackPanel>
-                            <RadioButton x:Name="LiveRecordingRadio" GroupName="AlbumType"
-                                         IsChecked="True" Margin="0,0,0,8" Checked="AlbumType_Changed"
-                                         Foreground="#FFFFFF" FontSize="13">
-                                <RadioButton.Content>
-                                    <StackPanel>
-                                        <TextBlock Text="Live (Audience Recording)" FontWeight="SemiBold" Foreground="#FFFFFF"/>
-                                        <TextBlock Text="Taper recordings from concerts" FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton x:Name="OfficialReleaseRadio" GroupName="AlbumType"
-                                         Margin="0,0,0,8" Checked="AlbumType_Changed"
-                                         Foreground="#FFFFFF" FontSize="13">
-                                <RadioButton.Content>
-                                    <StackPanel>
-                                        <TextBlock Text="Official Release" FontWeight="SemiBold" Foreground="#FFFFFF"/>
-                                        <TextBlock Text="Dave's Picks, Dick's Picks, Road Trips, etc." FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton x:Name="StudioAlbumRadio" GroupName="AlbumType"
-                                         Margin="0,0,0,8" Checked="AlbumType_Changed"
-                                         Foreground="#FFFFFF" FontSize="13">
-                                <RadioButton.Content>
-                                    <StackPanel>
-                                        <TextBlock Text="Studio Album" FontWeight="SemiBold" Foreground="#FFFFFF"/>
-                                        <TextBlock Text="Workingman's Dead, American Beauty, etc." FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                            <RadioButton x:Name="BoxSetRadio" GroupName="AlbumType"
-                                         Margin="0,0,0,0" Checked="AlbumType_Changed"
-                                         Foreground="#FFFFFF" FontSize="13">
-                                <RadioButton.Content>
-                                    <StackPanel>
-                                        <TextBlock Text="Box Set" FontWeight="SemiBold" Foreground="#FFFFFF"/>
-                                        <TextBlock Text="Digital downloads, physical box sets" FontSize="11" Foreground="#999999" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </RadioButton.Content>
-                            </RadioButton>
-                        </StackPanel>
-                    </Border>
+                    <!-- Artist -->
+                    <Label Grid.Row="0" Grid.Column="0" Content="ARTIST" VerticalAlignment="Top"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" x:Name="ArtistTextBox"
+                             Width="140" Height="26" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock Text="Artist:" Margin="0,0,0,5"/>
-                    <TextBox x:Name="ArtistTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
+                    <!-- Album Date -->
+                    <Label Grid.Row="0" Grid.Column="1" Content="ALBUM DATE" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="AlbumDateTextBox"
+                             Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
+                             ToolTip="yyyy-MM-dd"/>
 
-                    <!-- Studio Album Fields -->
-                    <TextBlock x:Name="AlbumNameLabel" Text="Album Name:" Margin="0,0,0,5" Visibility="Collapsed"/>
-                    <TextBox x:Name="AlbumNameTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"/>
+                    <!-- Venue -->
+                    <Label Grid.Row="0" Grid.Column="2" Content="VENUE" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" x:Name="VenueTextBox"
+                             Width="240" Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"/>
 
-                    <TextBlock x:Name="ReleaseYearLabel" Text="Release Year:" Margin="0,0,0,5" Visibility="Collapsed"/>
-                    <TextBox x:Name="ReleaseYearTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"/>
+                    <!-- City, State -->
+                    <Label Grid.Row="0" Grid.Column="3" Content="CITY, STATE" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" x:Name="CityStateTextBox"
+                             Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
+                             ToolTip="City, ST"/>
 
-                    <TextBlock x:Name="EditionLabel" Text="Edition/Remaster (optional):" Margin="0,0,0,5" Visibility="Collapsed"/>
-                    <TextBox x:Name="EditionTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"
-                             ToolTip="e.g., '2025 Remaster', 'Deluxe Edition', 'Expanded Edition'"/>
+                    <!-- Album / Release Name -->
+                    <Label Grid.Row="0" Grid.Column="4" Content="ALBUM / RELEASE NAME" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameTextBox"
+                             Width="190" Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
+                             ToolTip="Optional"/>
 
-                    <!-- Album Lookup Buttons (Studio Albums Only) -->
-                    <Button x:Name="LookupAlbumButton" Content="🔍 Fingerprint Lookup" Margin="0,0,0,10"
-                            Height="35" Click="LookupAlbumButton_Click" Visibility="Collapsed"
-                            ToolTip="Use audio fingerprinting to automatically identify this album"/>
+                    <!-- Year -->
+                    <Label Grid.Row="0" Grid.Column="5" Content="YEAR" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="5" x:Name="YearTextBox"
+                             Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
+                             ToolTip="Release year"/>
+                </Grid>
+            </Border>
 
-                    <Button x:Name="ManualSearchButton" Content="🔎 Manual Search" Margin="0,0,0,15"
-                            Height="35" Click="ManualSearchButton_Click" Visibility="Collapsed"
-                            ToolTip="Search MusicBrainz by album name and artist"/>
-
-
-                    <!-- Live Recording Fields -->
-                    <TextBlock x:Name="DateLabel" Text="Date:" Margin="0,0,0,5"/>
-                    <TextBox x:Name="DateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
-
-                    <TextBlock x:Name="VenueLabel" Text="Venue:" Margin="0,0,0,5"/>
-                    <TextBox x:Name="VenueTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
-
-                    <TextBlock x:Name="CityLabel" Text="City:" Margin="0,0,0,5"/>
-                    <TextBox x:Name="CityTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
-
-                    <TextBlock x:Name="StateLabel" Text="State:" Margin="0,0,0,5"/>
-                    <TextBox x:Name="StateTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
-
-                    <TextBlock x:Name="OfficialReleaseLabel" Text="Official Release (optional):" Margin="0,0,0,5" TextWrapping="Wrap"/>
-                    <TextBox x:Name="OfficialReleaseTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed"/>
-
-                    <!-- Box Set Fields -->
-                    <TextBlock x:Name="BoxSetNameLabel" Text="Box Set Name (optional):" Margin="0,0,0,5" Visibility="Collapsed" TextWrapping="Wrap"/>
-                    <TextBox x:Name="BoxSetNameTextBox" Margin="0,0,0,15" TextChanged="AlbumInfo_Changed" Visibility="Collapsed"
-                             ToolTip="e.g., 'Enjoying the Ride', 'Digital Album Live'"/>
-
-                    <Separator Margin="0,10,0,10"/>
-
-                    <TextBlock Text="Album Title Preview:" Margin="0,0,0,5" FontWeight="Bold"/>
-                    <Border BorderBrush="#555555" BorderThickness="1" Padding="5" Background="#2D2D30">
-                        <TextBlock x:Name="AlbumPreviewTextBlock" TextWrapping="Wrap" MinHeight="40" Foreground="#CCCCCC"/>
-                    </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </GroupBox>
-
-            <!-- Track List and Editor -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <!-- ===== SECTION 4: MAIN CONTENT (Track List + Artwork Panel) ===== -->
+            <Grid Grid.Row="3" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="220"/>
+                </Grid.ColumnDefinitions>
 
                 <!-- Track List -->
-                <GroupBox Grid.Row="0" Header="TRACK LIST" Margin="0,0,0,10">
+                <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="1"
+                        Background="#1E1E1E" Margin="0,0,10,0">
                     <DataGrid x:Name="TracksDataGrid"
                               AutoGenerateColumns="False"
                               CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeRows="False"
                               SelectionMode="Single"
                               SelectionChanged="TracksDataGrid_SelectionChanged"
                               LoadingRow="TracksDataGrid_LoadingRow"
-                              IsReadOnly="True"
-                              Margin="5"
+                              CellEditEnding="TracksDataGrid_CellEditEnding"
+                              PreparingCellForEdit="TracksDataGrid_PreparingCellForEdit"
                               Background="#1E1E1E"
                               Foreground="#FFFFFF"
                               RowBackground="#1E1E1E"
                               AlternatingRowBackground="#252526"
+                              BorderThickness="0"
+                              HeadersVisibility="Column"
                               GridLinesVisibility="Horizontal"
                               HorizontalGridLinesBrush="#3F3F46"
-                              BorderBrush="#3F3F46"
-                              FontSize="16">
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="#1E1E1E"/>
-                                <Setter Property="Foreground" Value="#FFFFFF"/>
-                                <Style.Triggers>
-                                    <Trigger Property="AlternationIndex" Value="1">
-                                        <Setter Property="Background" Value="#252526"/>
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="#264F78"/>
-                                        <Setter Property="Foreground" Value="#FFFFFF"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.RowStyle>
-                        <DataGrid.ColumnHeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="Background" Value="#2D2D30"/>
-                                <Setter Property="Foreground" Value="#CCCCCC"/>
-                                <Setter Property="BorderBrush" Value="#3F3F46"/>
-                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
-                                <Setter Property="Padding" Value="8,6"/>
-                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="FontSize" Value="16"/>
-                            </Style>
-                        </DataGrid.ColumnHeaderStyle>
-                        <DataGrid.CellStyle>
-                            <Style TargetType="DataGridCell">
+                              FontSize="14"
+                              RowHeight="28">
+                        <DataGrid.Resources>
+                            <!-- Style for editable cells -->
+                            <Style x:Key="EditableCellStyle" TargetType="DataGridCell">
                                 <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="#FFFFFF"/>
-                                <Setter Property="BorderBrush" Value="#3F3F46"/>
-                                <Setter Property="BorderThickness" Value="0,0,1,0"/>
-                                <Setter Property="Padding" Value="8,4"/>
-                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="6,2"/>
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="DataGridCell">
@@ -308,124 +355,311 @@
                                         <Setter Property="Background" Value="#264F78"/>
                                         <Setter Property="Foreground" Value="#FFFFFF"/>
                                     </Trigger>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                        <Setter Property="Foreground" Value="#FFFFFF"/>
-                                        <Setter Property="Background" Value="Transparent"/>
+                                    <Trigger Property="IsEditing" Value="True">
+                                        <Setter Property="Background" Value="#3C3C3C"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
-                        </DataGrid.CellStyle>
+                        </DataGrid.Resources>
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#2D2D30"/>
+                                <Setter Property="Foreground" Value="#CCCCCC"/>
+                                <Setter Property="BorderBrush" Value="#3F3F46"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                <Setter Property="Padding" Value="6,4"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="FontSize" Value="13"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="#1E1E1E"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                                <Style.Triggers>
+                                    <Trigger Property="AlternationIndex" Value="1">
+                                        <Setter Property="Background" Value="#252526"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#264F78"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#2A2D2E"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="40"/>
-                            <DataGridTextColumn Header="Song" Binding="{Binding DisplayTitle}" Width="200"/>
-                            <DataGridTextColumn Header="Final Metadata (Preview)" Binding="{Binding PreviewMetadata}" Width="*"/>
-                            <DataGridCheckBoxColumn Header="→" Binding="{Binding HasSegue}" Width="40"/>
-                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="70"/>
+                            <!-- Track Number (read-only) -->
+                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}"
+                                                Width="40" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter Property="FontFamily" Value="Consolas"/>
+                                        <Setter Property="Foreground" Value="#CCCCCC"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Title (editable, shows display title with auto-appended date) -->
+                            <DataGridTemplateColumn Header="Title" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DisplayTitle}"
+                                                   VerticalAlignment="Center"
+                                                   Padding="4,0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
+                                                 Background="#3C3C3C"
+                                                 Foreground="#FFFFFF"
+                                                 BorderThickness="0"
+                                                 Padding="4,0"
+                                                 VerticalContentAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Segue Checkbox (editable) -->
+                            <DataGridCheckBoxColumn Header="→" Binding="{Binding Segue, UpdateSourceTrigger=PropertyChanged}"
+                                                    Width="40">
+                                <DataGridCheckBoxColumn.ElementStyle>
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridCheckBoxColumn.ElementStyle>
+                            </DataGridCheckBoxColumn>
+
+                            <!-- Track Date (editable, shows inherited or override) -->
+                            <DataGridTemplateColumn Header="Date" Width="110">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock VerticalAlignment="Center" Padding="4,0">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="{Binding TrackDate}"/>
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                    <Setter Property="FontStyle" Value="Normal"/>
+                                                    <Style.Triggers>
+                                                        <!-- If TrackDate is empty, show inherited date in gray italic -->
+                                                        <DataTrigger Binding="{Binding TrackDate}" Value="">
+                                                            <Setter Property="Text" Value="{Binding InheritedDate}"/>
+                                                            <Setter Property="Foreground" Value="#777777"/>
+                                                            <Setter Property="FontStyle" Value="Italic"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding TrackDate}" Value="{x:Null}">
+                                                            <Setter Property="Text" Value="{Binding InheritedDate}"/>
+                                                            <Setter Property="Foreground" Value="#777777"/>
+                                                            <Setter Property="FontStyle" Value="Italic"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding TrackDate, UpdateSourceTrigger=PropertyChanged}"
+                                                 Background="#3C3C3C"
+                                                 Foreground="#FFFFFF"
+                                                 BorderThickness="0"
+                                                 Padding="4,0"
+                                                 VerticalContentAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Duration (read-only) -->
+                            <DataGridTextColumn Header="Time" Binding="{Binding Duration}"
+                                                Width="60" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter Property="FontFamily" Value="Consolas"/>
+                                        <Setter Property="Foreground" Value="#CCCCCC"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                </GroupBox>
+                </Border>
 
-                <!-- Selected Track Editor -->
-                <GroupBox Grid.Row="1" Header="SELECTED TRACK" MinHeight="120" Margin="0,0,0,10">
-                    <Grid Margin="10">
+                <!-- Artwork Panel -->
+                <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="1"
+                        Background="#2D2D30" Padding="10">
+                    <StackPanel>
+                        <!-- Artwork Display -->
+                        <Border BorderBrush="#555555" BorderThickness="1"
+                                Width="176" Height="176"
+                                Background="#1E1E1E" Margin="0,0,0,10">
+                            <Grid>
+                                <TextBlock x:Name="NoArtworkText" Text="No Artwork"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Foreground="#777777" FontStyle="Italic" FontSize="12"/>
+                                <Image x:Name="ArtworkImage" Stretch="Uniform" Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Artwork Buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
+                            <Button x:Name="ChangeArtworkButton" Content="Change..."
+                                    Width="80" Height="26" Margin="0,0,5,0"
+                                    Click="ChangeArtworkButton_Click" FontSize="12"/>
+                            <Button x:Name="RemoveArtworkButton" Content="Remove"
+                                    Width="80" Height="26" Margin="5,0,0,0"
+                                    Click="RemoveArtworkButton_Click" FontSize="12"/>
+                        </StackPanel>
+
+                        <Separator Margin="0,0,0,10" Background="#555555"/>
+
+                        <!-- Album Type Dropdown -->
+                        <Label Content="ALBUM TYPE" Margin="0,0,0,3"/>
+                        <ComboBox x:Name="AlbumTypeComboBox" Height="26" Margin="0,0,0,15"
+                                  SelectionChanged="AlbumTypeComboBox_SelectionChanged"
+                                  FontSize="13">
+                            <ComboBoxItem Content="Auto-detect" IsSelected="True"/>
+                            <ComboBoxItem Content="Live (Audience)"/>
+                            <ComboBoxItem Content="Official Release"/>
+                            <ComboBoxItem Content="Studio Album"/>
+                            <ComboBoxItem Content="Box Set"/>
+                        </ComboBox>
+
+                        <Separator Margin="0,0,0,10" Background="#555555"/>
+
+                        <!-- Folder Name Preview -->
+                        <Label Content="FOLDER NAME PREVIEW" Margin="0,0,0,3"/>
+                        <Border BorderBrush="#555555" BorderThickness="1"
+                                Background="#1E1E1E" Padding="6" Margin="0,0,0,10" MinHeight="60">
+                            <TextBlock x:Name="FolderPreviewTextBlock"
+                                       TextWrapping="Wrap"
+                                       Foreground="#D7BA7D"
+                                       FontSize="11"
+                                       LineHeight="14"/>
+                        </Border>
+
+                        <!-- Write Path -->
+                        <Label Content="WRITE PATH" Margin="0,0,0,3"/>
+                        <Border BorderBrush="#555555" BorderThickness="1"
+                                Background="#1E1E1E" Padding="6" MinHeight="50">
+                            <TextBlock x:Name="WritePathTextBlock"
+                                       TextWrapping="Wrap"
+                                       Foreground="#999999"
+                                       FontSize="10"
+                                       FontFamily="Consolas"
+                                       LineHeight="12"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ===== SECTION 5: PLAYBACK BAR ===== -->
+            <Border Grid.Row="4" BorderBrush="#555555" BorderThickness="1"
+                    Background="#2D2D30" Padding="10" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Transport Controls -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="PreviousTrackButton" Content="⏮" Width="40" Height="30"
+                                Margin="0,0,4,0" Click="PreviousTrackButton_Click"
+                                IsEnabled="False" FontSize="14"/>
+                        <Button x:Name="PlayPauseButton" Content="▶" Width="50" Height="30"
+                                Margin="0,0,4,0" Click="PlayPauseButton_Click"
+                                IsEnabled="False" FontSize="14" FontWeight="Bold"/>
+                        <Button x:Name="StopButton" Content="⏹" Width="40" Height="30"
+                                Margin="0,0,4,0" Click="StopButton_Click"
+                                IsEnabled="False" FontSize="14"/>
+                        <Button x:Name="NextTrackButton" Content="⏭" Width="40" Height="30"
+                                Margin="0,0,10,0" Click="NextTrackButton_Click"
+                                IsEnabled="False" FontSize="14"/>
+
+                        <!-- Now Playing Text -->
+                        <TextBlock x:Name="NowPlayingText" Text="No track playing"
+                                   FontSize="13" Foreground="#CCCCCC"
+                                   VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Progress Slider -->
+                    <Grid Grid.Column="1" Margin="20,0,20,0" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="SelectedTitleTextBox" VerticalAlignment="Center" TextChanged="SelectedTrack_Changed"/>
-
-                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Segue:" VerticalAlignment="Center" Margin="20,0,10,0"/>
-                        <CheckBox Grid.Row="0" Grid.Column="3" x:Name="SelectedSegueCheckBox" VerticalAlignment="Center" Checked="SelectedTrack_Changed" Unchecked="SelectedTrack_Changed"/>
-
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Date:" VerticalAlignment="Center" Margin="0,10,10,0"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="SelectedDateTextBox" VerticalAlignment="Center" Margin="0,10,0,0" TextChanged="SelectedTrack_Changed"/>
+                        <TextBlock Grid.Column="0" x:Name="CurrentTimeText"
+                                   Text="0:00" FontSize="11" FontFamily="Consolas"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"
+                                   Foreground="#CCCCCC"/>
+                        <Slider Grid.Column="1" x:Name="ProgressSlider"
+                                Minimum="0" Maximum="100" Value="0"
+                                VerticalAlignment="Center"
+                                PreviewMouseDown="ProgressSlider_PreviewMouseDown"
+                                PreviewMouseUp="ProgressSlider_PreviewMouseUp"
+                                IsEnabled="False"/>
+                        <TextBlock Grid.Column="2" x:Name="TotalTimeText"
+                                   Text="0:00" FontSize="11" FontFamily="Consolas"
+                                   VerticalAlignment="Center" Margin="8,0,0,0"
+                                   Foreground="#CCCCCC"/>
                     </Grid>
-                </GroupBox>
 
-                <!-- Audio Playback Controls -->
-                <GroupBox Grid.Row="2" Header="PLAYBACK" MinHeight="140">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                    <!-- Volume Control -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="🔊" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <Slider x:Name="VolumeSlider" Width="80"
+                                Minimum="0" Maximum="100" Value="75"
+                                VerticalAlignment="Center"
+                                ValueChanged="VolumeSlider_ValueChanged"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-                        <!-- Transport Controls -->
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                            <Button x:Name="PreviousTrackButton" Content="⏮ Previous" Width="100" Height="35" Margin="5" Click="PreviousTrackButton_Click" IsEnabled="False" FontSize="14"/>
-                            <Button x:Name="PlayPauseButton" Content="▶ Play" Width="100" Height="35" Margin="5" Click="PlayPauseButton_Click" IsEnabled="False" FontSize="14" FontWeight="SemiBold"/>
-                            <Button x:Name="StopButton" Content="⏹ Stop" Width="100" Height="35" Margin="5" Click="StopButton_Click" IsEnabled="False" FontSize="14"/>
-                            <Button x:Name="NextTrackButton" Content="⏭ Next" Width="100" Height="35" Margin="5" Click="NextTrackButton_Click" IsEnabled="False" FontSize="14"/>
-                        </StackPanel>
-
-                        <!-- Now Playing Info -->
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                            <TextBlock x:Name="NowPlayingText" Text="No track playing" FontSize="14" Foreground="#CCCCCC" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="TrackInfoText" Text="" FontSize="12" Foreground="#999999" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                        </StackPanel>
-
-                        <!-- Progress and Volume -->
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="60"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Column="0" x:Name="CurrentTimeText" Text="0:00" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#CCCCCC"/>
-                            <Slider Grid.Column="1" x:Name="ProgressSlider" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center"
-                                    PreviewMouseDown="ProgressSlider_PreviewMouseDown"
-                                    PreviewMouseUp="ProgressSlider_PreviewMouseUp"
-                                    IsEnabled="False"/>
-                            <TextBlock Grid.Column="2" x:Name="TotalTimeText" Text="0:00" FontSize="12" VerticalAlignment="Center" Margin="10,0,20,0" Foreground="#CCCCCC"/>
-                            <TextBlock Grid.Column="3" Text="Volume:" FontSize="12" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="#CCCCCC"/>
-                            <Slider Grid.Column="4" x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="75" VerticalAlignment="Center" ValueChanged="VolumeSlider_ValueChanged"/>
-                        </Grid>
-                    </Grid>
-                </GroupBox>
-            </Grid>
+            <!-- ===== SECTION 6: STATUS BAR ===== -->
+            <Border Grid.Row="5" BorderBrush="#555555" BorderThickness="1,0,0,0"
+                    Background="#252526" Padding="8,4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ProgressBar Grid.Row="1" x:Name="ProgressBar"
+                                 Height="3" Visibility="Collapsed"
+                                 Minimum="0" Maximum="100"
+                                 Background="#1E1E1E"
+                                 Foreground="#0E639C"
+                                 BorderThickness="0"/>
+                </Grid>
+            </Border>
         </Grid>
 
-        <!-- Status Bar (simplified - no player) -->
-        <Border Grid.Row="2" BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Padding="10" Background="#2D2D30">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" x:Name="StatusTextBlock" Text="Ready" FontSize="14" Margin="0,0,0,5" Foreground="#CCCCCC"/>
-                <ProgressBar Grid.Row="1" x:Name="ProgressBar" Height="20" Visibility="Collapsed" Minimum="0" Maximum="100"/>
-            </Grid>
-        </Border>
-
-        <!-- Notification Panel -->
-        <Border x:Name="NotificationPanel"
-                Grid.Row="0" Grid.RowSpan="2"
-                Background="#D0000000"
-                Visibility="Collapsed"
-                MouseDown="NotificationPanel_MouseDown">
+        <!-- Notification Panel (Modal Overlay) - Grid.RowSpan to cover entire window -->
+        <Grid x:Name="NotificationPanel" Grid.RowSpan="2" Panel.ZIndex="1000" Visibility="Collapsed">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.7"/>
+            </Grid.Background>
             <Border Background="#2D2D30"
                     BorderBrush="#007ACC"
                     BorderThickness="2"
-                    CornerRadius="8"
+                    CornerRadius="6"
                     MaxWidth="600"
                     MaxHeight="400"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Padding="30">
+                    Padding="25"
+                    MouseDown="NotificationPanel_MouseDown">
                 <Border.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="0" Opacity="0.8"/>
+                    <DropShadowEffect Color="Black" BlurRadius="30"
+                                      ShadowDepth="0" Opacity="0.8"/>
                 </Border.Effect>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -434,18 +668,33 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" x:Name="NotificationTitle" FontSize="20" FontWeight="Bold" Margin="0,0,0,15" Foreground="#FFFFFF"/>
-                    <ScrollViewer Grid.Row="1" MaxHeight="200" VerticalScrollBarVisibility="Auto" Margin="0,0,0,20">
-                        <TextBlock x:Name="NotificationMessage" TextWrapping="Wrap" FontSize="16" Foreground="#CCCCCC" LineHeight="24"/>
+                    <TextBlock Grid.Row="0" x:Name="NotificationTitle"
+                               FontSize="18" FontWeight="Bold"
+                               Margin="0,0,0,15" Foreground="#FFFFFF"/>
+                    <ScrollViewer Grid.Row="1" MaxHeight="250"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Margin="0,0,0,20">
+                        <TextBlock x:Name="NotificationMessage"
+                                   TextWrapping="Wrap" FontSize="14"
+                                   Foreground="#CCCCCC" LineHeight="20"/>
                     </ScrollViewer>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="NotificationYesButton" Content="Yes" Width="100" Height="40" Margin="5" Click="NotificationYes_Click" Visibility="Collapsed" FontSize="16" FontWeight="SemiBold"/>
-                        <Button x:Name="NotificationNoButton" Content="No" Width="100" Height="40" Margin="5" Click="NotificationNo_Click" Visibility="Collapsed" FontSize="16"/>
-                        <Button x:Name="NotificationOkButton" Content="OK" Width="100" Height="40" Margin="5" Click="NotificationOk_Click" FontSize="16" FontWeight="SemiBold"/>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <Button x:Name="NotificationYesButton" Content="Yes"
+                                Width="100" Height="36" Margin="5"
+                                Click="NotificationYes_Click" Visibility="Collapsed"
+                                FontSize="14" FontWeight="SemiBold"/>
+                        <Button x:Name="NotificationNoButton" Content="No"
+                                Width="100" Height="36" Margin="5"
+                                Click="NotificationNo_Click" Visibility="Collapsed"
+                                FontSize="14"/>
+                        <Button x:Name="NotificationOkButton" Content="OK"
+                                Width="100" Height="36" Margin="5"
+                                Click="NotificationOk_Click"
+                                FontSize="14" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Grid>
             </Border>
-        </Border>
         </Grid>
-    </DockPanel>
+    </Grid>
 </Window>

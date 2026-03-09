@@ -2,34 +2,29 @@ namespace DeadEditor.Models
 {
     public enum AlbumType
     {
-        Live,            // Live concert recording (audience/taper recording)
-        Studio,          // Studio album release
-        OfficialRelease, // Official live release (Dave's Picks, Road Trips, Dick's Picks, etc.)
-        BoxSet           // Box set collection (digital downloads or physical box sets with multiple shows)
+        AudienceRecording,  // Audience/taper recordings (was Live)
+        OfficialRelease     // Official releases (studio albums, live albums, box sets, series)
     }
 
     public class AlbumInfo
     {
         public string FolderPath { get; set; }         // Path to the folder
-        public string Artist { get; set; }             // Default: "Grateful Dead"
+        public string Artist { get; set; }             // Artist name (always visible/editable)
 
-        // Album type (defaults to Live for backward compatibility)
-        public AlbumType Type { get; set; } = AlbumType.Live;
+        // Unified fields - all always visible and editable regardless of album type
+        public string AlbumDate { get; set; }          // yyyy-MM-dd (renamed from Date for clarity)
+        public string Venue { get; set; }              // Venue name (may be empty for official releases)
+        public string CityState { get; set; }          // City, State combined (simplified from separate City/State)
+        public string AlbumName { get; set; }          // Album or official release name
+        public string CollectionName { get; set; }     // Collection/box set name (optional, applies to either type)
+        public string Year { get; set; }               // Release year as string (may be empty)
 
-        // Live recording properties
-        public string Date { get; set; }               // yyyy-MM-dd (performance date for live, null for studio)
-        public string Venue { get; set; }              // e.g., "Barton Hall" (live only)
-        public string City { get; set; }               // e.g., "Ithaca" (live only)
-        public string State { get; set; }              // e.g., "NY" (live only)
-        public string OfficialRelease { get; set; }    // e.g., "Dave's Picks Vol. 29" (optional)
+        // Album type (defaults to Auto-detect)
+        public AlbumType Type { get; set; } = AlbumType.AudienceRecording;
 
-        // Studio album properties
-        public string AlbumName { get; set; }          // e.g., "Workingman's Dead" (studio only)
-        public int? ReleaseYear { get; set; }          // e.g., 1970 (studio only)
-        public string? Edition { get; set; }           // e.g., "2025 Remaster", "Deluxe Edition" (optional)
-
-        // Box set properties
-        public string? BoxSetName { get; set; }        // e.g., "Enjoying the Ride", "Digital Album Live" (box set only)
+        // Folder name override
+        public bool FolderNameOverride { get; set; }   // True if user manually edited folder name
+        public string CustomFolderName { get; set; }   // User's custom folder name (when override=true)
 
         public bool IsModified { get; set; }
 
@@ -41,47 +36,114 @@ namespace DeadEditor.Models
         public string? InfoFileContent { get; set; }   // Content of .txt info files found in folder
         public string? InfoFileName { get; set; }      // Name of the info file
 
+        // Legacy properties for backward compatibility with existing code
+        public string Date
+        {
+            get => AlbumDate;
+            set => AlbumDate = value;
+        }
+
+        public string City
+        {
+            get
+            {
+                // Extract city from "City, ST" format
+                if (string.IsNullOrEmpty(CityState)) return "";
+                var parts = CityState.Split(new[] { ',' }, 2);
+                return parts[0].Trim();
+            }
+            set
+            {
+                // Preserve state if it exists
+                var state = State;
+                CityState = string.IsNullOrEmpty(state) ? value : $"{value}, {state}";
+            }
+        }
+
+        public string State
+        {
+            get
+            {
+                // Extract state from "City, ST" format
+                if (string.IsNullOrEmpty(CityState)) return "";
+                var parts = CityState.Split(new[] { ',' }, 2);
+                return parts.Length > 1 ? parts[1].Trim() : "";
+            }
+            set
+            {
+                // Preserve city if it exists
+                var city = City;
+                CityState = string.IsNullOrEmpty(value) ? city : $"{city}, {value}";
+            }
+        }
+
+        public int? ReleaseYear
+        {
+            get => int.TryParse(Year, out var year) ? year : null;
+            set => Year = value?.ToString() ?? "";
+        }
+
+        public string OfficialRelease
+        {
+            get => AlbumName; // Map to unified AlbumName field
+            set => AlbumName = value;
+        }
+
+        public string BoxSetName
+        {
+            get => AlbumName; // Map to unified AlbumName field
+            set => AlbumName = value;
+        }
+
+        public string Edition { get; set; }            // Optional edition info (preserved as separate field)
+
         // Computed property for album title (adapts based on Type)
         public string AlbumTitle
         {
             get
             {
-                if (Type == AlbumType.Studio)
+                // Check for user override first
+                if (FolderNameOverride && !string.IsNullOrEmpty(CustomFolderName))
                 {
-                    // Studio album format: "Album Name (Year) [Edition]"
-                    if (!string.IsNullOrEmpty(AlbumName))
+                    return CustomFolderName;
+                }
+
+                if (Type == AlbumType.OfficialRelease)
+                {
+                    // Official Release with Date+Venue: "Date - Venue - City, ST : Album Name"
+                    if (!string.IsNullOrEmpty(AlbumDate) && !string.IsNullOrEmpty(Venue))
                     {
-                        var title = ReleaseYear.HasValue
-                            ? $"{AlbumName} ({ReleaseYear.Value})"
+                        var baseTitle = $"{AlbumDate} - {Venue} - {CityState}";
+                        if (!string.IsNullOrEmpty(AlbumName))
+                            baseTitle += $" : {AlbumName}";
+                        if (!string.IsNullOrEmpty(CollectionName))
+                            baseTitle += $" : {CollectionName}";
+                        return baseTitle;
+                    }
+                    // Official Release without Date+Venue (studio album): "Album Name (Year)"
+                    else if (!string.IsNullOrEmpty(AlbumName))
+                    {
+                        var title = !string.IsNullOrEmpty(Year)
+                            ? $"{AlbumName} ({Year})"
                             : AlbumName;
-
-                        if (!string.IsNullOrEmpty(Edition))
-                            title += $" [{Edition}]";
-
+                        if (!string.IsNullOrEmpty(CollectionName))
+                            title += $" : {CollectionName}";
                         return title;
                     }
-                    return "Unknown Album";
+                    return "Unknown Release";
                 }
-                else if (Type == AlbumType.BoxSet)
+                else // AudienceRecording
                 {
-                    // Box set format: "Date - Venue - City, State: Box Set Name"
-                    var baseTitle = $"{Date} - {Venue} - {City}, {State}";
-                    if (!string.IsNullOrEmpty(BoxSetName))
-                        return $"{baseTitle}: {BoxSetName}";
-                    return baseTitle;
-                }
-                else
-                {
-                    // Live recording format: "Date - Venue - City, State"
-                    var baseTitle = $"{Date} - {Venue} - {City}, {State}";
-                    if (!string.IsNullOrEmpty(OfficialRelease))
-                        return $"{baseTitle} : {OfficialRelease}";
+                    // Audience recording format: "Date - Venue - City, State"
+                    var baseTitle = $"{AlbumDate} - {Venue} - {CityState}";
+                    if (!string.IsNullOrEmpty(CollectionName))
+                        baseTitle += $" : {CollectionName}";
                     return baseTitle;
                 }
             }
         }
 
-        // Helper property to determine if this is a studio album
-        public bool IsStudioAlbum => Type == AlbumType.Studio;
+        // Helper property to determine if this is an official release
+        public bool IsOfficialRelease => Type == AlbumType.OfficialRelease;
     }
 }

@@ -88,10 +88,9 @@
                             </Setter>
                         </Style>
                     </ComboBox.Resources>
-                    <ComboBoxItem Content="All" Tag="All" Background="#2D2D30"/>
-                    <ComboBoxItem Content="🎸 Audience Recordings" Tag="Live" Background="#2D2D30"/>
-                    <ComboBoxItem Content="📀 Official Releases" Tag="OfficialRelease" Background="#2D2D30"/>
-                    <ComboBoxItem Content="💿 Studio Albums" Tag="Studio" Background="#2D2D30"/>
+                    <ComboBoxItem Content="All" Tag="All" Background="#2D2D30" Foreground="#CCCCCC"/>
+                    <ComboBoxItem Content="🎸 Audience Recordings" Tag="AudienceRecording" Background="#2D2D30" Foreground="#CCCCCC"/>
+                    <ComboBoxItem Content="📀 Official Releases" Tag="OfficialRelease" Background="#2D2D30" Foreground="#CCCCCC"/>
                 </ComboBox>
 
                 <TextBlock Grid.Column="2" Text="Search:" Foreground="#CCCCCC" FontSize="14"

@@ -1,31 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git push)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nUpdate TODO.md with session 2026-01-08 accomplishments and next steps\n\nUpdated TODO.md to reflect:\n- Latest commit c6f4801\n- 598 songs in database (594 Grateful Dead, 4 NRPS)\n- Advanced Search functionality with 3 tabs\n- Song database management features\n- Critical bug fixes (LINQ lazy evaluation, TextChanged recursion, multi-song collection)\n- All new files and dialogs added\n- Fixed minor UI issue note (main window opens in background)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git add TODO.md)",
-      "Bash(git commit -m \"Add studio albums as next session focus in TODO.md\")",
-      "Bash(dotnet build DeadEditor.csproj)",
-      "Bash(dotnet run --project DeadEditor.csproj)",
-      "Bash(dir /s /b *.xaml)",
-      "Bash(findstr -i import)",
-      "Bash(cat \"$APPDATA/DeadEditor/settings.json\")",
-      "Read(//d/Projects/library/**)",
-      "Bash(ls \"D:/Projects/library/Studio Albums/Blues for Allah (1975)/\")",
-      "Bash(taskkill //F //IM DeadEditor.exe)",
-      "Bash(taskkill /F /PID 12324)",
-      "Bash(taskkill //F //PID 12324)",
-      "Bash(taskkill /F /PID 106872)",
-      "Bash(taskkill //F //PID 106872)",
-      "Bash(taskkill /F /IM DeadEditor.exe)",
-      "Read(//d/Projects/DeadEditor/**)",
-      "Bash(taskkill /F /PID 30868)",
-      "Bash(dotnet --version)",
-      "Read(//d/Projects/**)",
-      "Bash(timeout 5)",
-      "Bash(exit 0)",
-      "Bash(timeout 10)",
-      "Bash(taskkill /F /PID 30964)"
+      "Bash(git add LibraryBrowserWindow.xaml)",
+      "Bash(git commit -m \"Fix blank track titles in Library Browser\" -m \"The Title column in Library Browser was showing blank for all tracks because it was binding to PreviewMetadata, which was removed in the MainWindow redesign.\" -m \"Changed binding from PreviewMetadata to Title (which maps to SongName in the new data model).\" -m \"Track titles now display correctly in the library concert detail view.\")",
+      "Bash(dotnet build)",
+      "Bash(git add -A)"
     ],
     "deny": [],
     "ask": []

@@ -342,7 +342,7 @@ namespace DeadEditor
             // Search audience recordings
             if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) && Directory.Exists(_librarySettings.LibraryRootPath))
             {
-                SearchInFolder(_librarySettings.LibraryRootPath, AlbumType.Live, searchDate, searchVenue, results);
+                SearchInFolder(_librarySettings.LibraryRootPath, AlbumType.AudienceRecording, searchDate, searchVenue, results);
             }
 
             // Search official releases
@@ -355,7 +355,7 @@ namespace DeadEditor
             var studioAlbumsPath = Path.Combine(_librarySettings.LibraryRootPath, "Studio Albums");
             if (Directory.Exists(studioAlbumsPath))
             {
-                SearchInFolder(studioAlbumsPath, AlbumType.Studio, searchDate, searchVenue, results);
+                SearchInFolder(studioAlbumsPath, AlbumType.OfficialRelease, searchDate, searchVenue, results);
             }
 
             return results;
@@ -387,7 +387,7 @@ namespace DeadEditor
                         if (!string.IsNullOrEmpty(searchDate))
                         {
                             // For live albums, check album date
-                            if (albumType == AlbumType.Live && folderName.Contains(searchDate))
+                            if (albumType == AlbumType.AudienceRecording && folderName.Contains(searchDate))
                             {
                                 matches = true;
                             }

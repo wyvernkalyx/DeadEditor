@@ -170,7 +170,7 @@ public partial class LibraryBrowserWindow : Window
         // Sort by type first (Live, Official Release, Studio), then by date/name
         _allShows = _allShows
             .OrderBy(s => s.Type)
-            .ThenByDescending(s => s.Type == AlbumType.Live ? s.Date : s.AlbumName)
+            .ThenByDescending(s => s.Type == AlbumType.AudienceRecording ? s.Date : s.AlbumName)
             .ToList();
 
         // Apply any active search filters
@@ -243,7 +243,7 @@ public partial class LibraryBrowserWindow : Window
 
                     _allShows.Add(new LibraryShow
                     {
-                        Type = AlbumType.Studio,
+                        Type = AlbumType.OfficialRelease,
                         AlbumName = albumName,
                         ReleaseYear = releaseYear,
                         Edition = edition,
@@ -299,7 +299,7 @@ public partial class LibraryBrowserWindow : Window
                         // Try to read OfficialRelease or BoxSet name from first audio file's album tag
                         string officialRelease = "";
                         string boxSetName = "";
-                        AlbumType albumType = AlbumType.Live;
+                        AlbumType albumType = AlbumType.AudienceRecording;
 
                         if (audioFiles.Length > 0)
                         {
@@ -321,13 +321,13 @@ public partial class LibraryBrowserWindow : Window
                                     {
                                         // Official Release format: "... : Release Name" (space before colon)
                                         officialRelease = spaceBeforeColonMatch.Groups[1].Value.Trim();
-                                        albumType = AlbumType.Live;
+                                        albumType = AlbumType.AudienceRecording;
                                     }
                                     else if (boxSetMatch.Success)
                                     {
                                         // Box Set format: "...: Box Set Name" (no space before colon)
                                         boxSetName = boxSetMatch.Groups[1].Value.Trim();
-                                        albumType = AlbumType.BoxSet;
+                                        albumType = AlbumType.OfficialRelease;
                                     }
                                 }
                             }
@@ -347,7 +347,7 @@ public partial class LibraryBrowserWindow : Window
                             Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state)
                                 ? $"{city}, {state}"
                                 : city + state,
-                            OfficialRelease = albumType == AlbumType.Live ? officialRelease : boxSetName,
+                            OfficialRelease = albumType == AlbumType.AudienceRecording ? officialRelease : boxSetName,
                             TrackCount = audioFiles.Length,
                             FolderPath = showFolder
                         });
@@ -481,7 +481,7 @@ public partial class LibraryBrowserWindow : Window
             _currentShow = show;
 
             // Load info based on album type
-            if (show.Type == AlbumType.Studio)
+            if (show.Type == AlbumType.OfficialRelease)
             {
                 // Studio album - show album name and year
                 VenueText.Text = show.AlbumName;
@@ -497,7 +497,7 @@ public partial class LibraryBrowserWindow : Window
                 DateText.Text = show.Date;
 
                 // Show box set name if this is a box set
-                if (show.Type == AlbumType.BoxSet && !string.IsNullOrEmpty(show.OfficialRelease))
+                if (show.Type == AlbumType.OfficialRelease && !string.IsNullOrEmpty(show.OfficialRelease))
                 {
                     BoxSetText.Text = $"Box Set: {show.OfficialRelease}";
                     BoxSetText.Visibility = Visibility.Visible;
@@ -572,18 +572,19 @@ public partial class LibraryBrowserWindow : Window
             _currentTracks = _metadataService.ReadFolder(show.FolderPath);
 
             // Update preview metadata for each track
-            foreach (var track in _currentTracks)
-            {
-                // Studio albums don't append dates to track titles
-                if (show.Type == AlbumType.Studio)
-                {
-                    track.PreviewMetadata = track.GetFinalMetadataTitle(null);
-                }
-                else
-                {
-                    track.PreviewMetadata = track.GetFinalMetadataTitle(show.Date);
-                }
-            }
+            // Note: PreviewMetadata removed in redesign - display uses SongName directly
+            // foreach (var track in _currentTracks)
+            // {
+            //     // Studio albums don't append dates to track titles
+            //     if (show.Type == AlbumType.OfficialRelease)
+            //     {
+            //         track.PreviewMetadata = track.GetFinalMetadataTitle(null);
+            //     }
+            //     else
+            //     {
+            //         track.PreviewMetadata = track.GetFinalMetadataTitle(show.Date);
+            //     }
+            // }
 
             TracksDataGrid.ItemsSource = _currentTracks;
             TrackCountText.Text = $"{_currentTracks.Count} tracks";
@@ -1036,9 +1037,8 @@ public partial class LibraryBrowserWindow : Window
             if (filterTag != "All")
             {
                 filtered = filtered.Where(show =>
-                    (filterTag == "Live" && show.Type == AlbumType.Live) ||
-                    (filterTag == "OfficialRelease" && show.Type == AlbumType.OfficialRelease) ||
-                    (filterTag == "Studio" && show.Type == AlbumType.Studio)
+                    (filterTag == "AudienceRecording" && show.Type == AlbumType.AudienceRecording) ||
+                    (filterTag == "OfficialRelease" && show.Type == AlbumType.OfficialRelease)
                 );
             }
         }
@@ -1139,10 +1139,10 @@ public partial class LibraryBrowserWindow : Window
             // Check if show contains required songs
             if (_advancedSearchSongs.Any())
             {
-                // Get normalized titles, filtering out empty ones
-                var normalizedTitles = tracks
-                    .Where(t => !string.IsNullOrWhiteSpace(t.NormalizedTitle))
-                    .Select(t => t.NormalizedTitle!)
+                // Get song names, filtering out empty ones
+                var songNames = tracks
+                    .Where(t => !string.IsNullOrWhiteSpace(t.SongName))
+                    .Select(t => t.SongName!)
                     .ToList();
 
                 // DEBUG: Log first show's details to help diagnose
@@ -1156,8 +1156,8 @@ public partial class LibraryBrowserWindow : Window
                             $"Show: {show.Date} - {show.Venue}\n" +
                             $"Required songs: {string.Join(", ", _advancedSearchSongs)}\n" +
                             $"Total tracks: {tracks.Count}\n" +
-                            $"Normalized titles found: {normalizedTitles.Count}\n" +
-                            $"Titles: {string.Join(", ", normalizedTitles.Take(20))}\n" +
+                            $"Song names found: {songNames.Count}\n" +
+                            $"Titles: {string.Join(", ", songNames.Take(20))}\n" +
                             $"Log saved to: {logPath}\n");
                         System.Diagnostics.Debug.WriteLine($"Search debug log: {logPath}");
                     }
@@ -1166,8 +1166,8 @@ public partial class LibraryBrowserWindow : Window
 
                 foreach (var requiredSong in _advancedSearchSongs)
                 {
-                    // Check if any normalized title matches the required song (case-insensitive)
-                    bool found = normalizedTitles.Any(title =>
+                    // Check if any song name matches the required song (case-insensitive)
+                    bool found = songNames.Any(title =>
                         title.Equals(requiredSong, StringComparison.OrdinalIgnoreCase));
 
                     // DEBUG: Log comparison details for first show
@@ -1180,7 +1180,7 @@ public partial class LibraryBrowserWindow : Window
                                 $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] === COMPARISON DEBUG ===\n" +
                                 $"Looking for: '{requiredSong}' (length: {requiredSong.Length})\n" +
                                 $"Found: {found}\n" +
-                                $"Checking against: {string.Join(" | ", normalizedTitles.Select(t => $"'{t}' (len:{t.Length})"))}\n\n");
+                                $"Checking against: {string.Join(" | ", songNames.Select(t => $"'{t}' (len:{t.Length})"))}\n\n");
                         }
                         catch { }
                     }
@@ -1195,16 +1195,16 @@ public partial class LibraryBrowserWindow : Window
             // Check for excluded songs
             if (_advancedSearchExcludedSongs.Any())
             {
-                // Get normalized titles, filtering out empty ones
-                var normalizedTitles = tracks
-                    .Where(t => !string.IsNullOrWhiteSpace(t.NormalizedTitle))
-                    .Select(t => t.NormalizedTitle!)
+                // Get song names, filtering out empty ones
+                var songNames = tracks
+                    .Where(t => !string.IsNullOrWhiteSpace(t.SongName))
+                    .Select(t => t.SongName!)
                     .ToList();
 
                 // If the show contains ANY excluded song, reject it
                 foreach (var excludedSong in _advancedSearchExcludedSongs)
                 {
-                    bool found = normalizedTitles.Any(title =>
+                    bool found = songNames.Any(title =>
                         title.Equals(excludedSong, StringComparison.OrdinalIgnoreCase));
 
                     if (found)
@@ -1237,15 +1237,15 @@ public partial class LibraryBrowserWindow : Window
     {
         if (sequence.Count == 0) return true;
 
-        var normalizedTitles = tracks.Select(t => t.NormalizedTitle?.ToLowerInvariant() ?? "").ToList();
+        var songNames = tracks.Select(t => t.SongName?.ToLowerInvariant() ?? "").ToList();
 
         // Look for consecutive songs in order
-        for (int i = 0; i <= normalizedTitles.Count - sequence.Count; i++)
+        for (int i = 0; i <= songNames.Count - sequence.Count; i++)
         {
             bool matchFound = true;
             for (int j = 0; j < sequence.Count; j++)
             {
-                if (normalizedTitles[i + j] != sequence[j].ToLowerInvariant())
+                if (songNames[i + j] != sequence[j].ToLowerInvariant())
                 {
                     matchFound = false;
                     break;
@@ -1290,7 +1290,7 @@ public partial class LibraryBrowserWindow : Window
 public class LibraryShow
 {
     // Album type (defaults to Live)
-    public AlbumType Type { get; set; } = AlbumType.Live;
+    public AlbumType Type { get; set; } = AlbumType.AudienceRecording;
 
     // Live recording properties
     public string Date { get; set; } = "";
@@ -1314,29 +1314,30 @@ public class LibraryShow
     public string FolderPath { get; set; } = "";
 
     // Smart display properties that adapt based on type
-    public string TypeIcon => Type == AlbumType.Studio ? "💿" :
-                              Type == AlbumType.OfficialRelease ? "📀" : "🎸";
+    public string TypeIcon => Type == AlbumType.OfficialRelease ? "📀" : "🎸";
 
     public string PrimaryInfo =>
-        Type == AlbumType.Studio ? AlbumName :
-        Type == AlbumType.OfficialRelease ? OfficialRelease :
-        Date;
+        Type == AlbumType.OfficialRelease
+            ? (!string.IsNullOrEmpty(OfficialRelease) ? OfficialRelease : AlbumName)
+            : Date;
 
     public string SecondaryInfo =>
-        Type == AlbumType.Studio ? (ReleaseYear.HasValue ? ReleaseYear.Value.ToString() : "") :
-        Type == AlbumType.OfficialRelease ? (ContainsDates.Count > 1 ? string.Join(", ", ContainsDates) : Date) :
-        Venue;
+        Type == AlbumType.OfficialRelease
+            ? (ContainsDates.Count > 1 ? string.Join(", ", ContainsDates) : (ReleaseYear.HasValue ? ReleaseYear.Value.ToString() : Date))
+            : Venue;
 
     public string TertiaryInfo =>
-        Type == AlbumType.Studio ? Edition :
-        Type == AlbumType.OfficialRelease ? (ContainsVenues.Count > 1 ? string.Join(", ", ContainsVenues) : Venue) :
-        Location;
+        Type == AlbumType.OfficialRelease
+            ? (ContainsVenues.Count > 1 ? string.Join(", ", ContainsVenues) : (!string.IsNullOrEmpty(Edition) ? Edition : Venue))
+            : Location;
 
     // For backwards compatibility and display
     public string DisplayTitle =>
-        Type == AlbumType.Studio
-            ? (ReleaseYear.HasValue ? $"{AlbumName} ({ReleaseYear.Value})" : AlbumName)
+        Type == AlbumType.OfficialRelease
+            ? (!string.IsNullOrEmpty(AlbumName)
+                ? (ReleaseYear.HasValue ? $"{AlbumName} ({ReleaseYear.Value})" : AlbumName)
+                : OfficialRelease)
             : Date;
 
-    public bool IsStudioAlbum => Type == AlbumType.Studio;
+    public bool IsOfficialRelease => Type == AlbumType.OfficialRelease;
 }

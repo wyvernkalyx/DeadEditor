@@ -341,7 +341,7 @@ namespace DeadEditor.Services
                 var normalized = Normalize(track.Title);
                 if (normalized != null)
                 {
-                    track.NormalizedTitle = normalized;
+                    track.SongName = normalized;
                     matched++;
                 }
             }

@@ -63,7 +63,7 @@ namespace DeadEditor.Services
                 ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress, isOfficialRelease: true);
             }
             // Handle studio albums
-            else if (albumInfo.Type == AlbumType.Studio)
+            else if (albumInfo.Type == AlbumType.OfficialRelease)
             {
                 // Studio album: LibraryRoot\Studio Albums\Album Name (Year)\
                 var studioAlbumsFolder = Path.Combine(libraryRoot, "Studio Albums");
@@ -129,16 +129,16 @@ namespace DeadEditor.Services
             ref int processedTracks, int totalTracks, IProgress<(int current, int total, string message)>? progress, string? dateForTitle = null, bool isOfficialRelease = false)
         {
             // For studio albums, dateForTitle will be null
-            var isStudioAlbum = albumInfo.Type == AlbumType.Studio;
+            var isStudioAlbum = albumInfo.Type == AlbumType.OfficialRelease;
 
             // Copy and write metadata for each track
             foreach (var track in tracks)
             {
                 processedTracks++;
-                progress?.Report((processedTracks, totalTracks, $"Importing track {processedTracks} of {totalTracks}: {track.NormalizedTitle ?? track.Title}"));
+                progress?.Report((processedTracks, totalTracks, $"Importing track {processedTracks} of {totalTracks}: {track.SongName ?? track.Title}"));
 
                 // Generate new filename
-                var trackTitle = track.NormalizedTitle ?? track.Title;
+                var trackTitle = track.SongName ?? track.Title;
                 if (track.HasSegue)
                 {
                     trackTitle += " >";
@@ -203,7 +203,7 @@ namespace DeadEditor.Services
                 {
                     using (var file = TagLib.File.Create(targetPath))
                     {
-                        var title = track.NormalizedTitle ?? track.Title;
+                        var title = track.SongName ?? track.Title;
 
                         if (track.HasSegue)
                         {
@@ -442,7 +442,7 @@ namespace DeadEditor.Services
                 var matchingFolders = Directory.GetDirectories(seriesFolder, folderPattern);
                 return matchingFolders.Length > 0;
             }
-            else if (albumInfo.Type == AlbumType.Studio)
+            else if (albumInfo.Type == AlbumType.OfficialRelease)
             {
                 // Check in Studio Albums folder
                 var studioAlbumsFolder = Path.Combine(libraryRoot, "Studio Albums");

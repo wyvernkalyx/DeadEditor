@@ -40,6 +40,7 @@ namespace DeadEditor.Services
                             TrackNumber = (int)file.Tag.Track,
                             DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
                             SongName = songName,
+                            RawTitle = rawTitle,  // Store original title for library browser display
                             TrackDate = extractedDate ?? "",  // Use extracted date or empty string
                             Duration = file.Properties.Duration.ToString(@"mm\:ss"),
                             IsModified = false
@@ -146,19 +147,52 @@ namespace DeadEditor.Services
                 {
                     albumInfo.Artist = file.Tag.FirstPerformer ?? "Grateful Dead";
 
-                    // Try to parse album title
-                    var album = file.Tag.Album;
-                    if (!string.IsNullOrEmpty(album))
+                    // Try to read custom metadata fields first (for FLAC files)
+                    bool hasCustomFields = false;
+                    if (file is TagLib.Flac.File flacFile)
                     {
-                        ParseAlbumTitle(album, albumInfo);
+                        var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                        if (xiph != null)
+                        {
+                            var albumDate = xiph.GetFirstField("ALBUMDATE");
+                            var venue = xiph.GetFirstField("VENUE");
+                            var cityState = xiph.GetFirstField("CITYSTATE");
+                            var albumName = xiph.GetFirstField("ALBUMNAME");
+                            var albumType = xiph.GetFirstField("ALBUMTYPE");
+
+                            if (!string.IsNullOrEmpty(albumDate))
+                            {
+                                albumInfo.AlbumDate = albumDate;
+                                albumInfo.Venue = venue ?? "";
+                                albumInfo.CityState = cityState ?? "";
+                                albumInfo.AlbumName = albumName ?? "";
+
+                                if (Enum.TryParse<AlbumType>(albumType, out var type))
+                                {
+                                    albumInfo.Type = type;
+                                }
+
+                                hasCustomFields = true;
+                            }
+                        }
                     }
 
-                    // Try to get date
-                    if (file.Tag.Year > 0)
+                    // Fallback: Try to parse album title if no custom fields found
+                    if (!hasCustomFields)
                     {
-                        // Year only - might need to extract full date from album
-                        var dateFromAlbum = ExtractDateFromAlbum(album);
-                        albumInfo.Date = dateFromAlbum ?? $"{file.Tag.Year}-01-01";
+                        var album = file.Tag.Album;
+                        if (!string.IsNullOrEmpty(album))
+                        {
+                            ParseAlbumTitle(album, albumInfo);
+                        }
+
+                        // Try to get date
+                        if (file.Tag.Year > 0)
+                        {
+                            // Year only - might need to extract full date from album
+                            var dateFromAlbum = ExtractDateFromAlbum(album);
+                            albumInfo.AlbumDate = dateFromAlbum ?? $"{file.Tag.Year}-01-01";
+                        }
                     }
 
                     // Read artwork from first track
@@ -201,7 +235,7 @@ namespace DeadEditor.Services
                 using (var file = TagLib.File.Create(track.FilePath))
                 {
                     // Build the final title with date
-                    var date = track.PerformanceDate ?? album.Date;
+                    var date = track.PerformanceDate ?? album.AlbumDate;
                     var title = track.SongName ?? track.Title;
 
                     // Remove any existing date suffix to prevent duplicates
@@ -222,9 +256,23 @@ namespace DeadEditor.Services
                     file.Tag.Disc = (uint)track.DiscNumber;
 
                     // Parse year from date
-                    if (DateTime.TryParse(album.Date, out var parsedDate))
+                    if (DateTime.TryParse(album.AlbumDate, out var parsedDate))
                     {
                         file.Tag.Year = (uint)parsedDate.Year;
+                    }
+
+                    // Store individual metadata fields in custom tags (for FLAC files)
+                    if (file is TagLib.Flac.File flacFile)
+                    {
+                        var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                        if (xiph != null)
+                        {
+                            xiph.SetField("ALBUMDATE", album.AlbumDate);
+                            xiph.SetField("VENUE", album.Venue);
+                            xiph.SetField("CITYSTATE", album.CityState);
+                            xiph.SetField("ALBUMNAME", album.AlbumName ?? "");
+                            xiph.SetField("ALBUMTYPE", album.Type.ToString());
+                        }
                     }
 
                     // Embed artwork in this track
@@ -483,12 +531,13 @@ namespace DeadEditor.Services
             if (boxSetMatch.Success)
             {
                 // Box Set format (no space before colon)
-                info.Date = boxSetMatch.Groups[1].Value;
+                info.AlbumDate = boxSetMatch.Groups[1].Value;
                 info.Venue = boxSetMatch.Groups[2].Value.Trim();
-                info.City = boxSetMatch.Groups[3].Value.Trim();
-                info.State = boxSetMatch.Groups[4].Value.Trim();
-                info.BoxSetName = boxSetMatch.Groups[5].Value.Trim();
-                info.Type = AlbumType.BoxSet;
+                var city = boxSetMatch.Groups[3].Value.Trim();
+                var state = boxSetMatch.Groups[4].Value.Trim();
+                info.CityState = $"{city}, {state}";
+                info.AlbumName = boxSetMatch.Groups[5].Value.Trim();
+                info.Type = AlbumType.OfficialRelease;
                 return;
             }
 
@@ -501,12 +550,13 @@ namespace DeadEditor.Services
             if (officialMatch.Success)
             {
                 // Official Release format (space before colon)
-                info.Date = officialMatch.Groups[1].Value;
+                info.AlbumDate = officialMatch.Groups[1].Value;
                 info.Venue = officialMatch.Groups[2].Value.Trim();
-                info.City = officialMatch.Groups[3].Value.Trim();
-                info.State = officialMatch.Groups[4].Value.Trim();
-                info.OfficialRelease = officialMatch.Groups[5].Value.Trim();
-                info.Type = AlbumType.Live;
+                var city = officialMatch.Groups[3].Value.Trim();
+                var state = officialMatch.Groups[4].Value.Trim();
+                info.CityState = $"{city}, {state}";
+                info.AlbumName = officialMatch.Groups[5].Value.Trim();
+                info.Type = AlbumType.AudienceRecording;
                 return;
             }
 
@@ -518,11 +568,12 @@ namespace DeadEditor.Services
 
             if (liveMatch.Success)
             {
-                info.Date = liveMatch.Groups[1].Value;
+                info.AlbumDate = liveMatch.Groups[1].Value;
                 info.Venue = liveMatch.Groups[2].Value.Trim();
-                info.City = liveMatch.Groups[3].Value.Trim();
-                info.State = liveMatch.Groups[4].Value.Trim();
-                info.Type = AlbumType.Live;
+                var city = liveMatch.Groups[3].Value.Trim();
+                var state = liveMatch.Groups[4].Value.Trim();
+                info.CityState = $"{city}, {state}";
+                info.Type = AlbumType.AudienceRecording;
                 return;
             }
 
@@ -531,8 +582,9 @@ namespace DeadEditor.Services
             if (altMatch.Success)
             {
                 info.Venue = altMatch.Groups[1].Value.Trim();
-                info.City = altMatch.Groups[2].Value.Trim();
-                info.State = altMatch.Groups[3].Value.Trim();
+                var city = altMatch.Groups[2].Value.Trim();
+                var state = altMatch.Groups[3].Value.Trim();
+                info.CityState = $"{city}, {state}";
 
                 // Extract first date from the date range
                 var dateStr = altMatch.Groups[4].Value;
@@ -541,7 +593,7 @@ namespace DeadEditor.Services
                 {
                     if (DateTime.TryParse(dateMatch.Groups[1].Value, out var date))
                     {
-                        info.Date = date.ToString("yyyy-MM-dd");
+                        info.AlbumDate = date.ToString("yyyy-MM-dd");
                     }
                 }
 
@@ -549,7 +601,7 @@ namespace DeadEditor.Services
                 var releaseMatch = Regex.Match(album, @"\[([^\]]+)\]");
                 if (releaseMatch.Success && releaseMatch.Groups[1].Value != "Live")
                 {
-                    info.OfficialRelease = releaseMatch.Groups[1].Value.Trim();
+                    info.AlbumName = releaseMatch.Groups[1].Value.Trim();
                 }
             }
         }
