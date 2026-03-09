@@ -524,10 +524,8 @@
                                   SelectionChanged="AlbumTypeComboBox_SelectionChanged"
                                   FontSize="13">
                             <ComboBoxItem Content="Auto-detect" IsSelected="True"/>
-                            <ComboBoxItem Content="Live (Audience)"/>
+                            <ComboBoxItem Content="Audience Recording"/>
                             <ComboBoxItem Content="Official Release"/>
-                            <ComboBoxItem Content="Studio Album"/>
-                            <ComboBoxItem Content="Box Set"/>
                         </ComboBox>
 
                         <Separator Margin="0,0,0,10" Background="#555555"/>

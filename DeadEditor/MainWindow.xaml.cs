@@ -265,8 +265,6 @@ public partial class MainWindow : Window
         {
             1 => AlbumType.AudienceRecording,
             2 => AlbumType.OfficialRelease,
-            3 => AlbumType.OfficialRelease,
-            4 => AlbumType.OfficialRelease,
             _ => InferAlbumType() // Auto-detect
         };
 
