@@ -33,7 +33,7 @@ namespace DeadEditor.Services
             var totalTracks = tracks.Count;
             var processedTracks = 0;
 
-            // Handle official releases
+            // Handle official releases (studio albums, live albums, box sets, series)
             if (albumInfo.Type == AlbumType.OfficialRelease)
             {
                 if (string.IsNullOrEmpty(officialReleasesPath))
@@ -46,13 +46,29 @@ namespace DeadEditor.Services
                     Directory.CreateDirectory(officialReleasesPath);
                 }
 
-                // Official release: OfficialReleasesPath\Series\Album Name\
-                // Extract series name from OfficialRelease (e.g., "Dave's Picks" from "Dave's Picks Volume 28")
-                var seriesName = ExtractSeriesName(albumInfo.OfficialRelease);
-                var seriesFolder = Path.Combine(officialReleasesPath, seriesName);
+                string targetFolder;
 
-                var folderName = SanitizeFolderName(albumInfo.OfficialRelease);
-                var targetFolder = Path.Combine(seriesFolder, folderName);
+                // Determine folder structure based on whether it's a series release or standalone album
+                if (!string.IsNullOrEmpty(albumInfo.OfficialRelease))
+                {
+                    // Series release (Dave's Picks, Dick's Picks, etc.)
+                    var seriesName = ExtractSeriesName(albumInfo.OfficialRelease);
+                    var seriesFolder = Path.Combine(officialReleasesPath, seriesName);
+                    var folderName = SanitizeFolderName(albumInfo.OfficialRelease);
+                    targetFolder = Path.Combine(seriesFolder, folderName);
+                }
+                else
+                {
+                    // Studio album or standalone official release
+                    var folderName = !string.IsNullOrEmpty(albumInfo.AlbumName)
+                        ? (albumInfo.ReleaseYear.HasValue
+                            ? $"{albumInfo.AlbumName} ({albumInfo.ReleaseYear.Value})"
+                            : albumInfo.AlbumName)
+                        : "Unknown Album";
+
+                    folderName = SanitizeFolderName(folderName);
+                    targetFolder = Path.Combine(officialReleasesPath, "Studio Albums", folderName);
+                }
 
                 if (!Directory.Exists(targetFolder))
                 {
@@ -62,39 +78,29 @@ namespace DeadEditor.Services
                 // Import all tracks to this folder (official releases don't split by date)
                 ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress, isOfficialRelease: true);
             }
-            // Handle studio albums
-            else if (albumInfo.Type == AlbumType.OfficialRelease)
+            else // AudienceRecording
             {
-                // Studio album: LibraryRoot\Studio Albums\Album Name (Year)\
-                var studioAlbumsFolder = Path.Combine(libraryRoot, "Studio Albums");
-
-                var folderName = albumInfo.ReleaseYear.HasValue
-                    ? $"{albumInfo.AlbumName} ({albumInfo.ReleaseYear.Value})"
-                    : albumInfo.AlbumName;
-
-                folderName = SanitizeFolderName(folderName);
-                var targetFolder = Path.Combine(studioAlbumsFolder, folderName);
-
-                if (!Directory.Exists(targetFolder))
-                {
-                    Directory.CreateDirectory(targetFolder);
-                }
-
-                // Import all tracks to this folder
-                ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
-            }
-            else
-            {
-                // Live recording: Group tracks by date (for multi-show imports)
-                var tracksByDate = tracks.GroupBy(t => t.PerformanceDate ?? albumInfo.Date);
+                // Audience recording: Group tracks by date (for multi-show imports)
+                var tracksByDate = tracks.GroupBy(t => t.PerformanceDate ?? albumInfo.Date ?? "");
 
                 foreach (var dateGroup in tracksByDate)
                 {
                     var date = dateGroup.Key;
                     var dateTracks = dateGroup.ToList();
 
+                    // Skip empty dates (shouldn't happen for audience recordings, but be safe)
+                    if (string.IsNullOrWhiteSpace(date))
+                    {
+                        throw new InvalidOperationException("Audience recordings must have a performance date");
+                    }
+
                     // Create folder structure: LibraryRoot\Year\Date - Venue, City, State\
-                    var year = DateTime.Parse(date).Year.ToString();
+                    if (!DateTime.TryParse(date, out var parsedDate))
+                    {
+                        throw new InvalidOperationException($"Invalid date format: {date}. Expected yyyy-MM-dd format.");
+                    }
+
+                    var year = parsedDate.Year.ToString();
 
                     // Build folder name with proper handling of empty fields
                     var venue = string.IsNullOrWhiteSpace(albumInfo.Venue) ? "Unknown Venue" : albumInfo.Venue;
@@ -464,8 +470,18 @@ namespace DeadEditor.Services
             }
             else
             {
-                // Check in year folders for live recordings
-                var year = DateTime.Parse(albumInfo.Date ?? "2000-01-01").Year.ToString();
+                // Check in year folders for audience recordings
+                if (string.IsNullOrWhiteSpace(albumInfo.Date))
+                {
+                    return false; // Can't find audience recording without a date
+                }
+
+                if (!DateTime.TryParse(albumInfo.Date, out var parsedDate))
+                {
+                    return false; // Invalid date format
+                }
+
+                var year = parsedDate.Year.ToString();
                 var folderPattern = $"{albumInfo.Date}*";
                 var yearFolder = Path.Combine(libraryRoot, year);
 
