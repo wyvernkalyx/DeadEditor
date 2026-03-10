@@ -1,164 +1,199 @@
 # DeadEditor - Pending Tasks
 
-## Current Status (2026-01-29)
+## Current Status (2026-03-10)
 
-**Latest Commit:** `dc2af2b` - "Add studio albums as next session focus in TODO.md"
+**Latest Commit:** `942a679` - "Update Claude settings"
 
-### Session 2026-01-29 - COMPLETED
+### Session 2026-03-10 - COMPLETED
 
-**Focus:** Implementing Box Set support for managing multi-concert collections (e.g., "Enjoying the Ride" digital box set)
+**Focus:** Import screen redesign implementation and album type simplification
 
 #### Completed This Session:
-- ✅ **Box Set Type Support** - Added AlbumType.BoxSet with dedicated UI fields
-- ✅ **Box Set Name Memory** - Remembers last used box set name for faster multi-concert imports
-- ✅ **Box Set Detection** - Automatically detects box sets from metadata when editing existing concerts
-- ✅ **Library Display** - Box set names appear in "Official Release" column
-- ✅ **Concert Detail Panel** - Shows "Box Set: Enjoying the Ride" in library browser
-- ✅ **Automatic Library Refresh** - Library updates immediately after editing metadata
-- ✅ **MusicBrainz Manual Search** - Added manual album search dialog with year filter
-- ✅ **MusicBrainz Always-Show Selector** - Always shows release selector for user confirmation
-- ✅ **Double Date Bug Fix** - Fixed duplicate dates in song titles (e.g., "Jack Straw (1978-05-13) (1978-05-13)")
+- ✅ **Import Screen Redesign** - Implemented documentation/16-import-redesign-spec.md
+  - Single editable Title column (removed Preview Metadata column)
+  - Inline track editing (double-click Date/Segue columns)
+  - Album info bar with unified fields for all types
+  - Date auto-append when track date differs from album date
+  - MusicBrainz as simple populate action (no confirmation dialog)
+  - Playback controls on import screen
 
-#### Key Features Added:
+- ✅ **Album Type Simplification** - Reduced from 4 types to 2
+  - `AudienceRecording` (was Live)
+  - `OfficialRelease` (covers Studio, Official Release, Box Set, Series)
+  - Updated all code, UI dropdowns, and documentation
+  - Added backward compatibility mapping
+  - Collection Name field (replaces Box Set Name, works with both types)
 
-**1. Box Set Import Workflow:**
-- Select "Box Set" album type in import window
-- "Box Set Name (optional)" field appears
-- Name is remembered for next import (stored in settings.json)
-- Album title format: `"Date - Venue - City, State: Box Set Name"` (no space before colon)
+- ✅ **Bug Fixes**
+  - Fixed MainWindow album type dropdown showing old 4 types
+  - Fixed Library Browser track display (now shows full titles with date suffixes)
+  - Fixed Library Browser dropdown styling (gray on white text)
+  - Fixed DateTime.Parse crash on empty Album Date for studio albums
+  - Replaced DateTime.Parse with DateTime.TryParse throughout import path
 
-**2. Box Set Metadata Detection:**
-- Distinguishes between Box Set (`: `) and Official Release (` : `) formats via regex
-- `ParseAlbumTitle()` correctly identifies box sets from existing metadata
-- Library browser reads album tags to detect box set type
+- ✅ **Data Model Updates**
+  - Added RawTitle property to TrackInfo (stores original title from file)
+  - Added CollectionName, FolderNameOverride, CustomFolderName to AlbumInfo
+  - Updated AlbumTitle property for new folder naming logic
+  - Changed IsStudioAlbum to IsOfficialRelease
 
-**3. Library Display:**
-- Box set names show in "Official Release" column in main library grid
-- Concert detail panel shows "Box Set: Enjoying the Ride" below the date
-- Gold color (#D7BA7D) for box set text
+#### Files Modified This Session:
+- `Models/AlbumInfo.cs` - Simplified enum, added Collection Name field
+- `Models/TrackInfo.cs` - Added RawTitle for library browser display
+- `MainWindow.xaml` - Updated album type dropdown to 3 options
+- `MainWindow.xaml.cs` - Fixed dropdown selection handler
+- `LibraryBrowserWindow.xaml` - Updated Show filter dropdown
+- `LibraryBrowserWindow.xaml.cs` - Updated type filtering and display properties
+- `Services/LibraryImportService.cs` - Fixed DateTime.Parse crashes, unified OfficialRelease logic
+- `Services/MetadataService.cs` - Store RawTitle for display
+- `AdvancedSearchDialog.xaml.cs` - Updated album type references
+- `documentation/16-import-redesign-spec.md` - **NEW** - Complete import redesign spec
 
-**4. MusicBrainz Enhancements:**
-- Manual search dialog with Album Name, Artist, and Year (optional) fields
-- Always shows release selector even for single results
-- Both fingerprinting and manual search workflows supported
-
-#### Bug Fixes:
-- ✅ Fixed box set name not being saved during import (was checking `AlbumType.Studio` instead of `AlbumType.BoxSet`)
-- ✅ Fixed duplicate dates in WriteMetadata - strips existing dates before adding new one
-- ✅ Fixed library not refreshing after editing concerts - added `LoadShows()` call
-- ✅ Fixed ParseAlbumTitle regex to properly distinguish box sets from official releases using negative lookbehind
-
-#### Known Issues to Address Next Session:
-- ⚠️ **Auto-select Box Set radio on new import** - When importing a new concert after remembering a box set name, the Box Set radio button should be auto-selected but currently isn't working reliably
-- ⚠️ **Investigate box set name field visibility** - Need to verify pre-fill logic when loading new folders
-
----
-
-## Next Session Priorities
-
-### 1. Fix Auto-Select Box Set Radio Button (URGENT)
-**Priority:** High
-**Status:** Partially implemented, needs debugging
-**Issue:** When importing a new concert from a remembered box set, the box set name is pre-filled but the Box Set radio button isn't automatically selected
-**Location:** MainWindow.xaml.cs lines 246-260
-**Current Behavior:** Box set name shows in preview, but radio shows "Live (Audience Recording)"
-**Expected Behavior:** Box Set radio should be auto-selected when box set name is remembered
-
-### 2. Complete Three Album Type Testing
-**Priority:** High
-**Status:** Ready to test
-- Test importing a Live recording
-- Test importing a Studio album
-- Test importing an Official Release
-- Test importing a Box Set (multiple concerts)
-
-### 3. Track-Level Search (Previously Planned)
-**Priority:** Medium (deferred from previous session)
-**Description:** Enhanced Advanced Search for hybrid albums with embedded dates
-- Parse embedded dates from track titles
-- Show search results with album context
-- Open containing album folder when clicked
+#### Git Commits This Session:
+1. `c7d23e6` - Simplify album types from 4 to 2 and fix library browser track display
+2. `804acb5` - Fix MainWindow album type dropdown - remove old 4 types
+3. `fc5d416` - Fix import crash on empty Album Date for studio albums
+4. `942a679` - Update Claude settings
 
 ---
 
-## Technical Details
+## Known Issues / Next Session Priorities
 
-### Files Modified This Session (2026-01-29):
-- `Models/LibrarySettings.cs` - Added `LastBoxSetName` property
-- `Models/AlbumInfo.cs` - Box set name format in AlbumTitle property
-- `MainWindow.xaml` - Added ManualSearchButton for MusicBrainz
-- `MainWindow.xaml.cs` - Box set save logic, auto-select logic (needs fixing)
-- `LibraryBrowserWindow.xaml` - Added BoxSetText display field
-- `LibraryBrowserWindow.xaml.cs` - Box set detection, library auto-refresh, concert detail display
-- `Services/MetadataService.cs` - Fixed ParseAlbumTitle regex, duplicate date removal
-- `Services/MusicBrainzService.cs` - Added SearchReleasesByNameAsync() method
-- `AlbumSearchDialog.xaml/.xaml.cs` - **NEW** - Manual MusicBrainz search dialog
+### 1. Dropdown Styling Inconsistency
+**Priority:** Medium
+**Status:** Partially fixed
+**Issue:** Some dropdowns show white/gray text, others black/white, inconsistent across windows
+**Locations:**
+- MainWindow album type dropdown (needs styling review)
+- Library Browser "Show" dropdown (fixed but verify across themes)
+**Action:** Comprehensive UI styling audit for all ComboBox controls
 
-### Box Set Metadata Format:
-**Album Tag Format:**
-- Box Set: `"1972-09-15 - Boston Music Hall - Boston, MA: Enjoying the Ride"` (no space before colon)
-- Official Release: `"1972-09-15 - Boston Music Hall - Boston, MA : Dave's Picks Vol. 1"` (space before colon)
-- Live Recording: `"1972-09-15 - Boston Music Hall - Boston, MA"` (no colon)
+### 2. Song Performance Dates Not Showing in Library Browser Track View
+**Priority:** High
+**Status:** FIXED (as of this session)
+**Solution:** Added RawTitle property to TrackInfo, updated Title getter to return RawTitle
+**Verify:** Test with concert that has tracks with date suffixes like "Bertha (1971-04-27)"
 
-**Regex Patterns:**
-- Box Set: `@"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:\s]+)(?<!\s):\s*(.+)$"`
-  - Uses negative lookbehind `(?<!\s)` to ensure no space before colon
-- Official Release: `@"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:]+?)\s:\s*(.+)$"`
-  - Uses `\s:` to require space before colon
+### 3. FLAC Tag → App Field → View Mapping Review Needed
+**Priority:** Medium
+**Status:** Not started
+**Description:** Need comprehensive audit of:
+- Which FLAC tags are read (TITLE, ALBUM, DATE, etc.)
+- Which TrackInfo/AlbumInfo properties they map to
+- Which properties are displayed in Library Browser vs Import screen
+- Ensure consistency across all three layers
+**Action:** Create mapping document in documentation folder
 
-### Settings Storage:
-```json
-{
-  "LastBoxSetName": "Enjoying the Ride",
-  "LibraryRootPath": "D:/Projects/library",
-  ...
-}
-```
+### 4. Documentation Updates for Recent Changes
+**Priority:** Medium
+**Status:** Partially updated
+**Completed:**
+- ✅ documentation/16-import-redesign-spec.md - Created
+**Still Needed:**
+- Update documentation/01-main-window.md for redesigned import screen
+- Update documentation/02-library-browser.md for simplified album types
+- Update documentation/15-data-model.md for new TrackInfo.RawTitle field
+- Update CLAUDE.md with new AlbumType enum values
+
+### 5. Editable Folder Name Preview (Spec'd but Not Implemented)
+**Priority:** Low
+**Status:** Documented in spec, not yet implemented
+**Description:** From documentation/16-import-redesign-spec.md:
+- Folder Name Preview should be editable (click to override auto-computed name)
+- Add reset button (↻) to revert to auto-computed mode
+- Store override state in AlbumInfo.FolderNameOverride and CustomFolderName
+**Action:** Implement editable preview with reset button
+
+### 6. Collection Name Field Not Yet in UI
+**Priority:** Medium
+**Status:** Data model ready, UI not implemented
+**Description:**
+- AlbumInfo.CollectionName added to model
+- Not yet exposed in MainWindow album info bar
+- Spec says "COLLECTION NAME" field should be in album info bar
+**Action:** Add Collection Name TextBox to MainWindow.xaml album info section
+
+---
+
+## Testing Checklist for Next Session
+
+Before considering the redesign complete, test:
+
+- [ ] Import audience recording (with date) - verify folder structure
+- [ ] Import studio album (no date, Album Name + Year) - verify no crash
+- [ ] Import official release (Dave's Picks, etc.) - verify series folder
+- [ ] Import with Collection Name - verify folder naming
+- [ ] Library Browser shows full track titles with dates
+- [ ] Library Browser "Show" filter works with 2 types
+- [ ] MainWindow dropdown shows only 3 options (Auto-detect, Audience Recording, Official Release)
+- [ ] Album type auto-detection works correctly
+- [ ] Playback controls work on import screen
+- [ ] MusicBrainz lookup populates fields correctly
+
+---
+
+## Recently Completed Features
+
+### Import Screen Redesign (Session 2026-03-10)
+- Single-column editable track list (Title column)
+- Inline editing for Date and Segue columns
+- Album info bar with all fields always visible
+- Auto-detect album type from filled fields
+- MusicBrainz integration as simple button (no confirmation dialog)
+- Playback controls integrated into import screen
+
+### Album Type Simplification (Session 2026-03-10)
+- Reduced from 4 types (Live, Studio, OfficialRelease, BoxSet) to 2 (AudienceRecording, OfficialRelease)
+- All UI updated (MainWindow, LibraryBrowser, AdvancedSearch)
+- Backward compatibility for existing imports
+- Collection Name replaces Box Set Name (more flexible)
+
+### Bug Fixes (Session 2026-03-10)
+- DateTime.Parse crash on empty dates (studio albums)
+- Library browser track titles missing date suffixes
+- Dropdown styling (gray on white text)
+- MainWindow dropdown showing old 4 album types
+
+### Box Set Support (Session 2026-01-29)
+- Box set type detection from metadata
+- Box set name memory across imports
+- Library display with box set information
+- MusicBrainz manual search dialog
+- Always-show release selector
+
+### Advanced Search (Session 2026-01-08)
+- 3-tab search (Contains Songs, Exclude Songs, Song Sequence)
+- Song filter for 600+ song database
+- Real-time search results
+- Fixed LINQ lazy evaluation bugs
 
 ---
 
 ## Potential Future Enhancements
 
-### 1. Additional Song Coverage
-**Priority:** Low
-**Status:** Ongoing as needed
-**Current Coverage:** 598 songs with aliases and fuzzy matching
-
-### 2. UI/UX Improvements
+### 1. Additional UI/UX Improvements
 **Priority:** Low
 **Ideas:**
+- Implement editable Folder Name Preview with reset button
 - Batch import multiple concerts at once
 - Export concert metadata to CSV/JSON
 - Dark/light theme toggle
 - Keyboard shortcuts for common actions
 - Fix: Main window opens in background at startup
 
-### 3. Advanced Features
+### 2. Advanced Features
 **Priority:** Low
 **Ideas:**
 - Duplicate concert detection (same date/venue)
 - Show statistics (most played songs, venue counts)
 - Integration with online databases (archive.org, etree.org)
 - Automated backup/sync functionality
+- Track-level search for hybrid albums with embedded dates
 
----
-
-## Recently Completed (Session 2026-01-08)
-
-### Major Features Added:
-- ✅ **Advanced Search Dialog** - 3-tab search (Contains, Exclude, Sequence)
-- ✅ **Song Filter** - Real-time filtering in song selection
-- ✅ **Add Song Dialog** - Add songs on-the-fly with artist support
-- ✅ **Manage Songs Dialog** - Browse 598 songs, export to text
-- ✅ **Artist-based Database** - Songs organized by artist
-- ✅ **Quick Search** - Search by date, venue, location
-
-### Critical Bug Fixes:
-- ✅ **LINQ Lazy Evaluation Bug** - Fixed inconsistent search results
-- ✅ **TextChanged Recursion Bug** - Fixed duplicate searches
-- ✅ **Multi-song Collection Bug** - Fixed advanced search collection
-
-**Commit:** `c6f4801` - "Fix song search bugs and add exclude functionality"
+### 3. Additional Song Coverage
+**Priority:** Low
+**Status:** Ongoing as needed
+**Current Coverage:** 598 songs (594 Grateful Dead, 4 NRPS)
 
 ---
 
@@ -176,7 +211,8 @@ When starting a new session:
 
 3. **Kill any background processes:**
    ```bash
-   taskkill //F //IM DeadEditor.exe
+   taskkill //F //IM DeadEditor.exe //T
+   taskkill //F //IM dotnet.exe //T
    ```
 
 4. **Build and test:**
@@ -185,7 +221,35 @@ When starting a new session:
    dotnet run --project DeadEditor.csproj
    ```
 
-5. **Focus on:** Fixing auto-select Box Set radio button issue (see Next Session Priorities)
+5. **Focus on:** Testing import workflows and addressing known issues (see Next Session Priorities)
+
+---
+
+## Documentation Structure
+
+DeadEditor has comprehensive documentation in the `documentation/` folder:
+
+### Windows/Dialogs
+- `01-main-window.md` - Import workflow (needs update for redesign)
+- `02-library-browser.md` - Library grid, search (needs update for 2 types)
+- `03-advanced-search-dialog.md` - 3-tab search
+- `04-add-song-dialog.md` - Add songs on-the-fly
+- `05-manage-songs-dialog.md` - Browse/export song database
+- `06-settings-window.md` - Configure library paths
+- `07-release-selector-dialog.md` - Select MusicBrainz releases
+- `08-album-search-dialog.md` - Manual MusicBrainz search
+
+### Services & Data
+- `11-metadata-service.md` - ID3 tag reading/writing
+- `12-normalization-service.md` - Song title normalization
+- `13-library-import-service.md` - Two-path library system
+- `14-musicbrainz-service.md` - AcoustID fingerprinting
+- `15-data-model.md` - All model classes (needs update for RawTitle)
+- `16-import-redesign-spec.md` - **NEW** - Import screen redesign (implemented)
+
+### Main Docs
+- `CLAUDE.md` - AI assistant context document (needs update for AlbumType)
+- `TODO.md` - This file (project status and tasks)
 
 ---
 
