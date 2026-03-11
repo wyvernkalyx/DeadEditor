@@ -50,15 +50,22 @@ public List<TrackInfo> ReadFolder(string folderPath)
 
 2. **Per-File Processing** (line 25-63):
    - Open file with TagLib-Sharp: `TagLib.File.Create(filePath)`
-   - Extract ID3 tag values:
-     - **Title:** `file.Tag.Title` (or filename if tag missing)
+   - Extract raw title: `file.Tag.Title` (or filename if tag missing)
+   - **Parse title and date:** Call `ParseTitleAndDate(rawTitle)` (line 34) to separate song name from trailing date
+     - Returns tuple: `(songName, extractedDate)`
+     - Handles formats like "Bertha (1971-04-27)" or "Song (1971-04-27 - Venue, City)"
+     - Returns null for date if no yyyy-MM-dd pattern found
+   - Extract remaining ID3 tag values:
      - **Track Number:** `file.Tag.Track` (cast to int)
      - **Disc Number:** `file.Tag.Disc` (default to 1 if 0 or missing)
      - **Duration:** `file.Properties.Duration` (formatted as "mm:ss")
-   - Detect segue markers in title: `HasSegueMarker(rawTitle)` (line 45)
-   - Extract embedded date from title: `ExtractDateFromTitle(track.Title)` (line 48)
-   - Fallback to album-level date: `ExtractDateFromAlbum(file.Tag.Album)` (line 49)
-   - **Important:** Title NOT cleaned here (line 51-53 comment explains this preserves original metadata)
+   - Store parsed values in TrackInfo:
+     - **SongName:** Parsed song name from ParseTitleAndDate (line 42)
+     - **RawTitle:** Original unmodified title for display (line 43)
+     - **TrackDate:** Extracted date or empty string (line 44)
+   - Detect segue markers in title: `HasSegueMarker(rawTitle)` (line 50)
+   - If no date extracted from title, try album-level date: `ExtractDateFromAlbum(file.Tag.Album)` (lines 52-56)
+   - **Important:** Title NOT cleaned here (preserves original metadata for display/library browser)
 
 3. **Track Number Auto-Assignment** (line 66-72):
    - If ALL tracks have track number 0 (no ID3 track numbers)
