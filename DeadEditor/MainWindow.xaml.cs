@@ -558,7 +558,6 @@ public partial class MainWindow : Window
     private async void WriteButton_Click(object sender, RoutedEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("=== WriteButton_Click START ===");
-        System.Windows.MessageBox.Show("WriteButton clicked!", "Debug", MessageBoxButton.OK);
 
         if (_tracks.Count == 0 || _albumInfo == null)
         {
@@ -598,7 +597,6 @@ public partial class MainWindow : Window
     private async void ImportButton_Click(object sender, RoutedEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("=== ImportButton_Click START ===");
-        System.Windows.MessageBox.Show("ImportButton clicked!", "Debug", MessageBoxButton.OK);
         System.Diagnostics.Debug.WriteLine($"Tracks count: {_tracks.Count}");
         System.Diagnostics.Debug.WriteLine($"AlbumInfo null: {_albumInfo == null}");
         System.Diagnostics.Debug.WriteLine($"LibraryRootPath: {_librarySettings.LibraryRootPath}");

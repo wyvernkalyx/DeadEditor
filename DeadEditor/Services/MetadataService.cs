@@ -235,7 +235,7 @@ namespace DeadEditor.Services
                 using (var file = TagLib.File.Create(track.FilePath))
                 {
                     // Build the final title with date
-                    var date = track.PerformanceDate ?? album.AlbumDate;
+                    var date = !string.IsNullOrEmpty(track.PerformanceDate) ? track.PerformanceDate : album.AlbumDate;
                     var title = track.SongName ?? track.Title;
 
                     // Remove any existing date suffix to prevent duplicates
@@ -316,9 +316,19 @@ namespace DeadEditor.Services
             if (string.IsNullOrWhiteSpace(title))
                 return (title, null);
 
-            // Match trailing date in format (yyyy-MM-dd) at end of title
-            // Handles: "Bertha (1971-04-27)", "Not Fade Away / Goin' Down (1971-04-05)"
-            var match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})\)\s*$");
+            // Match patterns with yyyy-MM-dd date in parentheses:
+            // 1. "Song (yyyy-MM-dd)" - simple format
+            // 2. "Song (yyyy-MM-dd - venue info)" - with venue/location/album info after date
+            // Examples:
+            //   "Bertha (1971-04-27)"
+            //   "Bertha (1971-04-27 - New York, NY - Fillmore East - Skull & Roses)"
+            //   "Mama Tried (1971-04-26 - New York, NY - Fillmore East)"
+            //
+            // Captures:
+            //   Group 1: Song name (everything before opening paren)
+            //   Group 2: Date in yyyy-MM-dd format
+            //   (Discards everything after the date)
+            var match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$");
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
@@ -326,7 +336,7 @@ namespace DeadEditor.Services
                 return (songName, date);
             }
 
-            // No date found - return original title
+            // No date found - return original title with no date
             return (title, null);
         }
 

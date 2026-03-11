@@ -244,6 +244,83 @@ private bool HasSegueMarker(string title)
 
 ---
 
+### ParseTitleAndDate
+
+**Signature:**
+```csharp
+private (string songName, string? date) ParseTitleAndDate(string title)
+```
+
+**Purpose:** Parse track title to separate song name from trailing date suffix, handling both simple and complex parenthetical formats. This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields.
+
+**Parameters:**
+- `title` (string) - Full title from ID3 tag (e.g., "Bertha (1971-04-27 - New York, NY - Fillmore East - Skull & Roses)")
+
+**Return Value:** Tuple of (songName, date)
+- `songName` - Song name with date/venue stripped (e.g., "Bertha")
+- `date` - Date in yyyy-MM-dd format, or null if no date found
+
+**Regex Pattern:**
+```csharp
+@"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$"
+```
+
+**Pattern Explanation:**
+- `^(.+?)` - Capture group 1: Song name (non-greedy, everything before opening paren)
+- `\s*` - Optional whitespace before paren
+- `\(` - Opening parenthesis (escaped)
+- `(\d{4}-\d{2}-\d{2})` - Capture group 2: Date in yyyy-MM-dd format
+- `(?:\s*-.*?)?` - Non-capturing group (optional): Space, dash, and any remaining text (venue/location/album)
+- `\)` - Closing parenthesis (escaped)
+- `\s*$` - Optional trailing whitespace
+
+**Supported Formats:**
+
+1. **Simple date:** `"Bertha (1971-04-27)"`
+   - Returns: `("Bertha", "1971-04-27")`
+
+2. **Date with venue:** `"Mama Tried (1971-04-26 - New York, NY - Fillmore East)"`
+   - Returns: `("Mama Tried", "1971-04-26")`
+
+3. **Date with full metadata:** `"Johnny B. Goode (1971-03-24 - San Francisco, CA - Winterland - Skull & Roses)"`
+   - Returns: `("Johnny B. Goode", "1971-03-24")`
+
+4. **No date:** `"Radio AD"`
+   - Returns: `("Radio AD", null)`
+
+**Business Logic:**
+1. Return immediately if title is null/whitespace
+2. Attempt regex match
+3. If match succeeds:
+   - Extract song name from group 1, trim whitespace
+   - Extract date from group 2 (discards all text after date)
+   - Return tuple
+4. If no match:
+   - Return (original title, null)
+
+**Business Rules:**
+- **Date-first extraction:** Pulls yyyy-MM-dd date and discards venue/location/album metadata
+- **Whitespace handling:** Trims trailing spaces from song name
+- **Graceful fallback:** Returns original title unchanged if no date pattern found
+- **Prevents date doubling:** ParseTitleAndDate strips existing dates during ReadFolder, preventing duplicate dates when re-importing already-formatted files
+
+**Usage in ReadFolder:**
+```csharp
+var rawTitle = file.Tag.Title;  // "Bertha (1971-04-27 - Fillmore East)"
+var (songName, extractedDate) = ParseTitleAndDate(rawTitle);
+// songName = "Bertha"
+// extractedDate = "1971-04-27"
+
+track.SongName = songName;       // Clean song name
+track.RawTitle = rawTitle;       // Original title preserved for display
+track.TrackDate = extractedDate ?? "";  // Date or empty string
+```
+
+**Why This Matters:**
+When reimporting already-formatted files (e.g., from a previous DeadEditor export or files with embedded dates/venue info), ParseTitleAndDate prevents the user from having to manually strip dates. The method automatically extracts the song name and date into separate fields, allowing the import workflow to proceed without manual editing.
+
+---
+
 ### ExtractDateFromTitle
 
 **Signature:**
