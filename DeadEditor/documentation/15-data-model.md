@@ -279,22 +279,23 @@ The `TrackInfo` class represents metadata for a single audio track within an alb
 - Track 1, 2, 3, 4, ... (sequential)
 - `DiscNumber = 1` (default)
 
-**Multi-Disc Set Numbering:**
-- **Disc 1:** Track 1, 2, 3, ... (DiscNumber = 1)
-- **Disc 2:** Track 1, 2, 3, ... (DiscNumber = 2)
-- **Disc 3:** Track 1, 2, 3, ... (DiscNumber = 3)
+**Multi-Disc Set Numbering (101/201/301 Convention):**
 
-**Concert Set Notation (Alternative):**
+DeadEditor uses the **101/201/301 convention** for multi-disc sets to make disc boundaries visually obvious:
+- **Disc 1:** Track 101, 102, 103, ... (DiscNumber = 1, TrackNumber = 101, 102, 103, ...)
+- **Disc 2:** Track 201, 202, 203, ... (DiscNumber = 2, TrackNumber = 201, 202, 203, ...)
+- **Disc 3:** Track 301, 302, 303, ... (DiscNumber = 3, TrackNumber = 301, 302, 303, ...)
 
-Some taper recordings use 3-digit track numbers to indicate set:
-- **Set 1:** Track 101, 102, 103, ... (first set)
-- **Set 2:** Track 201, 202, 203, ... (second set)
-- **Encore:** Track 301, 302, 303, ... (encore)
+**Benefits:**
+- Disc boundaries are immediately visible in file browsers and media players
+- Sorting by track number naturally groups tracks by disc
+- Common convention in taper/collector communities
 
 **How DeadEditor Handles This:**
-- If track numbers are 101, 102, 103 → Convert to Track 1, 2, 3 (Disc 1)
-- If track numbers are 201, 202, 203 → Convert to Track 1, 2, 3 (Disc 2)
-- ID3 tags written with standard track numbering (1, 2, 3, ...)
+- **On Import:** Reads `DISCNUMBER` tag from FLAC/ID3 metadata (defaults to 1 if missing)
+- **Renumber Button:** Disc-aware renumbering using 101/201/301 format based on each track's `DiscNumber`
+- **On Write:** Writes both `TRACKNUMBER` (e.g., 101) and `DISCNUMBER` (e.g., 1) tags to files
+- **Graceful Fallback:** Tracks with missing/zero `DISCNUMBER` are treated as Disc 1
 
 ---
 

@@ -56,7 +56,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 |---------|------|------|--------|-----------------|--------|
 | Read from Files | Button | `ReadButton` | Re-loads current folder (redundant, auto-loads on browse) | `LoadFolder(FolderPathTextBox.Text)` | Working (unnecessary) |
 | Normalize All Songs | Button | `NormalizeButton` | Normalizes all track titles using fuzzy matching, highlights unmatched songs in yellow/gold | `_normalizationService.NormalizeAll(_tracks)` | Working |
-| Renumber Tracks | Button | `RenumberButton` | Renumbers tracks sequentially from 1 to N | Direct track manipulation (line 730-734) | Working |
+| Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention | Disc-aware sequential numbering (line 424-451) | Working |
 | Write to Files | Button | `WriteButton` | Writes metadata to audio files after confirmation | `_metadataService.WriteMetadata(_albumInfo, _tracks)` | Working |
 | View Info File | Button | `ViewInfoButton` | Opens non-modal window showing .txt info file content | Opens new Window with TextBox (line 823-851) | Working |
 | Import to Library | Button | `ImportButton` | Imports concert to library folder structure with progress bar | `_libraryImportService.ImportToLibrary(...)` | Working |

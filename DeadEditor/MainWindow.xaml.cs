@@ -425,14 +425,28 @@ public partial class MainWindow : Window
     {
         if (_tracks.Count == 0) return;
 
-        for (int i = 0; i < _tracks.Count; i++)
+        // Group tracks by disc number (treat missing/zero as Disc 1)
+        var tracksByDisc = _tracks
+            .GroupBy(t => t.Track.DiscNumber > 0 ? t.Track.DiscNumber : 1)
+            .OrderBy(g => g.Key);
+
+        // Renumber tracks using 101/201/301 convention
+        foreach (var discGroup in tracksByDisc)
         {
-            _tracks[i].Track.TrackNumber = i + 1;
-            _tracks[i].Track.IsModified = true;
+            int discNumber = discGroup.Key;
+            int trackIndex = 1;
+
+            foreach (var trackWrapper in discGroup)
+            {
+                // Calculate track number: Disc 1 → 101, 102, 103; Disc 2 → 201, 202, 203
+                trackWrapper.Track.TrackNumber = (discNumber * 100) + trackIndex;
+                trackWrapper.Track.IsModified = true;
+                trackIndex++;
+            }
         }
 
         TracksDataGrid.Items.Refresh();
-        StatusTextBlock.Text = "Tracks renumbered";
+        StatusTextBlock.Text = "Tracks renumbered using disc-aware 101/201/301 convention";
     }
 
     private async void MusicBrainzButton_Click(object sender, RoutedEventArgs e)
