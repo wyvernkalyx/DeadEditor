@@ -258,16 +258,31 @@ private bool HasSegueMarker(string title)
 private (string songName, string? date) ParseTitleAndDate(string title)
 ```
 
-**Purpose:** Parse track title to separate song name from trailing date suffix, handling both simple and complex parenthetical formats. This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields.
+**Purpose:** Parse track title to separate song name from trailing date suffix, handling both MusicBrainz format (M/D/YYYY in "Live at..." parentheses) and DeadEditor format (yyyy-MM-dd). This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields.
 
 **Parameters:**
-- `title` (string) - Full title from ID3 tag (e.g., "Bertha (1971-04-27 - New York, NY - Fillmore East - Skull & Roses)")
+- `title` (string) - Full title from ID3 tag (e.g., "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__")
 
 **Return Value:** Tuple of (songName, date)
-- `songName` - Song name with date/venue stripped (e.g., "Bertha")
+- `songName` - Song name with date/venue stripped (e.g., "Jack Straw")
 - `date` - Date in yyyy-MM-dd format, or null if no date found
 
-**Regex Pattern:**
+**Regex Patterns (checked in order):**
+
+**Pattern 1: MusicBrainz format with M/D/YYYY**
+```csharp
+@"^(.+?)\s*\(Live (?:at|in) .+?,\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*-\s*.+)?$"
+```
+
+**Pattern Explanation:**
+- `^(.+?)` - Capture group 1: Song name (non-greedy, before opening paren)
+- `\s*\(Live (?:at|in) ` - "(Live at..." or "(Live in..." (case-insensitive)
+- `.+?,\s*` - Venue/location text ending with comma
+- `(\d{1,2})/(\d{1,2})/(\d{4})` - Groups 2-4: M/D/YYYY date
+- `\)` - Closing paren
+- `(?:\s*-\s*.+)?$` - Optional artist suffix (e.g., " - Grateful Dead__")
+
+**Pattern 2: yyyy-MM-dd format**
 ```csharp
 @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$"
 ```
@@ -283,29 +298,43 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 
 **Supported Formats:**
 
-1. **Simple date:** `"Bertha (1971-04-27)"`
+1. **MusicBrainz with artist suffix:** `"Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__"`
+   - Returns: `("Jack Straw", "1978-02-01")`
+
+2. **MusicBrainz without artist suffix:** `"Terrapin Station (Live in Chicago, 1/31/1978)"`
+   - Returns: `("Terrapin Station", "1978-01-31")`
+
+3. **Simple yyyy-MM-dd date:** `"Bertha (1971-04-27)"`
    - Returns: `("Bertha", "1971-04-27")`
 
-2. **Date with venue:** `"Mama Tried (1971-04-26 - New York, NY - Fillmore East)"`
+4. **Date with venue:** `"Mama Tried (1971-04-26 - New York, NY - Fillmore East)"`
    - Returns: `("Mama Tried", "1971-04-26")`
 
-3. **Date with full metadata:** `"Johnny B. Goode (1971-03-24 - San Francisco, CA - Winterland - Skull & Roses)"`
+5. **Date with full metadata:** `"Johnny B. Goode (1971-03-24 - San Francisco, CA - Winterland - Skull & Roses)"`
    - Returns: `("Johnny B. Goode", "1971-03-24")`
 
-4. **No date:** `"Radio AD"`
+6. **No date:** `"Radio AD"`
    - Returns: `("Radio AD", null)`
 
 **Business Logic:**
 1. Return immediately if title is null/whitespace
-2. Attempt regex match
-3. If match succeeds:
+2. Try Pattern 1 (MusicBrainz M/D/YYYY format):
    - Extract song name from group 1, trim whitespace
-   - Extract date from group 2 (discards all text after date)
+   - Extract month/day/year from groups 2-4
+   - Convert to yyyy-MM-dd format
    - Return tuple
-4. If no match:
+3. If no match, try Pattern 2 (yyyy-MM-dd format):
+   - Extract song name from group 1, trim whitespace
+   - Extract date from group 2 (already yyyy-MM-dd)
+   - Return tuple
+4. If no match from either pattern:
    - Return (original title, null)
 
 **Business Rules:**
+- **MusicBrainz priority:** Pattern 1 (M/D/YYYY) checked first to handle MusicBrainz titles
+- **Date format conversion:** M/D/YYYY converted to yyyy-MM-dd for consistency
+- **Venue stripping:** MusicBrainz "(Live at...)" parenthetical completely removed from song name
+- **Artist suffix handling:** " - Artist__" suffix stripped automatically
 - **Date-first extraction:** Pulls yyyy-MM-dd date and discards venue/location/album metadata
 - **Whitespace handling:** Trims trailing spaces from song name
 - **Graceful fallback:** Returns original title unchanged if no date pattern found
@@ -313,10 +342,17 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 
 **Usage in ReadFolder:**
 ```csharp
-var rawTitle = file.Tag.Title;  // "Bertha (1971-04-27 - Fillmore East)"
+// Example 1: MusicBrainz title
+var rawTitle = file.Tag.Title;  // "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__"
 var (songName, extractedDate) = ParseTitleAndDate(rawTitle);
-// songName = "Bertha"
-// extractedDate = "1971-04-27"
+// songName = "Jack Straw"
+// extractedDate = "1978-02-01"
+
+// Example 2: DeadEditor formatted title
+var rawTitle2 = file.Tag.Title;  // "Bertha (1971-04-27 - Fillmore East)"
+var (songName2, extractedDate2) = ParseTitleAndDate(rawTitle2);
+// songName2 = "Bertha"
+// extractedDate2 = "1971-04-27"
 
 track.SongName = songName;       // Clean song name
 track.RawTitle = rawTitle;       // Original title preserved for display
@@ -324,7 +360,7 @@ track.TrackDate = extractedDate ?? "";  // Date or empty string
 ```
 
 **Why This Matters:**
-When reimporting already-formatted files (e.g., from a previous DeadEditor export or files with embedded dates/venue info), ParseTitleAndDate prevents the user from having to manually strip dates. The method automatically extracts the song name and date into separate fields, allowing the import workflow to proceed without manual editing.
+When importing MusicBrainz-tagged files or reimporting already-formatted files (e.g., from a previous DeadEditor export), ParseTitleAndDate prevents the user from having to manually strip dates and venue info. The method automatically extracts the song name and date into separate fields, allowing the import workflow to proceed without manual editing.
 
 ---
 

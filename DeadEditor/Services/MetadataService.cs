@@ -316,7 +316,32 @@ namespace DeadEditor.Services
             if (string.IsNullOrWhiteSpace(title))
                 return (title, null);
 
-            // Match patterns with yyyy-MM-dd date in parentheses:
+            // PATTERN 1: MusicBrainz format with M/D/YYYY date inside "(Live at/in...)" parentheses
+            // Examples:
+            //   "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__"
+            //   "Terrapin Station (Live in Chicago, 1/31/1978)"
+            //
+            // Regex pattern: "(Live at/in ..., M/D/YYYY) [optional artist suffix]"
+            // Captures:
+            //   Group 1: Song name (everything before opening paren)
+            //   Group 2: Month (1 or 2 digits)
+            //   Group 3: Day (1 or 2 digits)
+            //   Group 4: Year (4 digits)
+            // The entire "(Live at...)" parenthetical is stripped from the returned song name
+            var match = Regex.Match(title, @"^(.+?)\s*\(Live (?:at|in) .+?,\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*-\s*.+)?$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                var songName = match.Groups[1].Value.Trim();
+                var month = int.Parse(match.Groups[2].Value);
+                var day = int.Parse(match.Groups[3].Value);
+                var year = int.Parse(match.Groups[4].Value);
+
+                // Convert M/D/YYYY to yyyy-MM-dd format
+                var date = $"{year:D4}-{month:D2}-{day:D2}";
+                return (songName, date);
+            }
+
+            // PATTERN 2: yyyy-MM-dd date in parentheses (existing pattern)
             // 1. "Song (yyyy-MM-dd)" - simple format
             // 2. "Song (yyyy-MM-dd - venue info)" - with venue/location/album info after date
             // Examples:
@@ -328,7 +353,7 @@ namespace DeadEditor.Services
             //   Group 1: Song name (everything before opening paren)
             //   Group 2: Date in yyyy-MM-dd format
             //   (Discards everything after the date)
-            var match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$");
+            match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$");
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
