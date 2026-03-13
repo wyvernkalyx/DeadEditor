@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The **NormalizationService** implements fuzzy title matching using **Levenshtein distance algorithm** to normalize messy track titles from taper recordings into canonical song names. It handles typos, alternative spellings, date suffixes, venue info, segue markers, special characters, and remaster tags through a multi-stage cleaning and matching pipeline. The service loads `Data/songs.json` into memory, builds a case-insensitive alias lookup dictionary, and provides song database management (add songs, get all titles/artists).
+The **NormalizationService** implements fuzzy title matching using **Levenshtein distance algorithm** to normalize messy track titles from taper recordings and MusicBrainz into canonical song names. It handles typos, alternative spellings, date suffixes, venue info, artist suffixes, segue markers, special characters, and remaster tags through a multi-stage cleaning and matching pipeline. The service loads `Data/songs.json` into memory, builds a case-insensitive alias lookup dictionary, and provides song database management (add songs, get all titles/artists).
 
 ---
 
@@ -76,7 +76,7 @@ public string? Normalize(string title)
 - `string` - Canonical song name if match found
 - `null` - No match found (unknown song)
 
-**Business Logic (14-stage pipeline):**
+**Business Logic (15-stage pipeline):**
 
 #### Stage 1: Basic Cleaning (line 80-82)
 - Remove tape splice markers: `//`
@@ -131,23 +131,29 @@ public string? Normalize(string title)
    - Regex: `@"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$"`
    - Example: "[2003 Remaster]"
 
-7. **US Date/Venue in Brackets** (line 130-133):
+7. **US Date/Venue in Brackets** (line 120-124):
    - Regex: `@"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$"`
    - Example: "[5/7/72, Bickershaw Festival]"
 
-8. **Live At/In Brackets** (line 136-139):
+8. **Artist Suffix Removal** (line 126-132):
+   - Regex: `@"\s*-\s*[^-]+_{0,2}\s*$"`
+   - Examples: " - Grateful Dead__", " - Grateful Dead", " - Artist Name"
+   - **Critical:** MUST come BEFORE "(Live at...)" removal
+   - **Rationale:** MusicBrainz titles have format "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching end-of-string
+
+9. **Live At/In Brackets** (line 134-138):
    - Regex: `@"\s*\[Live (?:at|in) [^\]]+\]\s*$"`
    - Example: "[Live at Fillmore East]"
 
-9. **Live At/In Parentheses** (line 142-145):
+10. **Live At/In Parentheses** (line 140-144):
    - Regex: `@"\s*\(Live (?:at|in) [^)]+\)\s*$"`
    - Example: "(Live at Winterland)"
 
-10. **Venue/Date in Brackets** (line 148-151):
+11. **Venue/Date in Brackets** (line 146-150):
     - Regex: `@"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$"`
     - Example: "[Kiel Opera House, St. Louis, MO 10/24/70]"
 
-11. **Segue Markers** (line 154-157):
+12. **Segue Markers** (line 152-156):
     - Regex: `@"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$"`
     - Matches: `>`, `->`, `–>`, `→`, `[>]`
 
@@ -202,7 +208,7 @@ Each stage strips additional patterns, then checks lookup:
 #### Stage 13: No Match (line 265)
 - Return `null` if all stages fail
 
-**Total Stages:** 13 (1-3 cleaning, 4-12 progressive matching, 13 failure)
+**Total Stages:** 14 (1-3 cleaning, 4-13 progressive matching, 14 failure)
 
 **Return:** First match found in pipeline order
 
@@ -632,11 +638,12 @@ private string NormalizeDateInTitle(string title)
 1. Special patterns (Filler, dates with venues)
 2. Generic dates (ISO format, US format)
 3. Remaster tags
-4. Live venue info
-5. Segue markers
-6. Character normalization (dashes, apostrophes)
-7. Suffix removal
-8. Fuzzy matching (last resort)
+4. Artist suffix (MUST come before Live venue info)
+5. Live venue info
+6. Segue markers
+7. Character normalization (dashes, apostrophes)
+8. Suffix removal
+9. Fuzzy matching (last resort)
 
 **Rationale:** Specific patterns prevent false matches (e.g., "Song (1)" could match " (1972-01-01)" if date pattern checked first).
 

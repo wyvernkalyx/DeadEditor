@@ -123,6 +123,14 @@ namespace DeadEditor.Services
                 @"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$",
                 "").Trim();
 
+            // Remove artist suffix (e.g., " - Grateful Dead__", " - Artist Name")
+            // MUST come BEFORE "(Live at...)" removal because MusicBrainz titles have format:
+            // "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*-\s*[^-]+_{0,2}\s*$",
+                "").Trim();
+
             // Remove [Live in...] or [Live at...] patterns (square brackets)
             cleaned = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
