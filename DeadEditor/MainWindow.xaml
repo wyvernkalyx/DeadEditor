@@ -146,7 +146,7 @@
         </Grid.RowDefinitions>
 
         <!-- Menu Bar -->
-        <Menu Grid.Row="0" Background="#2D2D30" Foreground="#FFFFFF" FontSize="14">
+        <Menu Grid.Row="0" Background="#2D2D30" Foreground="#FFFFFF" FontSize="16">
             <Menu.Resources>
                 <Style TargetType="MenuItem">
                     <Setter Property="Foreground" Value="#FFFFFF"/>
@@ -187,10 +187,10 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" x:Name="BrowseButton" Content="Select Folder..."
                         Width="140" Height="32" Margin="0,0,10,0"
-                        Click="BrowseButton_Click" FontSize="14"/>
+                        Click="BrowseButton_Click" FontSize="16"/>
                 <TextBox Grid.Column="1" x:Name="FolderPathTextBox"
                          VerticalAlignment="Center" IsReadOnly="True"
-                         FontFamily="Consolas" FontSize="14" Background="#2D2D30"/>
+                         FontFamily="Consolas" FontSize="16" Background="#2D2D30"/>
             </Grid>
 
             <!-- ===== SECTION 2: ACTION BAR ===== -->
@@ -204,42 +204,42 @@
                 <!-- Left: Action Buttons -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <Button x:Name="ReadButton" Content="Read" Height="32"
-                            Click="ReadButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="ReadButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Read metadata from audio files"/>
                     <Button x:Name="MusicBrainzButton" Content="🔎 MusicBrainz" Height="32"
                             Style="{StaticResource AccentButton}"
-                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Lookup album on MusicBrainz"/>
                     <Button x:Name="NormalizeButton" Content="✨ Normalize" Height="32"
                             Style="{StaticResource AccentButton}"
-                            Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Normalize all song titles"/>
                     <Button x:Name="RenumberButton" Content="Renumber" Height="32"
-                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Renumber tracks sequentially"/>
                     <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
-                            Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="16"
                             IsEnabled="False"
                             ToolTip="View info file"/>
                 </StackPanel>
 
                 <!-- Center: Status Text -->
                 <TextBlock Grid.Column="1" x:Name="StatusTextBlock"
-                           Text="Ready" FontSize="14"
+                           Text="Ready" FontSize="16"
                            VerticalAlignment="Center" HorizontalAlignment="Center"
                            Foreground="#CCCCCC"/>
 
                 <!-- Right: Write/Import Buttons -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button x:Name="WriteButton" Content="Write to Files" Height="32"
-                            Click="WriteButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="WriteButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Write metadata to audio files"/>
                     <Button x:Name="ImportButton" Content="Import to Library" Height="32"
                             Style="{StaticResource PrimaryButton}"
-                            Click="ImportButton_Click" Margin="0,0,6,0" FontSize="14"
+                            Click="ImportButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Import to library"/>
                     <Button x:Name="CancelButton" Content="Cancel" Height="32"
-                            Click="CancelButton_Click" FontSize="14"
+                            Click="CancelButton_Click" FontSize="16"
                             ToolTip="Close window"/>
                 </StackPanel>
             </Grid>
@@ -330,7 +330,7 @@
                               HeadersVisibility="Column"
                               GridLinesVisibility="Horizontal"
                               HorizontalGridLinesBrush="#3F3F46"
-                              FontSize="14"
+                              FontSize="16"
                               RowHeight="28">
                         <DataGrid.Resources>
                             <!-- Style for editable cells -->
@@ -540,7 +540,7 @@
                         <Label Content="ALBUM TYPE" Margin="0,0,0,3"/>
                         <ComboBox x:Name="AlbumTypeComboBox" Height="26" Margin="0,0,0,15"
                                   SelectionChanged="AlbumTypeComboBox_SelectionChanged"
-                                  FontSize="14">
+                                  FontSize="16">
                             <ComboBoxItem Content="Auto-detect" IsSelected="True"/>
                             <ComboBoxItem Content="Audience Recording"/>
                             <ComboBoxItem Content="Official Release"/>
@@ -588,20 +588,20 @@
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button x:Name="PreviousTrackButton" Content="⏮" Width="40" Height="30"
                                 Margin="0,0,4,0" Click="PreviousTrackButton_Click"
-                                IsEnabled="False" FontSize="14"/>
+                                IsEnabled="False" FontSize="16"/>
                         <Button x:Name="PlayPauseButton" Content="▶" Width="50" Height="30"
                                 Margin="0,0,4,0" Click="PlayPauseButton_Click"
-                                IsEnabled="False" FontSize="14" FontWeight="Bold"/>
+                                IsEnabled="False" FontSize="16" FontWeight="Bold"/>
                         <Button x:Name="StopButton" Content="⏹" Width="40" Height="30"
                                 Margin="0,0,4,0" Click="StopButton_Click"
-                                IsEnabled="False" FontSize="14"/>
+                                IsEnabled="False" FontSize="16"/>
                         <Button x:Name="NextTrackButton" Content="⏭" Width="40" Height="30"
                                 Margin="0,0,10,0" Click="NextTrackButton_Click"
-                                IsEnabled="False" FontSize="14"/>
+                                IsEnabled="False" FontSize="16"/>
 
                         <!-- Now Playing Text -->
                         <TextBlock x:Name="NowPlayingText" Text="No track playing"
-                                   FontSize="14" Foreground="#CCCCCC"
+                                   FontSize="16" Foreground="#CCCCCC"
                                    VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </StackPanel>
 
@@ -631,7 +631,7 @@
 
                     <!-- Volume Control -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="🔊" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="🔊" FontSize="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
                         <Slider x:Name="VolumeSlider" Width="80"
                                 Minimum="0" Maximum="100" Value="75"
                                 VerticalAlignment="Center"
@@ -691,7 +691,7 @@
                                   VerticalScrollBarVisibility="Auto"
                                   Margin="0,0,0,20">
                         <TextBlock x:Name="NotificationMessage"
-                                   TextWrapping="Wrap" FontSize="14"
+                                   TextWrapping="Wrap" FontSize="16"
                                    Foreground="#CCCCCC" LineHeight="20"/>
                     </ScrollViewer>
                     <StackPanel Grid.Row="2" Orientation="Horizontal"
@@ -699,15 +699,15 @@
                         <Button x:Name="NotificationYesButton" Content="Yes"
                                 Width="100" Height="36" Margin="5"
                                 Click="NotificationYes_Click" Visibility="Collapsed"
-                                FontSize="14" FontWeight="SemiBold"/>
+                                FontSize="16" FontWeight="SemiBold"/>
                         <Button x:Name="NotificationNoButton" Content="No"
                                 Width="100" Height="36" Margin="5"
                                 Click="NotificationNo_Click" Visibility="Collapsed"
-                                FontSize="14"/>
+                                FontSize="16"/>
                         <Button x:Name="NotificationOkButton" Content="OK"
                                 Width="100" Height="36" Margin="5"
                                 Click="NotificationOk_Click"
-                                FontSize="14" FontWeight="SemiBold"/>
+                                FontSize="16" FontWeight="SemiBold"/>
                     </StackPanel>
                 </Grid>
             </Border>
