@@ -138,10 +138,10 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 
 **Columns:**
 - `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place
-- `Song` - Display title (normalized or original) (DisplayTitle)
-- `Final Metadata (Preview)` - Preview of metadata to be written (PreviewMetadata)
+- `Title` - Display title (normalized or original) (DisplayTitle)
+- `Date` - **Effective date** (TrackDate or inherited from album) - Shows track-specific date in white, or album date in muted steel blue-gray if no track date set
 - `→` - Segue checkbox (HasSegue)
-- `Duration` - Track duration (Duration)
+- `Time` - Track duration (Duration)
 
 ### Selected Track Editor Section
 

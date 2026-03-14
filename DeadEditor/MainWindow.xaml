@@ -190,7 +190,7 @@
                         Click="BrowseButton_Click" FontSize="14"/>
                 <TextBox Grid.Column="1" x:Name="FolderPathTextBox"
                          VerticalAlignment="Center" IsReadOnly="True"
-                         FontFamily="Consolas" FontSize="13" Background="#2D2D30"/>
+                         FontFamily="Consolas" FontSize="14" Background="#2D2D30"/>
             </Grid>
 
             <!-- ===== SECTION 2: ACTION BAR ===== -->
@@ -204,42 +204,42 @@
                 <!-- Left: Action Buttons -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <Button x:Name="ReadButton" Content="Read" Height="32"
-                            Click="ReadButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="ReadButton_Click" Margin="0,0,6,0" FontSize="14"
                             ToolTip="Read metadata from audio files"/>
                     <Button x:Name="MusicBrainzButton" Content="🔎 MusicBrainz" Height="32"
                             Style="{StaticResource AccentButton}"
-                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="14"
                             ToolTip="Lookup album on MusicBrainz"/>
                     <Button x:Name="NormalizeButton" Content="✨ Normalize" Height="32"
                             Style="{StaticResource AccentButton}"
-                            Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="14"
                             ToolTip="Normalize all song titles"/>
                     <Button x:Name="RenumberButton" Content="Renumber" Height="32"
-                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="14"
                             ToolTip="Renumber tracks sequentially"/>
                     <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
-                            Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="14"
                             IsEnabled="False"
                             ToolTip="View info file"/>
                 </StackPanel>
 
                 <!-- Center: Status Text -->
                 <TextBlock Grid.Column="1" x:Name="StatusTextBlock"
-                           Text="Ready" FontSize="13"
+                           Text="Ready" FontSize="14"
                            VerticalAlignment="Center" HorizontalAlignment="Center"
                            Foreground="#CCCCCC"/>
 
                 <!-- Right: Write/Import Buttons -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button x:Name="WriteButton" Content="Write to Files" Height="32"
-                            Click="WriteButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="WriteButton_Click" Margin="0,0,6,0" FontSize="14"
                             ToolTip="Write metadata to audio files"/>
                     <Button x:Name="ImportButton" Content="Import to Library" Height="32"
                             Style="{StaticResource PrimaryButton}"
-                            Click="ImportButton_Click" Margin="0,0,6,0" FontSize="13"
+                            Click="ImportButton_Click" Margin="0,0,6,0" FontSize="14"
                             ToolTip="Import to library"/>
                     <Button x:Name="CancelButton" Content="Cancel" Height="32"
-                            Click="CancelButton_Click" FontSize="13"
+                            Click="CancelButton_Click" FontSize="14"
                             ToolTip="Close window"/>
                 </StackPanel>
             </Grid>
@@ -455,16 +455,14 @@
                                                     <Setter Property="Foreground" Value="#FFFFFF"/>
                                                     <Setter Property="FontStyle" Value="Normal"/>
                                                     <Style.Triggers>
-                                                        <!-- If TrackDate is empty, show inherited date in gray italic -->
+                                                        <!-- If TrackDate is empty, show inherited date in muted steel blue-gray -->
                                                         <DataTrigger Binding="{Binding TrackDate}" Value="">
                                                             <Setter Property="Text" Value="{Binding InheritedDate}"/>
-                                                            <Setter Property="Foreground" Value="#777777"/>
-                                                            <Setter Property="FontStyle" Value="Italic"/>
+                                                            <Setter Property="Foreground" Value="#8FA3B8"/>
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding TrackDate}" Value="{x:Null}">
                                                             <Setter Property="Text" Value="{Binding InheritedDate}"/>
-                                                            <Setter Property="Foreground" Value="#777777"/>
-                                                            <Setter Property="FontStyle" Value="Italic"/>
+                                                            <Setter Property="Foreground" Value="#8FA3B8"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -542,7 +540,7 @@
                         <Label Content="ALBUM TYPE" Margin="0,0,0,3"/>
                         <ComboBox x:Name="AlbumTypeComboBox" Height="26" Margin="0,0,0,15"
                                   SelectionChanged="AlbumTypeComboBox_SelectionChanged"
-                                  FontSize="13">
+                                  FontSize="14">
                             <ComboBoxItem Content="Auto-detect" IsSelected="True"/>
                             <ComboBoxItem Content="Audience Recording"/>
                             <ComboBoxItem Content="Official Release"/>
@@ -603,7 +601,7 @@
 
                         <!-- Now Playing Text -->
                         <TextBlock x:Name="NowPlayingText" Text="No track playing"
-                                   FontSize="13" Foreground="#CCCCCC"
+                                   FontSize="14" Foreground="#CCCCCC"
                                    VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </StackPanel>
 
