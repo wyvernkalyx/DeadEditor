@@ -365,6 +365,126 @@ public partial class MainWindow : Window
         {
             e.Row.Foreground = new SolidColorBrush(Colors.White);
         }
+
+        // Attach drag-to-reorder handlers to each row
+        e.Row.PreviewMouseLeftButtonDown += Row_PreviewMouseLeftButtonDown;
+        e.Row.MouseMove += Row_MouseMove;
+        e.Row.Drop += Row_Drop;
+        e.Row.DragOver += Row_DragOver;
+        e.Row.AllowDrop = true;
+    }
+
+    // ===== DRAG-TO-REORDER FUNCTIONALITY =====
+
+    private System.Windows.Point _dragStartPoint;
+    private TrackInfoViewModel? _draggedItem;
+    private bool _isDragging;
+
+    private void Row_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is DataGridRow row)
+        {
+            _dragStartPoint = e.GetPosition(null);
+            _draggedItem = row.Item as TrackInfoViewModel;
+            _isDragging = false;
+        }
+    }
+
+    private void Row_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed && _draggedItem != null && !_isDragging)
+        {
+            System.Windows.Point currentPosition = e.GetPosition(null);
+            System.Windows.Vector diff = _dragStartPoint - currentPosition;
+
+            // Only start drag if mouse moved enough (prevents accidental drags during cell edits)
+            if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                _isDragging = true;
+                var row = sender as DataGridRow;
+                if (row != null)
+                {
+                    System.Windows.DragDrop.DoDragDrop(row, _draggedItem, System.Windows.DragDropEffects.Move);
+                }
+                _isDragging = false;
+            }
+        }
+    }
+
+    private void Row_DragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(typeof(TrackInfoViewModel)))
+        {
+            e.Effects = System.Windows.DragDropEffects.Move;
+
+            // Show visual drop indicator
+            if (sender is DataGridRow targetRow && _draggedItem != null)
+            {
+                var targetItem = targetRow.Item as TrackInfoViewModel;
+                if (targetItem != null && targetItem != _draggedItem)
+                {
+                    // Update drop indicator position (will be implemented in XAML)
+                    UpdateDropIndicator(targetRow);
+                }
+            }
+        }
+        else
+        {
+            e.Effects = System.Windows.DragDropEffects.None;
+        }
+        e.Handled = true;
+    }
+
+    private void Row_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(typeof(TrackInfoViewModel)) && sender is DataGridRow targetRow)
+        {
+            var targetItem = targetRow.Item as TrackInfoViewModel;
+            if (targetItem != null && _draggedItem != null && targetItem != _draggedItem)
+            {
+                // Get current indices
+                int draggedIndex = _tracks.IndexOf(_draggedItem);
+                int targetIndex = _tracks.IndexOf(targetItem);
+
+                if (draggedIndex >= 0 && targetIndex >= 0)
+                {
+                    // Remove from old position
+                    _tracks.RemoveAt(draggedIndex);
+
+                    // Insert at new position
+                    if (draggedIndex < targetIndex)
+                    {
+                        // If dragging down, adjust index because we removed item above
+                        _tracks.Insert(targetIndex, _draggedItem);
+                    }
+                    else
+                    {
+                        // If dragging up, insert at target position
+                        _tracks.Insert(targetIndex, _draggedItem);
+                    }
+
+                    // Clear selection and reselect moved row
+                    TracksDataGrid.SelectedItem = _draggedItem;
+                }
+            }
+        }
+
+        // Hide drop indicator
+        HideDropIndicator();
+        e.Handled = true;
+    }
+
+    private void UpdateDropIndicator(DataGridRow targetRow)
+    {
+        // Visual feedback will be implemented via XAML adorner or border
+        // For now, this is a placeholder for future enhancement
+    }
+
+    private void HideDropIndicator()
+    {
+        // Hide visual drop indicator
+        // Placeholder for future enhancement
     }
 
     private void UpdateAllTrackDisplayTitles()

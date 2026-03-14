@@ -56,7 +56,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 |---------|------|------|--------|-----------------|--------|
 | Read from Files | Button | `ReadButton` | Re-loads current folder (redundant, auto-loads on browse) | `LoadFolder(FolderPathTextBox.Text)` | Working (unnecessary) |
 | Normalize All Songs | Button | `NormalizeButton` | Normalizes all track titles using fuzzy matching, highlights unmatched songs in yellow/gold | `_normalizationService.NormalizeAll(_tracks)` | Working |
-| Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention | Disc-aware sequential numbering (line 424-451) | Working |
+| Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention based on current row order (use after drag-to-reorder) | Disc-aware sequential numbering (line 424-451) | Working |
 | Write to Files | Button | `WriteButton` | Writes metadata to audio files after confirmation | `_metadataService.WriteMetadata(_albumInfo, _tracks)` | Working |
 | View Info File | Button | `ViewInfoButton` | Opens non-modal window showing .txt info file content | Opens new Window with TextBox (line 823-851) | Working |
 | Import to Library | Button | `ImportButton` | Imports concert to library folder structure with progress bar | `_libraryImportService.ImportToLibrary(...)` | Working |
@@ -134,6 +134,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Tracks grid | DataGrid | `TracksDataGrid` | Displays all tracks, shows preview metadata, highlights unmatched songs (yellow/gold background) | `_metadataService.ReadFolder(folderPath)` | Working |
 | Row selection | DataGridRow | N/A | Updates selected track editor when row selected | `TracksDataGrid_SelectionChanged` → updates SelectedTitle/Date/Segue fields | Working |
 | Row loading | DataGridRow | N/A | Sets row background color based on normalization status | `TracksDataGrid_LoadingRow` → `UpdateRowBackground()` | Working |
+| Row drag-to-reorder | DataGridRow | N/A | Drag rows to reorder tracks, visual drop indicator shows insertion point | `Row_PreviewMouseLeftButtonDown` → `Row_MouseMove` → `Row_Drop` → reorders `_tracks` collection | Working |
 
 **Columns:**
 - `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place
@@ -535,6 +536,48 @@ Allows users to audition tracks while reviewing metadata before import. Uses the
 
 **Success Path:** Concert loaded → Metadata edited → Written → Window closed → Library refreshed
 **Note:** User does NOT re-import; files are edited in place within library folder
+
+---
+
+### Workflow 5: Drag-to-Reorder Tracks
+
+**Goal:** Reorder tracks by dragging rows to new positions, then renumber them.
+
+**Use Case:** Fix incorrect track order from badly-tagged files, or manually arrange tracks when disc numbers are missing.
+
+1. **User loads concert folder**
+   - Tracks appear in DataGrid in current order (sorted by disc number, then track number)
+   - Track numbers may be incorrect or inconsistent (e.g., 1, 2, 3 instead of 101, 201, 301)
+
+2. **User drags a row to new position**
+   - Click and hold left mouse button on any part of the row
+   - Drag up or down - a visual insertion line appears showing drop position
+   - Release mouse button to drop row at new position
+   - Row immediately moves to new position in the grid
+   - **Important:** Track numbers do NOT auto-update on drop
+
+3. **User continues reordering as needed**
+   - Any row can be dragged to any position (no disc boundary constraints)
+   - Rows stay in their new positions until dragged again
+   - Manual # edits and drag-to-reorder can be mixed freely
+
+4. **User clicks "Renumber Tracks" button**
+   - Renumber button assigns disc-aware 101/201/301 numbers based on current row order
+   - Groups tracks by DiscNumber, then numbers sequentially within each disc
+   - Example: If tracks are reordered but still have DiscNumber 1, 2, 1, 2:
+     - Disc 1 tracks get 101, 102 in current order
+     - Disc 2 tracks get 201, 202 in current order
+
+5. **User clicks "Write to Files"**
+   - Metadata written with new track numbers to audio files
+
+**Success Path:** Tracks loaded → Dragged to correct order → Renumbered → Written to files
+
+**Notes:**
+- Dragging does NOT automatically renumber - user must click Renumber button
+- Drag-to-reorder works independently of disc numbers (move tracks across disc boundaries freely)
+- After reordering, Renumber button respects current row order when assigning numbers
+- Visual feedback (insertion line) shows exactly where row will land before dropping
 
 ---
 
