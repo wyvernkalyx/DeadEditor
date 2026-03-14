@@ -261,7 +261,7 @@ The `TrackInfo` class represents metadata for a single audio track within an alb
 |----------|------|-------------|---------|
 | `FilePath` | `string` | Full path to audio file | `"D:\library\1977\...\01 - Minglewood.flac"` |
 | `FileName` | `string` | Filename only | `"01 - All New Minglewood Blues.flac"` |
-| `TrackNumber` | `int` | Track number within disc | `1` (first track), `12` (twelfth track) |
+| `TrackNumber` | `int` | Track number within disc (user-editable in import grid) | `1` (first track), `12` (twelfth track), `101` (disc 1 using 101/201 convention) |
 | `DiscNumber` | `int` | Disc number (defaults to 1) | `1` (single-disc), `2` (disc 2 of multi-disc) |
 | `Title` | `string` | Original title from file metadata | `"Dnacing in the Street"` (with typo) |
 | `NormalizedTitle` | `string` | Normalized title after fuzzy matching | `"Dancing in the Street"` (corrected) |

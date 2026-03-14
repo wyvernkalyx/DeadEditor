@@ -391,9 +391,9 @@
                             </Style>
                         </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <!-- Track Number (read-only) -->
-                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}"
-                                                Width="40" IsReadOnly="True">
+                            <!-- Track Number (editable) -->
+                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber, UpdateSourceTrigger=PropertyChanged}"
+                                                Width="40" IsReadOnly="False">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -401,6 +401,15 @@
                                         <Setter Property="Foreground" Value="#CCCCCC"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter Property="FontFamily" Value="Consolas"/>
+                                        <Setter Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
                             </DataGridTextColumn>
 
                             <!-- Title (editable, shows display title with auto-appended date) -->

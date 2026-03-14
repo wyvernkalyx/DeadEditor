@@ -136,7 +136,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Row loading | DataGridRow | N/A | Sets row background color based on normalization status | `TracksDataGrid_LoadingRow` → `UpdateRowBackground()` | Working |
 
 **Columns:**
-- `#` - Track number (TrackNumber)
+- `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place
 - `Song` - Display title (normalized or original) (DisplayTitle)
 - `Final Metadata (Preview)` - Preview of metadata to be written (PreviewMetadata)
 - `→` - Segue checkbox (HasSegue)
