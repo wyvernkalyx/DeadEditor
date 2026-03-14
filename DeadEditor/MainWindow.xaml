@@ -309,9 +309,9 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Track List -->
-                <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="1"
-                        Background="#1E1E1E" Margin="0,0,10,0">
-                    <DataGrid x:Name="TracksDataGrid"
+                <Grid Grid.Column="0" Margin="0,0,10,0">
+                    <Border BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E">
+                        <DataGrid x:Name="TracksDataGrid"
                               AutoGenerateColumns="False"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
@@ -496,8 +496,19 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                         </DataGrid.Columns>
-                    </DataGrid>
-                </Border>
+                        </DataGrid>
+                    </Border>
+
+                    <!-- Drop indicator line -->
+                    <Border x:Name="DropIndicator"
+                            Background="#007ACC"
+                            Height="3"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            Visibility="Collapsed"
+                            IsHitTestVisible="False"
+                            Margin="5,0,5,0"/>
+                </Grid>
 
                 <!-- Artwork Panel -->
                 <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="1"

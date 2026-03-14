@@ -477,14 +477,25 @@ public partial class MainWindow : Window
 
     private void UpdateDropIndicator(DataGridRow targetRow)
     {
-        // Visual feedback will be implemented via XAML adorner or border
-        // For now, this is a placeholder for future enhancement
+        try
+        {
+            // Get the position of the target row relative to the DataGrid
+            var position = targetRow.TranslatePoint(new System.Windows.Point(0, 0), TracksDataGrid);
+
+            // Show the indicator at the top of the target row
+            DropIndicator.Visibility = Visibility.Visible;
+            DropIndicator.Margin = new Thickness(5, position.Y, 5, 0);
+        }
+        catch
+        {
+            // If positioning fails, hide the indicator
+            HideDropIndicator();
+        }
     }
 
     private void HideDropIndicator()
     {
-        // Hide visual drop indicator
-        // Placeholder for future enhancement
+        DropIndicator.Visibility = Visibility.Collapsed;
     }
 
     private void UpdateAllTrackDisplayTitles()
