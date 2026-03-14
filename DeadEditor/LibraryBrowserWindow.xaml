@@ -72,7 +72,7 @@
                                     <ControlTemplate TargetType="ComboBoxItem">
                                         <Border Name="Border" Background="{TemplateBinding Background}"
                                                 BorderThickness="0" Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter/>
+                                            <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}"/>
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsHighlighted" Value="True">
