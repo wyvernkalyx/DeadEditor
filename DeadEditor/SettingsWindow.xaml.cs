@@ -214,5 +214,22 @@ namespace DeadEditor
 
             this.Close();
         }
+
+        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Suppress alert chime when Enter is pressed on buttons
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                e.Handled = true;
+
+                // If a button has focus, invoke its click handler manually
+                if (e.Source is System.Windows.Controls.Button button)
+                {
+                    // Trigger the button's Click event using PerformClick equivalent
+                    var clickEvent = new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent);
+                    button.RaiseEvent(clickEvent);
+                }
+            }
+        }
     }
 }
