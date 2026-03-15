@@ -90,12 +90,11 @@ namespace DeadEditor
         {
             // Show warning confirmation
             var result = System.Windows.MessageBox.Show(
-                "This will:\n" +
-                "• Move all files in your library to the Recycle Bin\n" +
-                "• Reset the songs database\n" +
-                "• Clear library settings\n\n" +
-                "This cannot be easily undone. Continue?",
-                "Reset All Data?",
+                "This will remove all imported library data:\n\n" +
+                "• Move all library files to the Recycle Bin\n\n" +
+                "Your settings, paths, and configuration will NOT be affected.\n\n" +
+                "Continue?",
+                "Reset Library Data?",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning,
                 MessageBoxResult.No);
@@ -165,23 +164,15 @@ namespace DeadEditor
                     }
                 }
 
-                // 3. Clear the current view in library window
+                // 3. Clear the current view in library window (but keep paths)
                 _libraryWindow.ClearCurrentView();
 
-                // 4. Reset library settings
-                _librarySettings.LibraryRootPath = "";
-                _librarySettings.OfficialReleasesPath = "";
-                _librarySettings.Save();
-                LibraryRootTextBox.Text = "";
-                OfficialReleasesTextBox.Text = "";
-
-                // Update library window
-                _libraryWindow.UpdateLibraryRootDisplay("");
+                // Note: Settings and paths are preserved - only library data is cleared
 
                 System.Windows.MessageBox.Show(
-                    $"Successfully reset all data!\n\n" +
+                    $"Successfully reset library data!\n\n" +
                     $"• {deletedItems} items moved to Recycle Bin\n" +
-                    $"• Library settings cleared\n\n" +
+                    $"• Your settings and paths have been preserved\n\n" +
                     $"You can restore files from the Recycle Bin if needed.",
                     "Reset Complete",
                     MessageBoxButton.OK,
