@@ -255,6 +255,7 @@ public partial class MainWindow : Window
 
         UpdateAlbumPreview();
         UpdateAllTrackDisplayTitles(); // Date changes affect track titles
+        UpdateAllTrackInheritedDates(); // Update inherited dates when album date changes
     }
 
     private void AlbumTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -503,6 +504,14 @@ public partial class MainWindow : Window
         foreach (var track in _tracks)
         {
             track.UpdateDisplayTitle();
+        }
+    }
+
+    private void UpdateAllTrackInheritedDates()
+    {
+        foreach (var track in _tracks)
+        {
+            track.UpdateInheritedDate();
         }
     }
 

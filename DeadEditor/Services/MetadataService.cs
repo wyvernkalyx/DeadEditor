@@ -49,12 +49,9 @@ namespace DeadEditor.Services
                         // Check for existing segue markers before cleaning
                         track.HasSegue = HasSegueMarker(rawTitle);
 
-                        // If no date was extracted from title, use album metadata as fallback
-                        // All tracks must have a date populated
-                        if (string.IsNullOrEmpty(track.TrackDate))
-                        {
-                            track.TrackDate = ExtractDateFromAlbum(file.Tag.Album) ?? "";
-                        }
+                        // DON'T populate TrackDate with album date here!
+                        // TrackDate should ONLY contain track-specific dates extracted from title.
+                        // Empty TrackDate means the track inherits the album date (shown in UI via InheritedDate).
 
                         // DON'T clean the title here - keep original metadata in Title field
                         // Cleaning will happen during normalization for matching purposes
