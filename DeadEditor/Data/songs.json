@@ -1692,9 +1692,9 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Other One",
+          "OfficialTitle": "The Other One",
           "Aliases": [
-            "The Other One",
+            "Other One",
             "TOO",
             "That's It for the Other One"
           ]
@@ -4390,14 +4390,6 @@
     {
       "OfficialTitle": "Operator",
       "Aliases": []
-    },
-    {
-      "OfficialTitle": "Other One",
-      "Aliases": [
-        "The Other One",
-        "TOO",
-        "That's It for the Other One"
-      ]
     },
     {
       "OfficialTitle": "Other One Jam",

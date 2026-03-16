@@ -1213,6 +1213,7 @@ public class TrackInfoViewModel : INotifyPropertyChanged
         {
             Track.Segue = value;
             OnPropertyChanged();
+            UpdateDisplayTitle(); // Update title when segue checkbox changes
         }
     }
 
@@ -1233,6 +1234,12 @@ public class TrackInfoViewModel : INotifyPropertyChanged
     {
         var effectiveDate = string.IsNullOrEmpty(Track.TrackDate) ? _albumInfo?.AlbumDate : Track.TrackDate;
         var songName = Track.SongName ?? Track.Title ?? "";
+
+        // Append segue marker if segue is checked
+        if (Track.Segue)
+        {
+            songName += " >";
+        }
 
         // Auto-append date if effective date differs from album date
         if (!string.IsNullOrEmpty(effectiveDate) &&
