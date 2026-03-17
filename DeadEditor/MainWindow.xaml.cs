@@ -1250,10 +1250,8 @@ public class TrackInfoViewModel : INotifyPropertyChanged
             songName += " >";
         }
 
-        // Auto-append date if effective date differs from album date
-        if (!string.IsNullOrEmpty(effectiveDate) &&
-            effectiveDate != _albumInfo?.AlbumDate &&
-            !string.IsNullOrEmpty(_albumInfo?.AlbumDate))
+        // ALWAYS append date to title (even if it matches album date)
+        if (!string.IsNullOrEmpty(effectiveDate))
         {
             DisplayTitle = $"{songName} ({effectiveDate})";
         }
