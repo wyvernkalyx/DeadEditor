@@ -1204,6 +1204,17 @@ public class TrackInfoViewModel : INotifyPropertyChanged
         }
     }
 
+    public int DiscNumber
+    {
+        get => Track.DiscNumber;
+        set
+        {
+            Track.DiscNumber = value;
+            Track.IsModified = true;
+            OnPropertyChanged();
+        }
+    }
+
     public string SongName
     {
         get => Track.SongName ?? "";

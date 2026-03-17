@@ -413,6 +413,27 @@
                                 </DataGridTextColumn.EditingElementStyle>
                             </DataGridTextColumn>
 
+                            <!-- Disc Number (editable) -->
+                            <DataGridTextColumn Header="Disc" Binding="{Binding DiscNumber, UpdateSourceTrigger=PropertyChanged}"
+                                                Width="50" IsReadOnly="False">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="FontFamily" Value="Consolas"/>
+                                        <Setter Property="Foreground" Value="#CCCCCC"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="FontFamily" Value="Consolas"/>
+                                        <Setter Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+
                             <!-- Title (editable, shows display title with auto-appended date) -->
                             <DataGridTemplateColumn Header="Title" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
