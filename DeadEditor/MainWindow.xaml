@@ -331,7 +331,7 @@
                               HeadersVisibility="Column"
                               GridLinesVisibility="Horizontal"
                               HorizontalGridLinesBrush="#3F3F46"
-                              FontSize="16"
+                              FontSize="18"
                               RowHeight="28">
                         <DataGrid.Resources>
                             <!-- Style for editable cells -->
@@ -455,7 +455,7 @@
                                 </DataGridTemplateColumn.CellEditingTemplate>
                             </DataGridTemplateColumn>
 
-                            <!-- Segue Checkbox (editable) -->
+                            <!-- Segue Checkbox (editable) - moved to immediately follow Title -->
                             <DataGridCheckBoxColumn Header="→" Binding="{Binding Segue, UpdateSourceTrigger=PropertyChanged}"
                                                     Width="40">
                                 <DataGridCheckBoxColumn.ElementStyle>

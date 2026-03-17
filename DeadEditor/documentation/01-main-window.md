@@ -136,12 +136,18 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Row loading | DataGridRow | N/A | Sets row background color based on normalization status | `TracksDataGrid_LoadingRow` → `UpdateRowBackground()` | Working |
 | Row drag-to-reorder | DataGridRow | N/A | Drag rows to reorder tracks, visual drop indicator shows insertion point | `Row_PreviewMouseLeftButtonDown` → `Row_MouseMove` → `Row_Drop` → reorders `_tracks` collection | Working |
 
-**Columns:**
+**Columns (in display order):**
 - `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place
-- `Title` - Display title (normalized or original) (DisplayTitle)
+- `Disc` - Disc number (DiscNumber) - **Editable:** Click cell and type new disc number for multi-disc albums
+- `Title` - Display title (normalized or original) (DisplayTitle) - Takes remaining width when window resizes
+- `→` - Segue checkbox (Segue) - **Positioned immediately after Title** with no gap
 - `Date` - **Effective date** (TrackDate or inherited from album) - Shows track-specific date in white, or album date in muted steel blue-gray if no track date set
-- `→` - Segue checkbox (HasSegue)
 - `Time` - Track duration (Duration)
+
+**Layout:**
+- Font size: **18pt** for improved readability
+- Grid is in side-by-side layout with artwork panel on right (230px fixed width)
+- Track grid takes all remaining width when window resizes (scalable)
 
 ### Selected Track Editor Section
 
