@@ -390,6 +390,11 @@ public partial class LibraryBrowserWindow : Window
                 var dates = new HashSet<string>();
                 var venues = new HashSet<string>();
                 string officialRelease = "";
+                string albumDate = "";
+                string albumVenue = "";
+                string albumCity = "";
+                string albumState = "";
+                bool albumParsed = false;
 
                 foreach (var audioFile in audioFiles)
                 {
@@ -400,17 +405,46 @@ public partial class LibraryBrowserWindow : Window
                             var title = tagFile.Tag.Title ?? "";
                             var album = tagFile.Tag.Album ?? "";
 
-                            // Extract official release from album tag if not already set
-                            if (string.IsNullOrEmpty(officialRelease))
+                            // Parse Album tag on first file only
+                            // Expected format: "Date - Venue - City, State - Release Name"
+                            // Example: "1978-02-01 - Uptown Theatre - Chicago, IL - Dave's Picks Volume 57"
+                            if (!albumParsed && !string.IsNullOrEmpty(album))
                             {
-                                // Look for patterns like "Dave's Picks Volume 38", "Road Trips, Vol. 3 No. 4"
-                                var releaseMatch = System.Text.RegularExpressions.Regex.Match(
-                                    album,
-                                    @"((?:Dave's Picks|Dick's Picks|Road Trips|Download Series)\s*,?\s*Vol(?:ume|\.)?\s+\d+(?:\s+No\.\s+\d+)?)",
-                                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-                                if (releaseMatch.Success)
+                                albumParsed = true;
+                                var albumParts = album.Split(new[] { " - " }, StringSplitOptions.None);
+
+                                if (albumParts.Length >= 4)
                                 {
-                                    officialRelease = releaseMatch.Groups[1].Value.Trim();
+                                    // Parse structured album tag
+                                    albumDate = albumParts[0].Trim();
+                                    albumVenue = albumParts[1].Trim();
+                                    var cityState = albumParts[2].Trim();
+
+                                    // Parse "City, State" format
+                                    var locationParts = cityState.Split(new[] { ", " }, 2, StringSplitOptions.None);
+                                    albumCity = locationParts.Length > 0 ? locationParts[0].Trim() : "";
+                                    albumState = locationParts.Length > 1 ? locationParts[1].Trim() : "";
+
+                                    // Release name is everything after the third " - "
+                                    officialRelease = string.Join(" - ", albumParts.Skip(3)).Trim();
+
+                                    // Add to collections
+                                    if (!string.IsNullOrEmpty(albumDate))
+                                        dates.Add(albumDate);
+                                    if (!string.IsNullOrEmpty(albumVenue))
+                                        venues.Add(albumVenue);
+                                }
+                                else
+                                {
+                                    // Fallback: Try to extract release name from album tag
+                                    var releaseMatch = System.Text.RegularExpressions.Regex.Match(
+                                        album,
+                                        @"((?:Dave's Picks|Dick's Picks|Road Trips|Download Series)\s*,?\s*Vol(?:ume|\.)?\s+\d+(?:\s+No\.\s+\d+)?)",
+                                        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                                    if (releaseMatch.Success)
+                                    {
+                                        officialRelease = releaseMatch.Groups[1].Value.Trim();
+                                    }
                                 }
                             }
 
@@ -455,21 +489,36 @@ public partial class LibraryBrowserWindow : Window
                     officialRelease = folderName;
                 }
 
+                // Build Location string from parsed city/state
+                var location = "";
+                if (!string.IsNullOrEmpty(albumCity) && !string.IsNullOrEmpty(albumState))
+                {
+                    location = $"{albumCity}, {albumState}";
+                }
+                else if (!string.IsNullOrEmpty(albumCity))
+                {
+                    location = albumCity;
+                }
+                else if (!string.IsNullOrEmpty(albumState))
+                {
+                    location = albumState;
+                }
+
                 // Create LibraryShow entry
                 _allShows.Add(new LibraryShow
                 {
                     Type = AlbumType.OfficialRelease,
                     OfficialRelease = officialRelease,
-                    Date = dates.Count > 0 ? dates.OrderBy(d => d).First() : "",  // First date
+                    Date = !string.IsNullOrEmpty(albumDate) ? albumDate : (dates.Count > 0 ? dates.OrderBy(d => d).First() : ""),
                     ContainsDates = dates.OrderBy(d => d).ToList(),
                     ContainsVenues = venues.OrderBy(v => v).ToList(),
                     TrackCount = audioFiles.Length,
                     FolderPath = releaseFolder,
-                    // For display purposes, use first date/venue if available
-                    Venue = venues.FirstOrDefault() ?? "",
-                    City = "",
-                    State = "",
-                    Location = venues.Count > 0 ? string.Join(", ", venues) : ""
+                    // Use parsed values from Album tag
+                    Venue = !string.IsNullOrEmpty(albumVenue) ? albumVenue : (venues.FirstOrDefault() ?? ""),
+                    City = albumCity,
+                    State = albumState,
+                    Location = !string.IsNullOrEmpty(location) ? location : (venues.Count > 0 ? string.Join(", ", venues) : "")
                 });
             }
         }
