@@ -290,12 +290,10 @@
 
                     <!-- Album / Release Name -->
                     <Label Grid.Row="0" Grid.Column="4" Content="ALBUM / RELEASE NAME" VerticalAlignment="Top" Margin="10,0,0,0"/>
-                    <ComboBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameComboBox"
-                              Width="190" Height="26" Margin="10,0,0,0"
-                              IsEditable="True"
-                              IsTextSearchEnabled="False"
-                              TextBoxBase.TextChanged="AlbumInfo_Changed"
-                              ToolTip="Optional - type or select from previously used names (click to type)"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameTextBox"
+                             Width="190" Height="26" Margin="10,0,0,0"
+                             TextChanged="AlbumInfo_Changed"
+                             ToolTip="Optional"/>
 
                     <!-- Release Year (publication year, not performance year) -->
                     <Label Grid.Row="0" Grid.Column="5" Content="RELEASE YEAR" VerticalAlignment="Top" Margin="10,0,0,0"/>
