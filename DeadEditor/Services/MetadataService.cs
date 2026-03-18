@@ -593,11 +593,12 @@ namespace DeadEditor.Services
                 return;
             }
 
-            // Pattern 3: Basic live recording format (no colon)
+            // Pattern 3: Live recording or Official Release with " - " separator for album name
             // Live: "1972-09-15 - Boston Music Hall - Boston, MA"
+            // Official: "1978-02-01 - Uptown Theatre - Chicago, IL - Dave's Picks Vol. 57"
             var liveMatch = Regex.Match(
                 album,
-                @"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*(.+)$");
+                @"^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([A-Z]{2})(?:\s*-\s*(.+))?$");
 
             if (liveMatch.Success)
             {
@@ -606,7 +607,17 @@ namespace DeadEditor.Services
                 var city = liveMatch.Groups[3].Value.Trim();
                 var state = liveMatch.Groups[4].Value.Trim();
                 info.CityState = $"{city}, {state}";
-                info.Type = AlbumType.AudienceRecording;
+
+                // Group 5 is the optional album name after " - "
+                if (!string.IsNullOrWhiteSpace(liveMatch.Groups[5].Value))
+                {
+                    info.AlbumName = liveMatch.Groups[5].Value.Trim();
+                    info.Type = AlbumType.OfficialRelease;
+                }
+                else
+                {
+                    info.Type = AlbumType.AudienceRecording;
+                }
                 return;
             }
 
