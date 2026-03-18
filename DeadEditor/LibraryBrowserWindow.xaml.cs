@@ -675,20 +675,16 @@ public partial class LibraryBrowserWindow : Window
             // Load tracks
             _currentTracks = _metadataService.ReadFolder(show.FolderPath);
 
-            // Update preview metadata for each track
-            // Note: PreviewMetadata removed in redesign - display uses SongName directly
-            // foreach (var track in _currentTracks)
-            // {
-            //     // Studio albums don't append dates to track titles
-            //     if (show.Type == AlbumType.OfficialRelease)
-            //     {
-            //         track.PreviewMetadata = track.GetFinalMetadataTitle(null);
-            //     }
-            //     else
-            //     {
-            //         track.PreviewMetadata = track.GetFinalMetadataTitle(show.Date);
-            //     }
-            // }
+            // Populate TrackDate for tracks that don't have embedded dates
+            // This ensures DisplayTitle shows "Song (yyyy-MM-dd)" format
+            foreach (var track in _currentTracks)
+            {
+                // If track has no date, inherit from album
+                if (string.IsNullOrEmpty(track.TrackDate) && !string.IsNullOrEmpty(show.Date))
+                {
+                    track.TrackDate = show.Date;
+                }
+            }
 
             TracksDataGrid.ItemsSource = _currentTracks;
             TrackCountText.Text = $"{_currentTracks.Count} tracks";
