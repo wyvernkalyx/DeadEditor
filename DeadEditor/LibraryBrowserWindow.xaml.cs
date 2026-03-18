@@ -179,46 +179,66 @@ public partial class LibraryBrowserWindow : Window
 
     private void LoadAudienceRecordings()
     {
-
-        // Scan year folders and special folders (like "Studio Albums")
+        // Scan year folders for live recordings
         var topLevelFolders = Directory.GetDirectories(_librarySettings.LibraryRootPath);
 
         foreach (var topFolder in topLevelFolders)
         {
+            // Load live recordings from year folders (skip non-year folders)
             var topFolderName = Path.GetFileName(topFolder);
 
-            // Check if this is the "Studio Albums" folder
-            if (topFolderName.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase))
+            // Skip folders that are not year folders (must be 4-digit number)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(topFolderName, @"^\d{4}$"))
             {
-                // Load studio albums
-                var albumFolders = Directory.GetDirectories(topFolder);
+                continue;
+            }
 
-                foreach (var albumFolder in albumFolders)
+            var showFolders = Directory.GetDirectories(topFolder);
+
+            foreach (var showFolder in showFolders)
+            {
+                var folderName = Path.GetFileName(showFolder);
+
+                // Expected formats:
+                // "yyyy-MM-dd - Venue - City, State"
+                // "yyyy-MM-dd - Venue, City, State"
+                var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
+
+                string date = "";
+                string venue = "";
+                string city = "";
+                string state = "";
+
+                if (parts.Length >= 2)
                 {
-                    var folderName = Path.GetFileName(albumFolder);
-                    var audioFiles = Directory.GetFiles(albumFolder, "*.flac")
-                                        .Concat(Directory.GetFiles(albumFolder, "*.mp3"))
-                                        .ToArray();
+                    date = parts[0];
 
-                    // Expected format: "Album Name (Year)" or just "Album Name"
-                    string albumName = folderName;
-                    int? releaseYear = null;
-                    string edition = "";
-
-                    // Try to parse year from parentheses
-                    var yearMatch = System.Text.RegularExpressions.Regex.Match(
-                        folderName, @"^(.+?)\s*\((\d{4})\)\s*$");
-
-                    if (yearMatch.Success)
+                    // Try format: "Date - Venue - City, State"
+                    if (parts.Length == 3)
                     {
-                        albumName = yearMatch.Groups[1].Value.Trim();
-                        if (int.TryParse(yearMatch.Groups[2].Value, out var year))
-                        {
-                            releaseYear = year;
-                        }
+                        venue = parts[1];
+                        var locationParts = parts[2].Split(new[] { ", " }, StringSplitOptions.None);
+                        city = locationParts.Length > 0 ? locationParts[0] : "";
+                        state = locationParts.Length > 1 ? locationParts[1] : "";
+                    }
+                    // Try format: "Date - Venue, City, State"
+                    else if (parts.Length == 2)
+                    {
+                        var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
+                        venue = venueParts.Length > 0 ? venueParts[0] : "";
+                        city = venueParts.Length > 1 ? venueParts[1] : "";
+                        state = venueParts.Length > 2 ? venueParts[2] : "";
                     }
 
-                    // Try to read Edition from first audio file's album tag
+                    var audioFiles = Directory.GetFiles(showFolder, "*.flac")
+                                        .Concat(Directory.GetFiles(showFolder, "*.mp3"))
+                                        .ToArray();
+
+                    // Try to read OfficialRelease or BoxSet name from first audio file's album tag
+                    string officialRelease = "";
+                    string boxSetName = "";
+                    AlbumType albumType = AlbumType.AudienceRecording;
+
                     if (audioFiles.Length > 0)
                     {
                         try
@@ -226,12 +246,26 @@ public partial class LibraryBrowserWindow : Window
                             using (var tagFile = TagLib.File.Create(audioFiles[0]))
                             {
                                 var album = tagFile.Tag.Album ?? "";
-                                // Check for edition in brackets like "Album Name (Year) [Edition]"
-                                var editionMatch = System.Text.RegularExpressions.Regex.Match(
-                                    album, @"\[([^\]]+)\]\s*$");
-                                if (editionMatch.Success)
+
+                                // Check for Box Set format first: "Date - Venue - City, State: Box Set Name" (no space before colon)
+                                var boxSetMatch = System.Text.RegularExpressions.Regex.Match(
+                                    album, @":\s*([^:]+)$");
+
+                                // Check if there's a space before the colon (Official Release) or not (Box Set)
+                                var spaceBeforeColonMatch = System.Text.RegularExpressions.Regex.Match(
+                                    album, @"\s:\s*(.+)$");
+
+                                if (spaceBeforeColonMatch.Success)
                                 {
-                                    edition = editionMatch.Groups[1].Value.Trim();
+                                    // Official Release format: "... : Release Name" (space before colon)
+                                    officialRelease = spaceBeforeColonMatch.Groups[1].Value.Trim();
+                                    albumType = AlbumType.AudienceRecording;
+                                }
+                                else if (boxSetMatch.Success)
+                                {
+                                    // Box Set format: "...: Box Set Name" (no space before colon)
+                                    boxSetName = boxSetMatch.Groups[1].Value.Trim();
+                                    albumType = AlbumType.OfficialRelease;
                                 }
                             }
                         }
@@ -243,128 +277,104 @@ public partial class LibraryBrowserWindow : Window
 
                     _allShows.Add(new LibraryShow
                     {
-                        Type = AlbumType.OfficialRelease,
-                        AlbumName = albumName,
-                        ReleaseYear = releaseYear,
-                        Edition = edition,
+                        Type = albumType,
+                        Date = date,
+                        Venue = venue,
+                        City = city,
+                        State = state,
+                        Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state)
+                            ? $"{city}, {state}"
+                            : city + state,
+                        OfficialRelease = albumType == AlbumType.AudienceRecording ? officialRelease : boxSetName,
                         TrackCount = audioFiles.Length,
-                        FolderPath = albumFolder
+                        FolderPath = showFolder
                     });
                 }
             }
-            else
-            {
-                // Load live recordings from year folders
-                var showFolders = Directory.GetDirectories(topFolder);
-
-                foreach (var showFolder in showFolders)
-                {
-                    var folderName = Path.GetFileName(showFolder);
-
-                    // Expected formats:
-                    // "yyyy-MM-dd - Venue - City, State"
-                    // "yyyy-MM-dd - Venue, City, State"
-                    var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
-
-                    string date = "";
-                    string venue = "";
-                    string city = "";
-                    string state = "";
-
-                    if (parts.Length >= 2)
-                    {
-                        date = parts[0];
-
-                        // Try format: "Date - Venue - City, State"
-                        if (parts.Length == 3)
-                        {
-                            venue = parts[1];
-                            var locationParts = parts[2].Split(new[] { ", " }, StringSplitOptions.None);
-                            city = locationParts.Length > 0 ? locationParts[0] : "";
-                            state = locationParts.Length > 1 ? locationParts[1] : "";
-                        }
-                        // Try format: "Date - Venue, City, State"
-                        else if (parts.Length == 2)
-                        {
-                            var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
-                            venue = venueParts.Length > 0 ? venueParts[0] : "";
-                            city = venueParts.Length > 1 ? venueParts[1] : "";
-                            state = venueParts.Length > 2 ? venueParts[2] : "";
-                        }
-
-                        var audioFiles = Directory.GetFiles(showFolder, "*.flac")
-                                            .Concat(Directory.GetFiles(showFolder, "*.mp3"))
-                                            .ToArray();
-
-                        // Try to read OfficialRelease or BoxSet name from first audio file's album tag
-                        string officialRelease = "";
-                        string boxSetName = "";
-                        AlbumType albumType = AlbumType.AudienceRecording;
-
-                        if (audioFiles.Length > 0)
-                        {
-                            try
-                            {
-                                using (var tagFile = TagLib.File.Create(audioFiles[0]))
-                                {
-                                    var album = tagFile.Tag.Album ?? "";
-
-                                    // Check for Box Set format first: "Date - Venue - City, State: Box Set Name" (no space before colon)
-                                    var boxSetMatch = System.Text.RegularExpressions.Regex.Match(
-                                        album, @":\s*([^:]+)$");
-
-                                    // Check if there's a space before the colon (Official Release) or not (Box Set)
-                                    var spaceBeforeColonMatch = System.Text.RegularExpressions.Regex.Match(
-                                        album, @"\s:\s*(.+)$");
-
-                                    if (spaceBeforeColonMatch.Success)
-                                    {
-                                        // Official Release format: "... : Release Name" (space before colon)
-                                        officialRelease = spaceBeforeColonMatch.Groups[1].Value.Trim();
-                                        albumType = AlbumType.AudienceRecording;
-                                    }
-                                    else if (boxSetMatch.Success)
-                                    {
-                                        // Box Set format: "...: Box Set Name" (no space before colon)
-                                        boxSetName = boxSetMatch.Groups[1].Value.Trim();
-                                        albumType = AlbumType.OfficialRelease;
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                // Ignore errors reading tags
-                            }
-                        }
-
-                        _allShows.Add(new LibraryShow
-                        {
-                            Type = albumType,
-                            Date = date,
-                            Venue = venue,
-                            City = city,
-                            State = state,
-                            Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state)
-                                ? $"{city}, {state}"
-                                : city + state,
-                            OfficialRelease = albumType == AlbumType.AudienceRecording ? officialRelease : boxSetName,
-                            TrackCount = audioFiles.Length,
-                            FolderPath = showFolder
-                        });
-                    }
-                }
-            }
         }
-
     }
 
     private void LoadOfficialReleases()
     {
-        // Scan for series folders (Dave's Picks, Road Trips, Dick's Picks, etc.)
+        // First, scan for Studio Albums folder
+        var studioAlbumsPath = Path.Combine(_librarySettings.OfficialReleasesPath, "Studio Albums");
+        if (Directory.Exists(studioAlbumsPath))
+        {
+            var albumFolders = Directory.GetDirectories(studioAlbumsPath);
+
+            foreach (var albumFolder in albumFolders)
+            {
+                var folderName = Path.GetFileName(albumFolder);
+                var audioFiles = Directory.GetFiles(albumFolder, "*.flac")
+                                    .Concat(Directory.GetFiles(albumFolder, "*.mp3"))
+                                    .ToArray();
+
+                // Expected format: "Album Name (Year)" or just "Album Name"
+                string albumName = folderName;
+                int? releaseYear = null;
+                string edition = "";
+
+                // Try to parse year from parentheses
+                var yearMatch = System.Text.RegularExpressions.Regex.Match(
+                    folderName, @"^(.+?)\s*\((\d{4})\)\s*$");
+
+                if (yearMatch.Success)
+                {
+                    albumName = yearMatch.Groups[1].Value.Trim();
+                    if (int.TryParse(yearMatch.Groups[2].Value, out var year))
+                    {
+                        releaseYear = year;
+                    }
+                }
+
+                // Try to read Edition from first audio file's album tag
+                if (audioFiles.Length > 0)
+                {
+                    try
+                    {
+                        using (var tagFile = TagLib.File.Create(audioFiles[0]))
+                        {
+                            var album = tagFile.Tag.Album ?? "";
+                            // Check for edition in brackets like "Album Name (Year) [Edition]"
+                            var editionMatch = System.Text.RegularExpressions.Regex.Match(
+                                album, @"\[([^\]]+)\]\s*$");
+                            if (editionMatch.Success)
+                            {
+                                edition = editionMatch.Groups[1].Value.Trim();
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore errors reading tags
+                    }
+                }
+
+                _allShows.Add(new LibraryShow
+                {
+                    Type = AlbumType.OfficialRelease,
+                    AlbumName = albumName,
+                    ReleaseYear = releaseYear,
+                    Edition = edition,
+                    TrackCount = audioFiles.Length,
+                    FolderPath = albumFolder
+                });
+            }
+        }
+
+        // Then, scan for series folders (Dave's Picks, Road Trips, Dick's Picks, etc.)
         var seriesFolders = Directory.GetDirectories(_librarySettings.OfficialReleasesPath);
 
         foreach (var seriesFolder in seriesFolders)
         {
+            var seriesFolderName = Path.GetFileName(seriesFolder);
+
+            // Skip the Studio Albums folder - we already processed it above
+            if (seriesFolderName.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             var releaseFolders = Directory.GetDirectories(seriesFolder);
 
             foreach (var releaseFolder in releaseFolders)
