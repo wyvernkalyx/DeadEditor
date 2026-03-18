@@ -542,43 +542,48 @@ public partial class LibraryBrowserWindow : Window
             // Load info based on album type
             if (show.Type == AlbumType.OfficialRelease)
             {
-                // Official Release - show album/release name and year
+                // Official Release - show album/release name
                 VenueText.Text = !string.IsNullOrEmpty(show.OfficialRelease) ? show.OfficialRelease : show.AlbumName;
 
-                // Build location line: "Released YYYY" or dates/venues for multi-date releases
-                if (show.ContainsDates.Count > 1)
+                // Show date (single-date releases) or multiple dates
+                if (!string.IsNullOrEmpty(show.Date))
                 {
-                    LocationText.Text = string.Join(" & ", show.ContainsDates);
+                    DateText.Text = show.Date;
+                }
+                else if (show.ContainsDates.Count > 1)
+                {
+                    DateText.Text = string.Join(" & ", show.ContainsDates);
                 }
                 else if (show.ReleaseYear.HasValue)
                 {
-                    LocationText.Text = $"Released {show.ReleaseYear.Value}";
-                }
-                else if (!string.IsNullOrEmpty(show.Date))
-                {
-                    LocationText.Text = show.Date;
-                }
-                else
-                {
-                    LocationText.Text = "Official Release";
-                }
-
-                // Show venue(s) in DateText for multi-venue releases
-                if (show.ContainsVenues.Count > 0)
-                {
-                    DateText.Text = string.Join(", ", show.ContainsVenues);
-                }
-                else if (!string.IsNullOrEmpty(show.Venue))
-                {
-                    DateText.Text = show.Venue;
+                    DateText.Text = $"Released {show.ReleaseYear.Value}";
                 }
                 else
                 {
                     DateText.Text = "";
                 }
 
-                // Show edition in BoxSetText if present
-                if (!string.IsNullOrEmpty(show.Edition))
+                // Show venue (single-venue releases) or multiple venues
+                if (!string.IsNullOrEmpty(show.Venue))
+                {
+                    LocationText.Text = show.Venue;
+                }
+                else if (show.ContainsVenues.Count > 0)
+                {
+                    LocationText.Text = string.Join(", ", show.ContainsVenues);
+                }
+                else
+                {
+                    LocationText.Text = "";
+                }
+
+                // Show City, State location in BoxSetText
+                if (!string.IsNullOrEmpty(show.Location))
+                {
+                    BoxSetText.Text = show.Location;
+                    BoxSetText.Visibility = Visibility.Visible;
+                }
+                else if (!string.IsNullOrEmpty(show.Edition))
                 {
                     BoxSetText.Text = $"Edition: {show.Edition}";
                     BoxSetText.Visibility = Visibility.Visible;
