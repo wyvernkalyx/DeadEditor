@@ -375,6 +375,42 @@ public partial class MainWindow : Window
         e.Row.AllowDrop = true;
     }
 
+    private void TracksDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+    {
+        // Check if sorting by Disc column
+        if (e.Column.Header.ToString() == "Disc")
+        {
+            // Cancel default sorting
+            e.Handled = true;
+
+            // Determine sort direction
+            ListSortDirection direction = e.Column.SortDirection != ListSortDirection.Ascending
+                ? ListSortDirection.Ascending
+                : ListSortDirection.Descending;
+
+            // Apply compound sort: Disc (primary), then Track Number (secondary)
+            ICollectionView view = CollectionViewSource.GetDefaultView(TracksDataGrid.ItemsSource);
+            view.SortDescriptions.Clear();
+
+            if (direction == ListSortDirection.Ascending)
+            {
+                // Ascending: Disc 1 Track 1...N, Disc 2 Track 1...N, Disc 3 Track 1...N
+                view.SortDescriptions.Add(new SortDescription("DiscNumber", ListSortDirection.Ascending));
+                view.SortDescriptions.Add(new SortDescription("TrackNumber", ListSortDirection.Ascending));
+            }
+            else
+            {
+                // Descending: Disc 3 Track 1...N, Disc 2 Track 1...N, Disc 1 Track 1...N
+                view.SortDescriptions.Add(new SortDescription("DiscNumber", ListSortDirection.Descending));
+                view.SortDescriptions.Add(new SortDescription("TrackNumber", ListSortDirection.Ascending));
+            }
+
+            // Update column sort direction indicator
+            e.Column.SortDirection = direction;
+        }
+        // For all other columns, use default sorting (e.Handled remains false)
+    }
+
     // ===== DRAG-TO-REORDER FUNCTIONALITY =====
 
     private System.Windows.Point _dragStartPoint;

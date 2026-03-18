@@ -137,12 +137,12 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Row drag-to-reorder | DataGridRow | N/A | Drag rows to reorder tracks, visual drop indicator shows insertion point | `Row_PreviewMouseLeftButtonDown` → `Row_MouseMove` → `Row_Drop` → reorders `_tracks` collection | Working |
 
 **Columns (in display order):**
-- `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place
-- `Disc` - Disc number (DiscNumber) - **Editable:** Click cell and type new disc number for multi-disc albums
-- `Title` - Display title (normalized or original) (DisplayTitle) - Takes remaining width when window resizes
-- `→` - Segue checkbox (Segue) - **Positioned immediately after Title** with no gap
-- `Date` - **Effective date** (TrackDate or inherited from album) - Shows track-specific date in white, or album date in muted steel blue-gray if no track date set
-- `Time` - Track duration (Duration)
+- `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place. **Sortable:** Single-key sort by track number only
+- `Disc` - Disc number (DiscNumber) - **Editable:** Click cell and type new disc number for multi-disc albums. **Sortable:** Compound sort by disc number (primary), then track number (secondary). Click header to sort ascending (Disc 1 Track 1...N, Disc 2 Track 1...N), click again for descending (Disc 3 Track 1...N, Disc 2 Track 1...N, Disc 1 Track 1...N)
+- `Title` - Display title (normalized or original) (DisplayTitle) - Takes remaining width when window resizes. **Sortable:** Alphabetical sort
+- `→` - Segue checkbox (Segue) - **Positioned immediately after Title** with no gap. **Not sortable**
+- `Date` - **Effective date** (TrackDate or inherited from album) - Shows track-specific date in white, or album date in muted steel blue-gray if no track date set. **Sortable:** Chronological sort
+- `Time` - Track duration (Duration). **Sortable:** Duration sort
 
 **Layout:**
 - Font size: **18pt** for improved readability

@@ -305,12 +305,12 @@
             <!-- ===== SECTION 4: MAIN CONTENT (Track List + Artwork Panel) ===== -->
             <Grid Grid.Row="3" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="230"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Track List -->
-                <Grid Grid.Column="0" Margin="0,0,10,0">
+                <Grid Grid.Column="0" Margin="0,0,10,0" MaxWidth="1100">
                     <Border BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E">
                         <DataGrid x:Name="TracksDataGrid"
                               AutoGenerateColumns="False"
@@ -323,6 +323,7 @@
                               LoadingRow="TracksDataGrid_LoadingRow"
                               CellEditEnding="TracksDataGrid_CellEditEnding"
                               PreparingCellForEdit="TracksDataGrid_PreparingCellForEdit"
+                              Sorting="TracksDataGrid_Sorting"
                               Background="#1E1E1E"
                               Foreground="#FFFFFF"
                               RowBackground="#1E1E1E"
@@ -435,7 +436,7 @@
                             </DataGridTextColumn>
 
                             <!-- Title (editable, shows display title with auto-appended date) -->
-                            <DataGridTemplateColumn Header="Title" Width="*">
+                            <DataGridTemplateColumn Header="Title" Width="550">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DisplayTitle}"
@@ -532,65 +533,65 @@
 
                 <!-- Artwork Panel -->
                 <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="1"
-                        Background="#2D2D30" Padding="10">
+                        Background="#2D2D30" Padding="15">
                     <StackPanel>
                         <!-- Artwork Display -->
                         <Border BorderBrush="#555555" BorderThickness="1"
-                                Width="176" Height="176"
-                                Background="#1E1E1E" Margin="0,0,0,10">
+                                Width="400" Height="400"
+                                Background="#1E1E1E" Margin="0,0,0,15">
                             <Grid>
                                 <TextBlock x:Name="NoArtworkText" Text="No Artwork"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                                           Foreground="#777777" FontStyle="Italic" FontSize="12"/>
+                                           Foreground="#777777" FontStyle="Italic" FontSize="18"/>
                                 <Image x:Name="ArtworkImage" Stretch="Uniform" Visibility="Collapsed"/>
                             </Grid>
                         </Border>
 
                         <!-- Artwork Buttons -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
                             <Button x:Name="ChangeArtworkButton" Content="Change..."
-                                    Width="95" Height="26" Margin="0,0,5,0"
-                                    Click="ChangeArtworkButton_Click" FontSize="11"/>
+                                    Width="130" Height="36" Margin="0,0,8,0"
+                                    Click="ChangeArtworkButton_Click" FontSize="16"/>
                             <Button x:Name="RemoveArtworkButton" Content="Remove"
-                                    Width="95" Height="26" Margin="5,0,0,0"
-                                    Click="RemoveArtworkButton_Click" FontSize="11"/>
+                                    Width="130" Height="36" Margin="8,0,0,0"
+                                    Click="RemoveArtworkButton_Click" FontSize="16"/>
                         </StackPanel>
 
-                        <Separator Margin="0,0,0,10" Background="#555555"/>
+                        <Separator Margin="0,0,0,15" Background="#555555"/>
 
                         <!-- Album Type Dropdown -->
-                        <Label Content="ALBUM TYPE" Margin="0,0,0,3"/>
-                        <ComboBox x:Name="AlbumTypeComboBox" Height="26" MinWidth="190" Margin="0,0,0,15"
+                        <Label Content="ALBUM TYPE" Margin="0,0,0,5" FontSize="18"/>
+                        <ComboBox x:Name="AlbumTypeComboBox" Height="40" MinWidth="260" Margin="0,0,0,20"
                                   SelectionChanged="AlbumTypeComboBox_SelectionChanged"
-                                  FontSize="13">
+                                  FontSize="18">
                             <ComboBoxItem Content="Auto-detect" IsSelected="True"/>
                             <ComboBoxItem Content="Audience Recording"/>
                             <ComboBoxItem Content="Official Release"/>
                         </ComboBox>
 
-                        <Separator Margin="0,0,0,10" Background="#555555"/>
+                        <Separator Margin="0,0,0,15" Background="#555555"/>
 
                         <!-- Folder Name Preview -->
-                        <Label Content="FOLDER NAME PREVIEW" Margin="0,0,0,3"/>
+                        <Label Content="FOLDER NAME PREVIEW" Margin="0,0,0,5" FontSize="18"/>
                         <Border BorderBrush="#555555" BorderThickness="1"
-                                Background="#1E1E1E" Padding="6" Margin="0,0,0,10" MinHeight="60">
+                                Background="#1E1E1E" Padding="10" Margin="0,0,0,15" MinHeight="80">
                             <TextBlock x:Name="FolderPreviewTextBlock"
                                        TextWrapping="Wrap"
                                        Foreground="#D7BA7D"
-                                       FontSize="11"
-                                       LineHeight="14"/>
+                                       FontSize="18"
+                                       LineHeight="22"/>
                         </Border>
 
                         <!-- Write Path -->
-                        <Label Content="WRITE PATH" Margin="0,0,0,3"/>
+                        <Label Content="WRITE PATH" Margin="0,0,0,5" FontSize="18"/>
                         <Border BorderBrush="#555555" BorderThickness="1"
-                                Background="#1E1E1E" Padding="6" MinHeight="50">
+                                Background="#1E1E1E" Padding="10" MinHeight="70">
                             <TextBlock x:Name="WritePathTextBlock"
                                        TextWrapping="Wrap"
                                        Foreground="#999999"
-                                       FontSize="10"
+                                       FontSize="18"
                                        FontFamily="Consolas"
-                                       LineHeight="12"/>
+                                       LineHeight="22"/>
                         </Border>
                     </StackPanel>
                 </Border>
