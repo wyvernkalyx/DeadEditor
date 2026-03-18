@@ -253,6 +253,26 @@ public partial class MainWindow : Window
         _albumInfo.Year = YearTextBox.Text;
         _albumInfo.IsModified = true;
 
+        // Auto-detect Album Type based on Album/Release Name field
+        // If Album Name has text → Official Release
+        // If Album Name is empty → Audience Recording
+        if (!string.IsNullOrWhiteSpace(_albumInfo.AlbumName))
+        {
+            // Album Name populated → Official Release
+            _albumInfo.Type = AlbumType.OfficialRelease;
+            _isUpdating = true;
+            AlbumTypeComboBox.SelectedIndex = 2; // Official Release
+            _isUpdating = false;
+        }
+        else
+        {
+            // Album Name empty → Audience Recording
+            _albumInfo.Type = AlbumType.AudienceRecording;
+            _isUpdating = true;
+            AlbumTypeComboBox.SelectedIndex = 1; // Audience Recording
+            _isUpdating = false;
+        }
+
         UpdateAlbumPreview();
         UpdateAllTrackDisplayTitles(); // Date changes affect track titles
         UpdateAllTrackInheritedDates(); // Update inherited dates when album date changes
