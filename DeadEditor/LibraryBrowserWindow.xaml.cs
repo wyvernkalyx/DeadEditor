@@ -483,23 +483,63 @@ public partial class LibraryBrowserWindow : Window
             // Load info based on album type
             if (show.Type == AlbumType.OfficialRelease)
             {
-                // Studio album - show album name and year
-                VenueText.Text = show.AlbumName;
-                LocationText.Text = show.ReleaseYear.HasValue ? $"Released {show.ReleaseYear.Value}" : "Studio Album";
-                DateText.Text = "";
-                BoxSetText.Visibility = Visibility.Collapsed;
+                // Official Release - show album/release name and year
+                VenueText.Text = !string.IsNullOrEmpty(show.OfficialRelease) ? show.OfficialRelease : show.AlbumName;
+
+                // Build location line: "Released YYYY" or dates/venues for multi-date releases
+                if (show.ContainsDates.Count > 1)
+                {
+                    LocationText.Text = string.Join(" & ", show.ContainsDates);
+                }
+                else if (show.ReleaseYear.HasValue)
+                {
+                    LocationText.Text = $"Released {show.ReleaseYear.Value}";
+                }
+                else if (!string.IsNullOrEmpty(show.Date))
+                {
+                    LocationText.Text = show.Date;
+                }
+                else
+                {
+                    LocationText.Text = "Official Release";
+                }
+
+                // Show venue(s) in DateText for multi-venue releases
+                if (show.ContainsVenues.Count > 0)
+                {
+                    DateText.Text = string.Join(", ", show.ContainsVenues);
+                }
+                else if (!string.IsNullOrEmpty(show.Venue))
+                {
+                    DateText.Text = show.Venue;
+                }
+                else
+                {
+                    DateText.Text = "";
+                }
+
+                // Show edition in BoxSetText if present
+                if (!string.IsNullOrEmpty(show.Edition))
+                {
+                    BoxSetText.Text = $"Edition: {show.Edition}";
+                    BoxSetText.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    BoxSetText.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {
-                // Live recording - show venue, location, and date
+                // Audience Recording - show venue, location, and date
                 VenueText.Text = show.Venue;
                 LocationText.Text = show.Location;
                 DateText.Text = show.Date;
 
-                // Show box set name if this is a box set
-                if (show.Type == AlbumType.OfficialRelease && !string.IsNullOrEmpty(show.OfficialRelease))
+                // Show official release name if this is an official release
+                if (!string.IsNullOrEmpty(show.OfficialRelease))
                 {
-                    BoxSetText.Text = $"Box Set: {show.OfficialRelease}";
+                    BoxSetText.Text = $"Release: {show.OfficialRelease}";
                     BoxSetText.Visibility = Visibility.Visible;
                 }
                 else
@@ -588,6 +628,9 @@ public partial class LibraryBrowserWindow : Window
 
             TracksDataGrid.ItemsSource = _currentTracks;
             TrackCountText.Text = $"{_currentTracks.Count} tracks";
+
+            // Set album type label
+            AlbumTypeText.Text = show.Type == AlbumType.OfficialRelease ? "Official Release" : "Audience Recording";
 
             // Enable play button if we have tracks
             if (_currentTracks.Count > 0)

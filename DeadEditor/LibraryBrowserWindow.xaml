@@ -6,6 +6,80 @@
         mc:Ignorable="d"
         Title="DeadEditor - Library" Height="800" Width="1200"
         Background="#1E1E1E">
+
+    <Window.Resources>
+        <!-- ComboBox Style (copied from MainWindow.xaml - working perfectly) -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="1"
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter Name="ContentSite"
+                                                      Grid.Column="0"
+                                                      IsHitTestVisible="False"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                      Margin="6,3,6,3"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left"
+                                                      TextBlock.Foreground="#FFFFFF"/>
+                                    <Path Name="Arrow"
+                                          Grid.Column="1"
+                                          Fill="#FFFFFF"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                </Grid>
+                            </ToggleButton>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                            Background="#2D2D30"
+                                            BorderThickness="1"
+                                            BorderBrush="#555555"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#2D2D30"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -54,43 +128,11 @@
                            VerticalAlignment="Center" Margin="0,0,10,0"/>
 
                 <ComboBox Grid.Column="1" x:Name="TypeFilterComboBox" Width="200" Height="32"
-                          FontSize="14" FontWeight="SemiBold" SelectedIndex="0"
-                          Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                          FontSize="16" FontWeight="SemiBold" SelectedIndex="0"
                           SelectionChanged="TypeFilterComboBox_SelectionChanged">
-                    <ComboBox.Resources>
-                        <!-- Override system colors for the popup -->
-                        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#2D2D30"/>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#2D2D30"/>
-
-                        <!-- Style for ComboBox items in the dropdown -->
-                        <Style TargetType="ComboBoxItem">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="#CCCCCC"/>
-                            <Setter Property="Padding" Value="10,8"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ComboBoxItem">
-                                        <Border Name="Border" Background="{TemplateBinding Background}"
-                                                BorderThickness="0" Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}"/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsHighlighted" Value="True">
-                                                <Setter TargetName="Border" Property="Background" Value="#094771"/>
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </Trigger>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ComboBox.Resources>
-                    <ComboBoxItem Content="All" Tag="All" Background="#2D2D30" Foreground="#CCCCCC"/>
-                    <ComboBoxItem Content="🎸 Audience Recordings" Tag="AudienceRecording" Background="#2D2D30" Foreground="#CCCCCC"/>
-                    <ComboBoxItem Content="📀 Official Releases" Tag="OfficialRelease" Background="#2D2D30" Foreground="#CCCCCC"/>
+                    <ComboBoxItem Content="All" Tag="All"/>
+                    <ComboBoxItem Content="🎸 Audience Recordings" Tag="AudienceRecording"/>
+                    <ComboBoxItem Content="📀 Official Releases" Tag="OfficialRelease"/>
                 </ComboBox>
 
                 <TextBlock Grid.Column="2" Text="Search:" Foreground="#CCCCCC" FontSize="14"
@@ -253,7 +295,11 @@
                                FontSize="16"
                                Foreground="#D7BA7D"
                                Visibility="Collapsed"
-                               Margin="0,0,0,18"/>
+                               Margin="0,0,0,6"/>
+                    <TextBlock x:Name="AlbumTypeText"
+                               FontSize="16"
+                               Foreground="#808080"
+                               Margin="0,0,0,6"/>
                     <TextBlock x:Name="TrackCountText"
                                FontSize="16"
                                Foreground="#808080"/>
@@ -337,7 +383,7 @@
                             </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="60"/>
-                                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                                <DataGridTextColumn Header="Title" Binding="{Binding RawTitle}" Width="*"/>
                                 <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="100"/>
                             </DataGrid.Columns>
                         </DataGrid>

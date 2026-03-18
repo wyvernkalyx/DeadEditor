@@ -1,21 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add LibraryBrowserWindow.xaml)",
-      "Bash(git commit -m \"Fix blank track titles in Library Browser\" -m \"The Title column in Library Browser was showing blank for all tracks because it was binding to PreviewMetadata, which was removed in the MainWindow redesign.\" -m \"Changed binding from PreviewMetadata to Title (which maps to SongName in the new data model).\" -m \"Track titles now display correctly in the library concert detail view.\")",
-      "Bash(dotnet build)",
-      "Bash(git add -A)",
-      "Bash(taskkill //F //IM DeadEditor.exe //T)",
-      "Bash(taskkill //F //IM dotnet.exe //T)",
-      "Bash(dotnet run --project DeadEditor.csproj)",
-      "Bash(git add MainWindow.xaml MainWindow.xaml.cs)",
-      "Bash(git commit -m \"Fix MainWindow album type dropdown - remove old 4 types\n\nUpdated MainWindow.xaml dropdown to show only 3 options:\n- Auto-detect\n- Audience Recording  \n- Official Release\n\nAlso fixed AlbumTypeComboBox_SelectionChanged event handler to use\ncorrect switch indices (1, 2 instead of 1, 2, 3, 4).\n\nFixes issue where old dropdown still showed Live (Audience), Studio Album,\nand Box Set options after enum simplification.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
-      "Bash(git add Services/LibraryImportService.cs)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nFix import crash on empty Album Date for studio albums\n\n## Bug Fixed\n\nImport was failing with \"String '' was not recognized as a valid DateTime\"\nat LibraryImportService.cs line 97 when importing studio albums with no\nperformance date.\n\n## Root Cause\n\nAfter simplifying album types from 4 to 2, the ImportToLibrary method had\nduplicate/dead code checking for AlbumType.OfficialRelease twice. The second\ncheck (line 66) was unreachable and should have handled studio albums differently.\n\nThe else branch assumed all non-official releases had dates and used \nDateTime.Parse without null/empty checks, causing crashes on studio albums.\n\n## Changes Made\n\n1. **Removed duplicate OfficialRelease check** (line 66 dead code)\n2. **Unified OfficialRelease handling** to cover both:\n   - Series releases (Dave''s Picks, etc.) → OfficialReleasesPath/Series/Album\n   - Studio albums → OfficialReleasesPath/Studio Albums/Album (Year)\n3. **Replaced DateTime.Parse with DateTime.TryParse** in two locations:\n   - Line 97: Import method (audience recording path)\n   - Line 474: Check method (verifying existing imports)\n4. **Added null/empty date validation** before parsing\n   - Audience recordings now throw clear error if date is missing\n   - Check method returns false instead of crashing\n\n## Testing\n\n- Build succeeds with no errors\n- Studio albums can now be imported without dates\n- Audience recordings still require valid yyyy-MM-dd dates\n- Better error messages for invalid date formats\n\nFixes import crash reported by user.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git add .claude/settings.local.json)",
-      "Bash(git commit -m \"Update Claude settings\")",
-      "Bash(git add TODO.md)",
-      "Bash(git commit -m \"Update TODO.md with session 2026-03-10 status\n\nComprehensive update documenting:\n\n## Completed This Session:\n- Import screen redesign implementation (doc 16)\n- Album type simplification (4 → 2 types)\n- Bug fixes (DateTime crash, track display, dropdown styling)\n- Data model updates (RawTitle, CollectionName)\n\n## Known Issues Documented:\n1. Dropdown styling inconsistency\n2. Song performance dates (FIXED this session)\n3. FLAC tag mapping review needed\n4. Documentation updates needed\n5. Editable folder name preview (spec''d, not implemented)\n6. Collection Name field not yet in UI\n\n## Testing Checklist Added:\n- Import workflows for all album types\n- Library browser functionality\n- UI component verification\n\nSession focus was implementing the redesigned import screen and\nsimplifying the album type system for better usability.\")"
+      "Bash(dotnet build DeadEditor.csproj)",
+      "Bash(git add -A)"
     ],
     "deny": [],
     "ask": []
