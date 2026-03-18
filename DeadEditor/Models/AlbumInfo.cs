@@ -110,12 +110,12 @@ namespace DeadEditor.Models
 
                 if (Type == AlbumType.OfficialRelease)
                 {
-                    // Official Release with Date+Venue: "Date - Venue - City, ST : Album Name"
+                    // Official Release with Date+Venue: "Date - Venue - City, ST - Album Name"
                     if (!string.IsNullOrEmpty(AlbumDate) && !string.IsNullOrEmpty(Venue))
                     {
                         var baseTitle = $"{AlbumDate} - {Venue} - {CityState}";
                         if (!string.IsNullOrEmpty(AlbumName))
-                            baseTitle += $" : {AlbumName}";
+                            baseTitle += $" - {AlbumName}";
                         if (!string.IsNullOrEmpty(CollectionName))
                             baseTitle += $" : {CollectionName}";
                         return baseTitle;

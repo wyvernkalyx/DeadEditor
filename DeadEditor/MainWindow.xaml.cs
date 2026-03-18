@@ -183,7 +183,7 @@ public partial class MainWindow : Window
             AlbumDateTextBox.Text = _albumInfo.AlbumDate ?? "";
             VenueTextBox.Text = _albumInfo.Venue ?? "";
             CityStateTextBox.Text = _albumInfo.CityState ?? "";
-            AlbumNameTextBox.Text = _albumInfo.AlbumName ?? "";
+            AlbumNameComboBox.Text = _albumInfo.AlbumName ?? "";
             YearTextBox.Text = _albumInfo.Year ?? "";
 
             // Set album type dropdown (simplified: Auto-detect, Audience Recording, Official Release)
@@ -219,7 +219,7 @@ public partial class MainWindow : Window
         AlbumDateTextBox.Text = "";
         VenueTextBox.Text = "";
         CityStateTextBox.Text = "";
-        AlbumNameTextBox.Text = "";
+        AlbumNameComboBox.Text = "";
         YearTextBox.Text = "";
         AlbumTypeComboBox.SelectedIndex = 0;
         FolderPreviewTextBlock.Text = "";
@@ -249,7 +249,7 @@ public partial class MainWindow : Window
         _albumInfo.AlbumDate = AlbumDateTextBox.Text;
         _albumInfo.Venue = VenueTextBox.Text;
         _albumInfo.CityState = CityStateTextBox.Text;
-        _albumInfo.AlbumName = AlbumNameTextBox.Text;
+        _albumInfo.AlbumName = AlbumNameComboBox.Text;
         _albumInfo.Year = YearTextBox.Text;
         _albumInfo.IsModified = true;
 
@@ -691,7 +691,7 @@ public partial class MainWindow : Window
             // Update album fields
             _isUpdating = true;
             ArtistTextBox.Text = release.Artist;
-            AlbumNameTextBox.Text = release.Title;
+            AlbumNameComboBox.Text = release.Title;
             YearTextBox.Text = release.Year.ToString();
             _isUpdating = false;
 

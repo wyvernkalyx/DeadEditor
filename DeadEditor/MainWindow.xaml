@@ -271,11 +271,11 @@
                     <TextBox Grid.Row="1" Grid.Column="0" x:Name="ArtistTextBox"
                              Width="140" Height="26" TextChanged="AlbumInfo_Changed"/>
 
-                    <!-- Album Date -->
-                    <Label Grid.Row="0" Grid.Column="1" Content="ALBUM DATE" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <!-- Concert Date (performance date) -->
+                    <Label Grid.Row="0" Grid.Column="1" Content="CONCERT DATE" VerticalAlignment="Top" Margin="10,0,0,0"/>
                     <TextBox Grid.Row="1" Grid.Column="1" x:Name="AlbumDateTextBox"
                              Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
-                             ToolTip="yyyy-MM-dd"/>
+                             ToolTip="yyyy-MM-dd (performance date)"/>
 
                     <!-- Venue -->
                     <Label Grid.Row="0" Grid.Column="2" Content="VENUE" VerticalAlignment="Top" Margin="10,0,0,0"/>
@@ -290,15 +290,17 @@
 
                     <!-- Album / Release Name -->
                     <Label Grid.Row="0" Grid.Column="4" Content="ALBUM / RELEASE NAME" VerticalAlignment="Top" Margin="10,0,0,0"/>
-                    <TextBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameTextBox"
-                             Width="190" Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
-                             ToolTip="Optional"/>
+                    <ComboBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameComboBox"
+                              Width="190" Height="26" Margin="10,0,0,0"
+                              IsEditable="True"
+                              TextBoxBase.TextChanged="AlbumInfo_Changed"
+                              ToolTip="Optional - type or select from previously used names"/>
 
-                    <!-- Year -->
-                    <Label Grid.Row="0" Grid.Column="5" Content="YEAR" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    <!-- Release Year (publication year, not performance year) -->
+                    <Label Grid.Row="0" Grid.Column="5" Content="RELEASE YEAR" VerticalAlignment="Top" Margin="10,0,0,0"/>
                     <TextBox Grid.Row="1" Grid.Column="5" x:Name="YearTextBox"
                              Height="26" Margin="10,0,0,0" TextChanged="AlbumInfo_Changed"
-                             ToolTip="Release year"/>
+                             ToolTip="Release/publication year"/>
                 </Grid>
             </Border>
 
