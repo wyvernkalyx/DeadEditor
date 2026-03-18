@@ -535,7 +535,8 @@
                 <!-- Artwork Panel -->
                 <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="1"
                         Background="#2D2D30" Padding="15">
-                    <StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel>
                         <!-- Artwork Display -->
                         <Border BorderBrush="#555555" BorderThickness="1"
                                 Width="400" Height="400"
@@ -594,7 +595,8 @@
                                        FontFamily="Consolas"
                                        LineHeight="22"/>
                         </Border>
-                    </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Border>
             </Grid>
 
