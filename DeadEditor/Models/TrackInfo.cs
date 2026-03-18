@@ -21,6 +21,38 @@ namespace DeadEditor.Models
             set => SongName = value;
         }
 
+        // Computed property: Full display title with date and segue for library browser
+        // Reconstructs from components if RawTitle doesn't have the full format
+        public string DisplayTitle
+        {
+            get
+            {
+                // If RawTitle already has the date/segue format, use it
+                if (!string.IsNullOrEmpty(RawTitle) &&
+                    (RawTitle.Contains("(") || RawTitle.EndsWith(">")))
+                {
+                    return RawTitle;
+                }
+
+                // Otherwise reconstruct from components
+                var title = SongName ?? "";
+
+                // Add date if present
+                if (!string.IsNullOrEmpty(TrackDate))
+                {
+                    title = $"{title} ({TrackDate})";
+                }
+
+                // Add segue marker if present
+                if (Segue && !title.EndsWith(">"))
+                {
+                    title = title.TrimEnd() + " >";
+                }
+
+                return title;
+            }
+        }
+
         // Computed property: Display title with auto-appended date (what you see is what gets written)
         public string GetDisplayTitle(string albumDate)
         {
