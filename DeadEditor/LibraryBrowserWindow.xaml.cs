@@ -1392,5 +1392,11 @@ public class LibraryShow
                 : OfficialRelease)
             : Date;
 
+    // Display album name only for Official Releases (blank for Audience Recordings)
+    public string DisplayAlbumName =>
+        Type == AlbumType.OfficialRelease
+            ? (!string.IsNullOrEmpty(OfficialRelease) ? OfficialRelease : AlbumName)
+            : "";
+
     public bool IsOfficialRelease => Type == AlbumType.OfficialRelease;
 }

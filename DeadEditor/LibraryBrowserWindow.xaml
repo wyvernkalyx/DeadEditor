@@ -218,10 +218,10 @@
                 </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="" Binding="{Binding TypeIcon}" Width="50"/>
-                    <DataGridTextColumn Header="Date / Album" Binding="{Binding PrimaryInfo}" Width="200"/>
-                    <DataGridTextColumn Header="Venue / Year" Binding="{Binding SecondaryInfo}" Width="*"/>
-                    <DataGridTextColumn Header="Location / Edition" Binding="{Binding TertiaryInfo}" Width="220"/>
-                    <DataGridTextColumn Header="Official Release" Binding="{Binding OfficialRelease}" Width="200"/>
+                    <DataGridTextColumn Header="yyyy-MM-dd" Binding="{Binding Date}" Width="120"/>
+                    <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="*"/>
+                    <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="200"/>
+                    <DataGridTextColumn Header="Album Name" Binding="{Binding DisplayAlbumName}" Width="250"/>
                     <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="90"/>
                 </DataGrid.Columns>
             </DataGrid>
@@ -383,7 +383,7 @@
                             </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="60"/>
-                                <DataGridTextColumn Header="Title" Binding="{Binding RawTitle}" Width="*"/>
+                                <DataGridTextColumn Header="Title" Binding="{Binding DisplayTitle}" Width="*"/>
                                 <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="100"/>
                             </DataGrid.Columns>
                         </DataGrid>
