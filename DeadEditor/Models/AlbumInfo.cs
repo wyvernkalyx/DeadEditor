@@ -134,8 +134,10 @@ namespace DeadEditor.Models
                 }
                 else // AudienceRecording
                 {
-                    // Audience recording format: "Date - Venue - City, State"
+                    // Audience recording format: "Date - Venue - City, State" [- Album Name]
                     var baseTitle = $"{AlbumDate} - {Venue} - {CityState}";
+                    if (!string.IsNullOrEmpty(AlbumName))
+                        baseTitle += $" - {AlbumName}";
                     if (!string.IsNullOrEmpty(CollectionName))
                         baseTitle += $" : {CollectionName}";
                     return baseTitle;

@@ -156,15 +156,17 @@ public string AlbumTitle { get; }
 
 **3. Live Recording Format** (Type = Live or OfficialRelease, lines 73-80):
 ```
-"{Date} - {Venue} - {City}, {State} : {OfficialRelease}"
+"{Date} - {Venue} - {City}, {State} [- {AlbumName}] [: {OfficialRelease}]"
 ```
 
-**Note:** SPACE before colon (` :`) - distinguishes official releases from box sets.
+**Note:** SPACE before colon (` :`) - distinguishes official releases from box sets. Album Name is appended with dash separator (if populated). Official Release name is appended with colon separator (if populated).
 
 **Examples:**
-- `Date = "1977-05-08"`, `Venue = "Barton Hall"`, `City = "Ithaca"`, `State = "NY"`, `OfficialRelease = null`
+- `Date = "1977-05-08"`, `Venue = "Barton Hall"`, `City = "Ithaca"`, `State = "NY"`, `AlbumName = null`, `OfficialRelease = null`
   - **Returns:** `"1977-05-08 - Barton Hall - Ithaca, NY"`
-- `Date = "1977-05-08"`, `Venue = "Barton Hall"`, `City = "Ithaca"`, `State = "NY"`, `OfficialRelease = "Dave's Picks Vol. 29"`
+- `Date = "1971-04-25"`, `Venue = "Fillmore East"`, `City = "New York"`, `State = "NY"`, `AlbumName = "Enjoying the Ride"`, `OfficialRelease = null`
+  - **Returns:** `"1971-04-25 - Fillmore East - New York, NY - Enjoying the Ride"`
+- `Date = "1977-05-08"`, `Venue = "Barton Hall"`, `City = "Ithaca"`, `State = "NY"`, `AlbumName = null`, `OfficialRelease = "Dave's Picks Vol. 29"`
   - **Returns:** `"1977-05-08 - Barton Hall - Ithaca, NY : Dave's Picks Vol. 29"`
 
 **Critical Business Rule:** Colon spacing distinguishes box sets from official releases:
