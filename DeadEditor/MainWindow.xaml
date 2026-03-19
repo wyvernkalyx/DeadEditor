@@ -442,7 +442,19 @@
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DisplayTitle}"
                                                    VerticalAlignment="Center"
-                                                   Padding="4,0"/>
+                                                   Padding="4,0">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                    <Style.Triggers>
+                                                        <!-- Unmatched songs shown in gold (#D7BA7D) -->
+                                                        <DataTrigger Binding="{Binding IsMatched}" Value="False">
+                                                            <Setter Property="Foreground" Value="#D7BA7D"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                                 <DataGridTemplateColumn.CellEditingTemplate>

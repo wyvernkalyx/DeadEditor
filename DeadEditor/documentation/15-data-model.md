@@ -265,13 +265,13 @@ The `TrackInfo` class represents metadata for a single audio track within an alb
 | `FileName` | `string` | Filename only | `"01 - All New Minglewood Blues.flac"` |
 | `TrackNumber` | `int` | Track number within disc (user-editable in import grid) | `1` (first track), `12` (twelfth track), `101` (disc 1 using 101/201 convention) |
 | `DiscNumber` | `int` | Disc number (defaults to 1) | `1` (single-disc), `2` (disc 2 of multi-disc) |
-| `Title` | `string` | Original title from file metadata | `"Dnacing in the Street"` (with typo) |
-| `NormalizedTitle` | `string` | Normalized title after fuzzy matching | `"Dancing in the Street"` (corrected) |
-| `PerformanceDate` | `string` | Performance date (yyyy-MM-dd) | `"1977-05-08"` |
-| `HasSegue` | `bool` | Transitions to next track (segue marker) | `true` (track flows into next), `false` (ends cleanly) |
+| `SongName` | `string` | Just the song name (without date suffix or segue) | `"Dancing in the Street"` (normalized or user-edited) |
+| `RawTitle` | `string` | Original title as stored in file (includes date/segue) | `"Dancing in the Street (1977-05-08)"` |
+| `TrackDate` | `string` | Track-specific date override (yyyy-MM-dd format, empty = inherit from album) | `"1977-05-08"` or `""` (inherits from album date) |
+| `Segue` | `bool` | Transitions to next track (segue marker) | `true` (track flows into next), `false` (ends cleanly) |
 | `Duration` | `string` | Track duration (MM:SS format, read-only) | `"07:42"`, `"12:15"` |
 | `IsModified` | `bool` | Has user made changes? | `true` if edited, `false` otherwise |
-| `PreviewMetadata` | `string` | Preview of final metadata to be written | `"Dark Star > (1972-05-04)"` |
+| `IsMatched` | `bool` | Song was matched in normalization (for UI highlighting) | `true` if found in song database, `false` if unmatched (shown in gold #D7BA7D) |
 
 ---
 

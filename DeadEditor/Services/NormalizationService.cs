@@ -350,7 +350,12 @@ namespace DeadEditor.Services
                 if (normalized != null)
                 {
                     track.SongName = normalized;
+                    track.IsMatched = true;  // Mark as matched for UI highlighting
                     matched++;
+                }
+                else
+                {
+                    track.IsMatched = false;  // Mark as unmatched for UI highlighting (gold color)
                 }
             }
             return matched;

@@ -588,17 +588,10 @@ public partial class MainWindow : Window
             // Extract TrackInfo objects
             var trackList = _tracks.Select(t => t.Track).ToList();
 
-            // Normalize
+            // Normalize (sets IsMatched flag on each track)
             int matched = _normalizationService.NormalizeAll(trackList);
 
-            // Update IsMatched flag and refresh display
-            foreach (var trackVM in _tracks)
-            {
-                trackVM.Track.IsMatched = !string.IsNullOrEmpty(trackVM.Track.Title);
-                trackVM.UpdateDisplayTitle();
-            }
-
-            // Refresh grid to update colors
+            // Refresh grid to update colors based on IsMatched
             TracksDataGrid.Items.Refresh();
 
             StatusTextBlock.Text = $"Matched {matched} of {_tracks.Count} songs";

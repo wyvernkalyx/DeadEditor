@@ -350,8 +350,13 @@ foreach (var track in tracks)
     var normalized = Normalize(track.Title);
     if (normalized != null)
     {
-        track.NormalizedTitle = normalized;  // Set property
+        track.SongName = normalized;   // Set normalized song name
+        track.IsMatched = true;        // Mark as matched for UI highlighting
         matched++;
+    }
+    else
+    {
+        track.IsMatched = false;       // Mark as unmatched for UI highlighting (gold color)
     }
 }
 return matched;
@@ -359,7 +364,9 @@ return matched;
 
 **Side Effects:**
 - Modifies `track.Title` to normalize slash-formatted dates to yyyy-MM-dd format
-- Modifies `track.NormalizedTitle` for each successful match
+- Modifies `track.SongName` for each successful match with the canonical song name from the database
+- Sets `track.IsMatched = true` for matched songs (displayed in white in import grid)
+- Sets `track.IsMatched = false` for unmatched songs (displayed in gold #D7BA7D in import grid to indicate they need attention)
 
 **Use Case:** MainWindow calls this after loading folder to normalize all tracks at once. Also called when user clicks "Normalize All Songs" button.
 
