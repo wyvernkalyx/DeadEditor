@@ -158,16 +158,103 @@ Reads original file's:
 - Genre, Comment, Copyright, Publisher, Composer
 Writes back after updating core fields (line 262-281)
 
-**Title Writing Logic (line 214-243):**
-- **Studio track with live bonus:** Use `GetFinalMetadataTitle()` (preserves embedded date/venue)
-- **Studio track with edition:** `{Title} ({Edition})`
-- **Studio track without edition:** Plain title
-- **Official release:** Use `GetFinalMetadataTitle()`
-- **Live recording:** `{Title} ({Date})`
+**Title Writing Logic (line 214-217):**
+All album types now use centralized `BuildFinalTitle()` method:
+- Resolves date: `dateForTitle` param → `track.TrackDate` → `albumInfo.Date`
+- Calls `BuildFinalTitle(songName, hasSegue, trackDate, albumDate)`
+- Returns final title with date suffix and segue marker in correct order
+- Includes double-date prevention (see BuildFinalTitle section below)
 
 **Progress Reporting:** Updates per-track: `(current, total, "Importing track N of M: Title")` (line 138)
 
 **Error Handling:** Try/catch on original metadata read (line 181-195), continues if fails.
+
+---
+
+### BuildFinalTitle
+
+**Signature:**
+```csharp
+private string BuildFinalTitle(string songName, bool hasSegue, string? trackDate, string? albumDate)
+```
+
+**Purpose:** Builds the final title string to write to TITLE tag with date suffix and double-date prevention. This is the **core invariant** for all metadata writing in the import process.
+
+**Parameters:**
+- `songName` (string) - Song name without date/segue markers
+- `hasSegue` (bool) - Whether track has segue marker (`>`)
+- `trackDate` (string?) - Track-specific date (TrackInfo.TrackDate)
+- `albumDate` (string?) - Album-level date fallback (AlbumInfo.AlbumDate)
+
+**Return Value:** Final title string to write to TITLE tag
+
+**Business Logic:**
+
+**1. Date Resolution (line 509):**
+```csharp
+var finalDate = !string.IsNullOrEmpty(trackDate) ? trackDate : albumDate;
+```
+- trackDate wins if non-empty
+- Falls back to albumDate
+- May be null/empty if both are empty
+
+**2. Double-Date Prevention (lines 514-541):**
+Checks if `songName` already contains date suffix `(yyyy-MM-dd)`:
+
+**Case A: Embedded date MATCHES finalDate**
+- Use songName as-is (don't append duplicate date)
+- Add segue marker if needed (before the existing date)
+- Example: `"Song (1978-02-01)"` + finalDate `"1978-02-01"` → `"Song (1978-02-01)"` (no change)
+- Example with segue: `"Song (1978-02-01)"` + segue → `"Song > (1978-02-01)"`
+
+**Case B: Embedded date DIFFERS from finalDate**
+- **Data integrity issue** - log warning to Debug output
+- Strip embedded date from songName
+- Proceed to append finalDate (trackDate/albumDate wins)
+- Example: `"Song (1970-01-01)"` + finalDate `"1978-02-01"` → `"Song (1978-02-01)"`
+- **Rationale:** Explicit TrackDate/AlbumDate from import workflow is authoritative
+
+**Case C: No embedded date**
+- Proceed to append finalDate normally
+
+**3. Segue Marker Placement (lines 543-547):**
+```csharp
+if (hasSegue && !title.EndsWith(">"))
+{
+    title = title.TrimEnd() + " >";
+}
+```
+- **Critical:** Segue marker MUST come BEFORE date suffix
+- Format: `"Song Name > (yyyy-MM-dd)"`
+
+**4. Date Suffix Append (lines 549-553):**
+```csharp
+if (!string.IsNullOrEmpty(finalDate))
+{
+    title = $"{title} ({finalDate})";
+}
+```
+- Only appends if finalDate is non-empty
+- If both trackDate and albumDate are empty, returns song name without date
+
+**Output Examples:**
+
+| Input | Output |
+|-------|--------|
+| `songName = "Bertha"`, `hasSegue = false`, `finalDate = "1978-02-01"` | `"Bertha (1978-02-01)"` |
+| `songName = "China Cat Sunflower"`, `hasSegue = true`, `finalDate = "1977-05-08"` | `"China Cat Sunflower > (1977-05-08)"` |
+| `songName = "Bertha"`, `hasSegue = false`, `finalDate = null` | `"Bertha"` (no date) |
+| `songName = "Bertha (1978-02-01)"`, `hasSegue = false`, `finalDate = "1978-02-01"` | `"Bertha (1978-02-01)"` (no duplicate) |
+| `songName = "Bertha (1970-01-01)"`, `hasSegue = false`, `finalDate = "1978-02-01"` | `"Bertha (1978-02-01)"` (corrected) |
+| `songName = "China Cat (1977-05-08)"`, `hasSegue = true`, `finalDate = "1977-05-08"` | `"China Cat > (1977-05-08)"` (segue added) |
+
+**Error Handling:**
+- **Missing dates:** Returns song name without date suffix (graceful degradation)
+- **Date mismatch:** Logs warning, uses finalDate (explicit value wins)
+- **Null songName:** Treats as empty string
+
+**Critical Invariant:**
+**The TITLE tag written to disk MUST always follow the format: `"Song Name > (yyyy-MM-dd)"` for segue tracks or `"Song Name (yyyy-MM-dd)"` for non-segue tracks. This is the core requirement for display in car audio systems (Apple Music/Plex).**
 
 ---
 

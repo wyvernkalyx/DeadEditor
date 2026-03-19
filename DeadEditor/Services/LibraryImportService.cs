@@ -209,44 +209,12 @@ namespace DeadEditor.Services
                 {
                     using (var file = TagLib.File.Create(targetPath))
                     {
-                        var title = track.SongName ?? track.Title;
+                        var songName = track.SongName ?? track.Title;
 
-                        if (track.HasSegue)
-                        {
-                            title = title + " >";
-                        }
-
-                        // Set title based on album type and track content
-                        if (isStudioAlbum)
-                        {
-                            // Studio album track - could be studio or live bonus track
-                            if (!string.IsNullOrEmpty(track.PerformanceDate))
-                            {
-                                // Live bonus track: Use GetFinalMetadataTitle to preserve embedded venue/date
-                                file.Tag.Title = track.GetFinalMetadataTitle(track.PerformanceDate);
-                            }
-                            else if (!string.IsNullOrEmpty(albumInfo.Edition))
-                            {
-                                // Studio track with edition/remaster info
-                                file.Tag.Title = $"{title} ({albumInfo.Edition})";
-                            }
-                            else
-                            {
-                                // Studio track without edition info
-                                file.Tag.Title = title;
-                            }
-                        }
-                        else if (isOfficialRelease)
-                        {
-                            // Official release: Use GetFinalMetadataTitle which preserves embedded date/venue info
-                            file.Tag.Title = track.GetFinalMetadataTitle(albumInfo.Date);
-                        }
-                        else
-                        {
-                            // Live recording: Title with date
-                            var trackDate = dateForTitle ?? track.PerformanceDate ?? albumInfo.Date;
-                            file.Tag.Title = $"{title} ({trackDate})";
-                        }
+                        // Build final title with date suffix using centralized logic
+                        // trackDate resolution: explicit dateForTitle param → track.TrackDate → albumInfo.Date
+                        var effectiveTrackDate = dateForTitle ?? track.TrackDate;
+                        file.Tag.Title = BuildFinalTitle(songName, track.HasSegue, effectiveTrackDate, albumInfo.Date);
 
                         file.Tag.Album = albumInfo.AlbumTitle;
                         file.Tag.Performers = new[] { albumInfo.Artist };
@@ -493,6 +461,66 @@ namespace DeadEditor.Services
                 var matchingFolders = Directory.GetDirectories(yearFolder, folderPattern);
                 return matchingFolders.Length > 0;
             }
+        }
+
+        /// <summary>
+        /// Builds the final title string to write to TITLE tag with date suffix and double-date prevention.
+        /// </summary>
+        /// <param name="songName">Song name (without date/segue)</param>
+        /// <param name="hasSegue">Whether song has segue marker</param>
+        /// <param name="trackDate">Track-specific date (TrackInfo.TrackDate)</param>
+        /// <param name="albumDate">Album-level date fallback (AlbumInfo.AlbumDate)</param>
+        /// <returns>Final title string: "Song > (yyyy-MM-dd)" or "Song (yyyy-MM-dd)" or "Song" if no date</returns>
+        private string BuildFinalTitle(string songName, bool hasSegue, string? trackDate, string? albumDate)
+        {
+            // Resolve the final date: trackDate wins, albumDate is fallback
+            var finalDate = !string.IsNullOrEmpty(trackDate) ? trackDate : albumDate;
+
+            // Start with song name
+            var title = songName ?? "";
+
+            // DOUBLE-DATE PREVENTION: Check if songName already has a date suffix
+            var datePattern = @"\s*\((\d{4}-\d{2}-\d{2})\)\s*$";
+            var match = System.Text.RegularExpressions.Regex.Match(title, datePattern);
+
+            if (match.Success)
+            {
+                var embeddedDate = match.Groups[1].Value;
+
+                // If embedded date matches finalDate, use title as-is (don't append again)
+                if (embeddedDate == finalDate)
+                {
+                    // Add segue marker if needed (before the existing date)
+                    if (hasSegue && !title.Contains(">"))
+                    {
+                        title = System.Text.RegularExpressions.Regex.Replace(title, datePattern, $" > ({embeddedDate})");
+                    }
+                    return title;
+                }
+                else
+                {
+                    // Embedded date DIFFERS from trackDate/albumDate
+                    // This is a data integrity issue - log warning and use trackDate (explicit value wins)
+                    System.Diagnostics.Debug.WriteLine($"WARNING: Song '{songName}' has embedded date '{embeddedDate}' but trackDate/albumDate is '{finalDate}'. Using trackDate/albumDate.");
+
+                    // Strip embedded date and proceed to append the correct one
+                    title = System.Text.RegularExpressions.Regex.Replace(title, datePattern, "");
+                }
+            }
+
+            // Add segue marker BEFORE date (must come before date suffix)
+            if (hasSegue && !title.EndsWith(">"))
+            {
+                title = title.TrimEnd() + " >";
+            }
+
+            // Add date suffix (only if we have a valid date)
+            if (!string.IsNullOrEmpty(finalDate))
+            {
+                title = $"{title} ({finalDate})";
+            }
+
+            return title;
         }
     }
 }
