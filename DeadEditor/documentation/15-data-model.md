@@ -271,7 +271,7 @@ The `TrackInfo` class represents metadata for a single audio track within an alb
 | `Segue` | `bool` | Transitions to next track (segue marker) | `true` (track flows into next), `false` (ends cleanly) |
 | `Duration` | `string` | Track duration (MM:SS format, read-only) | `"07:42"`, `"12:15"` |
 | `IsModified` | `bool` | Has user made changes? | `true` if edited, `false` otherwise |
-| `IsMatched` | `bool` | Song was matched in normalization (for UI highlighting) | `true` if found in song database, `false` if unmatched (shown in gold #D7BA7D) |
+| `IsMatched` | `bool?` | Song normalization status (three-state for UI highlighting) | `null` = not yet normalized (no highlighting), `true` = matched in database (white text), `false` = unmatched (gold #D7BA7D text) |
 
 ---
 

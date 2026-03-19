@@ -367,6 +367,7 @@ return matched;
 - Modifies `track.SongName` for each successful match with the canonical song name from the database
 - Sets `track.IsMatched = true` for matched songs (displayed in white in import grid)
 - Sets `track.IsMatched = false` for unmatched songs (displayed in gold #D7BA7D in import grid to indicate they need attention)
+- Tracks start with `IsMatched = null` (not yet normalized), so only tracks that have been through normalization will have true/false values
 
 **Use Case:** MainWindow calls this after loading folder to normalize all tracks at once. Also called when user clicks "Normalize All Songs" button.
 

@@ -12,7 +12,7 @@ namespace DeadEditor.Models
         public bool Segue { get; set; }                // Transitions to next track (renamed from HasSegue for consistency)
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
         public bool IsModified { get; set; }           // Has user made changes?
-        public bool IsMatched { get; set; }            // Song was matched in normalization (for UI highlighting)
+        public bool? IsMatched { get; set; }           // null = not yet normalized, true = matched, false = unmatched (gold #D7BA7D)
 
         // Computed property: Legacy Title field for backward compatibility (maps to RawTitle if available, else SongName)
         public string Title

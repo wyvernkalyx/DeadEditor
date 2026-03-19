@@ -377,9 +377,9 @@ public partial class MainWindow : Window
     private void TracksDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
     {
         var track = e.Row.Item as TrackInfoViewModel;
-        if (track != null && !track.Track.IsMatched)
+        if (track != null && track.Track.IsMatched == false)
         {
-            // Highlight unmatched songs in gold
+            // Highlight unmatched songs in gold (only when explicitly false, not null)
             e.Row.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xD7, 0xBA, 0x7D));
         }
         else
