@@ -21,15 +21,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- ComboBox Style -->
-        <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="#2D2D30"/>
-            <Setter Property="Foreground" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#555555"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8,4"/>
-            <Setter Property="FontSize" Value="16"/>
-        </Style>
+        <!-- ComboBox and ComboBoxItem styles inherited from App.xaml -->
     </Window.Resources>
 
     <Grid Margin="20">
