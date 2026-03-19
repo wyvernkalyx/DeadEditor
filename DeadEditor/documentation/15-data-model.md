@@ -255,6 +255,8 @@ public bool IsStudioAlbum => Type == AlbumType.Studio;
 
 The `TrackInfo` class represents metadata for a single audio track within an album. Tracks have both original metadata (read from file) and normalized metadata (after song matching). The class handles segue notation, performance dates, and metadata preview generation.
 
+**Implements:** `INotifyPropertyChanged` - Raises PropertyChanged events when IsMatched changes to trigger WPF DataTrigger re-evaluation for gold highlighting of unmatched songs.
+
 ---
 
 ### Properties

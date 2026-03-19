@@ -1,7 +1,11 @@
+using System.ComponentModel;
+
 namespace DeadEditor.Models
 {
-    public class TrackInfo
+    public class TrackInfo : INotifyPropertyChanged
     {
+        private bool? _isMatched;
+
         public string FilePath { get; set; }           // Full path to FLAC file
         public string FileName { get; set; }           // Just the filename
         public int TrackNumber { get; set; }           // Track # (within disc)
@@ -12,7 +16,27 @@ namespace DeadEditor.Models
         public bool Segue { get; set; }                // Transitions to next track (renamed from HasSegue for consistency)
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
         public bool IsModified { get; set; }           // Has user made changes?
-        public bool? IsMatched { get; set; }           // null = not yet normalized, true = matched, false = unmatched (gold #D7BA7D)
+
+        // IsMatched with PropertyChanged notification for WPF DataTrigger binding
+        public bool? IsMatched
+        {
+            get => _isMatched;
+            set
+            {
+                if (_isMatched != value)
+                {
+                    _isMatched = value;
+                    OnPropertyChanged(nameof(IsMatched));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         // Computed property: Legacy Title field for backward compatibility (maps to RawTitle if available, else SongName)
         public string Title
