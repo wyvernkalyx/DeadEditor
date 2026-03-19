@@ -1,0 +1,81 @@
+<Window x:Class="DeadEditor.UnmatchedSongsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Unmatched Songs" Height="600" Width="900"
+        Background="#1E1E1E"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+    <Window.Resources>
+        <!-- Button Style -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#0E639C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1177BB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ComboBox Style -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#2D2D30"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="Unmatched Songs"
+                   FontSize="28" FontWeight="Bold"
+                   Foreground="#FFFFFF"
+                   Margin="0,0,0,10"/>
+
+        <!-- Subtitle -->
+        <TextBlock Grid.Row="1"
+                   TextWrapping="Wrap"
+                   Foreground="#CCCCCC"
+                   FontSize="16"
+                   Margin="0,0,0,20">
+            <Run Text="These songs were not found in the database. Select the correct name from the dropdown or type a new one."/>
+            <LineBreak/>
+            <Run Text="New songs will be automatically added to songs.json when you click Apply All." Foreground="#D7BA7D"/>
+        </TextBlock>
+
+        <!-- Unmatched tracks list -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="UnmatchedTracksPanel">
+                <!-- Rows will be added programmatically -->
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0">
+            <Button Content="Skip"
+                    Width="120"
+                    Margin="0,0,10,0"
+                    Background="#3C3C3C"
+                    Click="SkipButton_Click"/>
+            <Button Content="Apply All"
+                    Width="120"
+                    Click="ApplyButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

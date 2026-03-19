@@ -371,6 +371,27 @@ return matched;
 
 **Use Case:** MainWindow calls this after loading folder to normalize all tracks at once. Also called when user clicks "Normalize All Songs" button.
 
+**Post-Normalization Flow (UnmatchedSongsDialog):**
+After normalization completes, if there are unmatched songs (IsMatched == false):
+1. MainWindow shows `UnmatchedSongsDialog` instead of the generic notification
+2. Dialog displays each unmatched track with:
+   - Track number and raw title (read-only, for context)
+   - Editable ComboBox populated with all songs from database (via `GetAllTitles()`)
+   - User can select from dropdown or type a new name
+3. When user clicks "Apply All":
+   - For each corrected track:
+     - Updates `track.SongName` to the corrected value
+     - Sets `track.IsMatched = true` (removes gold highlighting)
+     - If the correction is NOT in database, calls `AddSong()` to add it to songs.json
+   - Shows summary: "Added N new song(s) to songs.json: ..."
+   - Returns to MainWindow with grid refreshed
+4. User can click "Skip" to close dialog without applying corrections
+
+**Benefits:**
+- Guided correction workflow instead of relying only on gold highlighting
+- New songs automatically added to database for future imports
+- Corrections persist across re-imports of the same concert
+
 ---
 
 ### 6. GetAllTitles

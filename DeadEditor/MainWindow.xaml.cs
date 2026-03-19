@@ -599,8 +599,30 @@ public partial class MainWindow : Window
             int unmatched = _tracks.Count - matched;
             if (unmatched > 0)
             {
-                await ShowNotificationAsync("Normalization Complete",
-                    $"{unmatched} songs not in database (will use original titles). Unmatched songs shown in gold.");
+                // Get list of unmatched tracks
+                var unmatchedTracks = _tracks
+                    .Where(t => t.Track.IsMatched == false)
+                    .Select(t => t.Track)
+                    .ToList();
+
+                // Show UnmatchedSongsDialog to let user correct them
+                var dialog = new UnmatchedSongsDialog(unmatchedTracks, _normalizationService)
+                {
+                    Owner = this
+                };
+
+                if (dialog.ShowDialog() == true && dialog.ChangesMade)
+                {
+                    // User applied corrections - refresh the grid
+                    TracksDataGrid.Items.Refresh();
+                    StatusTextBlock.Text = $"Corrections applied. Matched {matched + unmatchedTracks.Count(t => t.IsMatched == true)} of {_tracks.Count} songs";
+                }
+                else
+                {
+                    // User skipped - show the original notification
+                    await ShowNotificationAsync("Normalization Complete",
+                        $"{unmatched} songs not in database (will use original titles). Unmatched songs shown in gold.");
+                }
             }
         }
         catch (Exception ex)
