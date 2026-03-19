@@ -1236,6 +1236,17 @@ public class TrackInfoViewModel : INotifyPropertyChanged
         _inheritedDate = "";
         UpdateDisplayTitle();
         UpdateInheritedDate();
+
+        // Subscribe to TrackInfo property changes to update DisplayTitle when SongName changes
+        Track.PropertyChanged += Track_PropertyChanged;
+    }
+
+    private void Track_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(TrackInfo.SongName))
+        {
+            UpdateDisplayTitle();
+        }
     }
 
     public string DisplayTitle

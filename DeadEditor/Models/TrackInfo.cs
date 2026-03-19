@@ -5,12 +5,28 @@ namespace DeadEditor.Models
     public class TrackInfo : INotifyPropertyChanged
     {
         private bool? _isMatched;
+        private string _songName;
 
         public string FilePath { get; set; }           // Full path to FLAC file
         public string FileName { get; set; }           // Just the filename
         public int TrackNumber { get; set; }           // Track # (within disc)
         public int DiscNumber { get; set; } = 1;       // Disc # (defaults to 1 for single-disc albums)
-        public string SongName { get; set; }           // Just the song name (without date suffix)
+
+        // SongName with PropertyChanged notification for DisplayTitle binding
+        public string SongName
+        {
+            get => _songName;
+            set
+            {
+                if (_songName != value)
+                {
+                    _songName = value;
+                    OnPropertyChanged(nameof(SongName));
+                    OnPropertyChanged(nameof(DisplayTitle));  // Notify DisplayTitle changed
+                }
+            }
+        }
+
         public string RawTitle { get; set; }           // Original title as stored in file (includes date/segue)
         public string TrackDate { get; set; }          // Track-specific date override (yyyy-MM-dd format, empty = inherit from album)
         public bool Segue { get; set; }                // Transitions to next track (renamed from HasSegue for consistency)
