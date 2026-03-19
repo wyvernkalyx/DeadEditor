@@ -22,31 +22,25 @@ namespace DeadEditor.Models
         }
 
         // Computed property: Full display title with date and segue for library browser
-        // Reconstructs from components if RawTitle doesn't have the full format
+        // Always reconstructs from components to ensure correct "Song > (Date)" format
         public string DisplayTitle
         {
             get
             {
-                // If RawTitle already has the date/segue format, use it
-                if (!string.IsNullOrEmpty(RawTitle) &&
-                    (RawTitle.Contains("(") || RawTitle.EndsWith(">")))
-                {
-                    return RawTitle;
-                }
-
-                // Otherwise reconstruct from components
+                // Always reconstruct from components to ensure correct format
+                // (RawTitle may have old wrong format like "Song (Date) >" from previous imports)
                 var title = SongName ?? "";
 
-                // Add date if present
-                if (!string.IsNullOrEmpty(TrackDate))
-                {
-                    title = $"{title} ({TrackDate})";
-                }
-
-                // Add segue marker if present
+                // Add segue marker if present (must come before date)
                 if (Segue && !title.EndsWith(">"))
                 {
                     title = title.TrimEnd() + " >";
+                }
+
+                // Add date if present (must come after segue)
+                if (!string.IsNullOrEmpty(TrackDate))
+                {
+                    title = $"{title} ({TrackDate})";
                 }
 
                 return title;
