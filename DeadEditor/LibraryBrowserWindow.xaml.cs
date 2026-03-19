@@ -167,6 +167,9 @@ public partial class LibraryBrowserWindow : Window
             return;
         }
 
+        // Group folders with matching Album tags into single LibraryShow entries
+        GroupMultiFolderAlbums();
+
         // Sort by type first (Live, Official Release, Studio), then by date/name
         _allShows = _allShows
             .OrderBy(s => s.Type)
@@ -237,6 +240,7 @@ public partial class LibraryBrowserWindow : Window
                     // Try to read OfficialRelease or BoxSet name from first audio file's album tag
                     string officialRelease = "";
                     string boxSetName = "";
+                    string albumTag = "";  // Store full album tag for grouping
                     AlbumType albumType = AlbumType.AudienceRecording;
 
                     if (audioFiles.Length > 0)
@@ -245,15 +249,15 @@ public partial class LibraryBrowserWindow : Window
                         {
                             using (var tagFile = TagLib.File.Create(audioFiles[0]))
                             {
-                                var album = tagFile.Tag.Album ?? "";
+                                albumTag = tagFile.Tag.Album ?? "";
 
                                 // Check for Box Set format first: "Date - Venue - City, State: Box Set Name" (no space before colon)
                                 var boxSetMatch = System.Text.RegularExpressions.Regex.Match(
-                                    album, @":\s*([^:]+)$");
+                                    albumTag, @":\s*([^:]+)$");
 
                                 // Check if there's a space before the colon (Official Release) or not (Box Set)
                                 var spaceBeforeColonMatch = System.Text.RegularExpressions.Regex.Match(
-                                    album, @"\s:\s*(.+)$");
+                                    albumTag, @"\s:\s*(.+)$");
 
                                 if (spaceBeforeColonMatch.Success)
                                 {
@@ -286,6 +290,7 @@ public partial class LibraryBrowserWindow : Window
                             ? $"{city}, {state}"
                             : city + state,
                         OfficialRelease = albumType == AlbumType.AudienceRecording ? officialRelease : boxSetName,
+                        AlbumName = albumTag,  // Store full album tag for grouping
                         TrackCount = audioFiles.Length,
                         FolderPath = showFolder
                     });
@@ -524,6 +529,79 @@ public partial class LibraryBrowserWindow : Window
         }
     }
 
+    private void GroupMultiFolderAlbums()
+    {
+        // Group folders by Album tag within the same AlbumType
+        // Multiple folders with the same Album tag should be merged into a single LibraryShow
+
+        var groupedShows = new List<LibraryShow>();
+
+        // Group by AlbumType first, then by AlbumName (Album tag)
+        var groups = _allShows
+            .GroupBy(show => new { show.Type, show.AlbumName })
+            .Where(g => !string.IsNullOrEmpty(g.Key.AlbumName));  // Only group shows that have an Album tag
+
+        // Process groups with matching Album tags
+        foreach (var group in groups)
+        {
+            if (group.Count() == 1)
+            {
+                // Single folder - no grouping needed, add as-is
+                groupedShows.Add(group.First());
+            }
+            else
+            {
+                // Multiple folders with same Album tag - merge them
+                var firstShow = group.First();
+                var mergedShow = new LibraryShow
+                {
+                    Type = firstShow.Type,
+                    AlbumName = firstShow.AlbumName,
+                    OfficialRelease = firstShow.OfficialRelease,
+                    Edition = firstShow.Edition,
+                    ReleaseYear = firstShow.ReleaseYear,
+
+                    // Aggregate dates and venues from all folders
+                    ContainsDates = group.SelectMany(s => string.IsNullOrEmpty(s.Date)
+                        ? Enumerable.Empty<string>()
+                        : new[] { s.Date })
+                        .Distinct()
+                        .OrderBy(d => d)
+                        .ToList(),
+
+                    ContainsVenues = group.SelectMany(s => string.IsNullOrEmpty(s.Venue)
+                        ? Enumerable.Empty<string>()
+                        : new[] { s.Venue })
+                        .Distinct()
+                        .OrderBy(v => v)
+                        .ToList(),
+
+                    // Use first show's metadata for display (or aggregate if multi-date)
+                    Date = firstShow.Date,
+                    Venue = firstShow.Venue,
+                    City = firstShow.City,
+                    State = firstShow.State,
+                    Location = firstShow.Location,
+
+                    // Sum track counts from all folders
+                    TrackCount = group.Sum(s => s.TrackCount),
+
+                    // Collect all folder paths
+                    FolderPaths = group.SelectMany(s => s.FolderPaths).Distinct().ToList()
+                };
+
+                groupedShows.Add(mergedShow);
+            }
+        }
+
+        // Add shows without Album tags (ungrouped)
+        var showsWithoutAlbumTag = _allShows.Where(s => string.IsNullOrEmpty(s.AlbumName));
+        groupedShows.AddRange(showsWithoutAlbumTag);
+
+        // Replace _allShows with grouped shows
+        _allShows = groupedShows;
+    }
+
     private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (ShowsDataGrid.SelectedItem is LibraryShow show)
@@ -672,8 +750,19 @@ public partial class LibraryBrowserWindow : Window
                 ArtworkPlaceholder.Visibility = Visibility.Visible;
             }
 
-            // Load tracks
-            _currentTracks = _metadataService.ReadFolder(show.FolderPath);
+            // Load tracks from ALL folders (multi-folder album support)
+            _currentTracks = new List<TrackInfo>();
+            foreach (var folderPath in show.FolderPaths)
+            {
+                var folderTracks = _metadataService.ReadFolder(folderPath);
+                _currentTracks.AddRange(folderTracks);
+            }
+
+            // Sort tracks by disc number and track number (disc-aware: 101, 102... 201, 202...)
+            _currentTracks = _currentTracks
+                .OrderBy(t => t.DiscNumber)
+                .ThenBy(t => t.TrackNumber)
+                .ToList();
 
             // Populate TrackDate for tracks that don't have embedded dates
             // This ensures DisplayTitle shows "Song (yyyy-MM-dd)" format
@@ -1414,7 +1503,20 @@ public class LibraryShow
 
     // Common properties
     public int TrackCount { get; set; }
-    public string FolderPath { get; set; } = "";
+    public List<string> FolderPaths { get; set; } = new List<string>();
+
+    // Backward-compatible property for code not yet updated
+    public string FolderPath
+    {
+        get => FolderPaths.FirstOrDefault() ?? "";
+        set
+        {
+            if (FolderPaths.Count == 0)
+                FolderPaths.Add(value);
+            else
+                FolderPaths[0] = value;
+        }
+    }
 
     // Smart display properties that adapt based on type
     public string TypeIcon => Type == AlbumType.OfficialRelease ? "📀" : "🎸";

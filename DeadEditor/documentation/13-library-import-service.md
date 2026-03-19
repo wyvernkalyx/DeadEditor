@@ -307,6 +307,22 @@ if (!string.IsNullOrEmpty(finalDate))
 - **Behavior:** Silently overwrites existing files
 - **Rationale:** Re-import should update files with new metadata
 
+### 11. Multi-Folder Album Grouping
+- **Rule:** Multiple folders with the same ALBUM tag are grouped into a single library entry
+- **Implementation:** LibraryBrowserWindow.GroupMultiFolderAlbums() (line 532-603)
+- **Identity Key:** Album tag value + AlbumType (groups within same type only)
+- **Behavior:**
+  - Folders with matching Album tags → Merged into ONE LibraryShow
+  - `FolderPaths` property stores ALL folder paths (List<string>)
+  - `TrackCount` = sum of all folders' track counts
+  - `ContainsDates` and `ContainsVenues` aggregated from all folders
+  - Track loading reads from ALL folders, sorted by Disc/Track number
+- **Example:**
+  - Import 3 folders: `1971-04-25`, `1971-04-26`, `1971-04-27`
+  - All have Album tag = "Enjoying the Ride"
+  - Result: ONE library entry with 3 folder paths, combined track count
+- **Rationale:** Multi-night concerts often span multiple folders but should appear as single album
+
 ---
 
 ## Critical File Operations

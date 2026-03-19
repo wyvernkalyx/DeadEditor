@@ -1002,13 +1002,37 @@ The LibraryBrowserWindow uses a dark theme (#1E1E1E background) with four main s
 **Behavior:**
 1. `LoadAudienceRecordings()` scans both folders (line 258-356)
 2. Both parsed with identical metadata: same Date, Venue, City, State
-3. Both added to `_allShows` list (line 340-353)
-4. Grid shows both concerts with identical grid row data
-5. `FolderPath` property differs (full path includes parent folders)
-6. User sees two identical rows
-7. Double-clicking either opens the correct folder (based on `FolderPath`)
+3. Both folders read Album tag from first audio file
+4. **If Album tags DIFFER:** Both added to `_allShows` as separate shows
+5. **If Album tags MATCH:** `GroupMultiFolderAlbums()` merges them into ONE LibraryShow (line 532-603)
+   - FolderPaths contains both folder paths
+   - TrackCount = sum of both folders' track counts
+   - OpenConcertView loads tracks from BOTH folders
+6. Grid shows ONE row with combined track count
+7. Double-clicking opens concert view with ALL tracks from ALL folders
 
-**Result:** Duplicates appear in grid but are distinct by folder path, both functional
+**Result:** Folders with matching Album tags are grouped; folders without Album tags or with different Album tags remain separate
+
+---
+
+### What happens if user imports multiple folders with the same Album Name?
+**Scenario:** User imports 3 concerts (1971-04-25, 1971-04-26, 1971-04-27), all with Album tag = "Enjoying the Ride"
+**Behavior:**
+1. All 3 folders imported to library (e.g., `1971/1971-04-25 - Fillmore East...`, `1971/1971-04-26 - Fillmore East...`, `1971/1971-04-27 - Fillmore East...`)
+2. `LoadAudienceRecordings()` creates 3 LibraryShow objects initially
+3. `GroupMultiFolderAlbums()` detects matching Album tag "Enjoying the Ride" (line 540-542)
+4. **Groups within same AlbumType** - only groups if Type matches (line 541)
+5. Merges 3 shows into ONE LibraryShow (line 555-593):
+   - `FolderPaths` = list of 3 folder paths
+   - `TrackCount` = sum of all tracks (e.g., 28 + 33 + 25 = 86)
+   - `ContainsDates` = `["1971-04-25", "1971-04-26", "1971-04-27"]`
+   - `ContainsVenues` = `["Fillmore East"]` (deduplicated)
+6. Grid shows **ONE row** with Album Name "Enjoying the Ride" and track count 86
+7. User double-clicks row → `OpenConcertView()` loads tracks from ALL 3 folders (line 753-779)
+8. Tracks sorted by DiscNumber, then TrackNumber (line 762-765)
+9. All 86 tracks displayed in correct order
+
+**Result:** Multi-folder albums appear as ONE entry with combined track count and all tracks accessible
 
 ---
 
