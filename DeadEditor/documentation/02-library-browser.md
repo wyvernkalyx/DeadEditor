@@ -1083,10 +1083,13 @@ Building the "By Date" view for Official Releases requires reading track metadat
    - `ContainsVenues` = `["Fillmore East"]` (deduplicated)
 6. Grid shows **ONE row** with Album Name "Enjoying the Ride" and track count 86
 7. User double-clicks row → `OpenConcertView()` loads tracks from ALL 3 folders (line 753-779)
-8. Tracks sorted by DiscNumber, then TrackNumber (line 762-765)
-9. All 86 tracks displayed in correct order
+8. **Multi-night sort detection** (line 934-961):
+   - Counts distinct TrackDate values across all tracks
+   - If 2+ distinct dates found → Sort by TrackDate (ascending), then DiscNumber, then TrackNumber
+   - If 0-1 dates → Sort by DiscNumber, then TrackNumber only
+9. All 86 tracks displayed grouped by date, then by disc/track number within each date
 
-**Result:** Multi-folder albums appear as ONE entry with combined track count and all tracks accessible
+**Result:** Multi-folder, multi-night albums appear as ONE entry with tracks sorted chronologically by date first, preventing interleaving of different concert nights
 
 ---
 

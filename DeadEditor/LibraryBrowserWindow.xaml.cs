@@ -931,11 +931,34 @@ public partial class LibraryBrowserWindow : Window
                 _currentTracks.AddRange(folderTracks);
             }
 
-            // Sort tracks by disc number and track number (disc-aware: 101, 102... 201, 202...)
-            _currentTracks = _currentTracks
-                .OrderBy(t => t.DiscNumber)
-                .ThenBy(t => t.TrackNumber)
-                .ToList();
+            // Detect multi-night albums by checking for multiple unique TrackDate values
+            var distinctDates = _currentTracks
+                .Where(t => !string.IsNullOrEmpty(t.TrackDate))
+                .Select(t => t.TrackDate)
+                .Distinct()
+                .Count();
+
+            // Sort tracks:
+            // - Multi-night albums (2+ distinct dates): Sort by date first, then disc/track
+            // - Single-night albums (0 or 1 date): Sort by disc/track only
+            if (distinctDates > 1)
+            {
+                // Multi-night: Sort by date first (yyyy-MM-dd sorts correctly as string),
+                // then disc number, then track number
+                _currentTracks = _currentTracks
+                    .OrderBy(t => t.TrackDate ?? "")
+                    .ThenBy(t => t.DiscNumber)
+                    .ThenBy(t => t.TrackNumber)
+                    .ToList();
+            }
+            else
+            {
+                // Single-night: Sort by disc number and track number only
+                _currentTracks = _currentTracks
+                    .OrderBy(t => t.DiscNumber)
+                    .ThenBy(t => t.TrackNumber)
+                    .ToList();
+            }
 
             // Populate TrackDate for tracks that don't have embedded dates
             // This ensures DisplayTitle shows "Song (yyyy-MM-dd)" format
