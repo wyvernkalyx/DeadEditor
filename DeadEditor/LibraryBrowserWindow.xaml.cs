@@ -602,11 +602,184 @@ public partial class LibraryBrowserWindow : Window
         _allShows = groupedShows;
     }
 
+    private List<ConcertDate> LoadConcertDates()
+    {
+        var concertDates = new List<ConcertDate>();
+
+        // Iterate through all shows and extract unique concert dates
+        foreach (var show in _allShows)
+        {
+            // For Official Releases and Box Sets, we need to read tracks to get authoritative dates
+            // For Audience Recordings, we can use the folder-based date
+            if (show.Type == AlbumType.OfficialRelease)
+            {
+                // Read all tracks from all folders to extract unique concert dates from TITLE tags
+                var dateTrackMap = new Dictionary<string, List<TrackInfo>>();
+
+                foreach (var folderPath in show.FolderPaths)
+                {
+                    if (!Directory.Exists(folderPath)) continue;
+
+                    var tracks = _metadataService.ReadFolder(folderPath);
+                    foreach (var track in tracks)
+                    {
+                        // Extract date from track.TrackDate (populated by ReadFolder from TITLE tag)
+                        if (!string.IsNullOrEmpty(track.TrackDate))
+                        {
+                            if (!dateTrackMap.ContainsKey(track.TrackDate))
+                            {
+                                dateTrackMap[track.TrackDate] = new List<TrackInfo>();
+                            }
+                            dateTrackMap[track.TrackDate].Add(track);
+                        }
+                    }
+                }
+
+                // Create a ConcertDate entry for each unique date found in tracks
+                foreach (var kvp in dateTrackMap)
+                {
+                    var date = kvp.Key;
+                    var tracksForDate = kvp.Value;
+
+                    // Determine collection name
+                    string collectionName = "";
+                    if (!string.IsNullOrEmpty(show.AlbumName))
+                    {
+                        collectionName = show.AlbumName;
+                    }
+                    else if (!string.IsNullOrEmpty(show.OfficialRelease))
+                    {
+                        collectionName = show.OfficialRelease;
+                    }
+                    else
+                    {
+                        collectionName = "Official Release";
+                    }
+
+                    // Extract venue and location from first track for this date (if available)
+                    // Tracks might have venue info embedded, but for official releases this is rare
+                    // Fall back to show-level venue/location
+                    string venue = show.Venue;
+                    string location = show.Location;
+
+                    // For multi-folder albums, find folders that contain tracks for this date
+                    List<string> dateFolderPaths = new List<string>();
+                    foreach (var folderPath in show.FolderPaths)
+                    {
+                        // Check if any tracks in this folder match this date
+                        if (tracksForDate.Any(t => t.FilePath.StartsWith(folderPath)))
+                        {
+                            dateFolderPaths.Add(folderPath);
+                        }
+                    }
+
+                    // If no specific folders found, use all folders from the show
+                    if (dateFolderPaths.Count == 0)
+                    {
+                        dateFolderPaths.AddRange(show.FolderPaths);
+                    }
+
+                    concertDates.Add(new ConcertDate
+                    {
+                        Date = date,
+                        Venue = venue,
+                        Location = location,
+                        CollectionName = collectionName,
+                        TrackCount = tracksForDate.Count, // Accurate count for this date only
+                        SourceShow = show,
+                        FolderPaths = dateFolderPaths
+                    });
+                }
+            }
+            else
+            {
+                // Audience Recording - use folder-based date (from folder name parsing)
+                List<string> dates = new List<string>();
+
+                if (!string.IsNullOrEmpty(show.Date))
+                {
+                    dates.Add(show.Date);
+                }
+
+                // Create a ConcertDate entry for each unique date
+                foreach (var date in dates)
+                {
+                    // Determine collection name
+                    string collectionName = "";
+                    if (!string.IsNullOrEmpty(show.AlbumName))
+                    {
+                        collectionName = show.AlbumName;
+                    }
+                    else if (!string.IsNullOrEmpty(show.OfficialRelease))
+                    {
+                        collectionName = show.OfficialRelease;
+                    }
+                    else
+                    {
+                        collectionName = "Audience Recording";
+                    }
+
+                    // For multi-folder albums, find the specific folder matching this date
+                    List<string> dateFolderPaths = new List<string>();
+                    if (show.FolderPaths.Count > 1)
+                    {
+                        // Multi-folder album - find folder(s) matching this date
+                        foreach (var folderPath in show.FolderPaths)
+                        {
+                            if (folderPath.Contains(date))
+                            {
+                                dateFolderPaths.Add(folderPath);
+                            }
+                        }
+                    }
+
+                    // If no specific folders found, use all folders from the show
+                    if (dateFolderPaths.Count == 0)
+                    {
+                        dateFolderPaths.AddRange(show.FolderPaths);
+                    }
+
+                    // Count tracks in the matched folders for accurate per-date count
+                    int trackCount = 0;
+                    foreach (var folderPath in dateFolderPaths)
+                    {
+                        if (Directory.Exists(folderPath))
+                        {
+                            var audioFiles = Directory.GetFiles(folderPath, "*.flac")
+                                                .Concat(Directory.GetFiles(folderPath, "*.mp3"))
+                                                .ToArray();
+                            trackCount += audioFiles.Length;
+                        }
+                    }
+
+                    concertDates.Add(new ConcertDate
+                    {
+                        Date = date,
+                        Venue = show.Venue,
+                        Location = show.Location,
+                        CollectionName = collectionName,
+                        TrackCount = trackCount, // Accurate count for this date only
+                        SourceShow = show,
+                        FolderPaths = dateFolderPaths
+                    });
+                }
+            }
+        }
+
+        // Sort by date ascending
+        return concertDates.OrderBy(cd => cd.Date).ToList();
+    }
+
     private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (ShowsDataGrid.SelectedItem is LibraryShow show)
         {
             OpenConcertView(show);
+        }
+        else if (ShowsDataGrid.SelectedItem is ConcertDate concertDate)
+        {
+            // Open concert view filtered to this specific date
+            OpenConcertDateView(concertDate);
         }
     }
 
@@ -804,6 +977,148 @@ public partial class LibraryBrowserWindow : Window
         catch (Exception ex)
         {
             MessageBox.Show($"Error loading concert: {ex.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void OpenConcertDateView(ConcertDate concertDate)
+    {
+        try
+        {
+            // Display date, venue, location, and collection name
+            VenueText.Text = concertDate.Venue;
+            LocationText.Text = concertDate.Location;
+            DateText.Text = concertDate.Date;
+
+            // Show collection name (box set or release name)
+            if (!string.IsNullOrEmpty(concertDate.CollectionName))
+            {
+                BoxSetText.Text = $"Collection: {concertDate.CollectionName}";
+                BoxSetText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BoxSetText.Visibility = Visibility.Collapsed;
+            }
+
+            // Load artwork from the first folder path (all folders for same concert likely have same artwork)
+            var artworkPath = "";
+            if (concertDate.FolderPaths.Count > 0)
+            {
+                artworkPath = Path.Combine(concertDate.FolderPaths[0], "cover.jpg");
+                if (!File.Exists(artworkPath))
+                {
+                    artworkPath = Path.Combine(concertDate.FolderPaths[0], "folder.jpg");
+                }
+            }
+
+            System.Windows.Media.Imaging.BitmapImage? bitmap = null;
+
+            if (File.Exists(artworkPath))
+            {
+                bitmap = new System.Windows.Media.Imaging.BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(artworkPath, UriKind.Absolute);
+                bitmap.EndInit();
+            }
+            else if (concertDate.FolderPaths.Count > 0)
+            {
+                // Try to extract embedded artwork from first audio file
+                var audioFiles = Directory.GetFiles(concertDate.FolderPaths[0], "*.flac")
+                                    .Concat(Directory.GetFiles(concertDate.FolderPaths[0], "*.mp3"))
+                                    .ToArray();
+                if (audioFiles.Length > 0)
+                {
+                    try
+                    {
+                        var tagFile = TagLib.File.Create(audioFiles[0]);
+                        if (tagFile.Tag.Pictures != null && tagFile.Tag.Pictures.Length > 0)
+                        {
+                            var picture = tagFile.Tag.Pictures[0];
+                            using (var ms = new System.IO.MemoryStream(picture.Data.Data))
+                            {
+                                bitmap = new System.Windows.Media.Imaging.BitmapImage();
+                                bitmap.BeginInit();
+                                bitmap.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                                bitmap.StreamSource = ms;
+                                bitmap.EndInit();
+                                bitmap.Freeze(); // Important for cross-thread access
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore errors extracting artwork
+                    }
+                }
+            }
+
+            if (bitmap != null)
+            {
+                AlbumArtwork.Source = bitmap;
+                ArtworkPlaceholder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                AlbumArtwork.Source = null;
+                ArtworkPlaceholder.Visibility = Visibility.Visible;
+            }
+
+            // Load tracks from ALL folder paths associated with this specific date
+            _currentTracks = new List<TrackInfo>();
+            foreach (var folderPath in concertDate.FolderPaths)
+            {
+                var folderTracks = _metadataService.ReadFolder(folderPath);
+                _currentTracks.AddRange(folderTracks);
+            }
+
+            // Sort tracks by disc number and track number (disc-aware: 101, 102... 201, 202...)
+            _currentTracks = _currentTracks
+                .OrderBy(t => t.DiscNumber)
+                .ThenBy(t => t.TrackNumber)
+                .ToList();
+
+            // Populate TrackDate for tracks that don't have embedded dates
+            // This ensures DisplayTitle shows "Song (yyyy-MM-dd)" format
+            foreach (var track in _currentTracks)
+            {
+                // If track has no date, inherit from concert date
+                if (string.IsNullOrEmpty(track.TrackDate) && !string.IsNullOrEmpty(concertDate.Date))
+                {
+                    track.TrackDate = concertDate.Date;
+                }
+            }
+
+            TracksDataGrid.ItemsSource = _currentTracks;
+            TrackCountText.Text = $"{_currentTracks.Count} tracks";
+
+            // Set album type label - concert dates are always from audience recordings or official releases
+            AlbumTypeText.Text = "Concert Date View";
+
+            // Enable play button if we have tracks
+            if (_currentTracks.Count > 0)
+            {
+                PlayPauseButton.IsEnabled = true;
+            }
+
+            // Switch views
+            LibraryView.Visibility = Visibility.Collapsed;
+            ConcertView.Visibility = Visibility.Visible;
+            StatusText.Visibility = Visibility.Collapsed;
+
+            // Show player controls only if not already visible
+            if (PlayerControls.Visibility != Visibility.Visible)
+            {
+                PlayerControls.Visibility = Visibility.Visible;
+            }
+
+            // Update window title
+            Title = $"{concertDate.Date} - {concertDate.Venue}";
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error loading concert date: {ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -1219,20 +1534,33 @@ public partial class LibraryBrowserWindow : Window
             return;
         }
 
-        // Start with all shows
+        // Check if we're in "By Date" mode
+        var selectedFilterTag = "";
+        if (TypeFilterComboBox != null && TypeFilterComboBox.SelectedItem is ComboBoxItem selectedItem)
+        {
+            selectedFilterTag = selectedItem.Tag?.ToString() ?? "All";
+        }
+
+        if (selectedFilterTag == "ByDate")
+        {
+            // Switch to date-based view
+            var concertDates = LoadConcertDates();
+            ShowsDataGrid.ItemsSource = concertDates;
+            SearchResultTextBlock.Text = $"{concertDates.Count} concert dates";
+            StatusText.Text = $"{concertDates.Count} concert dates in library";
+            return;
+        }
+
+        // Standard album-based view
         var filtered = _allShows.AsEnumerable();
 
         // Apply type filter from dropdown
-        if (TypeFilterComboBox != null && TypeFilterComboBox.SelectedItem is ComboBoxItem selectedItem)
+        if (selectedFilterTag != "All")
         {
-            var filterTag = selectedItem.Tag?.ToString() ?? "All";
-            if (filterTag != "All")
-            {
-                filtered = filtered.Where(show =>
-                    (filterTag == "AudienceRecording" && show.Type == AlbumType.AudienceRecording) ||
-                    (filterTag == "OfficialRelease" && show.Type == AlbumType.OfficialRelease)
-                );
-            }
+            filtered = filtered.Where(show =>
+                (selectedFilterTag == "AudienceRecording" && show.Type == AlbumType.AudienceRecording) ||
+                (selectedFilterTag == "OfficialRelease" && show.Type == AlbumType.OfficialRelease)
+            );
         }
 
         // Apply quick search filter
@@ -1551,4 +1879,34 @@ public class LibraryShow
             : "";
 
     public bool IsOfficialRelease => Type == AlbumType.OfficialRelease;
+}
+
+public class ConcertDate
+{
+    // Concert date (yyyy-MM-dd)
+    public string Date { get; set; } = "";
+
+    // Venue name
+    public string Venue { get; set; } = "";
+
+    // "City, State" location string
+    public string Location { get; set; } = "";
+
+    // Collection/Album name (e.g., "Enjoying the Ride" or "Audience Recording")
+    public string CollectionName { get; set; } = "";
+
+    // Track count for this specific date (if available without full file scan)
+    public int TrackCount { get; set; }
+
+    // Source LibraryShow this date came from (for opening the concert view)
+    public LibraryShow SourceShow { get; set; } = null!;
+
+    // Folder path(s) specific to this date (for multi-folder albums)
+    public List<string> FolderPaths { get; set; } = new List<string>();
+
+    // Icon for display (empty for date view)
+    public string TypeIcon => "📅";
+
+    // Display album name (reuse CollectionName for grid binding compatibility)
+    public string DisplayAlbumName => CollectionName;
 }

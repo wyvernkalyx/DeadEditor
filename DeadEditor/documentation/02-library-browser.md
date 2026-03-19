@@ -62,11 +62,65 @@ The LibraryBrowserWindow uses a dark theme (#1E1E1E background) with four main s
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
-| Show type filter | ComboBox | `TypeFilterComboBox` | Filters by album type (All/Live/OfficialRelease/Studio), re-applies all filters | `TypeFilterComboBox_SelectionChanged` → `ApplySearchFilter()` | Working |
+| Show type filter | ComboBox | `TypeFilterComboBox` | Filters by album type (All/Live/OfficialRelease/Studio/**ByDate**), re-applies all filters | `TypeFilterComboBox_SelectionChanged` → `ApplySearchFilter()` | Working |
 | Quick search textbox | TextBox | `QuickSearchTextBox` | Searches date, venue, location, album name, year, edition, official release; shows/hides clear button | `QuickSearchTextBox_TextChanged` → `ApplySearchFilter()` | Working |
 | Clear search button | Button | `ClearSearchButton` | Clears quick search + advanced search criteria, resets to all shows | `ClearSearchButton_Click` clears `_quickSearchText`, `_advancedSearchSongs`, etc. | Working |
 | Advanced Search button | Button | `AdvancedSearchButton` | Opens AdvancedSearchDialog, applies song-based filters (contains/exclude/sequence) | `new AdvancedSearchDialog(...).ShowDialog()` → `ApplySearchFilter()` | Working |
 | Search result count | TextBlock | `SearchResultTextBlock` | Shows "Showing X of Y concerts" when filtered | N/A (display only) | Working |
+
+**Type Filter Options:**
+- **All** - Shows all concerts (default)
+- **Audience Recordings** - Shows only taper recordings and audience recordings
+- **Official Releases** - Shows only official live releases, box sets, and studio albums
+- **📅 By Date** - Special date-based view that displays individual concert dates as rows (see below)
+
+### "By Date" View Mode
+
+The "📅 By Date" option in the type filter switches the library grid from album-based display to **date-based display**. This mode is especially useful for box sets and official releases that span multiple concert dates.
+
+**How It Works:**
+
+1. **Official Releases & Box Sets:** Dates are extracted from track TITLE tags (authoritative source)
+   - Reads all tracks from all folders for each LibraryShow
+   - Extracts unique dates from `track.TrackDate` (populated from TITLE tag parsing)
+   - Creates one ConcertDate row per unique date found
+   - Track count shows tracks for that specific date only (not the entire box set)
+
+2. **Audience Recordings:** Dates are extracted from folder names
+   - Uses the date parsed from the folder name (e.g., "1977-05-08 Barton Hall...")
+   - For multi-folder albums with the same Album tag, matches folders by date string
+   - Track count shows tracks in matched folder(s) for that date
+
+**Example Use Case:**
+
+"Enjoying the Ride" box set contains 61 total tracks from multiple concerts at Alpine Valley Music Theatre in 1980 and 1981. In album view, it shows as ONE row with 61 tracks. In "By Date" view, it shows as MULTIPLE rows:
+- 1980-08-23 - Alpine Valley Music Theatre - East Troy, WI - 28 tracks
+- 1981-08-12 - Alpine Valley Music Theatre - East Troy, WI - 33 tracks
+
+**Grid Columns in By Date View:**
+
+The same DataGrid columns are reused, but bound to `ConcertDate` properties instead of `LibraryShow`:
+
+| Header | Binding Property | Description | Data Source |
+|--------|-----------------|-------------|-------------|
+| (icon) | `TypeIcon` | 📅 (always) | Fixed for date view |
+| Date | `Date` | Concert date (yyyy-MM-dd) | From track TITLE tags (Official Releases) or folder name (Audience Recordings) |
+| Venue | `Venue` | Venue name | From LibraryShow.Venue |
+| Location | `Location` | "City, State" | From LibraryShow.Location |
+| Collection | `CollectionName` | Album/Release/Box Set name | From LibraryShow.AlbumName or LibraryShow.OfficialRelease |
+| Tracks | `TrackCount` | Track count for this date only | Count of tracks with matching TrackDate |
+
+**Double-Clicking a Date Row:**
+
+Opens the concert detail view scoped to only the tracks from that specific date:
+- `ShowsDataGrid_MouseDoubleClick` detects `ConcertDate` type
+- Calls `OpenConcertDateView(concertDate)` instead of `OpenConcertView(show)`
+- Loads tracks from only the folder(s) associated with that date
+- Displays collection name (e.g., "Collection: Enjoying the Ride")
+
+**Performance Note:**
+
+Building the "By Date" view for Official Releases requires reading track metadata from disk (to extract dates from TITLE tags). This happens lazily when the user selects "📅 By Date" from the filter dropdown, not during initial library load.
 
 ### Library Grid View
 
