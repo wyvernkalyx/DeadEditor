@@ -2,11 +2,11 @@
 
 ## Current Status (2026-03-20)
 
-**Latest Commit:** `200c5df` - "Phase 6: Remove old playback controls + add placeholder bar"
+**Latest Commit:** `d3f7a82` - "Fix PlayerWindow focus bug and playback not starting"
 
 ### Session 2026-03-20 - COMPLETED
 
-**Focus:** Winamp-style global playback system implementation (Phases 1-7)
+**Focus:** Winamp-style global playback system implementation (Phases 1-7) + Critical Bug Fixes
 
 #### Completed This Session:
 - ✅ **Phase 1: Diagnosis** - Audited playback controls and NAudio instantiation
@@ -34,22 +34,32 @@
   - Updated documentation/01-main-window.md (removed playback section)
   - Updated documentation/02-library-browser.md (documented placeholder bar)
   - Updated documentation/17-player-window.md (corrected LibraryBrowserWindow references)
+- ✅ **Bug Fix 1: PlayerWindow Focus** - FIXED taskbar flashing issue
+  - Root cause: WindowStyle="None" + AllowsTransparency="True" created WPF layered window focus bug
+  - Solution: Removed AllowsTransparency, set ShowInTaskbar="False" on companion windows
+  - Result: PlayerWindow now activates correctly when clicked
+- ✅ **Bug Fix 2: Playback Not Starting** - FIXED double-click tracks not playing
+  - Root cause: TrackInfo missing Equals/GetHashCode, IndexOf() failed to find tracks
+  - Solution: Added value-based equality using FilePath, comprehensive error logging
+  - Added guards in PlaylistWindow for empty playlist
+  - Result: Playback starts correctly, errors logged for debugging
 
 #### Known Cosmetic Issue:
 - **PlayerWindow appears orphaned during import:** When MainWindow (import modal) is open, PlayerWindow remains visible at the LibraryBrowserWindow position, appearing disconnected. This is cosmetic only - playback still works. Future polish: Option 1 (hide during import) or Option 2 (dock to import window).
 
 #### Files Modified This Session:
-- `Services/AudioPlayerService.cs` - Converted to singleton, added playlist management
+- `Services/AudioPlayerService.cs` - Converted to singleton, added playlist management, error logging
 - `App.xaml.cs` - Removed StartupUri, manual window creation in OnStartup
 - `App.xaml` - Removed StartupUri attribute
 - `MainWindow.xaml.cs` - Removed playback logic, LoadPlaylist only
 - `LibraryBrowserWindow.xaml.cs` - Removed playback logic, added placeholder bar methods
 - `LibraryBrowserWindow.xaml` - Removed player controls, added placeholder bar
 - `MainWindow.xaml` - Removed playback bar
-- `PlayerWindow.xaml` + `.cs` - **NEW** - Global player window with docking
-- `PlaylistWindow.xaml` + `.cs` - **NEW** - Playlist editor with attachment
-- `VisWindow.xaml` + `.cs` - **NEW** - Visualizer stub window
-- `documentation/player-audit.md` - **NEW** - Architecture analysis
+- `PlayerWindow.xaml` + `.cs` - **NEW** - Global player window with docking (fixed focus bug)
+- `PlaylistWindow.xaml` + `.cs` - **NEW** - Playlist editor with attachment (fixed playback, added guards)
+- `VisWindow.xaml` - **NEW** - Visualizer stub window (fixed taskbar appearance)
+- `Models/TrackInfo.cs` - Added Equals/GetHashCode overrides for value-based equality
+- `documentation/player-audit.md` - **NEW** - Architecture analysis + bug diagnosis
 - `documentation/17-player-window.md` - **NEW** - Complete feature spec
 - `documentation/01-main-window.md` - Updated playback section
 - `documentation/02-library-browser.md` - Updated playback section
@@ -65,6 +75,7 @@
 8. `[commit hash]` - Phase 4: PlaylistWindow + attachment behavior
 9. `ba83aad` - Phase 5: VIS stub window with attachment behavior
 10. `200c5df` - Phase 6: Remove old playback controls + add placeholder bar
+11. `d3f7a82` - Fix PlayerWindow focus bug and playback not starting (both critical usability fixes)
 
 ---
 
