@@ -6,9 +6,8 @@
         WindowStyle="None"
         ResizeMode="CanResize"
         Background="#1E1E1E"
-        AllowsTransparency="True"
         Topmost="False"
-        ShowInTaskbar="True"
+        ShowInTaskbar="False"
         MinHeight="150" MinWidth="350">
 
     <Border BorderBrush="#555555" BorderThickness="1">

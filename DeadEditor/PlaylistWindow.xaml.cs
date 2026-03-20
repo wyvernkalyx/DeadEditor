@@ -246,6 +246,19 @@ namespace DeadEditor
         {
             if (PlaylistDataGrid.SelectedItem is PlaylistTrackViewModel vm)
             {
+                // Guard: Verify playlist not empty and contains the track
+                if (_player.Playlist.Count == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("[PlaylistWindow] Cannot play - playlist is empty");
+                    return;
+                }
+
+                if (!_player.Playlist.Contains(vm.Track))
+                {
+                    System.Diagnostics.Debug.WriteLine($"[PlaylistWindow] WARNING: Track '{vm.Track.SongName ?? vm.Track.Title}' not found in playlist");
+                    return;
+                }
+
                 _player.Play(vm.Track);
             }
         }

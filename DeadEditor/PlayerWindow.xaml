@@ -6,9 +6,8 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="#1E1E1E"
-        AllowsTransparency="True"
         Topmost="False"
-        ShowInTaskbar="True">
+        ShowInTaskbar="False">
 
     <Border BorderBrush="#555555" BorderThickness="1">
         <Grid>

@@ -114,23 +114,50 @@ namespace DeadEditor.Services
 
         public void LoadFile(string filePath)
         {
-            Stop();
+            try
+            {
+                Stop();
 
-            _currentFilePath = filePath;
-            _audioFileReader = new AudioFileReader(filePath);
+                _currentFilePath = filePath;
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] LoadFile: {filePath}");
 
-            _wavePlayer = new WaveOutEvent();
-            _wavePlayer.Init(_audioFileReader);
-            _wavePlayer.PlaybackStopped += OnPlaybackStopped;
+                _audioFileReader = new AudioFileReader(filePath);
+
+                _wavePlayer = new WaveOutEvent();
+                _wavePlayer.Init(_audioFileReader);
+                _wavePlayer.PlaybackStopped += OnPlaybackStopped;
+
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] LoadFile SUCCESS - Duration: {_audioFileReader.TotalTime}");
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] LoadFile FAILED: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Exception: {ex}");
+                throw; // Re-throw to caller
+            }
         }
 
         public void Play()
         {
             if (_wavePlayer == null || _audioFileReader == null)
+            {
+                System.Diagnostics.Debug.WriteLine("[AudioPlayerService] Play() called but _wavePlayer or _audioFileReader is null - cannot play");
                 return;
+            }
 
-            _wavePlayer.Play();
-            SetPlaybackState(PlaybackState.Playing);
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() - Starting playback");
+                _wavePlayer.Play();
+                SetPlaybackState(PlaybackState.Playing);
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() SUCCESS - State: {_playbackState}");
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() FAILED: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Exception: {ex}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -138,17 +165,37 @@ namespace DeadEditor.Services
         /// </summary>
         public void Play(TrackInfo track)
         {
-            // Find track in playlist
-            var index = _playlist.IndexOf(track);
-            if (index >= 0)
+            try
             {
-                _currentTrackIndex = index;
-            }
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play(TrackInfo) called - Track: {track.SongName ?? track.Title}");
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] FilePath: {track.FilePath}");
 
-            _currentTrack = track;
-            LoadFile(track.FilePath);
-            Play();
-            TrackChanged?.Invoke(this, EventArgs.Empty);
+                // Find track in playlist
+                var index = _playlist.IndexOf(track);
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Track index in playlist: {index} (playlist count: {_playlist.Count})");
+
+                if (index >= 0)
+                {
+                    _currentTrackIndex = index;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] WARNING: Track not found in playlist");
+                }
+
+                _currentTrack = track;
+                LoadFile(track.FilePath);
+                Play();
+                TrackChanged?.Invoke(this, EventArgs.Empty);
+
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play(TrackInfo) completed successfully");
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play(TrackInfo) FAILED: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Exception: {ex}");
+                throw;
+            }
         }
 
         public void Pause()

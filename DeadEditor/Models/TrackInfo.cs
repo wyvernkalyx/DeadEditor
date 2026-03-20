@@ -134,5 +134,21 @@ namespace DeadEditor.Models
             get => Segue;
             set => Segue = value;
         }
+
+        // Override Equals and GetHashCode for value-based equality (needed for IndexOf in playlists)
+        // Two tracks are equal if they refer to the same file
+        public override bool Equals(object? obj)
+        {
+            if (obj is TrackInfo other)
+            {
+                return string.Equals(FilePath, other.FilePath, System.StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return FilePath?.ToLowerInvariant().GetHashCode() ?? 0;
+        }
     }
 }
