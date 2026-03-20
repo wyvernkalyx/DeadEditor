@@ -1,0 +1,56 @@
+<Window x:Class="DeadEditor.VisWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Visualizer"
+        Height="300" Width="450"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="#1E1E1E"
+        AllowsTransparency="True"
+        Topmost="False"
+        ShowInTaskbar="True"
+        MinHeight="150" MinWidth="350">
+
+    <Border BorderBrush="#555555" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28"/>  <!-- Drag bar -->
+                <RowDefinition Height="*"/>   <!-- Content area -->
+            </Grid.RowDefinitions>
+
+            <!-- Drag Bar -->
+            <Grid Grid.Row="0" Background="#2D2D30" MouseLeftButtonDown="DragBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>   <!-- Title -->
+                    <ColumnDefinition Width="60"/>  <!-- Minimize + Detach buttons -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Title -->
+                <TextBlock Grid.Column="0" Text="VISUALIZER" FontSize="11" Foreground="#CCCCCC"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"
+                           Margin="10,0,0,0" FontWeight="Bold"/>
+
+                <!-- Minimize Button -->
+                <Button Grid.Column="1" Content="_" Width="30" Height="28"
+                        Click="MinimizeButton_Click"
+                        Background="Transparent" Foreground="#CCCCCC" BorderThickness="0"
+                        FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Top" Padding="0,-4,0,0"/>
+
+                <!-- Detach Button -->
+                <Button x:Name="DetachButton" Grid.Column="1" Content="■" Width="30" Height="28"
+                        Margin="30,0,0,0"
+                        Click="DetachButton_Click"
+                        Background="Transparent" Foreground="#CCCCCC" BorderThickness="0"
+                        FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <!-- Content Area: Placeholder Text -->
+            <Grid Grid.Row="1" Background="#1E1E1E">
+                <TextBlock Text="Visualizer — coming soon"
+                           FontSize="18" Foreground="#808080" FontStyle="Italic"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

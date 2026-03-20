@@ -34,6 +34,11 @@ public partial class App : System.Windows.Application
         var playlistWindow = new PlaylistWindow(playerWindow);
         playerWindow.PlaylistWindowInstance = playlistWindow;
         playlistWindow.Show();
+
+        // Create and show visualizer window (attached to playlist window)
+        var visWindow = new VisWindow(playlistWindow);
+        playerWindow.VisWindowInstance = visWindow;
+        visWindow.Show();
     }
 
     protected override void OnExit(System.Windows.ExitEventArgs e)

@@ -17,8 +17,9 @@ namespace DeadEditor
         private bool _isSeeking = false;
         private double _marqueePosition = 0;
 
-        // PlaylistWindow reference (set by App.xaml.cs)
+        // PlaylistWindow and VisWindow references (set by App.xaml.cs)
         internal PlaylistWindow? PlaylistWindowInstance { get; set; }
+        internal VisWindow? VisWindowInstance { get; set; }
 
         public PlayerWindow(Window parentWindow)
         {
@@ -189,7 +190,12 @@ namespace DeadEditor
 
         private void VisButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Phase 5 - Toggle VisWindow visibility
+            if (VisWindowInstance != null)
+            {
+                VisWindowInstance.Visibility = VisWindowInstance.Visibility == Visibility.Visible
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
         }
 
         // ===== SEEK BAR =====
