@@ -41,8 +41,8 @@ public partial class MainWindow : Window
     private bool _isUpdating = false;
     private TaskCompletionSource<bool>? _notificationResult;
 
-    // Audio playback
-    private readonly AudioPlayerService _audioPlayer;
+    // Audio playback (using singleton)
+    private AudioPlayerService _audioPlayer => App.PlaybackService;
     private readonly DispatcherTimer _playbackTimer;
     private int _currentTrackIndex = -1;
     private bool _isScrubbing = false;
@@ -57,9 +57,8 @@ public partial class MainWindow : Window
         _librarySettings = LibrarySettings.Load();
         _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
 
-        // Initialize audio player
-        _audioPlayer = new AudioPlayerService();
-        _audioPlayer.PlaybackStopped += (s, e) => AudioPlayer_PlaybackStopped();
+        // Subscribe to singleton audio player events
+        _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
 
         // Initialize playback timer
         _playbackTimer = new DispatcherTimer();
@@ -90,9 +89,11 @@ public partial class MainWindow : Window
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        // Stop playback and cleanup
+        // Stop playback (don't dispose singleton, App.xaml.cs handles that)
         StopPlaybackAndCleanup();
-        _audioPlayer.Dispose();
+
+        // Unsubscribe from events to prevent memory leaks
+        _audioPlayer.PlaybackStopped -= AudioPlayer_PlaybackStopped;
 
         // Save window position
         _librarySettings.MainWindowLeft = Left;
@@ -1118,7 +1119,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void AudioPlayer_PlaybackStopped()
+    private void AudioPlayer_PlaybackStopped(object? sender, EventArgs e)
     {
         Dispatcher.Invoke(() =>
         {

@@ -21,7 +21,7 @@ public partial class LibraryBrowserWindow : Window
     private readonly LibrarySettings _librarySettings;
     private readonly MetadataService _metadataService;
     private readonly NormalizationService _normalizationService;
-    private readonly AudioPlayerService _audioPlayer;
+    private AudioPlayerService _audioPlayer => App.PlaybackService;  // Using singleton
     private List<LibraryShow> _shows = new();
     private List<LibraryShow> _allShows = new();  // Unfiltered list for search
     private List<TrackInfo> _currentTracks = new();
@@ -64,9 +64,8 @@ public partial class LibraryBrowserWindow : Window
         _librarySettings = LibrarySettings.Load();
         _metadataService = new MetadataService();
         _normalizationService = new NormalizationService();
-        _audioPlayer = new AudioPlayerService();
 
-        // Set up audio player events
+        // Subscribe to singleton audio player events
         _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
 
         // Set up update timer for scrubber
@@ -1957,7 +1956,8 @@ public partial class LibraryBrowserWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        _audioPlayer?.Dispose();
+        // Unsubscribe from events to prevent memory leaks
+        _audioPlayer.PlaybackStopped -= AudioPlayer_PlaybackStopped;
         _updateTimer?.Stop();
         base.OnClosing(e);
     }
