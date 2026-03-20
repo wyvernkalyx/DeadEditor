@@ -1,0 +1,177 @@
+<Window x:Class="DeadEditor.PlayerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Player"
+        Height="180" Width="450"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#1E1E1E"
+        AllowsTransparency="True"
+        Topmost="False"
+        ShowInTaskbar="True">
+
+    <Border BorderBrush="#555555" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24"/>  <!-- Drag bar -->
+                <RowDefinition Height="50"/>  <!-- Transport controls -->
+                <RowDefinition Height="30"/>  <!-- Seek bar -->
+                <RowDefinition Height="40"/>  <!-- Marquee -->
+                <RowDefinition Height="36"/>  <!-- Volume/Balance -->
+            </Grid.RowDefinitions>
+
+            <!-- Drag Bar -->
+            <Grid Grid.Row="0" Background="#2D2D30" MouseLeftButtonDown="DragBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>  <!-- Menu icon -->
+                    <ColumnDefinition Width="*"/>   <!-- Drag area -->
+                    <ColumnDefinition Width="60"/>  <!-- Minimize + Undock buttons -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Menu Icon -->
+                <TextBlock Grid.Column="0" Text="≡" FontSize="16" Foreground="#CCCCCC"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <!-- Drag Area Label -->
+                <TextBlock Grid.Column="1" Text="PLAYER" FontSize="10" Foreground="#808080"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold" IsHitTestVisible="False"/>
+
+                <!-- Minimize Button -->
+                <Button Grid.Column="2" Content="_" Width="30" Height="24"
+                        Click="MinimizeButton_Click"
+                        Background="Transparent" Foreground="#CCCCCC" BorderThickness="0"
+                        FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Top" Padding="0,-4,0,0"/>
+
+                <!-- Undock Button -->
+                <Button x:Name="UndockButton" Grid.Column="2" Content="■" Width="30" Height="24"
+                        Margin="30,0,0,0"
+                        Click="UndockButton_Click"
+                        Background="Transparent" Foreground="#CCCCCC" BorderThickness="0"
+                        FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <!-- Transport Controls Row -->
+            <Grid Grid.Row="1" Background="#252526">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Transport Buttons -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal"
+                            HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Button x:Name="PreviousButton" Content="«" Width="40" Height="35"
+                            Click="PreviousButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+
+                    <Button x:Name="PlayButton" Content="▶" Width="50" Height="35"
+                            Click="PlayButton_Click"
+                            Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB"
+                            BorderThickness="1" FontSize="16" FontWeight="Bold" Margin="0,0,5,0"/>
+
+                    <Button x:Name="StopButton" Content="■" Width="40" Height="35"
+                            Click="StopButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+
+                    <Button x:Name="PauseButton" Content="⏸" Width="40" Height="35"
+                            Click="PauseButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+
+                    <Button x:Name="NextButton" Content="»" Width="40" Height="35"
+                            Click="NextButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+
+                    <!-- Separator -->
+                    <Border Width="1" Background="#555555" Margin="5,5,5,5"/>
+
+                    <!-- PL Button -->
+                    <Button x:Name="PlaylistButton" Content="PL" Width="35" Height="35"
+                            Click="PlaylistButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            BorderThickness="1" FontSize="10" FontWeight="Bold" Margin="5,0,5,0"/>
+
+                    <!-- VIS Button -->
+                    <Button x:Name="VisButton" Content="VIS" Width="35" Height="35"
+                            Click="VisButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                            BorderThickness="1" FontSize="9" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Seek Bar Row -->
+            <Grid Grid.Row="2" Background="#1E1E1E" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Seek Slider -->
+                <Slider x:Name="SeekSlider" Grid.Column="0"
+                        Minimum="0" Maximum="100" Value="0"
+                        VerticalAlignment="Center"
+                        PreviewMouseDown="SeekSlider_PreviewMouseDown"
+                        PreviewMouseUp="SeekSlider_PreviewMouseUp"/>
+
+                <!-- Time Display -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center">
+                    <TextBlock x:Name="CurrentTimeText" Text="0:00" Foreground="#CCCCCC" FontSize="11"/>
+                    <TextBlock Text=" / " Foreground="#808080" FontSize="11"/>
+                    <TextBlock x:Name="TotalTimeText" Text="0:00" Foreground="#CCCCCC" FontSize="11"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Marquee Row -->
+            <Border Grid.Row="3" Background="#252526" Margin="10,5,10,5" BorderBrush="#555555" BorderThickness="1">
+                <Grid>
+                    <Canvas x:Name="MarqueeCanvas" ClipToBounds="True">
+                        <TextBlock x:Name="MarqueeText"
+                                   Text="No track playing"
+                                   Foreground="#D7BA7D" FontSize="14" FontWeight="Normal"
+                                   Canvas.Left="0" Canvas.Top="8">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform x:Name="MarqueeTransform"/>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Canvas>
+                </Grid>
+            </Border>
+
+            <!-- Volume and Balance Row -->
+            <Grid Grid.Row="4" Background="#1E1E1E" Margin="10,5,10,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Volume Label -->
+                <TextBlock Grid.Column="0" Text="VOL:" Foreground="#CCCCCC" FontSize="10"
+                           VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                <!-- Volume Slider -->
+                <Slider x:Name="VolumeSlider" Grid.Column="1"
+                        Minimum="0" Maximum="100" Value="75"
+                        VerticalAlignment="Center"
+                        ValueChanged="VolumeSlider_ValueChanged"/>
+
+                <!-- Balance Label -->
+                <TextBlock Grid.Column="3" Text="BAL:" Foreground="#CCCCCC" FontSize="10"
+                           VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                <!-- Balance Slider (placeholder, not yet functional) -->
+                <Slider x:Name="BalanceSlider" Grid.Column="4"
+                        Minimum="0" Maximum="100" Value="50"
+                        VerticalAlignment="Center"
+                        IsEnabled="False"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

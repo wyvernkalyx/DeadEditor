@@ -47,6 +47,7 @@ public partial class MainWindow : Window
     private int _currentTrackIndex = -1;
     private bool _isScrubbing = false;
 
+
     public MainWindow()
     {
         InitializeComponent();
@@ -1366,4 +1367,5 @@ public class TrackInfoViewModel : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
 }
