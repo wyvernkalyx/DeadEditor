@@ -3,11 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DeadEditor"
+        xmlns:models="clr-namespace:DeadEditor.Models"
+        xmlns:converters="clr-namespace:DeadEditor.Converters"
         mc:Ignorable="d"
         Title="DeadEditor - Library" Height="800" Width="1200"
         Background="#1E1E1E">
 
     <Window.Resources>
+        <!-- Date Header Converter -->
+        <local:DateHeaderConverter x:Key="DateHeaderConverter"/>
+
+        <!-- Date Selection Converter -->
+        <converters:DateSelectionConverter x:Key="DateSelectionConverter"/>
+
         <!-- ComboBox Style (copied from MainWindow.xaml - working perfectly) -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#3C3C3C"/>
@@ -133,6 +142,7 @@
                     <ComboBoxItem Content="All" Tag="All"/>
                     <ComboBoxItem Content="🎸 Audience Recordings" Tag="AudienceRecording"/>
                     <ComboBoxItem Content="📀 Official Releases" Tag="OfficialRelease"/>
+                    <ComboBoxItem Content="📅 By Date" Tag="ByDate"/>
                 </ComboBox>
 
                 <TextBlock Grid.Column="2" Text="Search:" Foreground="#CCCCCC" FontSize="14"
@@ -276,6 +286,49 @@
                     </Border>
 
                     <!-- Concert Info -->
+                    <!-- Album/Collection Name (always visible) -->
+                    <TextBlock x:Name="AlbumNameText"
+                               FontWeight="SemiBold"
+                               FontSize="26"
+                               TextWrapping="Wrap"
+                               Foreground="#FFFFFF"
+                               Margin="0,0,0,10"/>
+
+                    <!-- JerryBase Search Link -->
+                    <Button x:Name="JerryBaseSearchButton"
+                            Click="JerryBaseSearchButton_Click"
+                            Cursor="Hand"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,0,10">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <TextBlock x:Name="LinkText"
+                                                       FontSize="13"
+                                                       Foreground="#D7BA7D"
+                                                       Cursor="{TemplateBinding Cursor}">
+                                                <Run Text="🔍"/>
+                                                <Run Text=" Search JerryBase"/>
+                                            </TextBlock>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="LinkText" Property="TextDecorations" Value="Underline"/>
+                                                    <Setter TargetName="LinkText" Property="Foreground" Value="#E5C890"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <!-- Venue/Date/Location (hidden for multi-night shows) -->
                     <TextBlock x:Name="VenueText"
                                FontWeight="SemiBold"
                                FontSize="26"
@@ -291,11 +344,15 @@
                                FontSize="18"
                                Foreground="#B5CEA8"
                                Margin="0,0,0,6"/>
+
+                    <!-- Box Set / Official Release info -->
                     <TextBlock x:Name="BoxSetText"
                                FontSize="16"
                                Foreground="#D7BA7D"
                                Visibility="Collapsed"
                                Margin="0,0,0,6"/>
+
+                    <!-- Album Type and Track Count (always visible) -->
                     <TextBlock x:Name="AlbumTypeText"
                                FontSize="16"
                                Foreground="#808080"
@@ -303,6 +360,87 @@
                     <TextBlock x:Name="TrackCountText"
                                FontSize="16"
                                Foreground="#808080"/>
+
+                    <!-- Date Navigation Links (Multi-Night Shows Only) -->
+                    <StackPanel x:Name="DateLinksPanel"
+                                Visibility="Collapsed"
+                                Margin="0,20,0,0">
+                        <TextBlock Text="JUMP TO DATE"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="#808080"
+                                   Margin="0,0,0,10"/>
+                        <ScrollViewer MaxHeight="300"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl x:Name="DateLinksItemsControl"
+                                          ItemsSource="{Binding ConcertDates, RelativeSource={RelativeSource AncestorType=Window}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding}"
+                                                Click="DateLink_Click"
+                                                Tag="{Binding}"
+                                                Cursor="Hand"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Padding="0,4"
+                                                HorizontalAlignment="Left"
+                                                FontSize="15">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock x:Name="Indicator"
+                                                                               Text="●"
+                                                                               VerticalAlignment="Center"
+                                                                               Margin="0,0,6,0"
+                                                                               Visibility="Collapsed"/>
+                                                                    <TextBlock x:Name="LinkText"
+                                                                               Text="{TemplateBinding Content}"
+                                                                               FontSize="{TemplateBinding FontSize}"
+                                                                               Padding="{TemplateBinding Padding}"
+                                                                               Cursor="{TemplateBinding Cursor}"/>
+                                                                </StackPanel>
+                                                                <ControlTemplate.Triggers>
+                                                                    <!-- Selected state: check if this date matches SelectedDate -->
+                                                                    <DataTrigger Value="True">
+                                                                        <DataTrigger.Binding>
+                                                                            <MultiBinding Converter="{StaticResource DateSelectionConverter}">
+                                                                                <Binding/>
+                                                                                <Binding Path="SelectedDate" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                                                            </MultiBinding>
+                                                                        </DataTrigger.Binding>
+                                                                        <Setter TargetName="LinkText" Property="Foreground" Value="#E5C890"/>
+                                                                        <Setter TargetName="LinkText" Property="FontWeight" Value="Bold"/>
+                                                                        <Setter TargetName="Indicator" Property="Foreground" Value="#E5C890"/>
+                                                                        <Setter TargetName="Indicator" Property="FontWeight" Value="Bold"/>
+                                                                        <Setter TargetName="Indicator" Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <!-- Default (not selected) state -->
+                                                                    <DataTrigger Value="False">
+                                                                        <DataTrigger.Binding>
+                                                                            <MultiBinding Converter="{StaticResource DateSelectionConverter}">
+                                                                                <Binding/>
+                                                                                <Binding Path="SelectedDate" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                                                            </MultiBinding>
+                                                                        </DataTrigger.Binding>
+                                                                        <Setter TargetName="LinkText" Property="Foreground" Value="#D7BA7D"/>
+                                                                        <Setter TargetName="LinkText" Property="FontWeight" Value="Normal"/>
+                                                                    </DataTrigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
                 </StackPanel>
 
                 <!-- Right: Track List -->
@@ -323,10 +461,85 @@
                                 BorderBrush="#3F3F46"
                                 BorderThickness="0,0,0,1"
                                 Padding="18,16">
-                            <TextBlock Text="TRACKS"
-                                       FontSize="16"
-                                       FontWeight="SemiBold"
-                                       Foreground="#CCCCCC"/>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Expand/Collapse All buttons (multi-night shows only) -->
+                                <StackPanel x:Name="ExpandCollapseButtons"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed"
+                                            Margin="0,0,12,0">
+                                    <Button x:Name="ExpandAllButton"
+                                            Content="⊞"
+                                            Click="ExpandAllButton_Click"
+                                            ToolTip="Expand All"
+                                            Width="24"
+                                            Height="24"
+                                            FontSize="16"
+                                            Foreground="#808080"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Margin="0,0,6,0">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{TemplateBinding Content}"
+                                                                       FontSize="{TemplateBinding FontSize}"
+                                                                       Foreground="{TemplateBinding Foreground}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       Cursor="{TemplateBinding Cursor}"/>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                    <Button x:Name="CollapseAllButton"
+                                            Content="⊟"
+                                            Click="CollapseAllButton_Click"
+                                            ToolTip="Collapse All"
+                                            Width="24"
+                                            Height="24"
+                                            FontSize="16"
+                                            Foreground="#808080"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{TemplateBinding Content}"
+                                                                       FontSize="{TemplateBinding FontSize}"
+                                                                       Foreground="{TemplateBinding Foreground}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       Cursor="{TemplateBinding Cursor}"/>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </StackPanel>
+                                <TextBlock Text="TRACKS"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="#CCCCCC"/>
+                            </StackPanel>
                         </Border>
 
                         <!-- Track List -->
@@ -344,7 +557,9 @@
                                   Foreground="#CCCCCC"
                                   BorderThickness="0"
                                   Margin="5"
-                                  LoadingRow="TracksDataGrid_LoadingRow">
+                                  LoadingRow="TracksDataGrid_LoadingRow"
+                                  MouseLeftButtonUp="TracksDataGrid_MouseLeftButtonUp">
+
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="#252526"/>
@@ -358,6 +573,7 @@
                                 <Style TargetType="DataGridRow">
                                     <Setter Property="Background" Value="Transparent"/>
                                     <Setter Property="MinHeight" Value="42"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter Property="Background" Value="#37373D"/>
@@ -369,10 +585,11 @@
                                 </Style>
                                 <Style TargetType="DataGridCell">
                                     <Setter Property="BorderThickness" Value="0"/>
-                                    <Setter Property="Padding" Value="14,12"/>
+                                    <Setter Property="Padding" Value="14,0"/>
                                     <Setter Property="Background" Value="Transparent"/>
                                     <Setter Property="Foreground" Value="#CCCCCC"/>
                                     <Setter Property="FontSize" Value="16"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="Background" Value="Transparent"/>
@@ -382,9 +599,77 @@
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="60"/>
-                                <DataGridTextColumn Header="Title" Binding="{Binding DisplayTitle}" Width="*"/>
-                                <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="100"/>
+                                <!-- Track Number Column - shows chevron for headers, number for tracks -->
+                                <DataGridTemplateColumn Header="#" Width="60">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ContentControl Content="{Binding}" VerticalAlignment="Center">
+                                                <ContentControl.Resources>
+                                                    <DataTemplate DataType="{x:Type models:DateHeaderItem}">
+                                                        <Border Background="#1A1A2E" BorderBrush="#D7BA7D" BorderThickness="3,0,0,0" MinHeight="36" Padding="14,0,0,0">
+                                                            <TextBlock Text="{Binding ChevronIcon}"
+                                                                       FontWeight="Bold"
+                                                                       FontSize="15"
+                                                                       Foreground="#FFFFFF"
+                                                                       VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type models:TrackViewItem}">
+                                                        <TextBlock Text="{Binding Track.TrackNumber}" VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </ContentControl.Resources>
+                                            </ContentControl>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Title Column - shows header text for headers, track title for tracks -->
+                                <DataGridTemplateColumn Header="Title" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ContentControl Content="{Binding}" VerticalAlignment="Center">
+                                                <ContentControl.Resources>
+                                                    <DataTemplate DataType="{x:Type models:DateHeaderItem}">
+                                                        <Border Background="#1A1A2E" MinHeight="36" Padding="0">
+                                                            <TextBlock Text="{Binding HeaderText}"
+                                                                       FontWeight="Bold"
+                                                                       FontSize="15"
+                                                                       Foreground="#FFFFFF"
+                                                                       VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type models:TrackViewItem}">
+                                                        <TextBlock Text="{Binding Track.DisplayTitle}" VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </ContentControl.Resources>
+                                            </ContentControl>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Duration Column - shows track count for headers, duration for tracks -->
+                                <DataGridTemplateColumn Header="Duration" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ContentControl Content="{Binding}" VerticalAlignment="Center">
+                                                <ContentControl.Resources>
+                                                    <DataTemplate DataType="{x:Type models:DateHeaderItem}">
+                                                        <Border Background="#1A1A2E" MinHeight="36" Padding="0">
+                                                            <TextBlock Text="{Binding TrackCount, StringFormat='{}{0} tracks'}"
+                                                                       FontWeight="Bold"
+                                                                       FontSize="15"
+                                                                       Foreground="#FFFFFF"
+                                                                       VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type models:TrackViewItem}">
+                                                        <TextBlock Text="{Binding Track.Duration}" VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </ContentControl.Resources>
+                                            </ContentControl>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -392,149 +677,32 @@
             </Grid>
         </Grid>
 
-        <!-- Status Bar / Player Controls -->
+        <!-- Status Bar / Placeholder Bar (playback controls moved to PlayerWindow) -->
         <Border Grid.Row="3" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Padding="20,18">
             <Grid>
-                <!-- Library View Status -->
-                <TextBlock x:Name="StatusText" Text="Double-click a concert to open" FontSize="16" Foreground="#808080"
-                           Visibility="Visible"/>
+                <!-- Library View Status (visible when in library grid view) -->
+                <TextBlock x:Name="StatusText" Text="Double-click a concert to open" FontSize="16" Foreground="#808080"/>
 
-                <!-- Concert View Player -->
-                <Grid x:Name="PlayerControls" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                <!-- Docked state: "Now Playing: [track]" or empty (visible when PlayerWindow is docked) -->
+                <TextBlock x:Name="NowPlayingPlaceholder"
+                           Text=""
+                           FontSize="14"
+                           Foreground="#808080"
+                           VerticalAlignment="Center"
+                           Visibility="Collapsed"/>
 
-                    <!-- Now Playing Info -->
-                    <StackPanel Grid.Row="0" Margin="0,0,0,14">
-                        <TextBlock x:Name="NowPlayingText"
-                                   Text="No track playing"
-                                   FontWeight="SemiBold"
-                                   FontSize="17"
-                                   Foreground="#FFFFFF"/>
-                        <TextBlock x:Name="NowPlayingDetails"
-                                   Text=""
-                                   FontSize="15"
-                                   Foreground="#808080"
-                                   Margin="0,4,0,0"/>
-                    </StackPanel>
-
-                    <!-- Playback Controls -->
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Transport Buttons -->
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,25,0">
-                            <Button x:Name="PreviousButton" Content="⏮" Width="60" Height="46" Margin="0,0,10,0"
-                                    Click="PreviousButton_Click" IsEnabled="False"
-                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"
-                                    BorderThickness="1" Cursor="Hand">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#4E4E52"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#2E2E32"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                            <Button x:Name="PlayPauseButton" Content="▶" Width="70" Height="46" Margin="0,0,10,0"
-                                    Click="PlayPauseButton_Click" FontWeight="Bold" IsEnabled="False"
-                                    Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB" FontSize="22"
-                                    BorderThickness="1" Cursor="Hand">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#1177BB"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#0A4A75"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                            <Button x:Name="StopButton" Content="⏹" Width="60" Height="46" Margin="0,0,10,0"
-                                    Click="StopButton_Click" IsEnabled="False"
-                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"
-                                    BorderThickness="1" Cursor="Hand">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#4E4E52"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#2E2E32"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                            <Button x:Name="NextButton" Content="⏭" Width="60" Height="46"
-                                    Click="NextButton_Click" IsEnabled="False"
-                                    Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555" FontSize="20"
-                                    BorderThickness="1" Cursor="Hand">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#4E4E52"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#2E2E32"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </StackPanel>
-
-                        <!-- Scrubber -->
-                        <Grid Grid.Column="1" Margin="25,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock x:Name="CurrentTimeText" Grid.Column="0"
-                                       Text="0:00" VerticalAlignment="Center"
-                                       Margin="0,0,15,0" Foreground="#CCCCCC" FontSize="15"/>
-                            <Slider x:Name="AudioScrubber" Grid.Column="1"
-                                    Minimum="0" Maximum="100"
-                                    VerticalAlignment="Center"
-                                    ValueChanged="AudioScrubber_ValueChanged"
-                                    PreviewMouseDown="AudioScrubber_PreviewMouseDown"
-                                    PreviewMouseUp="AudioScrubber_PreviewMouseUp"
-                                    Foreground="#0E639C" Background="#3E3E42"/>
-                            <TextBlock x:Name="TotalTimeText" Grid.Column="2"
-                                       Text="0:00" VerticalAlignment="Center"
-                                       Margin="15,0,0,0" Foreground="#CCCCCC" FontSize="15"/>
-                        </Grid>
-
-                        <!-- Volume Control -->
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="25,0,0,0">
-                            <TextBlock Text="🔊" VerticalAlignment="Center"
-                                       Margin="0,0,14,0" FontSize="20"/>
-                            <Slider x:Name="VolumeSlider" Width="140"
-                                    Minimum="0" Maximum="100" Value="75"
-                                    VerticalAlignment="Center"
-                                    ValueChanged="VolumeSlider_ValueChanged"
-                                    Foreground="#0E639C" Background="#3E3E42"/>
-                        </StackPanel>
-                    </Grid>
-                </Grid>
+                <!-- Undocked state: "⊞ Re-dock Player" button (visible when PlayerWindow is undocked) -->
+                <Button x:Name="RedockPlayerButton"
+                        Content="⊞ Re-dock Player"
+                        Width="140"
+                        Height="28"
+                        HorizontalAlignment="Left"
+                        Click="RedockPlayerButton_Click"
+                        Background="#3E3E42"
+                        Foreground="#CCCCCC"
+                        BorderBrush="#555555"
+                        FontSize="13"
+                        Visibility="Collapsed"/>
             </Grid>
         </Border>
     </Grid>

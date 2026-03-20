@@ -21,16 +21,12 @@ public partial class LibraryBrowserWindow : Window
     private readonly LibrarySettings _librarySettings;
     private readonly MetadataService _metadataService;
     private readonly NormalizationService _normalizationService;
-    private AudioPlayerService _audioPlayer => App.PlaybackService;  // Using singleton
+    private AudioPlayerService _audioPlayer => App.PlaybackService;  // Using singleton for playlist population
     private List<LibraryShow> _shows = new();
     private List<LibraryShow> _allShows = new();  // Unfiltered list for search
     private List<TrackInfo> _currentTracks = new();
     private ObservableCollection<ConcertViewItem> _concertViewItems = new();
     private LibraryShow? _currentShow = null;
-    private int _currentTrackIndex = -1;
-    private DispatcherTimer? _updateTimer;
-    private bool _isScrubbing = false;
-    private bool _isManualTrackChange = false;
     private string _quickSearchText = "";
     private List<string> _advancedSearchSongs = new();
     private List<string> _advancedSearchExcludedSongs = new();
@@ -65,15 +61,8 @@ public partial class LibraryBrowserWindow : Window
         _metadataService = new MetadataService();
         _normalizationService = new NormalizationService();
 
-        // Subscribe to singleton audio player events
-        _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
-
-        // Set up update timer for scrubber
-        _updateTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(100)
-        };
-        _updateTimer.Tick += UpdateTimer_Tick;
+        // Subscribe to TrackChanged for placeholder bar updates
+        _audioPlayer.TrackChanged += AudioPlayer_TrackChanged;
 
         // Restore window position
         RestoreWindowPosition();
@@ -136,26 +125,16 @@ public partial class LibraryBrowserWindow : Window
         {
             int cmd = (int)((long)lParam >> 16) & 0xFFF;
 
+            // Media keys now handled by PlayerWindow
+            // (These keys will be handled by PlayerWindow which has focus when playing)
             switch (cmd)
             {
                 case APPCOMMAND_MEDIA_PLAY_PAUSE:
-                    PlayPauseButton_Click(this, new RoutedEventArgs());
-                    handled = true;
-                    break;
-
                 case APPCOMMAND_MEDIA_STOP:
-                    StopButton_Click(this, new RoutedEventArgs());
-                    handled = true;
-                    break;
-
                 case APPCOMMAND_MEDIA_NEXTTRACK:
-                    NextButton_Click(this, new RoutedEventArgs());
-                    handled = true;
-                    break;
-
                 case APPCOMMAND_MEDIA_PREVIOUSTRACK:
-                    PreviousButton_Click(this, new RoutedEventArgs());
-                    handled = true;
+                    // No-op: PlayerWindow handles media keys
+                    handled = false;
                     break;
             }
         }
@@ -1058,21 +1037,15 @@ public partial class LibraryBrowserWindow : Window
             // Set album type label
             AlbumTypeText.Text = show.Type == AlbumType.OfficialRelease ? "Official Release" : "Audience Recording";
 
-            // Enable play button if we have tracks
-            if (_currentTracks.Count > 0)
-            {
-                PlayPauseButton.IsEnabled = true;
-            }
-
             // Switch views
             LibraryView.Visibility = Visibility.Collapsed;
             ConcertView.Visibility = Visibility.Visible;
             StatusText.Visibility = Visibility.Collapsed;
 
-            // Show player controls only if not already visible
-            if (PlayerControls.Visibility != Visibility.Visible)
+            // Load playlist into PlaybackService for PlayerWindow
+            if (_currentTracks.Count > 0)
             {
-                PlayerControls.Visibility = Visibility.Visible;
+                _audioPlayer.LoadPlaylist(_currentTracks);
             }
 
             // Update window title
@@ -1591,21 +1564,15 @@ public partial class LibraryBrowserWindow : Window
             // Set album type label - concert dates are always from audience recordings or official releases
             AlbumTypeText.Text = "Concert Date View";
 
-            // Enable play button if we have tracks
-            if (_currentTracks.Count > 0)
-            {
-                PlayPauseButton.IsEnabled = true;
-            }
-
             // Switch views
             LibraryView.Visibility = Visibility.Collapsed;
             ConcertView.Visibility = Visibility.Visible;
             StatusText.Visibility = Visibility.Collapsed;
 
-            // Show player controls only if not already visible
-            if (PlayerControls.Visibility != Visibility.Visible)
+            // Load playlist into PlaybackService for PlayerWindow
+            if (_currentTracks.Count > 0)
             {
-                PlayerControls.Visibility = Visibility.Visible;
+                _audioPlayer.LoadPlaylist(_currentTracks);
             }
 
             // Update window title
@@ -1646,185 +1613,75 @@ public partial class LibraryBrowserWindow : Window
     {
         if (sender is DataGridRow row && row.Item is TrackInfo track)
         {
-            var index = _currentTracks.IndexOf(track);
-            if (index >= 0)
-            {
-                PlayTrack(index);
-            }
+            // Load playlist and play selected track using singleton
+            _audioPlayer.LoadPlaylist(_currentTracks);
+            _audioPlayer.Play(track);
         }
     }
 
-    private void PlayTrack(int index)
-    {
-        if (index < 0 || index >= _currentTracks.Count) return;
+    // ===== PLACEHOLDER BAR (PlayerWindow status display) =====
 
-        var track = _currentTracks[index];
-
-        // Set flag to prevent auto-advance when changing tracks manually
-        _isManualTrackChange = true;
-        _currentTrackIndex = index;
-
-        try
-        {
-            _audioPlayer.LoadFile(track.FilePath);
-            _audioPlayer.Play();
-
-            // Update UI
-            PlayPauseButton.Content = "⏸";
-            PlayPauseButton.IsEnabled = true;
-            StopButton.IsEnabled = true;
-            PreviousButton.IsEnabled = _currentTrackIndex > 0;
-            NextButton.IsEnabled = _currentTrackIndex < _currentTracks.Count - 1;
-
-            NowPlayingText.Text = $"♪ {track.Title}";
-            NowPlayingDetails.Text = $"Track {track.TrackNumber} - {track.Duration}";
-
-            // Set up scrubber
-            AudioScrubber.Maximum = _audioPlayer.TotalDuration.TotalSeconds;
-            TotalTimeText.Text = FormatTime(_audioPlayer.TotalDuration);
-
-            // Start update timer
-            _updateTimer?.Start();
-
-            // Clear the flag after a short delay
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                _isManualTrackChange = false;
-            }), DispatcherPriority.Background);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"Error playing track: {ex.Message}", "Playback Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-            _isManualTrackChange = false;
-        }
-    }
-
-    private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
-    {
-        // Use button content as the source of truth for current state
-        // This prevents the double-click issue caused by state checking
-        if (PlayPauseButton.Content.ToString() == "⏸")
-        {
-            // Currently playing - pause it
-            _audioPlayer.Pause();
-            PlayPauseButton.Content = "▶";
-            _updateTimer?.Stop();
-        }
-        else
-        {
-            // Currently paused or stopped - resume or start playing
-            if (_currentTrackIndex >= 0 && _currentTrackIndex < _currentTracks.Count)
-            {
-                _audioPlayer.Play();
-                PlayPauseButton.Content = "⏸";
-                _updateTimer?.Start();
-            }
-            else if (_currentTracks.Count > 0)
-            {
-                // Load playlist and start playing from first track
-                _audioPlayer.LoadPlaylist(_currentTracks);
-                PlayTrack(0);
-            }
-        }
-    }
-
-    private void StopButton_Click(object sender, RoutedEventArgs e)
-    {
-        _audioPlayer.Stop();
-        _updateTimer?.Stop();
-        PlayPauseButton.Content = "▶";
-        AudioScrubber.Value = 0;
-        CurrentTimeText.Text = "0:00";
-        StopButton.IsEnabled = false;
-        PlayPauseButton.IsEnabled = _currentTracks.Count > 0;
-    }
-
-    private void PreviousButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTrackIndex > 0)
-        {
-            PlayTrack(_currentTrackIndex - 1);
-        }
-    }
-
-    private void NextButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTrackIndex < _currentTracks.Count - 1)
-        {
-            PlayTrack(_currentTrackIndex + 1);
-        }
-    }
-
-    private void AudioPlayer_PlaybackStopped(object? sender, EventArgs e)
+    /// <summary>
+    /// Called by singleton PlaybackService when track changes to update placeholder bar.
+    /// </summary>
+    private void AudioPlayer_TrackChanged(object? sender, EventArgs e)
     {
         Dispatcher.Invoke(() =>
         {
-            _updateTimer?.Stop();
-            PlayPauseButton.Content = "▶";
-
-            // Auto-advance to next track if not manually changing tracks
-            if (!_isManualTrackChange && _currentTrackIndex >= 0 && _currentTrackIndex < _currentTracks.Count - 1)
-            {
-                PlayTrack(_currentTrackIndex + 1);
-            }
-            else if (_currentTrackIndex >= _currentTracks.Count - 1)
-            {
-                // End of playlist
-                AudioScrubber.Value = 0;
-                CurrentTimeText.Text = "0:00";
-                NowPlayingText.Text = "Playlist ended";
-                NowPlayingDetails.Text = "";
-                StopButton.IsEnabled = false;
-                PlayPauseButton.IsEnabled = _currentTracks.Count > 0;
-                PreviousButton.IsEnabled = false;
-                NextButton.IsEnabled = false;
-            }
+            UpdatePlaceholderBar();
         });
     }
 
-    private void UpdateTimer_Tick(object? sender, EventArgs e)
+    /// <summary>
+    /// Updates placeholder bar text when PlayerWindow is docked.
+    /// </summary>
+    private void UpdatePlaceholderBar()
     {
-        if (!_isScrubbing)
+        if (_audioPlayer.CurrentTrack != null)
         {
-            var currentPos = _audioPlayer.CurrentPosition;
-            AudioScrubber.Value = currentPos.TotalSeconds;
-            CurrentTimeText.Text = FormatTime(currentPos);
+            var songName = _audioPlayer.CurrentTrack.SongName ?? _audioPlayer.CurrentTrack.Title ?? "";
+            NowPlayingPlaceholder.Text = $"Now Playing: {songName}";
+        }
+        else
+        {
+            NowPlayingPlaceholder.Text = "";
         }
     }
 
-    private void AudioScrubber_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    /// <summary>
+    /// Shows/hides re-dock button based on PlayerWindow dock state.
+    /// Called by PlayerWindow when dock state changes.
+    /// </summary>
+    public void UpdatePlayerPlaceholderBar(bool isDocked)
     {
-        _isScrubbing = true;
-    }
-
-    private void AudioScrubber_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        _isScrubbing = false;
-        _audioPlayer.Seek(TimeSpan.FromSeconds(AudioScrubber.Value));
-    }
-
-    private void AudioScrubber_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        if (_isScrubbing)
+        if (isDocked)
         {
-            CurrentTimeText.Text = FormatTime(TimeSpan.FromSeconds(e.NewValue));
+            NowPlayingPlaceholder.Visibility = Visibility.Visible;
+            RedockPlayerButton.Visibility = Visibility.Collapsed;
+            UpdatePlaceholderBar();
+        }
+        else
+        {
+            NowPlayingPlaceholder.Visibility = Visibility.Collapsed;
+            RedockPlayerButton.Visibility = Visibility.Visible;
         }
     }
 
-    private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    /// <summary>
+    /// Re-dock button clicked - notify PlayerWindow to re-dock.
+    /// </summary>
+    private void RedockPlayerButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_audioPlayer != null)
+        // Find PlayerWindow and call DockToMainWindow()
+        foreach (Window window in System.Windows.Application.Current.Windows)
         {
-            _audioPlayer.Volume = (float)(e.NewValue / 100.0);
+            if (window is PlayerWindow playerWindow)
+            {
+                playerWindow.DockToMainWindow();
+                UpdatePlayerPlaceholderBar(isDocked: true);
+                break;
+            }
         }
-    }
-
-    private string FormatTime(TimeSpan time)
-    {
-        if (time.TotalHours >= 1)
-            return $"{(int)time.TotalHours}:{time.Minutes:D2}:{time.Seconds:D2}";
-        return $"{time.Minutes}:{time.Seconds:D2}";
     }
 
     // Menu handlers
@@ -1958,8 +1815,7 @@ public partial class LibraryBrowserWindow : Window
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
         // Unsubscribe from events to prevent memory leaks
-        _audioPlayer.PlaybackStopped -= AudioPlayer_PlaybackStopped;
-        _updateTimer?.Stop();
+        _audioPlayer.TrackChanged -= AudioPlayer_TrackChanged;
         base.OnClosing(e);
     }
 

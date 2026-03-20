@@ -41,11 +41,8 @@ public partial class MainWindow : Window
     private bool _isUpdating = false;
     private TaskCompletionSource<bool>? _notificationResult;
 
-    // Audio playback (using singleton)
+    // Audio playback (using singleton for playlist population only - playback controls in PlayerWindow)
     private AudioPlayerService _audioPlayer => App.PlaybackService;
-    private readonly DispatcherTimer _playbackTimer;
-    private int _currentTrackIndex = -1;
-    private bool _isScrubbing = false;
 
 
     public MainWindow()
@@ -57,14 +54,6 @@ public partial class MainWindow : Window
         _libraryImportService = new LibraryImportService(_metadataService);
         _librarySettings = LibrarySettings.Load();
         _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
-
-        // Subscribe to singleton audio player events
-        _audioPlayer.PlaybackStopped += AudioPlayer_PlaybackStopped;
-
-        // Initialize playback timer
-        _playbackTimer = new DispatcherTimer();
-        _playbackTimer.Interval = TimeSpan.FromMilliseconds(100);
-        _playbackTimer.Tick += PlaybackTimer_Tick;
 
         // Restore window position
         RestoreWindowPosition();
@@ -90,12 +79,6 @@ public partial class MainWindow : Window
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        // Stop playback (don't dispose singleton, App.xaml.cs handles that)
-        StopPlaybackAndCleanup();
-
-        // Unsubscribe from events to prevent memory leaks
-        _audioPlayer.PlaybackStopped -= AudioPlayer_PlaybackStopped;
-
         // Save window position
         _librarySettings.MainWindowLeft = Left;
         _librarySettings.MainWindowTop = Top;
@@ -124,9 +107,6 @@ public partial class MainWindow : Window
     {
         try
         {
-            // Stop any ongoing playback
-            StopPlaybackAndCleanup();
-
             FolderPathTextBox.Text = folderPath;
             StatusTextBlock.Text = "Reading files...";
 
@@ -348,11 +328,7 @@ public partial class MainWindow : Window
 
     private void TracksDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        // Enable play button if track selected
-        if (TracksDataGrid.SelectedItem != null)
-        {
-            PlayPauseButton.IsEnabled = true;
-        }
+        // Selection handling (playback controls now in PlayerWindow)
     }
 
     private void TracksDataGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
@@ -1022,147 +998,6 @@ public partial class MainWindow : Window
         }
     }
 
-    // ===== AUDIO PLAYBACK =====
-
-    private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_audioPlayer.IsPlaying)
-        {
-            _audioPlayer.Pause();
-            PlayPauseButton.Content = "▶";
-            _playbackTimer.Stop();
-        }
-        else if (_currentTrackIndex >= 0)
-        {
-            _audioPlayer.Play();
-            PlayPauseButton.Content = "⏸";
-            _playbackTimer.Start();
-        }
-        else if (TracksDataGrid.SelectedIndex >= 0)
-        {
-            PlayTrack(TracksDataGrid.SelectedIndex);
-        }
-    }
-
-    private void PreviousTrackButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTrackIndex > 0)
-        {
-            PlayTrack(_currentTrackIndex - 1);
-        }
-    }
-
-    private void NextTrackButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentTrackIndex < _tracks.Count - 1)
-        {
-            PlayTrack(_currentTrackIndex + 1);
-        }
-    }
-
-    private void StopButton_Click(object sender, RoutedEventArgs e)
-    {
-        StopPlaybackAndCleanup();
-    }
-
-    private void PlayTrack(int index)
-    {
-        if (index < 0 || index >= _tracks.Count) return;
-
-        try
-        {
-            _currentTrackIndex = index;
-            var track = _tracks[index].Track;
-
-            _audioPlayer.LoadFile(track.FilePath);
-            _audioPlayer.Play();
-
-            PlayPauseButton.Content = "⏸";
-            PlayPauseButton.IsEnabled = true;
-            StopButton.IsEnabled = true;
-            PreviousTrackButton.IsEnabled = index > 0;
-            NextTrackButton.IsEnabled = index < _tracks.Count - 1;
-
-            NowPlayingText.Text = $"♪ {track.SongName ?? track.Title}";
-            TotalTimeText.Text = FormatTime(_audioPlayer.TotalDuration);
-            ProgressSlider.IsEnabled = true;
-
-            _playbackTimer.Start();
-        }
-        catch (Exception ex)
-        {
-            ShowNotificationAsync("Playback Error", $"Error playing track: {ex.Message}");
-        }
-    }
-
-    private void StopPlaybackAndCleanup()
-    {
-        _playbackTimer.Stop();
-        _audioPlayer.Stop();
-        _currentTrackIndex = -1;
-
-        PlayPauseButton.Content = "▶";
-        PlayPauseButton.IsEnabled = false;
-        StopButton.IsEnabled = false;
-        PreviousTrackButton.IsEnabled = false;
-        NextTrackButton.IsEnabled = false;
-        ProgressSlider.IsEnabled = false;
-
-        NowPlayingText.Text = "No track playing";
-        CurrentTimeText.Text = "0:00";
-        TotalTimeText.Text = "0:00";
-        ProgressSlider.Value = 0;
-    }
-
-    private void PlaybackTimer_Tick(object? sender, EventArgs e)
-    {
-        if (_audioPlayer.IsPlaying && !_isScrubbing)
-        {
-            CurrentTimeText.Text = FormatTime(_audioPlayer.CurrentPosition);
-            ProgressSlider.Value = (_audioPlayer.CurrentPosition.TotalSeconds / _audioPlayer.TotalDuration.TotalSeconds) * 100;
-        }
-    }
-
-    private void AudioPlayer_PlaybackStopped(object? sender, EventArgs e)
-    {
-        Dispatcher.Invoke(() =>
-        {
-            // Auto-advance to next track if not at end
-            if (_currentTrackIndex >= 0 && _currentTrackIndex < _tracks.Count - 1)
-            {
-                PlayTrack(_currentTrackIndex + 1);
-            }
-            else
-            {
-                StopPlaybackAndCleanup();
-            }
-        });
-    }
-
-    private void ProgressSlider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        _isScrubbing = true;
-    }
-
-    private void ProgressSlider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        _isScrubbing = false;
-        var position = TimeSpan.FromSeconds((_audioPlayer.TotalDuration.TotalSeconds * ProgressSlider.Value) / 100);
-        _audioPlayer.Seek(position);
-    }
-
-    private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        if (_audioPlayer != null)
-        {
-            _audioPlayer.Volume = (float)(VolumeSlider.Value / 100.0);
-        }
-    }
-
-    private string FormatTime(TimeSpan time)
-    {
-        return $"{(int)time.TotalMinutes}:{time.Seconds:D2}";
-    }
 
     // ===== NOTIFICATION PANEL =====
 

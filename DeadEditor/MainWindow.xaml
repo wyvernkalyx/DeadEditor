@@ -97,7 +97,7 @@
                 <RowDefinition Height="Auto"/>
                 <!-- Main Content (Track List + Artwork) -->
                 <RowDefinition Height="*"/>
-                <!-- Playback Bar -->
+                <!-- Placeholder Bar (replaced old Playback Bar) -->
                 <RowDefinition Height="Auto"/>
                 <!-- Status Bar -->
                 <RowDefinition Height="Auto"/>
@@ -535,71 +535,7 @@
                 </Border>
             </Grid>
 
-            <!-- ===== SECTION 5: PLAYBACK BAR ===== -->
-            <Border Grid.Row="4" BorderBrush="#555555" BorderThickness="1"
-                    Background="#2D2D30" Padding="10" Margin="0,0,0,10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Transport Controls -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button x:Name="PreviousTrackButton" Content="⏮" Width="40" Height="30"
-                                Margin="0,0,4,0" Click="PreviousTrackButton_Click"
-                                IsEnabled="False" FontSize="16"/>
-                        <Button x:Name="PlayPauseButton" Content="▶" Width="50" Height="30"
-                                Margin="0,0,4,0" Click="PlayPauseButton_Click"
-                                IsEnabled="False" FontSize="16" FontWeight="Bold"/>
-                        <Button x:Name="StopButton" Content="⏹" Width="40" Height="30"
-                                Margin="0,0,4,0" Click="StopButton_Click"
-                                IsEnabled="False" FontSize="16"/>
-                        <Button x:Name="NextTrackButton" Content="⏭" Width="40" Height="30"
-                                Margin="0,0,10,0" Click="NextTrackButton_Click"
-                                IsEnabled="False" FontSize="16"/>
-
-                        <!-- Now Playing Text -->
-                        <TextBlock x:Name="NowPlayingText" Text="No track playing"
-                                   FontSize="16" Foreground="#CCCCCC"
-                                   VerticalAlignment="Center" Margin="10,0,0,0"/>
-                    </StackPanel>
-
-                    <!-- Progress Slider -->
-                    <Grid Grid.Column="1" Margin="20,0,20,0" VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" x:Name="CurrentTimeText"
-                                   Text="0:00" FontSize="11" FontFamily="Consolas"
-                                   VerticalAlignment="Center" Margin="0,0,8,0"
-                                   Foreground="#CCCCCC"/>
-                        <Slider Grid.Column="1" x:Name="ProgressSlider"
-                                Minimum="0" Maximum="100" Value="0"
-                                VerticalAlignment="Center"
-                                PreviewMouseDown="ProgressSlider_PreviewMouseDown"
-                                PreviewMouseUp="ProgressSlider_PreviewMouseUp"
-                                IsEnabled="False"/>
-                        <TextBlock Grid.Column="2" x:Name="TotalTimeText"
-                                   Text="0:00" FontSize="11" FontFamily="Consolas"
-                                   VerticalAlignment="Center" Margin="8,0,0,0"
-                                   Foreground="#CCCCCC"/>
-                    </Grid>
-
-                    <!-- Volume Control -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="🔊" FontSize="16" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <Slider x:Name="VolumeSlider" Width="80"
-                                Minimum="0" Maximum="100" Value="75"
-                                VerticalAlignment="Center"
-                                ValueChanged="VolumeSlider_ValueChanged"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <!-- ===== SECTION 5: (Playback controls removed - now in PlayerWindow) ===== -->
 
             <!-- ===== SECTION 6: STATUS BAR ===== -->
             <Border Grid.Row="5" BorderBrush="#555555" BorderThickness="1,0,0,0"

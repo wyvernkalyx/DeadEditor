@@ -127,20 +127,18 @@ namespace DeadEditor
             if (_isDocked)
             {
                 UndockFromMainWindow();
-                // TODO: Phase 3 - Update placeholder bar when implemented
-                // if (_parentWindow is LibraryBrowserWindow libraryWindow)
-                // {
-                //     libraryWindow.UpdatePlayerPlaceholderBar(isDocked: false);
-                // }
+                if (_parentWindow is LibraryBrowserWindow libraryWindow)
+                {
+                    libraryWindow.UpdatePlayerPlaceholderBar(isDocked: false);
+                }
             }
             else
             {
                 DockToMainWindow();
-                // TODO: Phase 3 - Update placeholder bar when implemented
-                // if (_parentWindow is LibraryBrowserWindow libraryWindow)
-                // {
-                //     libraryWindow.UpdatePlayerPlaceholderBar(isDocked: true);
-                // }
+                if (_parentWindow is LibraryBrowserWindow libraryWindow)
+                {
+                    libraryWindow.UpdatePlayerPlaceholderBar(isDocked: true);
+                }
             }
         }
 
