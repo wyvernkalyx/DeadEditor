@@ -40,13 +40,13 @@ The LibraryBrowserWindow uses a dark theme (#1E1E1E background) with four main s
   - Track list DataGrid with columns: #, Title, Duration
   - Double-click row to play track
 
-**Bottom Section (Status Bar / Player Controls):**
-- **Library view:** Status text only
-- **Concert view:** Full player controls:
-  - Now playing info (title, track number, duration)
-  - Transport buttons (Previous, Play/Pause, Stop, Next)
-  - Scrubber slider with current/total time
-  - Volume slider
+**Bottom Section (Status Bar / Placeholder Bar):**
+- **Library view:** Status text ("Double-click a concert to open")
+- **Concert view:** Placeholder bar showing:
+  - "Now Playing: [track]" when PlayerWindow is docked (or empty if nothing playing)
+  - "⊞ Re-dock Player" button when PlayerWindow is undocked
+
+**Playback Note:** Audio playback is handled globally by PlayerWindow. See [documentation/17-player-window.md](17-player-window.md) for playback details.
 
 ## Interactive Elements
 
@@ -181,32 +181,38 @@ Building the "By Date" view for Official Releases requires reading track metadat
 | Now playing title | TextBlock | `NowPlayingText` | Shows "♪ [Song Title]" or "No track playing" | Updated in `PlayTrack()` | Working |
 | Now playing details | TextBlock | `NowPlayingDetails` | Shows "Track X - Y:YY" | Updated in `PlayTrack()` | Working |
 
-#### Transport Controls
+#### Placeholder Bar (Status Bar)
+
+**REMOVED in Phase 6:** Playback controls have been removed from LibraryBrowserWindow. Audio playback is now handled globally by PlayerWindow.
+
+**Current Status Bar Elements:**
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
-| Previous button | Button | `PreviousButton` | Plays previous track, enabled only if not first track | `PreviousButton_Click` → `PlayTrack(_currentTrackIndex - 1)` | Working |
-| Play/Pause button | Button | `PlayPauseButton` | Toggles play/pause, uses button content ("▶"/"⏸") as state indicator | `PlayPauseButton_Click` checks `Content.ToString()` | Working |
-| Stop button | Button | `StopButton` | Stops playback, resets scrubber, disables self | `StopButton_Click` → `_audioPlayer.Stop()` | Working |
-| Next button | Button | `NextButton` | Plays next track, enabled only if not last track | `NextButton_Click` → `PlayTrack(_currentTrackIndex + 1)` | Working |
+| Status text | TextBlock | `StatusText` | Shows "Double-click a concert to open" in library view | N/A (display only) | Working |
+| Now Playing placeholder | TextBlock | `NowPlayingPlaceholder` | Shows "Now Playing: [track]" when PlayerWindow is docked | Updated by `AudioPlayer_TrackChanged` | Working |
+| Re-dock Player button | Button | `RedockPlayerButton` | Shows "⊞ Re-dock Player" when PlayerWindow is undocked, re-docks when clicked | `RedockPlayerButton_Click` → finds PlayerWindow → calls `DockToMainWindow()` | Working |
 
-#### Scrubber Controls
+**Placeholder Bar Behavior:**
+- **Library View:** Shows `StatusText` ("Double-click a concert to open")
+- **Concert View + PlayerWindow Docked:** Shows `NowPlayingPlaceholder` with current track
+- **Concert View + PlayerWindow Undocked:** Shows `RedockPlayerButton` to bring PlayerWindow back
 
-| Element | Type | Name | Action | API/Service Call | Status |
-|---------|------|------|--------|-----------------|--------|
-| Current time | TextBlock | `CurrentTimeText` | Shows current playback position (M:SS or H:MM:SS format) | Updated by `_updateTimer` → `UpdateTimer_Tick()` | Working |
-| Audio scrubber | Slider | `AudioScrubber` | Seeks to position when dragged, uses `_isScrubbing` flag to prevent feedback loop | `PreviewMouseUp` → `_audioPlayer.Seek()` | Working |
-| Total time | TextBlock | `TotalTimeText` | Shows total track duration | Set in `PlayTrack()` from `_audioPlayer.TotalDuration` | Working |
-| Volume slider | Slider | `VolumeSlider` | Adjusts playback volume (0-100), default 75 | `VolumeSlider_ValueChanged` → `_audioPlayer.Volume` | Working |
+**Playback Integration:**
+- When a concert is double-clicked or loaded, `App.PlaybackService.LoadPlaylist(_currentTracks)` is called
+- Double-clicking a track calls `_audioPlayer.Play(track)`
+- All transport controls, scrubber, and volume are in PlayerWindow (see [17-player-window.md](17-player-window.md))
 
-### Media Key Support (Special Feature)
+### Media Key Support
+
+**CHANGED in Phase 6:** Media key handlers have been stubbed out (no-op). Media keys are now handled by PlayerWindow when it has focus.
 
 | Media Key | Action | Handler | Status |
 |-----------|--------|---------|--------|
-| Play/Pause key | Toggles playback | `WndProc()` captures `WM_APPCOMMAND` → `APPCOMMAND_MEDIA_PLAY_PAUSE` → `PlayPauseButton_Click()` | Working |
-| Stop key | Stops playback | `WndProc()` → `APPCOMMAND_MEDIA_STOP` → `StopButton_Click()` | Working |
-| Next Track key | Plays next track | `WndProc()` → `APPCOMMAND_MEDIA_NEXTTRACK` → `NextButton_Click()` | Working |
-| Previous Track key | Plays previous track | `WndProc()` → `APPCOMMAND_MEDIA_PREVIOUSTRACK` → `PreviousButton_Click()` | Working |
+| Play/Pause key | Handled by PlayerWindow | `WndProc()` → no-op | Deferred to PlayerWindow |
+| Stop key | Handled by PlayerWindow | `WndProc()` → no-op | Deferred to PlayerWindow |
+| Next Track key | Handled by PlayerWindow | `WndProc()` → no-op | Deferred to PlayerWindow |
+| Previous Track key | Handled by PlayerWindow | `WndProc()` → no-op | Deferred to PlayerWindow |
 
 ## User Workflows
 

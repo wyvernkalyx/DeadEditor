@@ -1,8 +1,72 @@
 # DeadEditor - Pending Tasks
 
-## Current Status (2026-03-10)
+## Current Status (2026-03-20)
 
-**Latest Commit:** `942a679` - "Update Claude settings"
+**Latest Commit:** `200c5df` - "Phase 6: Remove old playback controls + add placeholder bar"
+
+### Session 2026-03-20 - COMPLETED
+
+**Focus:** Winamp-style global playback system implementation (Phases 1-7)
+
+#### Completed This Session:
+- ✅ **Phase 1: Diagnosis** - Audited playback controls and NAudio instantiation
+- ✅ **Phase 2: PlaybackService Singleton** - Converted AudioPlayerService to singleton with thread-safe locking
+  - Added PlaybackState enum, CurrentTrack, Playlist, Play/Next/Previous/LoadPlaylist methods
+  - Added TrackChanged and PlaybackStateChanged events
+  - Registered in App.xaml.cs
+- ✅ **Phase 3: PlayerWindow** - Created chromeless dockable player window
+  - Unicode transport buttons (no icon fonts)
+  - Docks to bottom-left of LibraryBrowserWindow
+  - Undock/re-dock functionality
+- ✅ **Phase 4: PlaylistWindow** - Created playlist editor with attachment behavior
+  - DataGrid bound to App.PlaybackService.Playlist
+  - Gold highlight for currently playing track
+  - Double-click to play
+  - Attaches below PlayerWindow
+- ✅ **Phase 5: VIS Stub** - Created visualizer placeholder window
+  - Identical architecture to PlaylistWindow for future replacement
+  - Attaches below PlaylistWindow
+- ✅ **Phase 6: Remove Old Controls** - Removed fragmented playback controls
+  - Removed playback bar from MainWindow (import dialog)
+  - Removed playback controls from LibraryBrowserWindow
+  - Added placeholder bar showing "Now Playing" or "Re-dock Player" button
+- ✅ **Phase 7: Documentation Updates** - Updated all docs to reflect new architecture
+  - Updated documentation/01-main-window.md (removed playback section)
+  - Updated documentation/02-library-browser.md (documented placeholder bar)
+  - Updated documentation/17-player-window.md (corrected LibraryBrowserWindow references)
+
+#### Known Cosmetic Issue:
+- **PlayerWindow appears orphaned during import:** When MainWindow (import modal) is open, PlayerWindow remains visible at the LibraryBrowserWindow position, appearing disconnected. This is cosmetic only - playback still works. Future polish: Option 1 (hide during import) or Option 2 (dock to import window).
+
+#### Files Modified This Session:
+- `Services/AudioPlayerService.cs` - Converted to singleton, added playlist management
+- `App.xaml.cs` - Removed StartupUri, manual window creation in OnStartup
+- `App.xaml` - Removed StartupUri attribute
+- `MainWindow.xaml.cs` - Removed playback logic, LoadPlaylist only
+- `LibraryBrowserWindow.xaml.cs` - Removed playback logic, added placeholder bar methods
+- `LibraryBrowserWindow.xaml` - Removed player controls, added placeholder bar
+- `MainWindow.xaml` - Removed playback bar
+- `PlayerWindow.xaml` + `.cs` - **NEW** - Global player window with docking
+- `PlaylistWindow.xaml` + `.cs` - **NEW** - Playlist editor with attachment
+- `VisWindow.xaml` + `.cs` - **NEW** - Visualizer stub window
+- `documentation/player-audit.md` - **NEW** - Architecture analysis
+- `documentation/17-player-window.md` - **NEW** - Complete feature spec
+- `documentation/01-main-window.md` - Updated playback section
+- `documentation/02-library-browser.md` - Updated playback section
+
+#### Git Commits This Session:
+1. `bf75f75` - Fix multi-night box set track sorting in library browser
+2. `42f6f16` - Fix grid not updating after Apply All in UnmatchedSongsDialog
+3. `ef3e6e0` - Fix UnmatchedSongsDialog editable ComboBox text visibility
+4. `a770cc0` - Add UnmatchedSongsDialog for guided correction of unmatched tracks
+5. `edef6cf` - Implement INotifyPropertyChanged on TrackInfo for IsMatched binding
+6. `[commit hash]` - Phase 2: Convert AudioPlayerService to singleton playback service
+7. `[commit hash]` - Phase 3: PlayerWindow + docking behavior
+8. `[commit hash]` - Phase 4: PlaylistWindow + attachment behavior
+9. `ba83aad` - Phase 5: VIS stub window with attachment behavior
+10. `200c5df` - Phase 6: Remove old playback controls + add placeholder bar
+
+---
 
 ### Session 2026-03-10 - COMPLETED
 
@@ -86,12 +150,13 @@
 
 ### 4. Documentation Updates for Recent Changes
 **Priority:** Medium
-**Status:** Partially updated
+**Status:** Completed (as of 2026-03-20)
 **Completed:**
 - ✅ documentation/16-import-redesign-spec.md - Created
+- ✅ documentation/17-player-window.md - Created (Winamp player spec)
+- ✅ documentation/01-main-window.md - Updated for playback removal
+- ✅ documentation/02-library-browser.md - Updated for placeholder bar
 **Still Needed:**
-- Update documentation/01-main-window.md for redesigned import screen
-- Update documentation/02-library-browser.md for simplified album types
 - Update documentation/15-data-model.md for new TrackInfo.RawTitle field
 - Update CLAUDE.md with new AlbumType enum values
 
@@ -133,6 +198,15 @@ Before considering the redesign complete, test:
 ---
 
 ## Recently Completed Features
+
+### Winamp-Style Global Playback System (Session 2026-03-20)
+- Singleton PlaybackService replacing fragmented playback controls
+- PlayerWindow with chromeless design and docking behavior
+- PlaylistWindow with gold highlighting for current track
+- VisWindow stub for future visualizer integration
+- Placeholder bar in LibraryBrowserWindow
+- Complete documentation in documentation/17-player-window.md
+- Known cosmetic issue: PlayerWindow appears orphaned during import (future polish)
 
 ### Import Screen Redesign (Session 2026-03-10)
 - Single-column editable track list (Title column)
