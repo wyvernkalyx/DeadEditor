@@ -1,3 +1,4 @@
+using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
 using System.Windows;
@@ -9,24 +10,23 @@ namespace DeadEditor
 {
     public partial class PlayerWindow : Window
     {
-        private readonly Window _parentWindow;
         private readonly AudioPlayerService _player;
         private readonly DispatcherTimer _updateTimer;
         private readonly DispatcherTimer _marqueeTimer;
-        private bool _isDocked = true;
         private bool _isSeeking = false;
         private double _marqueePosition = 0;
+        private readonly LibrarySettings _settings;
 
         // PlaylistWindow and VisWindow references (set by App.xaml.cs)
         internal PlaylistWindow? PlaylistWindowInstance { get; set; }
         internal VisWindow? VisWindowInstance { get; set; }
 
-        public PlayerWindow(Window parentWindow)
+        public PlayerWindow()
         {
             InitializeComponent();
 
-            _parentWindow = parentWindow ?? throw new ArgumentNullException(nameof(parentWindow));
             _player = App.PlaybackService;
+            _settings = LibrarySettings.Load();
 
             // Subscribe to playback service events
             _player.PlaybackStateChanged += Player_PlaybackStateChanged;
@@ -47,8 +47,11 @@ namespace DeadEditor
             _marqueeTimer.Tick += MarqueeTimer_Tick;
             _marqueeTimer.Start();
 
-            // Subscribe to MainWindow events for docking
-            DockToMainWindow();
+            // Restore window position or set default
+            RestoreWindowPosition();
+
+            // Save position when window moves
+            LocationChanged += PlayerWindow_LocationChanged;
 
             // Initialize UI from current playback state
             UpdatePlaybackUI();
@@ -56,56 +59,71 @@ namespace DeadEditor
         }
 
         /// <summary>
-        /// Docks the player window to MainWindow (subscribes to position events).
+        /// Restores window position from settings, or sets default position if no saved position.
         /// </summary>
-        public void DockToMainWindow()
+        private void RestoreWindowPosition()
         {
-            _isDocked = true;
+            var left = _settings.PlayerWindowLeft;
+            var top = _settings.PlayerWindowTop;
 
-            // Subscribe to parent window position/size changes
-            _parentWindow.LocationChanged += MainWindow_LocationChanged;
-            _parentWindow.SizeChanged += MainWindow_SizeChanged;
+            System.Diagnostics.Debug.WriteLine($"[PlayerWindow] Restoring position: Left={left}, Top={top}");
 
-            // Initial position snap
-            SnapToMainWindow();
-        }
-
-        /// <summary>
-        /// Undocks the player window (unsubscribes from position events).
-        /// </summary>
-        public void UndockFromMainWindow()
-        {
-            _isDocked = false;
-
-            // Unsubscribe from parent window events
-            _parentWindow.LocationChanged -= MainWindow_LocationChanged;
-            _parentWindow.SizeChanged -= MainWindow_SizeChanged;
-        }
-
-        /// <summary>
-        /// Snaps PlayerWindow to bottom-left of parent window.
-        /// </summary>
-        private void SnapToMainWindow()
-        {
-            Left = _parentWindow.Left;
-            Top = _parentWindow.Top + _parentWindow.ActualHeight;
-        }
-
-        private void MainWindow_LocationChanged(object? sender, EventArgs e)
-        {
-            if (_isDocked)
+            // Check if any monitor contains this position
+            bool isOnScreen = false;
+            if (left.HasValue && top.HasValue)
             {
-                SnapToMainWindow();
+                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                {
+                    var workArea = screen.WorkingArea;
+                    System.Diagnostics.Debug.WriteLine($"[PlayerWindow] Checking screen: {workArea}");
+
+                    // Check if the top-left corner of the window is within this screen's working area
+                    if (left.Value >= workArea.Left && left.Value < workArea.Right &&
+                        top.Value >= workArea.Top && top.Value < workArea.Bottom)
+                    {
+                        isOnScreen = true;
+                        System.Diagnostics.Debug.WriteLine($"[PlayerWindow] Position is on screen");
+                        break;
+                    }
+                }
+            }
+
+            if (isOnScreen && left.HasValue && top.HasValue && left.Value != 0 && top.Value != 0)
+            {
+                Left = left.Value;
+                Top = top.Value;
+                System.Diagnostics.Debug.WriteLine($"[PlayerWindow] Restored to saved position: Left={Left}, Top={Top}");
+            }
+            else
+            {
+                // Default: center-bottom of primary screen
+                var screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+                Left = screen.Left + (screen.Width - Width) / 2;
+                Top = screen.Top + screen.Height - Height - 40; // 40px from bottom for taskbar
+
+                System.Diagnostics.Debug.WriteLine($"[PlayerWindow] Using default position: Left={Left}, Top={Top}");
+
+                // Clear bad saved values
+                _settings.PlayerWindowLeft = Left;
+                _settings.PlayerWindowTop = Top;
+                _settings.Save();
             }
         }
 
-        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        /// <summary>
+        /// Saves window position when user moves the window.
+        /// </summary>
+        private void PlayerWindow_LocationChanged(object? sender, EventArgs e)
         {
-            if (_isDocked)
+            // Don't save if window is minimized or maximized
+            if (WindowState == WindowState.Normal && Left >= 0 && Top >= 0)
             {
-                SnapToMainWindow();
+                _settings.PlayerWindowLeft = Left;
+                _settings.PlayerWindowTop = Top;
+                _settings.Save();
             }
         }
+
 
         // ===== DRAG BAR =====
 
@@ -122,24 +140,9 @@ namespace DeadEditor
             WindowState = WindowState.Minimized;
         }
 
-        private void UndockButton_Click(object sender, RoutedEventArgs e)
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_isDocked)
-            {
-                UndockFromMainWindow();
-                if (_parentWindow is LibraryBrowserWindow libraryWindow)
-                {
-                    libraryWindow.UpdatePlayerPlaceholderBar(isDocked: false);
-                }
-            }
-            else
-            {
-                DockToMainWindow();
-                if (_parentWindow is LibraryBrowserWindow libraryWindow)
-                {
-                    libraryWindow.UpdatePlayerPlaceholderBar(isDocked: true);
-                }
-            }
+            Close();
         }
 
         // ===== TRANSPORT CONTROLS =====
@@ -371,12 +374,7 @@ namespace DeadEditor
             // Unsubscribe from events
             _player.PlaybackStateChanged -= Player_PlaybackStateChanged;
             _player.TrackChanged -= Player_TrackChanged;
-
-            if (_isDocked)
-            {
-                _parentWindow.LocationChanged -= MainWindow_LocationChanged;
-                _parentWindow.SizeChanged -= MainWindow_SizeChanged;
-            }
+            LocationChanged -= PlayerWindow_LocationChanged;
 
             _updateTimer.Stop();
             _marqueeTimer.Stop();

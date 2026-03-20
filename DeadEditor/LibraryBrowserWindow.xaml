@@ -677,33 +677,9 @@
             </Grid>
         </Grid>
 
-        <!-- Status Bar / Placeholder Bar (playback controls moved to PlayerWindow) -->
+        <!-- Status Bar -->
         <Border Grid.Row="3" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Padding="20,18">
-            <Grid>
-                <!-- Library View Status (visible when in library grid view) -->
-                <TextBlock x:Name="StatusText" Text="Double-click a concert to open" FontSize="16" Foreground="#808080"/>
-
-                <!-- Docked state: "Now Playing: [track]" or empty (visible when PlayerWindow is docked) -->
-                <TextBlock x:Name="NowPlayingPlaceholder"
-                           Text=""
-                           FontSize="14"
-                           Foreground="#808080"
-                           VerticalAlignment="Center"
-                           Visibility="Collapsed"/>
-
-                <!-- Undocked state: "⊞ Re-dock Player" button (visible when PlayerWindow is undocked) -->
-                <Button x:Name="RedockPlayerButton"
-                        Content="⊞ Re-dock Player"
-                        Width="140"
-                        Height="28"
-                        HorizontalAlignment="Left"
-                        Click="RedockPlayerButton_Click"
-                        Background="#3E3E42"
-                        Foreground="#CCCCCC"
-                        BorderBrush="#555555"
-                        FontSize="13"
-                        Visibility="Collapsed"/>
-            </Grid>
+            <TextBlock x:Name="StatusText" Text="Double-click a concert to open" FontSize="16" Foreground="#808080"/>
         </Border>
     </Grid>
 </Window>

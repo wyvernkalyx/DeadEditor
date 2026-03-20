@@ -70,6 +70,7 @@ namespace DeadEditor
         private readonly AudioPlayerService _player;
         private bool _isAttached = true;
         private readonly ObservableCollection<PlaylistTrackViewModel> _playlistViewModels;
+        private readonly LibrarySettings _settings;
 
         public PlaylistWindow(PlayerWindow playerWindow)
         {
@@ -77,6 +78,7 @@ namespace DeadEditor
 
             _playerWindow = playerWindow ?? throw new ArgumentNullException(nameof(playerWindow));
             _player = App.PlaybackService;
+            _settings = LibrarySettings.Load();
 
             // Create view model collection
             _playlistViewModels = new ObservableCollection<PlaylistTrackViewModel>();
@@ -91,11 +93,73 @@ namespace DeadEditor
             // Initialize playlist view models from current playlist
             RebuildPlaylistViewModels();
 
-            // Attach to PlayerWindow by default
-            AttachToPlayerWindow();
+            // Attach to PlayerWindow by default (or restore detached position)
+            RestoreWindowPosition();
+
+            // Save position when window moves (only when detached)
+            LocationChanged += PlaylistWindow_LocationChangedSave;
 
             // Update footer stats
             UpdateFooterStats();
+        }
+
+        /// <summary>
+        /// Restores window position from settings, or attaches below PlayerWindow by default.
+        /// </summary>
+        private void RestoreWindowPosition()
+        {
+            var left = _settings.PlaylistWindowLeft;
+            var top = _settings.PlaylistWindowTop;
+
+            // Check if saved position is on screen
+            bool isOnScreen = false;
+            if (left.HasValue && top.HasValue)
+            {
+                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                {
+                    var workArea = screen.WorkingArea;
+                    if (left.Value >= workArea.Left && left.Value < workArea.Right &&
+                        top.Value >= workArea.Top && top.Value < workArea.Bottom)
+                    {
+                        isOnScreen = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isOnScreen && left.HasValue && top.HasValue)
+            {
+                // Restore saved position (implies detached)
+                _isAttached = false;
+                Left = left.Value;
+                Top = top.Value;
+            }
+            else
+            {
+                // Clear bad saved values if any
+                if (left.HasValue || top.HasValue)
+                {
+                    _settings.PlaylistWindowLeft = null;
+                    _settings.PlaylistWindowTop = null;
+                    _settings.Save();
+                }
+                // Default: attach below PlayerWindow
+                AttachToPlayerWindow();
+            }
+        }
+
+        /// <summary>
+        /// Saves window position when user moves the window (only when detached).
+        /// </summary>
+        private void PlaylistWindow_LocationChangedSave(object? sender, EventArgs e)
+        {
+            // Only save if detached and window is in normal state
+            if (!_isAttached && WindowState == WindowState.Normal && Left >= 0 && Top >= 0)
+            {
+                _settings.PlaylistWindowLeft = Left;
+                _settings.PlaylistWindowTop = Top;
+                _settings.Save();
+            }
         }
 
         /// <summary>
@@ -104,6 +168,11 @@ namespace DeadEditor
         public void AttachToPlayerWindow()
         {
             _isAttached = true;
+
+            // Clear saved position (attached windows don't need saved position)
+            _settings.PlaylistWindowLeft = null;
+            _settings.PlaylistWindowTop = null;
+            _settings.Save();
 
             // Subscribe to PlayerWindow position/size changes
             _playerWindow.LocationChanged += PlayerWindow_LocationChanged;
@@ -275,6 +344,7 @@ namespace DeadEditor
             // Unsubscribe from events
             _player.Playlist.CollectionChanged -= Playlist_CollectionChanged;
             _player.TrackChanged -= Player_TrackChanged;
+            LocationChanged -= PlaylistWindow_LocationChangedSave;
 
             if (_isAttached)
             {

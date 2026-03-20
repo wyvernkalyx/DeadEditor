@@ -23,6 +23,18 @@ namespace DeadEditor.Models
         public double? LibraryWindowWidth { get; set; }
         public double? LibraryWindowHeight { get; set; }
 
+        // PlayerWindow position (free-floating, no docking)
+        public double? PlayerWindowLeft { get; set; }
+        public double? PlayerWindowTop { get; set; }
+
+        // PlaylistWindow position (follows PlayerWindow by default, can detach)
+        public double? PlaylistWindowLeft { get; set; }
+        public double? PlaylistWindowTop { get; set; }
+
+        // VisWindow position (follows PlaylistWindow by default, can detach)
+        public double? VisWindowLeft { get; set; }
+        public double? VisWindowTop { get; set; }
+
         private static readonly string SettingsPath = Path.Combine(
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData),
             "DeadEditor",

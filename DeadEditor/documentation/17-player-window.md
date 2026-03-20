@@ -33,7 +33,7 @@ Chromeless WPF Window (no standard title bar). Compact fixed-width panel.
 
 ```
 ┌─────────────────────────────────────────────┐
-│ ≡  [drag area]                      [_] [■] │  <- thin drag bar, minimize, undock
+│ ≡  [drag area]                      [_] [×] │  <- thin drag bar, minimize, close
 │  «   ▶   ■   ⏸   »  │ PL │ VIS │          │  <- transport + PL/VIS toggles
 │ ████████████████████░░░░  0:00 / 4:32       │  <- seek bar + elapsed/total time
 │ ┌──────────────────────────────────────┐    │
@@ -61,34 +61,28 @@ display width. Format: `Song Name (yyyy-MM-dd) — Venue, City, State`
 
 ---
 
-## Docking Behavior
+## Window Positioning
 
-PlayerWindow is a separate WPF Window (not a UserControl embedded in LibraryBrowserWindow).
+PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 
-**Docked state (default):**
-- PlayerWindow floats snapped to the bottom-left corner of **LibraryBrowserWindow** (the primary app window)
-- Subscribes to LibraryBrowserWindow.LocationChanged and LibraryBrowserWindow.SizeChanged
-- On each event, recalculates and sets PlayerWindow.Left / PlayerWindow.Top
-  to maintain the bottom-left snap position
-- Snap offset formula:
-  - Left = LibraryBrowserWindow.Left
-  - Top = LibraryBrowserWindow.Top + LibraryBrowserWindow.Height
+**Free-floating behavior:**
+- PlayerWindow floats independently of LibraryBrowserWindow
+- User can position it anywhere on screen by dragging
+- Position is persisted to `%APPDATA%/DeadEditor/settings.json` on every move
+- On app relaunch, PlayerWindow restores to last saved position
+- If no saved position (first launch), defaults to center-bottom of screen (40px from bottom for taskbar)
+- If saved position is off-screen (monitor disconnected), falls back to default position
 
-**Undocked state:**
-- User clicks undock button (■ in drag bar)
-- PlayerWindow becomes free-floating — no longer tracks LibraryBrowserWindow position
-- LibraryBrowserWindow placeholder bar shows "⊞ Re-dock Player" button
+**Position persistence:**
+- Saved on `LocationChanged` event (only when window is in Normal state, not minimized)
+- Settings keys: `PlayerWindowLeft`, `PlayerWindowTop`
+- Screen bounds validation prevents restoring to invalid positions
 
-**Re-docking:**
-- User clicks "⊞ Re-dock Player" on LibraryBrowserWindow placeholder bar
-- PlayerWindow snaps back to bottom-left of LibraryBrowserWindow
-- Location tracking resumes
+**Close button:**
+- × button in drag bar closes PlayerWindow
+- User can re-open from LibraryBrowserWindow menu (or keyboard shortcut, if implemented)
 
-**LibraryBrowserWindow placeholder bar** (thin, always present at bottom of LibraryBrowserWindow):
-- Docked: shows "Now Playing: [track name]" (or empty if nothing playing)
-- Undocked: shows "⊞ Re-dock Player" button
-
-**Note:** MainWindow is a modal import dialog, not the primary app window. PlayerWindow docks to LibraryBrowserWindow.
+**Note:** PlayerWindow no longer docks to LibraryBrowserWindow. The "Now Playing" placeholder bar has been removed from LibraryBrowserWindow.
 
 ---
 
@@ -111,10 +105,11 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 ```
 
 **Attachment behavior:**
-- Default: attached directly below PlayerWindow, moves with it
-- Detach button (■) makes it a free-floating window
-- When PlayerWindow re-docks to MainWindow, PlaylistWindow re-attaches below
-  PlayerWindow (unless it was manually detached in this session)
+- Default: attached directly below PlayerWindow, follows PlayerWindow when it moves
+- Detach button (■) makes it a free-floating window with independent position
+- When attached: position not persisted (always follows PlayerWindow)
+- When detached: position persisted to settings (`PlaylistWindowLeft`, `PlaylistWindowTop`)
+- On app relaunch: restores to detached position if saved, otherwise attaches below PlayerWindow
 - Double-click a row → PlaybackService.Play(track)
 - Currently playing row highlighted in gold (#D7BA7D)
 
@@ -130,8 +125,11 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 ## VIS Window (stub)
 
 **Attachment behavior:**
-- Default: attached directly below **PlaylistWindow**, moves with it
-- Detach button (■) makes it a free-floating window
+- Default: attached directly below PlaylistWindow, follows PlaylistWindow when it moves
+- Detach button (■) makes it a free-floating window with independent position
+- When attached: position not persisted (always follows PlaylistWindow)
+- When detached: position persisted to settings (`VisWindowLeft`, `VisWindowTop`)
+- On app relaunch: restores to detached position if saved, otherwise attaches below PlaylistWindow
 - Content: dark background, centered text "Visualizer — coming soon"
 - VIS button on PlayerWindow toggles visibility
 - Architecture is identical to PlaylistWindow so real visualizer content
@@ -146,9 +144,8 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 - Playback controls from MainWindow (import dialog)
 - Playback controls from LibraryBrowserWindow (primary app window)
 - Any NAudio instantiation outside of PlaybackService
-
-**What Gets Added:**
-- Placeholder bar in LibraryBrowserWindow showing current track when docked, or "Re-dock Player" button when undocked
+- Docking system (PlayerWindow no longer snaps to LibraryBrowserWindow)
+- Placeholder bar from LibraryBrowserWindow (no longer needed without docking)
 
 ---
 
@@ -165,19 +162,37 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 
 1. App.xaml.cs OnStartup() creates windows in order:
    - LibraryBrowserWindow (primary window)
-   - PlayerWindow(libraryWindow) - docks to LibraryBrowserWindow
-   - PlaylistWindow(playerWindow) - attaches to PlayerWindow
-   - VisWindow(playlistWindow) - attaches to PlaylistWindow
+   - PlayerWindow() - free-floating (restores last position or defaults to center-bottom)
+   - PlaylistWindow(playerWindow) - attaches below PlayerWindow (or restores detached position)
+   - VisWindow(playlistWindow) - attaches below PlaylistWindow (or restores detached position)
 2. All windows shown at startup
-3. PlayerWindow follows LibraryBrowserWindow
-4. PlaylistWindow follows PlayerWindow
-5. VisWindow follows PlaylistWindow
+3. PlayerWindow is independent (no longer follows LibraryBrowserWindow)
+4. PlaylistWindow follows PlayerWindow (when attached)
+5. VisWindow follows PlaylistWindow (when attached)
 
-## Known Cosmetic Issue
+## Position Persistence Implementation
 
-**PlayerWindow appears orphaned during import:** When MainWindow (import modal) is open, PlayerWindow remains visible at the LibraryBrowserWindow position, appearing disconnected. This is cosmetic only - playback still works.
+All three companion windows (PlayerWindow, PlaylistWindow, VisWindow) persist their positions:
 
-**Future polish options:**
-- Option 1: Hide PlayerWindow when MainWindow opens, restore when MainWindow closes
-- Option 2: Dock PlayerWindow to MainWindow when it's open (complex - requires window switching logic)
-- **Current decision:** Leave as-is. Users understand PlayerWindow is global.
+**PlayerWindow:**
+- Always saves position on `LocationChanged`
+- Settings keys: `PlayerWindowLeft`, `PlayerWindowTop`
+- Default position: center-bottom of screen (40px from bottom)
+- Screen bounds validation on restore
+
+**PlaylistWindow:**
+- Saves position only when detached (`_isAttached == false`)
+- When attached: clears saved position (position follows PlayerWindow)
+- Settings keys: `PlaylistWindowLeft`, `PlaylistWindowTop`
+- Restoring saved position implies detached state
+
+**VisWindow:**
+- Saves position only when detached (`_isAttached == false`)
+- When attached: clears saved position (position follows PlaylistWindow)
+- Settings keys: `VisWindowLeft`, `VisWindowTop`
+- Restoring saved position implies detached state
+
+**Settings persistence:**
+- All settings saved to `%APPDATA%/DeadEditor/settings.json`
+- Uses existing `LibrarySettings.Save()` infrastructure
+- JSON serialization via Newtonsoft.Json

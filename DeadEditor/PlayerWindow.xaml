@@ -24,7 +24,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>  <!-- Menu icon -->
                     <ColumnDefinition Width="*"/>   <!-- Drag area -->
-                    <ColumnDefinition Width="60"/>  <!-- Minimize + Undock buttons -->
+                    <ColumnDefinition Width="60"/>  <!-- Minimize + Close buttons -->
                 </Grid.ColumnDefinitions>
 
                 <!-- Menu Icon -->
@@ -43,12 +43,12 @@
                         FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Top" Padding="0,-4,0,0"/>
 
-                <!-- Undock Button -->
-                <Button x:Name="UndockButton" Grid.Column="2" Content="■" Width="30" Height="24"
+                <!-- Close Button -->
+                <Button x:Name="CloseButton" Grid.Column="2" Content="×" Width="30" Height="24"
                         Margin="30,0,0,0"
-                        Click="UndockButton_Click"
+                        Click="CloseButton_Click"
                         Background="Transparent" Foreground="#CCCCCC" BorderThickness="0"
-                        FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             </Grid>
 
             <!-- Transport Controls Row -->

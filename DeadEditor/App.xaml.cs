@@ -26,9 +26,10 @@ public partial class App : System.Windows.Application
         var libraryWindow = new LibraryBrowserWindow();
         libraryWindow.Show();
 
-        // Create and show player window (docked to library window)
-        var playerWindow = new PlayerWindow(libraryWindow);
+        // Create and show player window (free-floating, no docking)
+        var playerWindow = new PlayerWindow();
         playerWindow.Show();
+        System.Diagnostics.Debug.WriteLine($"[App] PlayerWindow created and shown at Left={playerWindow.Left}, Top={playerWindow.Top}");
 
         // Create and show playlist window (attached to player window)
         var playlistWindow = new PlaylistWindow(playerWindow);

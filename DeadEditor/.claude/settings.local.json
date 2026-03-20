@@ -1,13 +1,20 @@
 {
   "permissions": {
     "allow": [
+      "Bash(git add TODO.md)",
+      "Bash(git commit -m \"Update TODO.md with bug fix completion\")",
+      "Bash(git log -1 --format=\"%H %s\")",
+      "Bash(git show d3f7a82 --no-patch --format=\"%B\")",
       "Bash(dotnet build DeadEditor.csproj)",
-      "Bash(git add -A)",
-      "Bash(dotnet run --project DeadEditor.csproj)",
-      "Bash(tasklist)",
+      "Bash(cat \"$APPDATA/DeadEditor/settings.json\")",
       "Bash(taskkill //F //IM DeadEditor.exe //T)",
-      "Bash(git add LibraryBrowserWindow.xaml LibraryBrowserWindow.xaml.cs)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nRedesign library browser columns to fixed layout (ISSUE 1)\n\nChanged library browser grid from adaptive columns to fixed columns with \nexplicit data bindings for better clarity and user experience.\n\n## PROBLEM\n\nLibrary browser used adaptive columns (PrimaryInfo, SecondaryInfo, TertiaryInfo) \nthat changed their meaning based on album type. Column headers like \n\"Date / Album\" and \"Venue / Year\" were confusing because they showed different \ndata depending on whether the row was an Audience Recording or Official Release.\n\n**Old columns:**\n- Date / Album (adaptive)\n- Venue / Year (adaptive)\n- Location / Edition (adaptive)\n- Official Release\n- Tracks\n\n## FIX\n\nReplaced adaptive columns with fixed columns that always show the same type of data:\n\n**New columns:**\n- yyyy-MM-dd (always concert date)\n- Venue (always venue name)\n- City, State (always location)\n- Album Name (only for Official Releases, blank for Audience Recordings)\n- Tracks (always track count)\n\n## IMPLEMENTATION\n\n**LibraryBrowserWindow.xaml (lines 220-225):**\n- Changed column bindings from PrimaryInfo/SecondaryInfo/TertiaryInfo to \n  Date/Venue/Location/DisplayAlbumName\n- Updated column headers to be explicit: \"yyyy-MM-dd\", \"Venue\", \"City, State\", \n  \"Album Name\"\n- Adjusted column widths for better layout\n\n**LibraryBrowserWindow.xaml.cs (lines 1395-1399):**\n- Added `DisplayAlbumName` computed property to LibraryShow class\n- Returns OfficialRelease or AlbumName for Official Releases\n- Returns empty string for Audience Recordings\n\n## RESULT\n\n✅ Column headers are now clear and consistent\n✅ Date column always shows concert date (yyyy-MM-dd format)\n✅ Venue column always shows venue name\n✅ City, State column always shows location\n✅ Album Name column shows release name for Official Releases, blank for Audience\n✅ No more confusing adaptive headers that change meaning per row\n✅ Grid is easier to scan and understand at a glance\n\n**Example for Audience Recording:**\n- yyyy-MM-dd: 1978-02-01\n- Venue: Uptown Theatre\n- City, State: Chicago, IL\n- Album Name: (blank)\n- Tracks: 12\n\n**Example for Official Release:**\n- yyyy-MM-dd: (blank or first date in multi-date release)\n- Venue: (blank or first venue)\n- City, State: (blank)\n- Album Name: Dave''s Picks Vol. 57\n- Tracks: 28\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(taskkill //F //IM dotnet.exe //T)",
+      "Bash(tasklist)",
+      "Bash(echo \"$APPDATA\")",
+      "Bash(ls -la \"$APPDATA/DeadEditor/\")",
+      "Bash(cmd //c \"echo %APPDATA%\")",
+      "Bash(cmd //c \"type %APPDATA%\\DeadEditor\\settings.json\")",
+      "Bash(git add -A)"
     ],
     "deny": [],
     "ask": []

@@ -290,3 +290,300 @@ When LibraryBrowserWindow opens MainWindow as a modal dialog (line 1833), both w
 **End of Phase 1 Audit**
 
 Ready for Phase 2: PlaybackService singleton implementation.
+
+---
+
+## 8. Phase 3 Architecture Analysis (2026-03-20)
+
+### Startup Sequence (Post-Phase 3)
+
+**App.xaml.cs OnStartup() — Lines 18-32:**
+
+```csharp
+protected override void OnStartup(System.Windows.StartupEventArgs e)
+{
+    base.OnStartup(e);
+
+    // Initialize singleton on app startup to ensure it's ready
+    _ = AudioPlayerService.Instance;
+
+    // Create and show main library browser window
+    var libraryWindow = new LibraryBrowserWindow();
+    libraryWindow.Show();
+
+    // Create and show player window (docked to library window)
+    var playerWindow = new PlayerWindow(libraryWindow);
+    playerWindow.Show();
+}
+```
+
+**Sequence:**
+1. App.xaml has NO StartupUri (removed in Phase 3)
+2. OnStartup() creates LibraryBrowserWindow FIRST
+3. OnStartup() creates PlayerWindow SECOND (receives LibraryBrowserWindow as parent)
+4. Both windows shown via .Show() (not .ShowDialog())
+5. LibraryBrowserWindow is now the effective "main window" of the application
+
+**MainWindow is NOT created at startup.** MainWindow is now a modal dialog opened on-demand.
+
+### Window Relationships
+
+**LibraryBrowserWindow (Primary Window):**
+- Created at application startup (App.xaml.cs line 26)
+- Shown with `.Show()` — non-modal, stays open
+- Owns other dialogs (Settings, Advanced Search, Import)
+- PlayerWindow docks to LibraryBrowserWindow by default
+
+**MainWindow (Import Dialog):**
+- Created on-demand when user clicks File → Import (LibraryBrowserWindow.xaml.cs line 1832)
+- OR created when user clicks Edit button on a show (line 1864)
+- Shown with `.ShowDialog()` — MODAL dialog
+- `importWindow.Owner = this` (LibraryBrowserWindow is the owner)
+- Blocks LibraryBrowserWindow while open
+- Closes when import completes
+
+**PlayerWindow (Global Player):**
+- Created at application startup (App.xaml.cs line 30)
+- Receives LibraryBrowserWindow as parent window
+- Docks to LibraryBrowserWindow's bottom-left corner
+- Listens to parent's LocationChanged and SizeChanged events
+- Remains visible when MainWindow (import dialog) opens
+
+### What Happens When User Opens MainWindow (Import Screen)?
+
+**Current Behavior:**
+
+1. User clicks File → Import from LibraryBrowserWindow menu
+2. LibraryBrowserWindow creates `new MainWindow()` (line 1832)
+3. MainWindow shown as modal dialog via `.ShowDialog()` (line 1833)
+4. MainWindow appears OVER LibraryBrowserWindow (blocking modal)
+5. **PlayerWindow remains docked to LibraryBrowserWindow** (which is now behind MainWindow)
+6. PlayerWindow is visible but docked to the hidden/background window
+7. When MainWindow closes, LibraryBrowserWindow comes back to front
+8. PlayerWindow is still docked to LibraryBrowserWindow (unchanged)
+
+**Problem:** PlayerWindow does not re-dock to MainWindow when import screen opens. It stays docked to LibraryBrowserWindow, which is now blocked/hidden by the modal MainWindow dialog.
+
+**Visual Result:**
+- MainWindow appears in front
+- LibraryBrowserWindow is blocked (modal dialog behavior)
+- PlayerWindow is visible at LibraryBrowserWindow's bottom-left position (not MainWindow's position)
+- PlayerWindow is "orphaned" — visible but docked to the wrong window
+
+### Does Docking Parent Need to Change?
+
+**Answer: No architectural change needed, but behavior could be improved.**
+
+**Current Architecture is Correct:**
+- LibraryBrowserWindow is the primary/main window (correct)
+- MainWindow is a modal import dialog (correct)
+- PlayerWindow docks to LibraryBrowserWindow (correct for normal use)
+
+**Options for Phase 4+:**
+
+1. **Keep Current Behavior (Simplest)**
+   - PlayerWindow stays docked to LibraryBrowserWindow
+   - When import dialog opens, PlayerWindow remains at library window position
+   - Acceptable because playback continues in background during import
+
+2. **Hide PlayerWindow During Import (Better UX)**
+   - When MainWindow.ShowDialog() is called, temporarily hide PlayerWindow
+   - When MainWindow closes, show PlayerWindow again
+   - Prevents visual confusion of player being visible but docked to hidden window
+
+3. **Re-dock to Active Window (Complex)**
+   - When MainWindow opens, undock from LibraryBrowserWindow
+   - Dock to MainWindow temporarily
+   - When MainWindow closes, re-dock to LibraryBrowserWindow
+   - Most complex, requires tracking window lifecycle
+
+**Recommendation:** Option 1 (keep current behavior) for Phase 4. PlayerWindow is a global player, staying docked to the primary window (LibraryBrowserWindow) is correct. Users can manually undock if needed.
+
+### Summary
+
+- **Startup:** LibraryBrowserWindow → PlayerWindow (no MainWindow)
+- **Architecture:** LibraryBrowserWindow is primary, MainWindow is modal dialog
+- **PlayerWindow Parent:** LibraryBrowserWindow (correct, does not need to change)
+- **Import Workflow:** MainWindow appears over LibraryBrowserWindow (modal), PlayerWindow stays docked to LibraryBrowserWindow
+- **No Architectural Change Needed:** Current design is sound
+
+---
+
+**End of Phase 3 Architecture Analysis**
+
+---
+
+## 9. Bug Diagnosis (2026-03-20 Post-Phase 6)
+
+### Bug 1: PlayerWindow Won't Come to Front
+
+**Symptom:** PlayerWindow appears in the taskbar but clicking it only flashes — it won't raise to the foreground.
+
+**Diagnosis:**
+
+1. **Owner Property:** ✓ NOT SET
+   - Checked PlayerWindow.xaml.cs for `Owner` assignments: NONE FOUND
+   - PlayerWindow has no Owner set, so it should be freely focusable
+
+2. **ShowInTaskbar:** ✓ SET TO TRUE
+   - PlayerWindow.xaml line 11: `ShowInTaskbar="True"`
+   - PlaylistWindow.xaml line 12: `ShowInTaskbar="True"`
+   - VisWindow.xaml line 11: `ShowInTaskbar="True"`
+   - All three windows appear in taskbar
+
+3. **Topmost Property:** ✓ SET TO FALSE (correct)
+   - PlayerWindow.xaml line 10: `Topmost="False"`
+   - PlaylistWindow.xaml line 11: `Topmost="False"`
+   - VisWindow.xaml line 10: `Topmost="False"`
+   - None are topmost windows
+
+4. **Focus/Activate Calls:** ✓ NONE FOUND
+   - Grepped PlayerWindow.xaml.cs for `Owner|Focus|Activate|Topmost`: NO MATCHES
+   - No code fighting with window focus
+
+5. **WindowStyle:** ✓ CORRECT
+   - PlayerWindow.xaml line 6: `WindowStyle="None"`
+   - AllowsTransparency line 9: `AllowsTransparency="True"`
+   - ResizeMode line 7: `ResizeMode="NoResize"`
+
+**ROOT CAUSE HYPOTHESIS:**
+
+The combination of `WindowStyle="None"` + `AllowsTransparency="True"` creates a WPF layered window (software rendered). Layered windows have known focus issues in WPF:
+
+- **WPF Bug:** Layered windows (AllowsTransparency=True) cannot receive focus via taskbar click in some scenarios
+- **Reference:** https://github.com/dotnet/wpf/issues/2466
+- **Workaround:** Use `WindowStyle="ToolWindow"` OR remove `AllowsTransparency` OR handle taskbar clicks manually
+
+**Additional Evidence:**
+- ShowInTaskbar="True" + AllowsTransparency="True" + WindowStyle="None" is a problematic combination
+- Window flashing (instead of activating) is classic symptom of WPF layered window focus bug
+
+**Recommended Fix:**
+1. Change `ShowInTaskbar="False"` (tool windows shouldn't be in taskbar separately)
+2. OR remove `AllowsTransparency="True"` and use opaque background
+3. OR add manual activation handling in WndProc
+
+---
+
+### Bug 2: Playback Not Starting from LibraryBrowserWindow or PlaylistWindow
+
+**Symptom:** Double-clicking tracks doesn't start playback.
+
+**Diagnosis:**
+
+1. **LibraryBrowserWindow Double-Click Handler:**
+   - Event: `TracksDataGridRow_MouseDoubleClick` (line 1612)
+   - Code: Lines 1614-1620
+   ```csharp
+   private void TracksDataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+   {
+       if (sender is DataGridRow row && row.Item is TrackInfo track)
+       {
+           // Load playlist and play selected track using singleton
+           _audioPlayer.LoadPlaylist(_currentTracks);
+           _audioPlayer.Play(track);
+       }
+   }
+   ```
+   - ✓ Calls `LoadPlaylist()` BEFORE `Play(track)` — correct order
+   - ✓ Track extracted from DataGridRow.Item
+
+2. **PlaylistWindow Double-Click Handler:**
+   - Event: `PlaylistDataGrid_MouseDoubleClick` (line 245)
+   - Code: Lines 247-251
+   ```csharp
+   private void PlaylistDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+   {
+       if (PlaylistDataGrid.SelectedItem is PlaylistTrackViewModel vm)
+       {
+           _player.Play(vm.Track);
+       }
+   }
+   ```
+   - ✓ Calls `Play(track)` directly
+   - ⚠️ Does NOT call `LoadPlaylist()` first — assumes playlist already loaded
+
+3. **AudioPlayerService.Play(TrackInfo) Method:**
+   - Location: Services/AudioPlayerService.cs line 139
+   - Code: Lines 139-152
+   ```csharp
+   public void Play(TrackInfo track)
+   {
+       // Find track in playlist
+       var index = _playlist.IndexOf(track);
+       if (index >= 0)
+       {
+           _currentTrackIndex = index;
+       }
+
+       _currentTrack = track;
+       LoadFile(track.FilePath);
+       Play();
+       TrackChanged?.Invoke(this, EventArgs.Empty);
+   }
+   ```
+   - ✓ Finds track in playlist using `IndexOf()`
+   - ✓ Sets _currentTrackIndex if found
+   - ✓ Calls `LoadFile()` then `Play()`
+   - ⚠️ **POTENTIAL ISSUE:** If track NOT in playlist (`index < 0`), _currentTrackIndex is NOT updated
+   - ⚠️ **POTENTIAL ISSUE:** `Play()` is called regardless of whether track is in playlist
+
+4. **LoadPlaylist() Method:**
+   - Location: Services/AudioPlayerService.cs line 203
+   - Code: Lines 203-211
+   ```csharp
+   public void LoadPlaylist(System.Collections.Generic.IEnumerable<TrackInfo> tracks)
+   {
+       _playlist.Clear();
+       foreach (var track in tracks)
+       {
+           _playlist.Add(track);
+       }
+       _currentTrackIndex = -1;
+   }
+   ```
+   - ✓ Clears playlist first
+   - ✓ Adds all tracks
+   - ✓ Resets _currentTrackIndex to -1
+
+**ROOT CAUSE HYPOTHESIS:**
+
+Several possible issues:
+
+1. **IsPlaying Check Missing:**
+   - `AudioPlayerService.Play()` method (parameterless) may check IsPlaying and return early
+   - Need to check if Play() actually starts playback or is a no-op
+
+2. **Track Reference Inequality:**
+   - `_playlist.IndexOf(track)` uses reference equality (default for objects)
+   - If LibraryBrowserWindow passes a different TrackInfo instance than what's in playlist, IndexOf() returns -1
+   - Need to verify if TrackInfo has custom Equals() implementation
+
+3. **LoadFile() Errors Swallowed:**
+   - Need to check if LoadFile() throws exceptions that are being caught/ignored
+   - Need to check if file path is valid
+
+4. **NAudio Initialization:**
+   - WaveOutEvent may not be initialized properly
+   - Need to check if _wavePlayer is null
+
+**Recommended Debug Steps:**
+
+1. Add `Debug.WriteLine()` to `Play(TrackInfo)` entry point
+2. Add `Debug.WriteLine()` to `LoadFile()` entry point
+3. Add `Debug.WriteLine()` to parameterless `Play()` entry point
+4. Check if file paths are valid
+5. Check if NAudio throws exceptions
+6. Verify TrackInfo reference equality
+
+**Need to Check:**
+- AudioPlayerService.Play() (parameterless) implementation
+- AudioPlayerService.LoadFile() implementation
+- TrackInfo.Equals() implementation (if any)
+- Exception handling in AudioPlayerService
+
+---
+
+**End of Bug Diagnosis**
+
+**Next Steps:** Report findings, wait for approval before adding debug logging or making fixes.
