@@ -2,6 +2,7 @@ using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
 using MessageBox = System.Windows.MessageBox;
 
@@ -23,6 +25,7 @@ public partial class LibraryBrowserWindow : Window
     private List<LibraryShow> _shows = new();
     private List<LibraryShow> _allShows = new();  // Unfiltered list for search
     private List<TrackInfo> _currentTracks = new();
+    private ObservableCollection<ConcertViewItem> _concertViewItems = new();
     private LibraryShow? _currentShow = null;
     private int _currentTrackIndex = -1;
     private DispatcherTimer? _updateTimer;
@@ -32,6 +35,27 @@ public partial class LibraryBrowserWindow : Window
     private List<string> _advancedSearchSongs = new();
     private List<string> _advancedSearchExcludedSongs = new();
     private List<string> _advancedSearchSequence = new();
+    private Dictionary<string, (string venue, string location)> _dateVenueMap = new();
+    private ObservableCollection<string> _concertDates = new();
+    private string _selectedDate = "";
+
+    // Public properties for XAML binding
+    public Dictionary<string, (string venue, string location)> DateVenueMap => _dateVenueMap;
+    public ObservableCollection<string> ConcertDates => _concertDates;
+
+    public string SelectedDate
+    {
+        get => _selectedDate;
+        set
+        {
+            if (_selectedDate != value)
+            {
+                _selectedDate = value;
+                // Force refresh of date links styling
+                DateLinksItemsControl?.Items.Refresh();
+            }
+        }
+    }
 
     public LibraryBrowserWindow()
     {
@@ -793,8 +817,11 @@ public partial class LibraryBrowserWindow : Window
             // Load info based on album type
             if (show.Type == AlbumType.OfficialRelease)
             {
-                // Official Release - show album/release name
-                VenueText.Text = !string.IsNullOrEmpty(show.OfficialRelease) ? show.OfficialRelease : show.AlbumName;
+                // Official Release - show album/release name in AlbumNameText (always visible)
+                AlbumNameText.Text = !string.IsNullOrEmpty(show.OfficialRelease) ? show.OfficialRelease : show.AlbumName;
+
+                // VenueText is used for single-night shows only (will be hidden for multi-night)
+                VenueText.Text = "";
 
                 // Show date (single-date releases) or multiple dates
                 if (!string.IsNullOrEmpty(show.Date))
@@ -828,7 +855,7 @@ public partial class LibraryBrowserWindow : Window
                     LocationText.Text = "";
                 }
 
-                // Show City, State location in BoxSetText
+                // Show City, State location or Edition in BoxSetText (will be hidden for multi-night)
                 if (!string.IsNullOrEmpty(show.Location))
                 {
                     BoxSetText.Text = show.Location;
@@ -846,7 +873,10 @@ public partial class LibraryBrowserWindow : Window
             }
             else
             {
-                // Audience Recording - show venue, location, and date
+                // Audience Recording - AlbumNameText is typically empty for audience recordings
+                AlbumNameText.Text = "";
+
+                // Show venue, location, and date
                 VenueText.Text = show.Venue;
                 LocationText.Text = show.Location;
                 DateText.Text = show.Date;
@@ -971,8 +1001,60 @@ public partial class LibraryBrowserWindow : Window
                 }
             }
 
-            TracksDataGrid.ItemsSource = _currentTracks;
+            // Build date-venue map for venue/location lookup
+            _dateVenueMap = BuildDateVenueMapFromTracks(_currentTracks, show);
+
+            // Populate concert dates list for Jump To Date links
+            _concertDates.Clear();
+            var distinctDatesOrdered = _currentTracks
+                .Where(t => !string.IsNullOrEmpty(t.TrackDate))
+                .Select(t => t.TrackDate)
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
+
+            foreach (var date in distinctDatesOrdered)
+            {
+                _concertDates.Add(date);
+            }
+
+            // Build concert view items (flat list with headers and tracks)
+            if (_concertDates.Count > 1)
+            {
+                // Multi-night: Build collapsible sections
+                BuildCollapsibleConcertView();
+                TracksDataGrid.ItemsSource = _concertViewItems;
+            }
+            else
+            {
+                // Single-night: Bind directly to tracks (no headers)
+                TracksDataGrid.ItemsSource = _currentTracks;
+            }
+
             TrackCountText.Text = $"{_currentTracks.Count} tracks";
+
+            // Show/hide date navigation links and expand/collapse buttons based on whether this is a multi-night show
+            // For multi-night shows, also hide venue/date/location (shown in section headers instead)
+            if (_concertDates.Count > 1)
+            {
+                // Multi-night: Show date links and expand/collapse buttons, hide venue/date/location/boxset
+                DateLinksPanel.Visibility = Visibility.Visible;
+                ExpandCollapseButtons.Visibility = Visibility.Visible;
+                VenueText.Visibility = Visibility.Collapsed;
+                DateText.Visibility = Visibility.Collapsed;
+                LocationText.Visibility = Visibility.Collapsed;
+                BoxSetText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                // Single-night: Hide date links and expand/collapse buttons, show venue/date/location
+                DateLinksPanel.Visibility = Visibility.Collapsed;
+                ExpandCollapseButtons.Visibility = Visibility.Collapsed;
+                VenueText.Visibility = Visibility.Visible;
+                DateText.Visibility = Visibility.Visible;
+                LocationText.Visibility = Visibility.Visible;
+                // BoxSetText visibility is already set above based on whether Location or Edition exists
+            }
 
             // Set album type label
             AlbumTypeText.Text = show.Type == AlbumType.OfficialRelease ? "Official Release" : "Audience Recording";
@@ -1002,6 +1084,397 @@ public partial class LibraryBrowserWindow : Window
             MessageBox.Show($"Error loading concert: {ex.Message}", "Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    /// <summary>
+    /// Builds a lookup dictionary mapping concert dates to their venue and location.
+    /// For box sets and multi-night shows, extracts venue/location from folder paths matching each date.
+    /// </summary>
+    /// <param name="tracks">List of tracks with TrackDate populated</param>
+    /// <param name="show">The LibraryShow containing folder path(s)</param>
+    /// <returns>Dictionary keyed by yyyy-MM-dd date with (venue, location) tuples</returns>
+    private Dictionary<string, (string venue, string location)> BuildDateVenueMapFromTracks(List<TrackInfo> tracks, LibraryShow show)
+    {
+        var map = new Dictionary<string, (string venue, string location)>();
+
+        System.Diagnostics.Debug.WriteLine($"BuildDateVenueMapFromTracks: Building map for {show.FolderPaths.Count} folder(s)");
+
+        // Get unique dates from tracks
+        var uniqueDates = tracks
+            .Where(t => !string.IsNullOrEmpty(t.TrackDate))
+            .Select(t => t.TrackDate)
+            .Distinct()
+            .ToList();
+
+        foreach (var date in uniqueDates)
+        {
+            // Find tracks for this date
+            var dateTrack = tracks.FirstOrDefault(t => t.TrackDate == date);
+            if (dateTrack == null) continue;
+
+            // Find the folder path containing this track
+            var trackFolderPath = show.FolderPaths.FirstOrDefault(fp =>
+                dateTrack.FilePath.StartsWith(fp, StringComparison.OrdinalIgnoreCase));
+
+            if (string.IsNullOrEmpty(trackFolderPath) || !Directory.Exists(trackFolderPath))
+            {
+                System.Diagnostics.Debug.WriteLine($"  Date '{date}': No matching folder found");
+                continue;
+            }
+
+            var folderName = Path.GetFileName(trackFolderPath);
+            System.Diagnostics.Debug.WriteLine($"  Date '{date}': Processing folder '{folderName}'");
+
+            // Try parsing "yyyy-MM-dd - Venue, City, State" format (audience recordings)
+            var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
+            if (parts.Length >= 2 && parts[0].Trim() == date)
+            {
+                // Folder name format: "yyyy-MM-dd - Venue, City, State"
+                var remainder = string.Join(" - ", parts.Skip(1));  // "Venue, City, State" or "Venue - City, State"
+
+                // Parse venue and location
+                string venue = "";
+                string city = "";
+                string state = "";
+                string location = "";
+
+                // Try "Venue, City, State" format first
+                var locationParts = remainder.Split(',');
+                if (locationParts.Length >= 2)
+                {
+                    venue = locationParts[0].Trim();
+                    city = locationParts.Length > 1 ? locationParts[1].Trim() : "";
+                    state = locationParts.Length > 2 ? locationParts[2].Trim() : "";
+
+                    if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state))
+                    {
+                        location = $"{city}, {state}";
+                    }
+                    else if (!string.IsNullOrEmpty(city))
+                    {
+                        location = city;
+                    }
+                }
+                else
+                {
+                    // Try "Venue - City, State" format (alternative)
+                    var altParts = remainder.Split(" - ");
+                    if (altParts.Length >= 2)
+                    {
+                        venue = altParts[0].Trim();
+                        var locationStr = altParts[1].Trim();
+                        var locParts = locationStr.Split(',');
+                        city = locParts.Length > 0 ? locParts[0].Trim() : "";
+                        state = locParts.Length > 1 ? locParts[1].Trim() : "";
+
+                        if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state))
+                        {
+                            location = $"{city}, {state}";
+                        }
+                        else
+                        {
+                            location = locationStr;
+                        }
+                    }
+                    else
+                    {
+                        venue = remainder;
+                        location = "";
+                    }
+                }
+
+                // Add to map
+                map[date] = (venue, location);
+                System.Diagnostics.Debug.WriteLine($"    Added from folder: '{date}' → '{venue}', '{location}'");
+            }
+            else
+            {
+                // Box set or official release folder - no date/venue in folder name
+                // Use show-level metadata as fallback
+                var venue = show.Venue ?? "";
+                var location = show.Location ?? "";
+                map[date] = (venue, location);
+                System.Diagnostics.Debug.WriteLine($"    Added from show metadata: '{date}' → '{venue}', '{location}'");
+            }
+        }
+
+        System.Diagnostics.Debug.WriteLine($"BuildDateVenueMapFromTracks: Final map has {map.Count} entries");
+        return map;
+    }
+
+    /// <summary>
+    /// Builds a flat list of concert view items with collapsible date sections.
+    /// First section is expanded, others are collapsed.
+    /// </summary>
+    private void BuildCollapsibleConcertView()
+    {
+        _concertViewItems.Clear();
+
+        // Group tracks by date
+        var tracksByDate = _currentTracks
+            .Where(t => !string.IsNullOrEmpty(t.TrackDate))
+            .GroupBy(t => t.TrackDate)
+            .OrderBy(g => g.Key);
+
+        bool isFirstSection = true;
+
+        foreach (var dateGroup in tracksByDate)
+        {
+            var date = dateGroup.Key;
+            var dateTracks = dateGroup.ToList();
+
+            // Get venue and location for this date
+            var (venue, location) = _dateVenueMap.TryGetValue(date, out var venueInfo)
+                ? venueInfo
+                : ("", "");
+
+            // Create date header
+            var header = new DateHeaderItem
+            {
+                Date = date,
+                Venue = venue,
+                Location = location,
+                TrackCount = dateTracks.Count,
+                IsExpanded = isFirstSection  // First section expanded, others collapsed
+            };
+
+            _concertViewItems.Add(header);
+
+            // Add tracks if this section is expanded
+            if (header.IsExpanded)
+            {
+                foreach (var track in dateTracks)
+                {
+                    _concertViewItems.Add(new TrackViewItem
+                    {
+                        Track = track,
+                        ParentHeader = header
+                    });
+                }
+            }
+
+            isFirstSection = false;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"BuildCollapsibleConcertView: Created {_concertViewItems.Count} view items");
+    }
+
+    /// <summary>
+    /// Toggles expansion of a date section header.
+    /// When expanding, collapses all other sections (single selection).
+    /// </summary>
+    private void ToggleDateSection(DateHeaderItem header)
+    {
+        if (header.IsExpanded)
+        {
+            // Collapse this header
+            var tracksToRemove = _concertViewItems
+                .OfType<TrackViewItem>()
+                .Where(t => t.ParentHeader == header)
+                .ToList();
+
+            foreach (var track in tracksToRemove)
+            {
+                _concertViewItems.Remove(track);
+            }
+
+            header.IsExpanded = false;
+            SelectedDate = "";
+        }
+        else
+        {
+            // Collapse ALL other sections first (single selection behavior)
+            var allHeaders = _concertViewItems.OfType<DateHeaderItem>().ToList();
+            foreach (var otherHeader in allHeaders)
+            {
+                if (otherHeader != header && otherHeader.IsExpanded)
+                {
+                    var tracksToRemove = _concertViewItems
+                        .OfType<TrackViewItem>()
+                        .Where(t => t.ParentHeader == otherHeader)
+                        .ToList();
+
+                    foreach (var track in tracksToRemove)
+                    {
+                        _concertViewItems.Remove(track);
+                    }
+
+                    otherHeader.IsExpanded = false;
+                }
+            }
+
+            // Now expand this header
+            var headerIndex = _concertViewItems.IndexOf(header);
+            var dateTracks = _currentTracks
+                .Where(t => t.TrackDate == header.Date)
+                .ToList();
+
+            int insertIndex = headerIndex + 1;
+            foreach (var track in dateTracks)
+            {
+                _concertViewItems.Insert(insertIndex, new TrackViewItem
+                {
+                    Track = track,
+                    ParentHeader = header
+                });
+                insertIndex++;
+            }
+
+            header.IsExpanded = true;
+            SelectedDate = header.Date;
+        }
+    }
+
+    /// <summary>
+    /// Expands all date sections, showing all tracks.
+    /// </summary>
+    private void ExpandAllSections()
+    {
+        var allHeaders = _concertViewItems.OfType<DateHeaderItem>().ToList();
+        foreach (var header in allHeaders)
+        {
+            if (!header.IsExpanded)
+            {
+                var headerIndex = _concertViewItems.IndexOf(header);
+                var dateTracks = _currentTracks
+                    .Where(t => t.TrackDate == header.Date)
+                    .ToList();
+
+                int insertIndex = headerIndex + 1;
+                foreach (var track in dateTracks)
+                {
+                    _concertViewItems.Insert(insertIndex, new TrackViewItem
+                    {
+                        Track = track,
+                        ParentHeader = header
+                    });
+                    insertIndex++;
+                }
+
+                header.IsExpanded = true;
+            }
+        }
+
+        // Keep the last expanded section as selected
+        SelectedDate = allHeaders.LastOrDefault()?.Date ?? "";
+    }
+
+    /// <summary>
+    /// Collapses all date sections, hiding all tracks.
+    /// </summary>
+    private void CollapseAllSections()
+    {
+        var allHeaders = _concertViewItems.OfType<DateHeaderItem>().ToList();
+        foreach (var header in allHeaders)
+        {
+            if (header.IsExpanded)
+            {
+                var tracksToRemove = _concertViewItems
+                    .OfType<TrackViewItem>()
+                    .Where(t => t.ParentHeader == header)
+                    .ToList();
+
+                foreach (var track in tracksToRemove)
+                {
+                    _concertViewItems.Remove(track);
+                }
+
+                header.IsExpanded = false;
+            }
+        }
+
+        SelectedDate = "";
+    }
+
+    /// <summary>
+    /// Scrolls to and expands the section for the specified date.
+    /// Called when user clicks a date link in the left panel.
+    /// Scrolls the header to the TOP of the visible grid area.
+    /// </summary>
+    private async void ScrollToDate(string date)
+    {
+        if (string.IsNullOrEmpty(date)) return;
+
+        // Find the date header for this date
+        var header = _concertViewItems
+            .OfType<DateHeaderItem>()
+            .FirstOrDefault(h => h.Date == date);
+
+        if (header != null)
+        {
+            // Expand the section if collapsed
+            if (!header.IsExpanded)
+            {
+                ToggleDateSection(header);
+            }
+
+            // Wait for layout to complete after expanding
+            await Dispatcher.InvokeAsync(() =>
+            {
+                ScrollHeaderToTop(header);
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+    }
+
+    /// <summary>
+    /// Scrolls a date header row to the TOP of the visible DataGrid area.
+    /// </summary>
+    private void ScrollHeaderToTop(DateHeaderItem header)
+    {
+        // First, scroll it into view (roughly) to generate container
+        TracksDataGrid.ScrollIntoView(header);
+
+        // Update layout to ensure containers are generated
+        TracksDataGrid.UpdateLayout();
+
+        // Find the ScrollViewer inside the DataGrid
+        var scrollViewer = FindVisualChild<ScrollViewer>(TracksDataGrid);
+        if (scrollViewer == null) return;
+
+        // Get the container for the header row
+        var container = TracksDataGrid.ItemContainerGenerator.ContainerFromItem(header) as DataGridRow;
+        if (container == null) return;
+
+        try
+        {
+            // Get the header's position relative to the ScrollViewer's viewport
+            var transform = container.TransformToAncestor(scrollViewer);
+            var position = transform.Transform(new System.Windows.Point(0, 0));
+
+            // Scroll to position the header at the top
+            // position.Y is relative to the viewport, so we add current offset
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + position.Y);
+        }
+        catch
+        {
+            // Fallback to basic scroll if transform fails
+            TracksDataGrid.ScrollIntoView(header);
+        }
+    }
+
+    /// <summary>
+    /// Finds a child of a specific type in the visual tree.
+    /// </summary>
+    private T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        if (parent == null) return null;
+
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T typedChild)
+            {
+                return typedChild;
+            }
+
+            var childOfChild = FindVisualChild<T>(child);
+            if (childOfChild != null)
+            {
+                return childOfChild;
+            }
+        }
+
+        return null;
     }
 
     private void OpenConcertDateView(ConcertDate concertDate)
@@ -1399,6 +1872,74 @@ public partial class LibraryBrowserWindow : Window
 
         // Reload the concert view after editing to reflect any changes
         OpenConcertView(_currentShow);
+    }
+
+    private void DateLink_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.Button button && button.Tag is string date)
+        {
+            ScrollToDate(date);
+        }
+    }
+
+    private void TracksDataGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        // Check if the clicked item is a DateHeaderItem
+        if (TracksDataGrid.SelectedItem is DateHeaderItem header)
+        {
+            ToggleDateSection(header);
+        }
+    }
+
+    private void ExpandAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        ExpandAllSections();
+    }
+
+    private void CollapseAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        CollapseAllSections();
+    }
+
+    private void JerryBaseSearchButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_currentShow == null) return;
+
+        string searchTerm = "";
+
+        if (_currentShow.Type == AlbumType.OfficialRelease)
+        {
+            // Search by album name
+            searchTerm = !string.IsNullOrEmpty(_currentShow.OfficialRelease)
+                ? _currentShow.OfficialRelease
+                : _currentShow.AlbumName;
+        }
+        else
+        {
+            // Search by concert date
+            searchTerm = _currentShow.Date;
+        }
+
+        if (string.IsNullOrEmpty(searchTerm)) return;
+
+        // URL encode and construct Google search URL for jerrybase.com
+        string encodedTerm = Uri.EscapeDataString(searchTerm);
+        string url = $"https://www.google.com/search?q=site:jerrybase.com+{encodedTerm}";
+
+        try
+        {
+            // Open URL in default browser
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Could not open browser: {ex.Message}", "Error",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     public void UpdateLibraryRootDisplay(string path)
@@ -1932,4 +2473,40 @@ public class ConcertDate
 
     // Display album name (reuse CollectionName for grid binding compatibility)
     public string DisplayAlbumName => CollectionName;
+}
+
+// Value converter for formatting date section headers
+public class DateHeaderConverter : System.Windows.Data.IMultiValueConverter
+{
+    public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        // Debug logging
+        System.Diagnostics.Debug.WriteLine($"DateHeaderConverter called with {values.Length} values");
+        if (values.Length >= 1) System.Diagnostics.Debug.WriteLine($"  Value[0]: {values[0]} (type: {values[0]?.GetType().Name})");
+        if (values.Length >= 2) System.Diagnostics.Debug.WriteLine($"  Value[1]: {values[1]} (type: {values[1]?.GetType().Name})");
+
+        if (values.Length >= 2 && values[0] is string date && values[1] is Dictionary<string, (string venue, string location)> dateVenueMap)
+        {
+            System.Diagnostics.Debug.WriteLine($"  Attempting lookup for date: '{date}', map has {dateVenueMap.Count} entries");
+
+            if (dateVenueMap.TryGetValue(date, out var venueInfo))
+            {
+                var result = $"{date} — {venueInfo.venue}, {venueInfo.location}";
+                System.Diagnostics.Debug.WriteLine($"  SUCCESS: Returning '{result}'");
+                return result;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"  FALLBACK: Date '{date}' not found in map");
+            // Fallback: just show the date
+            return date;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"  ERROR: Invalid binding types or count");
+        return values[0]?.ToString() ?? "";
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
 }
