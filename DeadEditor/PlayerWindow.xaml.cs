@@ -17,6 +17,9 @@ namespace DeadEditor
         private bool _isSeeking = false;
         private double _marqueePosition = 0;
 
+        // PlaylistWindow reference (set by App.xaml.cs)
+        internal PlaylistWindow? PlaylistWindowInstance { get; set; }
+
         public PlayerWindow(Window parentWindow)
         {
             InitializeComponent();
@@ -176,7 +179,12 @@ namespace DeadEditor
 
         private void PlaylistButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Phase 4 - Toggle PlaylistWindow visibility
+            if (PlaylistWindowInstance != null)
+            {
+                PlaylistWindowInstance.Visibility = PlaylistWindowInstance.Visibility == Visibility.Visible
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
         }
 
         private void VisButton_Click(object sender, RoutedEventArgs e)

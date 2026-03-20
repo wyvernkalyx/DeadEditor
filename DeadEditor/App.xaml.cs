@@ -29,6 +29,11 @@ public partial class App : System.Windows.Application
         // Create and show player window (docked to library window)
         var playerWindow = new PlayerWindow(libraryWindow);
         playerWindow.Show();
+
+        // Create and show playlist window (attached to player window)
+        var playlistWindow = new PlaylistWindow(playerWindow);
+        playerWindow.PlaylistWindowInstance = playlistWindow;
+        playlistWindow.Show();
     }
 
     protected override void OnExit(System.Windows.ExitEventArgs e)

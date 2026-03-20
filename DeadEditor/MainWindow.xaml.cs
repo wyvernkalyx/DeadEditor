@@ -153,6 +153,9 @@ public partial class MainWindow : Window
                 _tracks.Add(new TrackInfoViewModel(track, _albumInfo));
             }
 
+            // Load playlist for playback
+            _audioPlayer.LoadPlaylist(trackList);
+
             // Update UI
             RefreshUI();
 

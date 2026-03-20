@@ -1722,7 +1722,8 @@ public partial class LibraryBrowserWindow : Window
             }
             else if (_currentTracks.Count > 0)
             {
-                // Start playing from first track
+                // Load playlist and start playing from first track
+                _audioPlayer.LoadPlaylist(_currentTracks);
                 PlayTrack(0);
             }
         }
