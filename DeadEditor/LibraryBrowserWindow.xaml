@@ -553,7 +553,7 @@
                                   x:Name="TracksDataGrid"
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
-                                  SelectionMode="Single"
+                                  SelectionMode="Extended"
                                   IsReadOnly="True"
                                   HeadersVisibility="Column"
                                   GridLinesVisibility="None"
@@ -564,7 +564,22 @@
                                   BorderThickness="0"
                                   Margin="5"
                                   LoadingRow="TracksDataGrid_LoadingRow"
-                                  MouseLeftButtonUp="TracksDataGrid_MouseLeftButtonUp">
+                                  MouseLeftButtonUp="TracksDataGrid_MouseLeftButtonUp"
+                                  MouseDoubleClick="TracksDataGrid_MouseDoubleClick">
+
+                            <!-- Context Menu for Track Actions -->
+                            <DataGrid.ContextMenu>
+                                <ContextMenu Opened="TracksContextMenu_Opened">
+                                    <MenuItem Header="▶ Play Now" Click="PlayNowMenuItem_Click"/>
+                                    <MenuItem Header="＋ Add to Playlist" Click="AddToPlaylistMenuItem_Click"/>
+                                    <Separator/>
+                                    <MenuItem x:Name="RemoveFromPlaylistMenuItem" Header="✕ Remove from Playlist"
+                                              Click="RemoveFromPlaylistMenuItem_Click"/>
+                                    <Separator/>
+                                    <MenuItem x:Name="AddSelectedToPlaylistMenuItem" Header="＋ Add Selected to Playlist"
+                                              Click="AddSelectedToPlaylistMenuItem_Click"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
 
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader">
@@ -623,6 +638,9 @@
                                                     <DataTemplate DataType="{x:Type models:TrackViewItem}">
                                                         <TextBlock Text="{Binding Track.TrackNumber}" VerticalAlignment="Center"/>
                                                     </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type models:TrackInfo}">
+                                                        <TextBlock Text="{Binding TrackNumber}" VerticalAlignment="Center"/>
+                                                    </DataTemplate>
                                                 </ContentControl.Resources>
                                             </ContentControl>
                                         </DataTemplate>
@@ -637,15 +655,37 @@
                                                 <ContentControl.Resources>
                                                     <DataTemplate DataType="{x:Type models:DateHeaderItem}">
                                                         <Border Background="#1A1A2E" MinHeight="36" Padding="0">
-                                                            <TextBlock Text="{Binding HeaderText}"
-                                                                       FontWeight="Bold"
-                                                                       FontSize="15"
-                                                                       Foreground="#FFFFFF"
-                                                                       VerticalAlignment="Center"/>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding HeaderText}"
+                                                                           FontWeight="Bold"
+                                                                           FontSize="15"
+                                                                           Foreground="#FFFFFF"
+                                                                           VerticalAlignment="Center"/>
+                                                                <Button Grid.Column="1"
+                                                                        Content="＋ Add All"
+                                                                        Click="AddAllTracksButton_Click"
+                                                                        Tag="{Binding Date}"
+                                                                        Background="#2D2D30"
+                                                                        Foreground="#FFFFFF"
+                                                                        BorderBrush="#555555"
+                                                                        BorderThickness="1"
+                                                                        Padding="10,4"
+                                                                        Margin="0,0,10,0"
+                                                                        FontSize="13"
+                                                                        Cursor="Hand"
+                                                                        VerticalAlignment="Center"/>
+                                                            </Grid>
                                                         </Border>
                                                     </DataTemplate>
                                                     <DataTemplate DataType="{x:Type models:TrackViewItem}">
                                                         <TextBlock Text="{Binding Track.DisplayTitle}" VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type models:TrackInfo}">
+                                                        <TextBlock Text="{Binding DisplayTitle}" VerticalAlignment="Center"/>
                                                     </DataTemplate>
                                                 </ContentControl.Resources>
                                             </ContentControl>
@@ -670,6 +710,9 @@
                                                     </DataTemplate>
                                                     <DataTemplate DataType="{x:Type models:TrackViewItem}">
                                                         <TextBlock Text="{Binding Track.Duration}" VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                    <DataTemplate DataType="{x:Type models:TrackInfo}">
+                                                        <TextBlock Text="{Binding Duration}" VerticalAlignment="Center"/>
                                                     </DataTemplate>
                                                 </ContentControl.Resources>
                                             </ContentControl>
