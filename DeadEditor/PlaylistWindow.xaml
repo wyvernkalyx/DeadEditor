@@ -83,6 +83,13 @@
                       RowStyle="{StaticResource PlaylistRowStyle}"
                       MouseDoubleClick="PlaylistDataGrid_MouseDoubleClick">
 
+                <!-- Context Menu -->
+                <DataGrid.ContextMenu>
+                    <ContextMenu Background="#252526" Foreground="#CCCCCC" BorderBrush="#3E3E42">
+                        <MenuItem Header="🎵 Go to Concert" Click="GoToConcert_Click" x:Name="GoToConcertMenuItem"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
                 <DataGrid.Resources>
                     <!-- Column Header Style -->
                     <Style TargetType="DataGridColumnHeader">

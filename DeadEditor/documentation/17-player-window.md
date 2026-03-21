@@ -113,6 +113,15 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 - Double-click a row → PlaybackService.Play(track)
 - Currently playing row highlighted in gold (#D7BA7D)
 
+**Context Menu:**
+- Right-click a playlist track → "🎵 Go to Concert" menu item
+- Clicking it navigates LibraryBrowserWindow to the track's parent concert
+- Scrolls to and highlights the specific track in the concert view
+- LibraryBrowserWindow comes to foreground
+- PlaylistWindow remains open
+- If track not found in library (e.g., added from import screen and not yet saved):
+  - Shows informational message: "Could not find this track in the library. The track may have been added from the import screen and not yet saved to the library."
+
 **PL button on PlayerWindow:** toggles PlaylistWindow.Visibility
 
 **Playlist Population Rules:**

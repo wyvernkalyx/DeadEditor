@@ -1088,6 +1088,71 @@ public partial class LibraryBrowserWindow : Window
     }
 
     /// <summary>
+    /// Public method to navigate to a track's parent concert from external windows (e.g., PlaylistWindow).
+    /// Finds the concert containing the track, opens it, and scrolls to the specific track.
+    /// </summary>
+    /// <param name="track">Track to navigate to</param>
+    /// <returns>True if concert was found and navigation succeeded, false otherwise</returns>
+    public bool NavigateToTrack(TrackInfo track)
+    {
+        if (track == null || string.IsNullOrEmpty(track.FilePath))
+            return false;
+
+        // Extract parent folder from file path
+        var trackFolder = Path.GetDirectoryName(track.FilePath);
+        if (string.IsNullOrEmpty(trackFolder))
+            return false;
+
+        // Find the show that contains this folder path
+        var parentShow = _allShows.FirstOrDefault(show =>
+            show.FolderPaths.Any(folderPath =>
+                folderPath.Equals(trackFolder, StringComparison.OrdinalIgnoreCase)));
+
+        if (parentShow == null)
+            return false;
+
+        // Open the concert view
+        OpenConcertView(parentShow);
+
+        // Scroll to and highlight the track
+        Dispatcher.InvokeAsync(() =>
+        {
+            // Find the track in the current view
+            TrackInfo? targetTrack = null;
+
+            if (_concertDates.Count > 1)
+            {
+                // Multi-night view: Find track in _concertViewItems
+                var trackItem = _concertViewItems.OfType<TrackViewItem>()
+                    .FirstOrDefault(t => t.Track.FilePath == track.FilePath);
+
+                if (trackItem != null)
+                {
+                    TracksDataGrid.SelectedItem = trackItem;
+                    TracksDataGrid.ScrollIntoView(trackItem);
+                }
+            }
+            else
+            {
+                // Single-night view: Find track in _currentTracks
+                targetTrack = _currentTracks.FirstOrDefault(t => t.FilePath == track.FilePath);
+
+                if (targetTrack != null)
+                {
+                    TracksDataGrid.SelectedItem = targetTrack;
+                    TracksDataGrid.ScrollIntoView(targetTrack);
+                }
+            }
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
+
+        // Bring window to foreground
+        Activate();
+        Focus();
+
+        return true;
+    }
+
+    /// <summary>
     /// Builds a lookup dictionary mapping concert dates to their venue and location.
     /// For box sets and multi-night shows, extracts venue/location from folder paths matching each date.
     /// </summary>

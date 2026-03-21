@@ -352,6 +352,39 @@ namespace DeadEditor
             _player.Playlist.Clear();
         }
 
+        /// <summary>
+        /// Context menu handler: Navigate to the track's parent concert in LibraryBrowserWindow.
+        /// </summary>
+        private void GoToConcert_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlaylistDataGrid.SelectedItem is not PlaylistTrackViewModel vm)
+                return;
+
+            var track = vm.Track;
+
+            // Find LibraryBrowserWindow in application windows
+            var libraryWindow = System.Windows.Application.Current.Windows.OfType<LibraryBrowserWindow>().FirstOrDefault();
+
+            if (libraryWindow == null)
+            {
+                System.Windows.MessageBox.Show("Library browser window not found.", "Error",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                return;
+            }
+
+            // Navigate to the track's concert
+            bool success = libraryWindow.NavigateToTrack(track);
+
+            if (!success)
+            {
+                System.Windows.MessageBox.Show("Could not find this track in the library.\n\nThe track may have been added from the import screen and not yet saved to the library.",
+                    "Track Not in Library",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+
+            // Note: PlaylistWindow stays open and visible (user can manually close it if desired)
+        }
+
         // ===== CLEANUP =====
 
         protected override void OnClosing(CancelEventArgs e)
