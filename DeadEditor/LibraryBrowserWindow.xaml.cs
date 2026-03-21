@@ -1422,6 +1422,8 @@ public partial class LibraryBrowserWindow : Window
     /// </summary>
     private void ScrollHeaderToTop(DateHeaderItem header)
     {
+        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Target date: {header.Date}");
+
         // First, scroll it into view (roughly) to generate container
         TracksDataGrid.ScrollIntoView(header);
 
@@ -1430,26 +1432,53 @@ public partial class LibraryBrowserWindow : Window
 
         // Find the ScrollViewer inside the DataGrid
         var scrollViewer = FindVisualChild<ScrollViewer>(TracksDataGrid);
-        if (scrollViewer == null) return;
+        if (scrollViewer == null)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] ERROR: ScrollViewer not found");
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Current scroll offset: {scrollViewer.VerticalOffset}");
 
         // Get the container for the header row
         var container = TracksDataGrid.ItemContainerGenerator.ContainerFromItem(header) as DataGridRow;
-        if (container == null) return;
+        if (container == null)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] ERROR: Container not found for header");
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Container found - Type: {container.GetType().Name}, Item type: {container.Item?.GetType().Name}");
+        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Container.ActualHeight: {container.ActualHeight}");
 
         try
         {
-            // Get the header's position relative to the ScrollViewer's viewport
-            var transform = container.TransformToAncestor(scrollViewer);
-            var position = transform.Transform(new System.Windows.Point(0, 0));
+            // Find the ItemsPresenter which contains all the items
+            var itemsPresenter = FindVisualChild<System.Windows.Controls.Primitives.DataGridRowsPresenter>(TracksDataGrid);
+            if (itemsPresenter == null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] ERROR: ItemsPresenter not found");
+                TracksDataGrid.ScrollIntoView(header);
+                return;
+            }
 
-            // Scroll to position the header at the top with a small offset
-            // position.Y is relative to the viewport, so we add current offset
-            // Subtract 8px so header isn't flush against the top edge
-            var targetOffset = scrollViewer.VerticalOffset + position.Y - 8;
+            // Get the header's position relative to the items presenter (content area)
+            var transform = container.TransformToAncestor(itemsPresenter);
+            var positionInContent = transform.Transform(new System.Windows.Point(0, 0));
+
+            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Position in content area: Y={positionInContent.Y}");
+
+            // The target scroll offset is the position in content area, minus 8px padding
+            var targetOffset = positionInContent.Y - 8;
+            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Target offset: {targetOffset} (contentPosition={positionInContent.Y} - 8)");
+
             scrollViewer.ScrollToVerticalOffset(Math.Max(0, targetOffset));
+
+            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Scroll complete. New offset: {scrollViewer.VerticalOffset}");
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Exception during scroll: {ex.Message}");
             // Fallback to basic scroll if transform fails
             TracksDataGrid.ScrollIntoView(header);
         }
