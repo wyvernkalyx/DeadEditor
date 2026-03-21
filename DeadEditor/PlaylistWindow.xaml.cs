@@ -38,11 +38,7 @@ namespace DeadEditor
                 if (string.IsNullOrEmpty(_track.TrackDate))
                     return "";
 
-                // Format: yyyy-MM-dd → MM-dd
-                if (_track.TrackDate.Length >= 10)
-                {
-                    return _track.TrackDate.Substring(5, 5); // "MM-dd"
-                }
+                // Return full yyyy-MM-dd format
                 return _track.TrackDate;
             }
         }
@@ -334,7 +330,14 @@ namespace DeadEditor
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
+            // Stop playback
+            _player.Stop();
+
+            // Clear playlist
             _player.Playlist.Clear();
+
+            // This will trigger TrackChanged event in AudioPlayerService,
+            // which PlayerWindow subscribes to for marquee updates
         }
 
         // ===== CLEANUP =====

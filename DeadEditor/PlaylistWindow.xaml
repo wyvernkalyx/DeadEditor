@@ -126,7 +126,7 @@
                     </DataGridTextColumn>
 
                     <!-- Date Column -->
-                    <DataGridTextColumn Header="Date" Width="80" Binding="{Binding ShortDate}">
+                    <DataGridTextColumn Header="Date" Width="95" Binding="{Binding ShortDate}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
