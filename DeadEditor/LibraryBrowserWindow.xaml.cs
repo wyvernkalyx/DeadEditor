@@ -1442,9 +1442,11 @@ public partial class LibraryBrowserWindow : Window
             var transform = container.TransformToAncestor(scrollViewer);
             var position = transform.Transform(new System.Windows.Point(0, 0));
 
-            // Scroll to position the header at the top
+            // Scroll to position the header at the top with a small offset
             // position.Y is relative to the viewport, so we add current offset
-            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + position.Y);
+            // Subtract 8px so header isn't flush against the top edge
+            var targetOffset = scrollViewer.VerticalOffset + position.Y - 8;
+            scrollViewer.ScrollToVerticalOffset(Math.Max(0, targetOffset));
         }
         catch
         {
@@ -1645,6 +1647,163 @@ public partial class LibraryBrowserWindow : Window
             // Load playlist and play selected track using singleton
             _audioPlayer.LoadPlaylist(_currentTracks);
             _audioPlayer.Play(track);
+        }
+    }
+
+    /// <summary>
+    /// Helper method to add tracks to the playlist, avoiding duplicates.
+    /// Uses TrackInfo.Equals() which compares FilePath for duplicate detection.
+    /// </summary>
+    private void AddTracksToPlaylist(System.Collections.Generic.IEnumerable<TrackInfo> tracks)
+    {
+        foreach (var track in tracks)
+        {
+            // FilePath equality already handled by TrackInfo.Equals()
+            if (!App.PlaybackService.Playlist.Contains(track))
+                App.PlaybackService.Playlist.Add(track);
+        }
+    }
+
+    /// <summary>
+    /// Double-click handler: Adds track to playlist if not present, then plays it.
+    /// </summary>
+    private void TracksDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        // Get the track from the clicked row (handles both single-night and multi-night views)
+        var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
+        if (track != null)
+        {
+            AddTracksToPlaylist(new[] { track });
+            App.PlaybackService.Play(track);
+        }
+    }
+
+    /// <summary>
+    /// Context menu: Play Now - Adds track to playlist and starts playing.
+    /// </summary>
+    private void PlayNowMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
+        if (track != null)
+        {
+            AddTracksToPlaylist(new[] { track });
+            App.PlaybackService.Play(track);
+        }
+    }
+
+    /// <summary>
+    /// Context menu: Add to Playlist - Adds track without starting playback.
+    /// </summary>
+    private void AddToPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
+        if (track != null)
+        {
+            AddTracksToPlaylist(new[] { track });
+        }
+    }
+
+    /// <summary>
+    /// Context menu: Remove from Playlist - Removes the selected track from playlist.
+    /// </summary>
+    private void RemoveFromPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
+        if (track != null)
+        {
+            App.PlaybackService.Playlist.Remove(track);
+        }
+    }
+
+    /// <summary>
+    /// Context menu: Add Selected to Playlist - Adds all selected tracks to playlist.
+    /// </summary>
+    private void AddSelectedToPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        var selectedTracks = TracksDataGrid.SelectedItems
+            .Cast<object>()
+            .Select(item => GetTrackFromDataGridSelection(item))
+            .Where(track => track != null)
+            .Cast<TrackInfo>()
+            .ToList();
+
+        if (selectedTracks.Any())
+        {
+            AddTracksToPlaylist(selectedTracks);
+        }
+    }
+
+    /// <summary>
+    /// Helper to extract TrackInfo from either TrackInfo (single-night) or TrackViewItem (multi-night).
+    /// Returns null if item is a DateHeaderItem or invalid type.
+    /// </summary>
+    private TrackInfo? GetTrackFromDataGridSelection(object? item)
+    {
+        if (item == null)
+            return null;
+
+        // Single-night view: item is directly TrackInfo
+        if (item is TrackInfo track)
+            return track;
+
+        // Multi-night view: item is TrackViewItem wrapping TrackInfo
+        if (item is TrackViewItem trackViewItem)
+            return trackViewItem.Track;
+
+        // DateHeaderItem or other type - not a track
+        return null;
+    }
+
+    /// <summary>
+    /// Context menu Opened event: Enables/disables menu items based on current selection.
+    /// </summary>
+    private void TracksContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
+
+        // Enable "Remove from Playlist" only if the track is currently in the playlist
+        if (RemoveFromPlaylistMenuItem != null)
+        {
+            RemoveFromPlaylistMenuItem.IsEnabled = track != null && App.PlaybackService.Playlist.Contains(track);
+        }
+
+        // Enable "Add Selected to Playlist" only if multiple items are selected
+        if (AddSelectedToPlaylistMenuItem != null)
+        {
+            AddSelectedToPlaylistMenuItem.IsEnabled = TracksDataGrid.SelectedItems.Count > 1;
+        }
+    }
+
+    /// <summary>
+    /// "Add All" button click handler: Adds all tracks for a specific concert date to the playlist.
+    /// Button.Tag contains the date string (yyyy-MM-dd).
+    /// </summary>
+    private void AddAllTracksButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Button button || button.Tag is not string date)
+            return;
+
+        // Get all tracks for this date from _currentTracks
+        var tracksForDate = _currentTracks
+            .Where(t => t.TrackDate == date)
+            .ToList();
+
+        if (tracksForDate.Any())
+        {
+            AddTracksToPlaylist(tracksForDate);
+
+            // Show confirmation in status bar
+            StatusText.Text = $"{tracksForDate.Count} tracks from {date} added to playlist";
+            StatusText.Visibility = Visibility.Visible;
+
+            // Clear status after 3 seconds
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            timer.Tick += (s, args) =>
+            {
+                timer.Stop();
+                StatusText.Text = $"{_shows.Count} concerts in library";
+            };
+            timer.Start();
         }
     }
 
