@@ -67,6 +67,7 @@
             <!-- Playlist DataGrid -->
             <DataGrid Grid.Row="1" x:Name="PlaylistDataGrid"
                       AutoGenerateColumns="False"
+                      IsReadOnly="True"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
                       CanUserReorderColumns="False"
