@@ -1,20 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add TODO.md)",
-      "Bash(git commit -m \"Update TODO.md with bug fix completion\")",
-      "Bash(git log -1 --format=\"%H %s\")",
-      "Bash(git show d3f7a82 --no-patch --format=\"%B\")",
-      "Bash(dotnet build DeadEditor.csproj)",
-      "Bash(cat \"$APPDATA/DeadEditor/settings.json\")",
-      "Bash(taskkill //F //IM DeadEditor.exe //T)",
-      "Bash(taskkill //F //IM dotnet.exe //T)",
-      "Bash(tasklist)",
-      "Bash(echo \"$APPDATA\")",
-      "Bash(ls -la \"$APPDATA/DeadEditor/\")",
-      "Bash(cmd //c \"echo %APPDATA%\")",
-      "Bash(cmd //c \"type %APPDATA%\\DeadEditor\\settings.json\")",
-      "Bash(git add -A)"
+      "Bash(git commit -m \"Add Player visibility toggle button with Ctrl+P shortcut\n\nFEATURE: Show/Hide PlayerWindow from LibraryBrowserWindow\n\nIMPLEMENTATION:\n- Added \"\"🎵 Player\"\" menu item to LibraryBrowserWindow menu bar\n- Menu item right-aligned, shows \"\"Ctrl+P\"\" shortcut hint\n- Button state reflects PlayerWindow visibility (bold=visible, normal=hidden)\n- Clicking toggles PlayerWindow, PlaylistWindow, and VisWindow visibility\n- Ctrl+P keyboard shortcut toggles same behavior\n- State syncs when PlayerWindow closed via its own × button\n\nBEHAVIOR:\n- When PlayerWindow visible: menu item bold, clicking hides all three windows\n- When PlayerWindow hidden: menu item normal, clicking shows PlayerWindow\n- Companion windows (Playlist/Vis) restore to last visibility state\n- User-controlled visibility via PL/VIS buttons preserved\n\nTECHNICAL DETAILS:\n- Added PlayerToggleMenuItem to Menu bar with HorizontalAlignment=Right\n- Window_PreviewKeyDown handles Ctrl+P keyboard shortcut\n- Toggle PlayerWindowVisibility() finds PlayerWindow and toggles visibility\n- Subscribed to PlayerWindow.IsVisibleChanged to sync menu state\n- Used System.Windows.Application.Current.Windows to find PlayerWindow\n\nFILES MODIFIED:\n- LibraryBrowserWindow.xaml: added menu item, PreviewKeyDown handler\n- LibraryBrowserWindow.xaml.cs: toggle logic + event handlers\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")"
     ],
     "deny": [],
     "ask": []

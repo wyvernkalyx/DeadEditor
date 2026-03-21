@@ -67,8 +67,40 @@ public partial class LibraryBrowserWindow : Window
         // Save window position when closing
         Closing += LibraryBrowserWindow_Closing;
 
+        // Subscribe to PlayerWindow visibility changes (when closed via × button)
+        Loaded += LibraryBrowserWindow_Loaded;
+
         // Load shows
         LoadShows();
+    }
+
+    private void LibraryBrowserWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Find PlayerWindow and subscribe to its IsVisibleChanged event
+        foreach (Window window in System.Windows.Application.Current.Windows)
+        {
+            if (window is PlayerWindow playerWindow)
+            {
+                playerWindow.IsVisibleChanged += PlayerWindow_IsVisibleChanged;
+
+                // Set initial menu item state
+                PlayerToggleMenuItem.FontWeight = playerWindow.Visibility == Visibility.Visible
+                    ? FontWeights.Bold
+                    : FontWeights.Normal;
+                break;
+            }
+        }
+    }
+
+    private void PlayerWindow_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is PlayerWindow playerWindow)
+        {
+            // Update menu item state to reflect PlayerWindow visibility
+            PlayerToggleMenuItem.FontWeight = playerWindow.Visibility == Visibility.Visible
+                ? FontWeights.Bold
+                : FontWeights.Normal;
+        }
     }
 
     private void RestoreWindowPosition()
@@ -1640,6 +1672,66 @@ public partial class LibraryBrowserWindow : Window
     private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    /// <summary>
+    /// Toggles PlayerWindow visibility (and its companion windows).
+    /// Updates menu item appearance to reflect state.
+    /// </summary>
+    private void PlayerToggleMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        TogglePlayerWindowVisibility();
+    }
+
+    /// <summary>
+    /// Handles Ctrl+P keyboard shortcut to toggle PlayerWindow.
+    /// </summary>
+    private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.P &&
+            (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+        {
+            TogglePlayerWindowVisibility();
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>
+    /// Toggles PlayerWindow visibility and updates menu button state.
+    /// Also toggles PlaylistWindow and VisWindow to match.
+    /// </summary>
+    private void TogglePlayerWindowVisibility()
+    {
+        // Find PlayerWindow in app windows
+        foreach (Window window in System.Windows.Application.Current.Windows)
+        {
+            if (window is PlayerWindow playerWindow)
+            {
+                if (playerWindow.Visibility == Visibility.Visible)
+                {
+                    // Hide player and companions
+                    playerWindow.Hide();
+                    playerWindow.PlaylistWindowInstance?.Hide();
+                    playerWindow.VisWindowInstance?.Hide();
+
+                    // Update menu item appearance to show inactive state
+                    PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
+                }
+                else
+                {
+                    // Show player and restore companion visibility states
+                    playerWindow.Show();
+
+                    // PlaylistWindow visibility is controlled by PL button on PlayerWindow
+                    // VisWindow visibility is controlled by VIS button on PlayerWindow
+                    // Don't force them visible here - let user's last state persist
+
+                    // Update menu item appearance to show active state
+                    PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+                }
+                break;
+            }
+        }
     }
 
     private void EditMetadataButton_Click(object sender, RoutedEventArgs e)
