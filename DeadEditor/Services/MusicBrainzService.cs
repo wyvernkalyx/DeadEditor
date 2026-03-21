@@ -771,6 +771,7 @@ namespace DeadEditor.Services
                 var tracks = new List<MusicBrainzTrack>();
 
                 // Extract tracks from all media (discs)
+                int discNumber = 1;
                 foreach (var medium in media)
                 {
                     var trackList = medium["tracks"] as JArray;
@@ -784,15 +785,17 @@ namespace DeadEditor.Services
 
                             tracks.Add(new MusicBrainzTrack
                             {
+                                DiscNumber = discNumber,
                                 Position = position,
                                 Title = trackTitle,
                                 Length = length
                             });
                         }
                     }
+                    discNumber++;
                 }
 
-                Console.WriteLine($"Found {tracks.Count} tracks for this release");
+                Console.WriteLine($"Found {tracks.Count} tracks across {discNumber - 1} disc(s) for this release");
 
                 return tracks.Count > 0 ? tracks : null;
             }

@@ -330,14 +330,9 @@ namespace DeadEditor
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            // Stop playback
-            _player.Stop();
-
-            // Clear playlist
+            // Clear playlist only - do not stop playback
+            // The currently playing track continues playing even with an empty playlist
             _player.Playlist.Clear();
-
-            // This will trigger TrackChanged event in AudioPlayerService,
-            // which PlayerWindow subscribes to for marquee updates
         }
 
         // ===== CLEANUP =====

@@ -129,6 +129,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 |---------|------|------|--------|-----------------|--------|
 | Tracks grid | DataGrid | `TracksDataGrid` | Displays all tracks, shows preview metadata, highlights unmatched songs (yellow/gold background) | `_metadataService.ReadFolder(folderPath)` | Working |
 | Row selection | DataGridRow | N/A | Updates selected track editor when row selected | `TracksDataGrid_SelectionChanged` → updates SelectedTitle/Date/Segue fields | Working |
+| Row double-click | DataGridRow | N/A | Sends track to global playlist and plays it (delegates to PlayerWindow for playback controls) | `TracksDataGrid_MouseDoubleClick` → `AddTracksToPlaylist()` → `App.PlaybackService.Play(track)` | Working |
 | Row loading | DataGridRow | N/A | Sets row background color based on normalization status | `TracksDataGrid_LoadingRow` → `UpdateRowBackground()` | Working |
 | Row drag-to-reorder | DataGridRow | N/A | Drag rows to reorder tracks, visual drop indicator shows insertion point | `Row_PreviewMouseLeftButtonDown` → `Row_MouseMove` → `Row_Drop` → reorders `_tracks` collection | Working |
 

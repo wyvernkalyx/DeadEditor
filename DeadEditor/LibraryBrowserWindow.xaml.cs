@@ -1390,124 +1390,72 @@ public partial class LibraryBrowserWindow : Window
     /// <summary>
     /// Scrolls to and expands the section for the specified date.
     /// Called when user clicks a date link in the left panel.
-    /// Scrolls the header to the TOP of the visible grid area.
+    /// Collapses all other sections and scrolls the target header to the top.
     /// </summary>
     private async void ScrollToDate(string date)
     {
         if (string.IsNullOrEmpty(date)) return;
 
         // Find the date header for this date
-        var header = _concertViewItems
+        var targetHeader = _concertViewItems
             .OfType<DateHeaderItem>()
             .FirstOrDefault(h => h.Date == date);
 
-        if (header != null)
-        {
-            // Expand the section if collapsed
-            if (!header.IsExpanded)
-            {
-                ToggleDateSection(header);
-            }
+        if (targetHeader == null) return;
 
-            // Wait for layout to complete after expanding
-            await Dispatcher.InvokeAsync(() =>
+        // Step 1: Collapse all sections except the target
+        var allHeaders = _concertViewItems.OfType<DateHeaderItem>().ToList();
+        foreach (var header in allHeaders)
+        {
+            if (header != targetHeader && header.IsExpanded)
             {
-                ScrollHeaderToTop(header);
-            }, System.Windows.Threading.DispatcherPriority.Loaded);
+                // Collapse this section by removing its tracks
+                var tracksToRemove = _concertViewItems
+                    .OfType<TrackViewItem>()
+                    .Where(t => t.ParentHeader == header)
+                    .ToList();
+
+                foreach (var track in tracksToRemove)
+                {
+                    _concertViewItems.Remove(track);
+                }
+
+                header.IsExpanded = false;
+            }
         }
+
+        // Step 2: Expand target section if collapsed
+        if (!targetHeader.IsExpanded)
+        {
+            var headerIndex = _concertViewItems.IndexOf(targetHeader);
+            if (headerIndex >= 0 && _currentTracks.Count > 0)
+            {
+                var dateTracks = _currentTracks.Where(t => t.TrackDate == targetHeader.Date).ToList();
+
+                int insertIndex = headerIndex + 1;
+                foreach (var track in dateTracks)
+                {
+                    _concertViewItems.Insert(insertIndex++, new TrackViewItem
+                    {
+                        Track = track,
+                        ParentHeader = targetHeader
+                    });
+                }
+
+                targetHeader.IsExpanded = true;
+            }
+        }
+
+        // Step 3: Update selected date for UI highlighting
+        SelectedDate = date;
+
+        // Step 4: Wait for layout to complete, then scroll header into view
+        await Dispatcher.InvokeAsync(() =>
+        {
+            TracksDataGrid.ScrollIntoView(targetHeader);
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
-    /// <summary>
-    /// Scrolls a date header row to the TOP of the visible DataGrid area.
-    /// </summary>
-    private void ScrollHeaderToTop(DateHeaderItem header)
-    {
-        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Target date: {header.Date}");
-
-        // First, scroll it into view (roughly) to generate container
-        TracksDataGrid.ScrollIntoView(header);
-
-        // Update layout to ensure containers are generated
-        TracksDataGrid.UpdateLayout();
-
-        // Find the ScrollViewer inside the DataGrid
-        var scrollViewer = FindVisualChild<ScrollViewer>(TracksDataGrid);
-        if (scrollViewer == null)
-        {
-            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] ERROR: ScrollViewer not found");
-            return;
-        }
-
-        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Current scroll offset: {scrollViewer.VerticalOffset}");
-
-        // Get the container for the header row
-        var container = TracksDataGrid.ItemContainerGenerator.ContainerFromItem(header) as DataGridRow;
-        if (container == null)
-        {
-            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] ERROR: Container not found for header");
-            return;
-        }
-
-        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Container found - Type: {container.GetType().Name}, Item type: {container.Item?.GetType().Name}");
-        System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Container.ActualHeight: {container.ActualHeight}");
-
-        try
-        {
-            // Find the ItemsPresenter which contains all the items
-            var itemsPresenter = FindVisualChild<System.Windows.Controls.Primitives.DataGridRowsPresenter>(TracksDataGrid);
-            if (itemsPresenter == null)
-            {
-                System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] ERROR: ItemsPresenter not found");
-                TracksDataGrid.ScrollIntoView(header);
-                return;
-            }
-
-            // Get the header's position relative to the items presenter (content area)
-            var transform = container.TransformToAncestor(itemsPresenter);
-            var positionInContent = transform.Transform(new System.Windows.Point(0, 0));
-
-            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Position in content area: Y={positionInContent.Y}");
-
-            // The target scroll offset is the position in content area, minus 8px padding
-            var targetOffset = positionInContent.Y - 8;
-            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Target offset: {targetOffset} (contentPosition={positionInContent.Y} - 8)");
-
-            scrollViewer.ScrollToVerticalOffset(Math.Max(0, targetOffset));
-
-            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Scroll complete. New offset: {scrollViewer.VerticalOffset}");
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[ScrollHeaderToTop] Exception during scroll: {ex.Message}");
-            // Fallback to basic scroll if transform fails
-            TracksDataGrid.ScrollIntoView(header);
-        }
-    }
-
-    /// <summary>
-    /// Finds a child of a specific type in the visual tree.
-    /// </summary>
-    private T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
-    {
-        if (parent == null) return null;
-
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is T typedChild)
-            {
-                return typedChild;
-            }
-
-            var childOfChild = FindVisualChild<T>(child);
-            if (childOfChild != null)
-            {
-                return childOfChild;
-            }
-        }
-
-        return null;
-    }
 
     private void OpenConcertDateView(ConcertDate concertDate)
     {

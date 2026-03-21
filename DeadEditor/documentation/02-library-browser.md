@@ -172,6 +172,99 @@ Building the "By Date" view for Official Releases requires reading track metadat
 - `Title` - Song title with segue markers (`TrackInfo.PreviewMetadata`)
 - `Duration` - Track duration (`TrackInfo.Duration`)
 
+#### Track Interactions — Playlist Population
+
+The concert detail view provides multiple ways to add tracks to the global playlist managed by `AudioPlayerService`:
+
+**1. Double-Click Track**
+- **Action:** Adds track to playlist (if not already present) and immediately plays it
+- **Handler:** `TracksDataGrid_MouseDoubleClick`
+- **Playlist Behavior:** Uses `AddTracksToPlaylist()` helper to check for duplicates via `TrackInfo.Equals()` (FilePath comparison)
+- **Implementation:**
+  ```csharp
+  var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
+  if (track != null) {
+      AddTracksToPlaylist(new[] { track });
+      App.PlaybackService.Play(track);
+  }
+  ```
+
+**2. Right-Click Context Menu**
+
+The track DataGrid includes a context menu with the following options:
+
+| Menu Item | Shortcut | Action | Plays Track? | Implementation |
+|-----------|----------|--------|--------------|----------------|
+| ▶ Play Now | (none) | Adds track to playlist and plays it | Yes | `PlayNowMenuItem_Click` → `AddTracksToPlaylist()` → `Play(track)` |
+| ＋ Add to Playlist | (none) | Adds track to playlist without playing | No | `AddToPlaylistMenuItem_Click` → `AddTracksToPlaylist()` |
+| ✕ Remove from Playlist | (none) | Removes track from playlist | No | `RemoveFromPlaylistMenuItem_Click` → `Playlist.Remove(track)` |
+| ＋ Add Selected to Playlist | (none) | Adds all selected tracks (multi-select) | No | `AddSelectedToPlaylistMenuItem_Click` → loops selected items |
+
+**Context Menu Smart Behavior:**
+- **Remove from Playlist** is disabled (greyed out) if the track is NOT currently in the playlist
+- **Add Selected to Playlist** is disabled if only one track is selected
+- Menu opening handler: `TracksContextMenu_Opened` checks `Playlist.Contains(track)` to enable/disable items
+
+**3. Add All Button (Multi-Night Concerts Only)**
+
+For box sets and official releases spanning multiple concert dates, each date section header includes an **"＋ Add All"** button:
+
+| Element | Visibility | Location | Action | Implementation |
+|---------|-----------|----------|--------|----------------|
+| Add All button | Multi-night view only | Right side of date section header | Adds all tracks for that date to playlist | `AddAllTracksButton_Click` → filters `_currentTracks` by `TrackDate` |
+
+**Behavior:**
+- Button.Tag contains the concert date (yyyy-MM-dd)
+- Filters `_currentTracks.Where(t => t.TrackDate == date)` to get all tracks for that date
+- Calls `AddTracksToPlaylist(tracksForDate)` to add all tracks at once
+- Shows confirmation message in status bar: "X tracks from yyyy-MM-dd added to playlist" (auto-clears after 3 seconds)
+
+**4. Multi-Select Support**
+
+The tracks DataGrid supports standard Windows multi-selection:
+- **Ctrl+Click:** Select/deselect individual tracks
+- **Shift+Click:** Select range of tracks
+- **Right-click → Add Selected to Playlist:** Adds all selected tracks at once
+
+**Implementation:** `TracksDataGrid.SelectedItems` is enumerated, each item is passed through `GetTrackFromDataGridSelection()` to extract the `TrackInfo` (handles both single-night `TrackInfo` and multi-night `TrackViewItem` wrappers).
+
+**Duplicate Prevention:**
+
+All playlist addition methods use the `AddTracksToPlaylist()` helper:
+```csharp
+private void AddTracksToPlaylist(IEnumerable<TrackInfo> tracks)
+{
+    foreach (var track in tracks)
+    {
+        // FilePath equality already handled by TrackInfo.Equals()
+        if (!App.PlaybackService.Playlist.Contains(track))
+            App.PlaybackService.Playlist.Add(track);
+    }
+}
+```
+
+This ensures tracks are never duplicated in the playlist, even if added multiple times from different UI interactions.
+
+**Helper Method — GetTrackFromDataGridSelection:**
+
+Because the DataGrid shows different item types in single-night vs multi-night views, a helper method extracts the `TrackInfo`:
+
+```csharp
+private TrackInfo? GetTrackFromDataGridSelection(object? item)
+{
+    if (item == null) return null;
+
+    // Single-night view: item is directly TrackInfo
+    if (item is TrackInfo track) return track;
+
+    // Multi-night view: item is TrackViewItem wrapping TrackInfo
+    if (item is TrackViewItem trackViewItem) return trackViewItem.Track;
+
+    // DateHeaderItem or other type - not a track
+    return null;
+}
+```
+
 ### Audio Player Controls
 
 #### Now Playing Display

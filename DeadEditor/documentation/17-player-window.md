@@ -115,10 +115,104 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 
 **PL button on PlayerWindow:** toggles PlaylistWindow.Visibility
 
-**Population rules:**
-- Import screen opens an album → PlaybackService.LoadPlaylist(tracks)
-- Library browser: selecting a concert + pressing Play → PlaybackService.LoadPlaylist(tracks)
-- PlaylistWindow DataGrid bound directly to PlaybackService.Playlist (ObservableCollection)
+**Playlist Population Rules:**
+
+The playlist is populated through four methods:
+
+1. **Double-click track in LibraryBrowserWindow concert view**
+   - Adds track to playlist (if not already present) via `AddTracksToPlaylist()` helper
+   - Immediately plays the track via `App.PlaybackService.Play(track)`
+   - Duplicate prevention: uses `TrackInfo.Equals()` (FilePath comparison) via `Playlist.Contains()`
+
+2. **Right-click context menu in LibraryBrowserWindow**
+   - **▶ Play Now:** Adds track and plays it
+   - **＋ Add to Playlist:** Adds track without playing
+   - **✕ Remove from Playlist:** Removes track from playlist (greyed out if not in playlist)
+   - **＋ Add Selected to Playlist:** Adds all selected tracks (multi-select support)
+   - All menu items use `AddTracksToPlaylist()` for duplicate prevention
+
+3. **"Add All" button (multi-night concerts)**
+   - Appears on date section headers in box sets and official releases
+   - Adds all tracks for that specific concert date at once
+   - Shows confirmation message: "X tracks from yyyy-MM-dd added to playlist"
+
+4. **Opening a concert in LibraryBrowserWindow**
+   - When user double-clicks a concert in the library grid, calls `PlaybackService.LoadPlaylist(_currentTracks)`
+   - **Note:** This *replaces* the entire playlist with the concert's tracks (does not append)
+
+**Clear All Behavior:**
+
+The [✕ Clear] button in PlaylistWindow:
+- Calls `PlaybackService.Stop()` to halt playback
+- Clears the playlist via `PlaybackService.Playlist.Clear()`
+- PlayerWindow marquee resets to blank (via `TrackChanged` event)
+
+**Playlist Binding:**
+- PlaylistWindow DataGrid bound directly to `PlaybackService.Playlist` (ObservableCollection<TrackInfo>)
+- Changes automatically reflect in UI via ObservableCollection.CollectionChanged event
+
+---
+
+## Playlist Persistence
+
+The playlist is saved to `%APPDATA%/DeadEditor/settings.json` on app exit and restored on app startup.
+
+**Save on Exit (App.xaml.cs OnExit):**
+```csharp
+private void SavePlaylist()
+{
+    var settings = Models.LibrarySettings.Load();
+    settings.SavedPlaylistPaths = PlaybackService.Playlist
+        .Select(t => t.FilePath)
+        .ToList();
+    settings.Save();
+}
+```
+
+**Restore on Startup (App.xaml.cs OnStartup):**
+```csharp
+private void RestorePlaylist()
+{
+    var settings = Models.LibrarySettings.Load();
+    if (settings.SavedPlaylistPaths == null || !settings.SavedPlaylistPaths.Any())
+        return;
+
+    foreach (var path in settings.SavedPlaylistPaths)
+    {
+        // Skip missing files silently
+        if (!System.IO.File.Exists(path))
+            continue;
+
+        try
+        {
+            // Create minimal TrackInfo with just FilePath and Title
+            // Full metadata will be loaded if the track is played
+            var track = new Models.TrackInfo
+            {
+                FilePath = path,
+                Title = System.IO.Path.GetFileNameWithoutExtension(path)
+            };
+
+            PlaybackService.Playlist.Add(track);
+        }
+        catch
+        {
+            // Skip files that can't be loaded
+            continue;
+        }
+    }
+}
+```
+
+**Settings Schema:**
+- `SavedPlaylistPaths` (List<string>) — File paths of tracks in saved playlist
+- Added to LibrarySettings.cs as a new property
+- Persists alongside window positions and library paths
+
+**Error Handling:**
+- Missing files (deleted/moved) are silently skipped during restore
+- Playlist shows minimal metadata (filename only) until tracks are played
+- No error messages shown to user for missing files
 
 ---
 

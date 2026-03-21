@@ -139,25 +139,52 @@ namespace DeadEditor.Services
 
         public void Play()
         {
-            if (_wavePlayer == null || _audioFileReader == null)
+            // Case 1: Wave player exists and is paused - resume playback
+            if (_wavePlayer != null && _audioFileReader != null && _playbackState == PlaybackState.Paused)
             {
-                System.Diagnostics.Debug.WriteLine("[AudioPlayerService] Play() called but _wavePlayer or _audioFileReader is null - cannot play");
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() - Resuming from paused state");
+                    _wavePlayer.Play();
+                    SetPlaybackState(PlaybackState.Playing);
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() SUCCESS - Resumed");
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() resume FAILED: {ex.Message}");
+                    throw;
+                }
+            }
+
+            // Case 2: Already playing - do nothing
+            if (_wavePlayer != null && _audioFileReader != null && _playbackState == PlaybackState.Playing)
+            {
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() - Already playing");
                 return;
             }
 
-            try
+            // Case 3: CurrentTrack exists but player is not initialized - reload and play
+            if (_currentTrack != null && System.IO.File.Exists(_currentTrack.FilePath))
             {
-                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() - Starting playback");
-                _wavePlayer.Play();
-                SetPlaybackState(PlaybackState.Playing);
-                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() SUCCESS - State: {_playbackState}");
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() - Reloading current track: {_currentTrack.SongName ?? _currentTrack.Title}");
+                    LoadFile(_currentTrack.FilePath);
+                    _wavePlayer.Play();
+                    SetPlaybackState(PlaybackState.Playing);
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() SUCCESS - Reloaded and playing");
+                    return;
+                }
+                catch (System.Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() reload FAILED: {ex.Message}");
+                    throw;
+                }
             }
-            catch (System.Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play() FAILED: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Exception: {ex}");
-                throw;
-            }
+
+            // Case 4: No current track - cannot play
+            System.Diagnostics.Debug.WriteLine("[AudioPlayerService] Play() called but no track to play");
         }
 
         /// <summary>

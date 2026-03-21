@@ -12,6 +12,9 @@ namespace DeadEditor.Models
         public string? LastBoxSetName { get; set; }                    // Remember last box set name for faster imports
         public bool DismissedFpcalcWarning { get; set; } = false;      // User has dismissed the fpcalc.exe startup warning
 
+        // Playlist persistence
+        public List<string> SavedPlaylistPaths { get; set; } = new();  // File paths of tracks in saved playlist
+
         // Window positions
         public double? MainWindowLeft { get; set; }
         public double? MainWindowTop { get; set; }

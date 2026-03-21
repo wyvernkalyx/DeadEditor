@@ -1,6 +1,7 @@
 ﻿using DeadEditor.Services;
 using System.Configuration;
 using System.Data;
+using System.Linq;
 
 namespace DeadEditor;
 
@@ -22,6 +23,9 @@ public partial class App : System.Windows.Application
         // Initialize singleton on app startup to ensure it's ready
         _ = AudioPlayerService.Instance;
 
+        // Restore saved playlist from settings
+        RestorePlaylist();
+
         // Create and show main library browser window
         var libraryWindow = new LibraryBrowserWindow();
         libraryWindow.Show();
@@ -42,11 +46,59 @@ public partial class App : System.Windows.Application
         visWindow.Show();
     }
 
+    private void RestorePlaylist()
+    {
+        var settings = Models.LibrarySettings.Load();
+        if (settings.SavedPlaylistPaths == null || !settings.SavedPlaylistPaths.Any())
+            return;
+
+        foreach (var path in settings.SavedPlaylistPaths)
+        {
+            // Skip missing files silently
+            if (!System.IO.File.Exists(path))
+                continue;
+
+            try
+            {
+                // Create minimal TrackInfo with just FilePath and Title
+                // Full metadata will be loaded if the track is played
+                var track = new Models.TrackInfo
+                {
+                    FilePath = path,
+                    Title = System.IO.Path.GetFileNameWithoutExtension(path)
+                };
+
+                PlaybackService.Playlist.Add(track);
+            }
+            catch
+            {
+                // Skip files that can't be loaded
+                continue;
+            }
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[App] Restored {PlaybackService.Playlist.Count} tracks to playlist from settings");
+    }
+
     protected override void OnExit(System.Windows.ExitEventArgs e)
     {
+        // Save playlist to settings before exit
+        SavePlaylist();
+
         // Cleanup audio player on app exit
         AudioPlayerService.Instance.Dispose();
         base.OnExit(e);
+    }
+
+    private void SavePlaylist()
+    {
+        var settings = Models.LibrarySettings.Load();
+        settings.SavedPlaylistPaths = PlaybackService.Playlist
+            .Select(t => t.FilePath)
+            .ToList();
+        settings.Save();
+
+        System.Diagnostics.Debug.WriteLine($"[App] Saved {settings.SavedPlaylistPaths.Count} tracks to settings");
     }
 }
 

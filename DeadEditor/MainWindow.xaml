@@ -248,6 +248,7 @@
                               CellEditEnding="TracksDataGrid_CellEditEnding"
                               PreparingCellForEdit="TracksDataGrid_PreparingCellForEdit"
                               Sorting="TracksDataGrid_Sorting"
+                              MouseDoubleClick="TracksDataGrid_MouseDoubleClick"
                               Background="#1E1E1E"
                               Foreground="#FFFFFF"
                               RowBackground="#1E1E1E"

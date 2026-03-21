@@ -416,12 +416,14 @@ public async Task<List<MusicBrainzTrack>?> GetReleaseTracksAsync(string releaseI
    - This is the ONLY correct endpoint for fetching track listings
 2. **Extract media array** from response
 3. **For each medium** (disc):
+   - Track disc number (1-based, increments for each medium)
    - Extract `tracks[]` array
    - For each track:
-     * Extract position (track number, 1-based)
+     * Extract disc number (from medium position in media array)
+     * Extract position (track number within disc, 1-based)
      * Extract title
      * Extract length (duration in milliseconds, optional)
-4. **Return List<MusicBrainzTrack>** with all tracks from all media
+4. **Return List<MusicBrainzTrack>** with all tracks from all media, each tagged with disc number
 
 **Usage Pattern:**
 1. User performs fingerprint or manual search → gets list of `ReleaseOption` objects
@@ -745,6 +747,57 @@ fpcalc.exe "path/to/audio.flac"
 - Label
 
 **Consequence:** User may see "wrong" edition if multiple with same year.
+
+---
+
+## Track Matching Strategy
+
+MusicBrainz track data is applied to local tracks using **position-based matching** (as of 2026-03-21). This strategy is reliable for official releases where track order is fixed.
+
+### Position-Based Matching (MainWindow.xaml.cs)
+
+**When:** After user selects a release and track data is fetched via `GetReleaseTracksAsync()`
+
+**How:**
+1. For each local track in `_tracks`:
+   - Find MusicBrainz track where `DiscNumber` and `Position` match local track's `DiscNumber` and `TrackNumber`
+   - If match found:
+     * Set `Track.SongName` to MusicBrainz title
+     * Mark as matched (`IsMatched = true`)
+     * Mark as modified (`IsModified = true`)
+2. Log each match/unmatch to console
+3. Calculate confidence indicator:
+   - **High confidence:** All local tracks matched AND track count equals MB track count
+   - **Medium confidence:** Otherwise (missing matches or count mismatch)
+4. Update status bar with match count and confidence
+
+**Example Console Output:**
+```
+=== Applying MusicBrainz track data (position-based matching) ===
+Local tracks: 85, MusicBrainz tracks: 85
+  Matched: Disc 1 Track 1 → Alabama Getaway
+  Matched: Disc 1 Track 2 → Promised Land
+  ...
+=== Match confidence: High (85/85 matched) ===
+```
+
+**Advantages:**
+- **Reliable for official releases:** Fixed track order ensures correct matching
+- **Handles multi-disc albums:** Matches by disc+position instead of global index
+- **No fingerprint errors:** Doesn't rely on audio fingerprinting for individual tracks
+- **Transparent:** Console logs show exactly what matched
+
+**Limitations:**
+- **Requires exact disc/track structure:** Fails if local files have different disc organization
+- **No fuzzy matching:** Track 1 on Disc 2 won't match Track 11 on Disc 1 even if same song
+- **Medium confidence flagged:** User must manually review when counts differ
+
+**Why Not Fingerprint Matching for Official Releases:**
+
+AcoustID fingerprinting is designed for identifying *unknown* recordings. For official releases:
+- Track order is known and fixed
+- Position-based matching is deterministic
+- Fingerprinting live bonus tracks often returns weak/wrong matches (e.g., "Dark Star" from different dates)
 
 ---
 

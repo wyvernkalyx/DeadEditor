@@ -67,7 +67,8 @@ namespace DeadEditor
 
     public class MusicBrainzTrack
     {
-        public int Position { get; set; }        // Track number (1-based)
+        public int DiscNumber { get; set; }      // Disc number (1-based)
+        public int Position { get; set; }        // Track number within disc (1-based)
         public string Title { get; set; } = "";  // Track title from MusicBrainz
         public int? Length { get; set; }         // Duration in milliseconds (optional)
     }

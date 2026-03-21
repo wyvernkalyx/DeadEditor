@@ -412,6 +412,34 @@ public partial class MainWindow : Window
         // For all other columns, use default sorting (e.Handled remains false)
     }
 
+    // ===== PLAYBACK INTEGRATION =====
+
+    /// <summary>
+    /// Adds tracks to the global playlist (prevents duplicates based on FilePath).
+    /// </summary>
+    private void AddTracksToPlaylist(System.Collections.Generic.IEnumerable<TrackInfo> tracks)
+    {
+        foreach (var track in tracks)
+        {
+            // FilePath equality already handled by TrackInfo.Equals()
+            if (!App.PlaybackService.Playlist.Contains(track))
+                App.PlaybackService.Playlist.Add(track);
+        }
+    }
+
+    /// <summary>
+    /// Double-click handler: Adds track to playlist if not present, then plays it.
+    /// </summary>
+    private void TracksDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (TracksDataGrid.SelectedItem is TrackInfoViewModel viewModel)
+        {
+            var track = viewModel.Track;
+            AddTracksToPlaylist(new[] { track });
+            App.PlaybackService.Play(track);
+        }
+    }
+
     // ===== DRAG-TO-REORDER FUNCTIONALITY =====
 
     private System.Windows.Point _dragStartPoint;
@@ -737,22 +765,51 @@ public partial class MainWindow : Window
                 }
             }
 
-            // Update track titles from MusicBrainz
+            // Update track titles from MusicBrainz using position-based matching
             if (tracks != null && tracks.Count > 0)
             {
-                for (int i = 0; i < Math.Min(_tracks.Count, tracks.Count); i++)
+                Console.WriteLine($"=== Applying MusicBrainz track data (position-based matching) ===");
+                Console.WriteLine($"Local tracks: {_tracks.Count}, MusicBrainz tracks: {tracks.Count}");
+
+                int matchedCount = 0;
+                int unmatchedCount = 0;
+
+                // Match local tracks to MusicBrainz tracks by disc number + position
+                foreach (var localTrack in _tracks)
                 {
-                    _tracks[i].Track.SongName = tracks[i].Title;
-                    _tracks[i].Track.IsMatched = true;
-                    _tracks[i].Track.IsModified = true;
-                    _tracks[i].UpdateDisplayTitle();
+                    var mbTrack = tracks.FirstOrDefault(t =>
+                        t.DiscNumber == localTrack.DiscNumber &&
+                        t.Position == localTrack.TrackNumber);
+
+                    if (mbTrack != null)
+                    {
+                        localTrack.Track.SongName = mbTrack.Title;
+                        localTrack.Track.IsMatched = true;
+                        localTrack.Track.IsModified = true;
+                        localTrack.UpdateDisplayTitle();
+                        matchedCount++;
+                        Console.WriteLine($"  Matched: Disc {localTrack.DiscNumber} Track {localTrack.TrackNumber} → {mbTrack.Title}");
+                    }
+                    else
+                    {
+                        unmatchedCount++;
+                        Console.WriteLine($"  Unmatched: Disc {localTrack.DiscNumber} Track {localTrack.TrackNumber} (no MB match found)");
+                    }
                 }
+
+                // Confidence indicator
+                string confidence = (matchedCount == _tracks.Count && _tracks.Count == tracks.Count) ? "High" : "Medium";
+                Console.WriteLine($"=== Match confidence: {confidence} ({matchedCount}/{_tracks.Count} matched) ===");
+
+                StatusTextBlock.Text = $"MusicBrainz: Found {release.Title} ({release.Year}) - {matchedCount}/{_tracks.Count} tracks matched (confidence: {confidence})";
+            }
+            else
+            {
+                StatusTextBlock.Text = $"MusicBrainz: Found {release.Title} ({release.Year}) - No track data";
             }
 
             TracksDataGrid.Items.Refresh();
             UpdateAlbumPreview();
-
-            StatusTextBlock.Text = $"MusicBrainz: Found {release.Title} ({release.Year})";
         }
         catch (Exception ex)
         {
