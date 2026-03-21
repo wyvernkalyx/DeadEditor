@@ -20,6 +20,9 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
+        // Set shutdown mode: app exits when main window closes
+        ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
+
         // Initialize singleton on app startup to ensure it's ready
         _ = AudioPlayerService.Instance;
 
@@ -29,6 +32,9 @@ public partial class App : System.Windows.Application
         // Create and show main library browser window
         var libraryWindow = new LibraryBrowserWindow();
         libraryWindow.Show();
+
+        // Set as main window - closing this window will trigger app shutdown
+        MainWindow = libraryWindow;
 
         // Create and show player window (free-floating, no docking)
         var playerWindow = new PlayerWindow();
@@ -44,6 +50,16 @@ public partial class App : System.Windows.Application
         var visWindow = new VisWindow(playlistWindow);
         playerWindow.VisWindowInstance = visWindow;
         visWindow.Show();
+
+        // Hook Windows session ending (log off/shutdown)
+        SessionEnding += App_SessionEnding;
+    }
+
+    private void App_SessionEnding(object sender, System.Windows.SessionEndingCancelEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine($"[App] SessionEnding: {e.ReasonSessionEnding}");
+        // Stop playback immediately on Windows shutdown/logoff
+        PlaybackService.Stop();
     }
 
     private void RestorePlaylist()
@@ -82,11 +98,17 @@ public partial class App : System.Windows.Application
 
     protected override void OnExit(System.Windows.ExitEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine("[App] OnExit called - stopping playback and cleaning up");
+
+        // Stop playback explicitly before dispose
+        PlaybackService.Stop();
+
         // Save playlist to settings before exit
         SavePlaylist();
 
         // Cleanup audio player on app exit
-        AudioPlayerService.Instance.Dispose();
+        PlaybackService.Dispose();
+
         base.OnExit(e);
     }
 

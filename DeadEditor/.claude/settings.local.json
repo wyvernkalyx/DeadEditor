@@ -1,10 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet build DeadEditor.csproj)",
-      "Bash(taskkill //F //IM DeadEditor.exe //T)",
-      "Bash(dotnet run --project DeadEditor.csproj)",
-      "Bash(git add -A)"
+      "Bash(taskkill //F //IM dotnet.exe //T)"
     ],
     "deny": [],
     "ask": []
