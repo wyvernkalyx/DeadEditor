@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(taskkill //F //IM dotnet.exe //T)"
+      "Bash(taskkill //F //IM dotnet.exe //T)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix audio continuing to play after app closes\n\nRoot cause: NAudio kept playing because OnExit() never fired when user closed\nLibraryBrowserWindow. WPF''s default behavior keeps the app running until ALL\nwindows close, and PlayerWindow/PlaylistWindow/VisWindow remained open.\n\nFix implemented:\n\n1. Set ShutdownMode.OnMainWindowClose in OnStartup\n   - Ensures app exits when LibraryBrowserWindow closes\n   - Other windows (PlayerWindow, etc.) can remain open but won''t block shutdown\n\n2. Set Application.MainWindow = libraryWindow\n   - Explicitly designate LibraryBrowserWindow as the main window\n   - Closing this window now triggers OnExit() immediately\n\n3. Add SessionEnding event handler\n   - Handles Windows logoff/shutdown scenarios\n   - Calls PlaybackService.Stop() before system shutdown\n\n4. Explicit Stop() call in OnExit before Dispose()\n   - Ensures audio stops even if Dispose() is called\n   - Sequence: Stop() → SavePlaylist() → Dispose()\n   - Stop() calls _wavePlayer.Stop() before _wavePlayer.Dispose()\n\nFiles changed:\n- App.xaml.cs: Add MainWindow assignment, shutdown mode, SessionEnding handler, explicit Stop() in OnExit\n\nVerification:\n- Play track → Close app → Audio stops immediately\n- Task Manager → DeadEditor.exe process exits cleanly\n- Windows shutdown → SessionEnding stops playback before shutdown\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

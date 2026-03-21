@@ -1835,6 +1835,10 @@ public partial class LibraryBrowserWindow : Window
     /// <summary>
     /// Toggles PlayerWindow visibility and updates menu button state.
     /// Also toggles PlaylistWindow and VisWindow to match.
+    /// Behavior:
+    /// - If hidden: show
+    /// - If visible but not focused: bring to foreground
+    /// - If visible and focused: hide
     /// </summary>
     private void TogglePlayerWindowVisibility()
     {
@@ -1843,19 +1847,41 @@ public partial class LibraryBrowserWindow : Window
         {
             if (window is PlayerWindow playerWindow)
             {
-                if (playerWindow.Visibility == Visibility.Visible)
+                if (playerWindow.IsVisible)
                 {
-                    // Hide player and companions
-                    playerWindow.Hide();
-                    playerWindow.PlaylistWindowInstance?.Hide();
-                    playerWindow.VisWindowInstance?.Hide();
+                    if (playerWindow.IsActive)
+                    {
+                        // Already focused — hide everything
+                        playerWindow.Hide();
+                        playerWindow.PlaylistWindowInstance?.Hide();
+                        playerWindow.VisWindowInstance?.Hide();
 
-                    // Update menu item appearance to show inactive state
-                    PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
+                        // Update menu item appearance to show inactive state
+                        PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
+                    }
+                    else
+                    {
+                        // Visible but not focused — bring to front
+                        playerWindow.Activate();
+                        playerWindow.Focus();
+
+                        // Also bring companion windows to front if they're visible
+                        if (playerWindow.PlaylistWindowInstance?.IsVisible == true)
+                        {
+                            playerWindow.PlaylistWindowInstance.Activate();
+                        }
+                        if (playerWindow.VisWindowInstance?.IsVisible == true)
+                        {
+                            playerWindow.VisWindowInstance.Activate();
+                        }
+
+                        // Update menu item appearance to show active state
+                        PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+                    }
                 }
                 else
                 {
-                    // Show player and restore companion visibility states
+                    // Hidden — show
                     playerWindow.Show();
 
                     // PlaylistWindow visibility is controlled by PL button on PlayerWindow
