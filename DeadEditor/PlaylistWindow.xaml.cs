@@ -29,7 +29,24 @@ namespace DeadEditor
 
         public string TrackNumber => _track.TrackNumber.ToString();
 
-        public string DisplayTitle => _track.SongName ?? _track.Title ?? "";
+        public string DisplayTitle
+        {
+            get
+            {
+                // Use SongName (normalized) if available, otherwise Title
+                var title = _track.SongName ?? _track.Title ?? "";
+
+                // Strip leading track number pattern "NN - " or "NN. " from title
+                // Example: "02 - Me and My Uncle" → "Me and My Uncle"
+                var match = System.Text.RegularExpressions.Regex.Match(title, @"^\d+[\s\-\.]+(.+)$");
+                if (match.Success)
+                {
+                    return match.Groups[1].Value;
+                }
+
+                return title;
+            }
+        }
 
         public string ShortDate
         {
