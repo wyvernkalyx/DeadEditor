@@ -1854,10 +1854,8 @@ public partial class LibraryBrowserWindow : Window
     private void ImportMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var importWindow = new MainWindow();
-        importWindow.ShowDialog();
-
-        // Refresh library after import
-        LoadShows();
+        importWindow.Closed += (s, e) => LoadShows(); // Refresh library when import closes
+        importWindow.Show();
     }
 
     private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
@@ -1974,10 +1972,8 @@ public partial class LibraryBrowserWindow : Window
         var importWindow = new MainWindow();
         importWindow.Owner = this;
         importWindow.LoadFolder(_currentShow.FolderPath);
-        importWindow.ShowDialog();
-
-        // Reload the library list to reflect any metadata changes (e.g., box set names)
-        LoadShows();
+        importWindow.Closed += (s, e) => LoadShows(); // Reload library when edit completes
+        importWindow.Show();
 
         // Reload the concert view after editing to reflect any changes
         OpenConcertView(_currentShow);

@@ -161,7 +161,8 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 **Current Behavior:**
 - When a folder is loaded via `LoadFolder()`, tracks are automatically sent to the global playback service: `App.PlaybackService.LoadPlaylist(trackList)`
 - Users can play tracks using PlayerWindow (see [17-player-window.md](17-player-window.md))
-- MainWindow is a modal dialog for metadata preparation only
+- MainWindow opens as a **non-modal window** (using `Show()`) so the player remains fully interactive during import
+- Library grid refreshes automatically when MainWindow closes via `Closed` event handler
 
 ### Status Bar Section
 

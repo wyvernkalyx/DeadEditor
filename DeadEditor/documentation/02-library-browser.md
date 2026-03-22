@@ -54,7 +54,7 @@ The LibraryBrowserWindow uses a dark theme (#1E1E1E background) with four main s
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
-| Import New Concert | MenuItem | N/A | Opens MainWindow dialog, refreshes library after close | `new MainWindow().ShowDialog()` → `LoadShows()` | Working |
+| Import New Concert | MenuItem | N/A | Opens MainWindow (non-modal), refreshes library when window closes | `new MainWindow().Show()` + `Closed` event → `LoadShows()` | Working |
 | Settings | MenuItem | N/A | Opens SettingsWindow dialog, refreshes library after close | `new SettingsWindow(...).ShowDialog()` → `LoadShows()` | Working |
 | Exit | MenuItem | N/A | Closes window (terminates application) | `Close()` | Working |
 
@@ -147,7 +147,7 @@ Building the "By Date" view for Official Releases requires reading track metadat
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
 | Back to Library | Button | `BackButton` | Returns to grid view, keeps playback running, keeps player controls visible | `BackButton_Click` switches visibility, doesn't stop `_updateTimer` | Working |
-| Edit Metadata | Button | `EditMetadataButton` | Opens MainWindow with current concert folder, reloads library + concert view after close | `new MainWindow().LoadFolder(_currentShow.FolderPath)` → `LoadShows()` → `OpenConcertView()` | Working |
+| Edit Metadata | Button | `EditMetadataButton` | Opens MainWindow (non-modal) with current concert folder, reloads library + concert view when window closes | `new MainWindow().LoadFolder()` + `.Show()` + `Closed` event → `LoadShows()` | Working |
 
 #### Concert Information Display
 
@@ -667,19 +667,20 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
    - **Calls `LoadFolder()` on MainWindow** passing concert's folder path (line 863)
      - This loads the concert into MainWindow's import workflow
      - All existing metadata read from files
-   - Opens MainWindow as modal dialog (line 864)
+   - Opens MainWindow as **non-modal window** using `.Show()` (not `.ShowDialog()`)
+   - Registers `Closed` event handler to refresh library when window closes
 
-3. **User edits metadata in MainWindow**
+3. **User edits metadata in MainWindow (non-blocking)**
    - Changes song titles, venues, dates, artwork, etc.
    - Normalizes songs, renumbers tracks
+   - **Player remains fully interactive** - user can move/control player windows during editing
    - **Clicks "Write to Files"** button
      - Metadata written to audio files IN PLACE (in library folder)
      - Does NOT use "Import to Library" button (concert already in library)
    - Closes MainWindow (Cancel button or X)
 
-4. **MainWindow closes, control returns to LibraryBrowserWindow**
-   - `ShowDialog()` unblocks (line 864)
-   - **Reloads library:** `LoadShows()` (line 867)
+4. **MainWindow closes, `Closed` event fires**
+   - Automatically calls `LoadShows()` to refresh library grid
      - Re-scans all folders to pick up metadata changes
      - Updates box set names, venue names, etc. in grid
    - **Reloads concert view:** `OpenConcertView(_currentShow)` (line 870)
