@@ -6,7 +6,7 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="#1E1E1E"
-        Topmost="False"
+        Topmost="True"
         ShowInTaskbar="False">
 
     <Border BorderBrush="#555555" BorderThickness="1">

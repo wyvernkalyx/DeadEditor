@@ -6,7 +6,7 @@
         WindowStyle="None"
         ResizeMode="CanResize"
         Background="#1E1E1E"
-        Topmost="False"
+        Topmost="True"
         ShowInTaskbar="False"
         MinHeight="150" MinWidth="350">
 
