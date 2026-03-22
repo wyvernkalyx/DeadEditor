@@ -1707,7 +1707,46 @@ public partial class LibraryBrowserWindow : Window
     }
 
     /// <summary>
-    /// Double-click handler: Adds track to playlist if not present, then plays it.
+    /// Gets the forward segue chain starting from the clicked track.
+    /// Walks forward through consecutive segue tracks until a track does NOT segue.
+    /// Example: "China Cat Sunflower >" → returns ["China Cat >", "I Know You Rider"]
+    /// Example: "Dark Star" (no segue) → returns ["Dark Star"]
+    /// </summary>
+    /// <param name="startTrack">The track that was clicked</param>
+    /// <param name="allTracks">All tracks for the current concert (in playback order)</param>
+    /// <returns>List containing startTrack + any forward segue chain</returns>
+    private List<TrackInfo> GetForwardSegueChain(TrackInfo startTrack, List<TrackInfo> allTracks)
+    {
+        var chain = new List<TrackInfo>();
+
+        // Find the index of the start track
+        var startIndex = allTracks.IndexOf(startTrack);
+        if (startIndex == -1)
+        {
+            // Track not found - return empty list
+            return chain;
+        }
+
+        // Walk forward from startIndex
+        for (int i = startIndex; i < allTracks.Count; i++)
+        {
+            var currentTrack = allTracks[i];
+            chain.Add(currentTrack);
+
+            // Stop if this track does NOT segue
+            if (!currentTrack.Segue)
+                break;
+
+            // If this is the last track, stop even if it has segue marker
+            if (i == allTracks.Count - 1)
+                break;
+        }
+
+        return chain;
+    }
+
+    /// <summary>
+    /// Double-click handler: Adds track + forward segue chain to playlist, then plays it.
     /// </summary>
     private void TracksDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
@@ -1715,7 +1754,13 @@ public partial class LibraryBrowserWindow : Window
         var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
         if (track != null)
         {
-            AddTracksToPlaylist(new[] { track });
+            // Get the forward segue chain (track + any tracks it segues into)
+            var segueChain = GetForwardSegueChain(track, _currentTracks);
+
+            // Add the entire chain to playlist
+            AddTracksToPlaylist(segueChain);
+
+            // Play the clicked track (first in chain)
             App.PlaybackService.Play(track);
         }
     }

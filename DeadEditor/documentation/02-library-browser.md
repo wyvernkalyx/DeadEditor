@@ -177,14 +177,19 @@ Building the "By Date" view for Official Releases requires reading track metadat
 The concert detail view provides multiple ways to add tracks to the global playlist managed by `AudioPlayerService`:
 
 **1. Double-Click Track**
-- **Action:** Adds track to playlist (if not already present) and immediately plays it
+- **Action:** Adds track + forward segue chain to playlist (if not already present) and immediately plays the clicked track
 - **Handler:** `TracksDataGrid_MouseDoubleClick`
+- **Segue Chain Logic:** Uses `GetForwardSegueChain()` helper to walk forward through consecutive tracks that have `Segue = true`
+  - Example: Double-clicking "China Cat Sunflower >" adds both "China Cat >" and "I Know You Rider" (if Rider doesn't segue)
+  - Example: Double-clicking "Dark Star" (no segue) adds only "Dark Star"
+  - Stops when reaching a track that does NOT segue (no `>` marker)
 - **Playlist Behavior:** Uses `AddTracksToPlaylist()` helper to check for duplicates via `TrackInfo.Equals()` (FilePath comparison)
 - **Implementation:**
   ```csharp
   var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
   if (track != null) {
-      AddTracksToPlaylist(new[] { track });
+      var segueChain = GetForwardSegueChain(track, _currentTracks);
+      AddTracksToPlaylist(segueChain);
       App.PlaybackService.Play(track);
   }
   ```
