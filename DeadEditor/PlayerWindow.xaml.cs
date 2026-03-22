@@ -333,11 +333,16 @@ namespace DeadEditor
         {
             if (!_isSeeking && _player.State == PlaybackState.Playing)
             {
-                CurrentTimeText.Text = FormatTime(_player.CurrentPosition);
+                // Clamp position to never exceed duration (prevents display overrun during final buffer playback)
+                var position = _player.CurrentPosition;
+                var duration = _player.TotalDuration;
+                var clampedPosition = position > duration ? duration : position;
 
-                if (_player.TotalDuration.TotalSeconds > 0)
+                CurrentTimeText.Text = FormatTime(clampedPosition);
+
+                if (duration.TotalSeconds > 0)
                 {
-                    SeekSlider.Value = (_player.CurrentPosition.TotalSeconds / _player.TotalDuration.TotalSeconds) * 100;
+                    SeekSlider.Value = Math.Min(100, (clampedPosition.TotalSeconds / duration.TotalSeconds) * 100);
                 }
             }
         }
