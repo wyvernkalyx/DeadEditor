@@ -194,15 +194,37 @@ private void RestorePlaylist()
 
         try
         {
-            // Create minimal TrackInfo with just FilePath and Title
-            // Full metadata will be loaded if the track is played
-            var track = new Models.TrackInfo
+            // Read full metadata from file for proper playlist display
+            using (var file = TagLib.File.Create(path))
             {
-                FilePath = path,
-                Title = System.IO.Path.GetFileNameWithoutExtension(path)
-            };
+                var rawTitle = file.Tag.Title ?? System.IO.Path.GetFileNameWithoutExtension(path);
 
-            PlaybackService.Playlist.Add(track);
+                // Parse title to extract date if embedded (e.g., "Song (1977-05-08)")
+                var extractedDate = "";
+                var songName = rawTitle;
+                var dateMatch = System.Text.RegularExpressions.Regex.Match(rawTitle, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})\)\s*>?$");
+                if (dateMatch.Success)
+                {
+                    songName = dateMatch.Groups[1].Value.Trim();
+                    extractedDate = dateMatch.Groups[2].Value;
+                }
+
+                var track = new Models.TrackInfo
+                {
+                    FilePath = path,
+                    FileName = System.IO.Path.GetFileName(path),
+                    TrackNumber = (int)file.Tag.Track,
+                    DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
+                    SongName = songName,
+                    RawTitle = rawTitle,
+                    TrackDate = extractedDate,
+                    Duration = file.Properties.Duration.ToString(@"mm\:ss"),
+                    Segue = rawTitle.TrimEnd().EndsWith(">"),
+                    IsModified = false
+                };
+
+                PlaybackService.Playlist.Add(track);
+            }
         }
         catch
         {
@@ -218,10 +240,21 @@ private void RestorePlaylist()
 - Added to LibrarySettings.cs as a new property
 - Persists alongside window positions and library paths
 
+**Metadata Loading:**
+- Restored tracks read **full ID3 tag metadata** (TrackNumber, Duration, SongName, TrackDate)
+- This ensures PlaylistWindow DataGrid displays track numbers, dates, and durations correctly
+- **Previous bug:** Tracks were restored with only FilePath + Title, causing "0" track numbers and blank date/time columns
+- **Fix:** Read all metadata from audio file tags using TagLib during restoration (2026-03-22)
+
 **Error Handling:**
 - Missing files (deleted/moved) are silently skipped during restore
-- Playlist shows minimal metadata (filename only) until tracks are played
-- No error messages shown to user for missing files
+- Corrupted/invalid audio files are silently skipped (TagLib.File.Create() failure caught)
+- No error messages shown to user for missing or corrupted files
+
+**Automated Tests:**
+- Test coverage for playlist restoration exists in `DeadEditor.Tests/PlaylistRestorationTests.cs`
+- Tests verify TrackNumber != 0, Duration != null, and graceful handling of missing/corrupted files
+- Run tests: `dotnet test DeadEditor.Tests`
 
 ---
 

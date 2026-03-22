@@ -76,15 +76,37 @@ public partial class App : System.Windows.Application
 
             try
             {
-                // Create minimal TrackInfo with just FilePath and Title
-                // Full metadata will be loaded if the track is played
-                var track = new Models.TrackInfo
+                // Read full metadata from file for proper playlist display
+                using (var file = TagLib.File.Create(path))
                 {
-                    FilePath = path,
-                    Title = System.IO.Path.GetFileNameWithoutExtension(path)
-                };
+                    var rawTitle = file.Tag.Title ?? System.IO.Path.GetFileNameWithoutExtension(path);
 
-                PlaybackService.Playlist.Add(track);
+                    // Parse title to extract date if embedded (e.g., "Song (1977-05-08)")
+                    var extractedDate = "";
+                    var songName = rawTitle;
+                    var dateMatch = System.Text.RegularExpressions.Regex.Match(rawTitle, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})\)\s*>?$");
+                    if (dateMatch.Success)
+                    {
+                        songName = dateMatch.Groups[1].Value.Trim();
+                        extractedDate = dateMatch.Groups[2].Value;
+                    }
+
+                    var track = new Models.TrackInfo
+                    {
+                        FilePath = path,
+                        FileName = System.IO.Path.GetFileName(path),
+                        TrackNumber = (int)file.Tag.Track,
+                        DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
+                        SongName = songName,
+                        RawTitle = rawTitle,
+                        TrackDate = extractedDate,
+                        Duration = file.Properties.Duration.ToString(@"mm\:ss"),
+                        Segue = rawTitle.TrimEnd().EndsWith(">"),
+                        IsModified = false
+                    };
+
+                    PlaybackService.Playlist.Add(track);
+                }
             }
             catch
             {
