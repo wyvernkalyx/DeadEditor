@@ -172,11 +172,6 @@ namespace DeadEditor
             _player.Stop();
         }
 
-        private void PauseButton_Click(object sender, RoutedEventArgs e)
-        {
-            _player.Pause();
-        }
-
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             _player.Next();

@@ -34,7 +34,7 @@ Chromeless WPF Window (no standard title bar). Compact fixed-width panel.
 ```
 ┌─────────────────────────────────────────────┐
 │ ≡  [drag area]                      [_] [×] │  <- thin drag bar, minimize, close
-│  «   ▶   ■   ⏸   »  │ PL │ VIS │          │  <- transport + PL/VIS toggles
+│  «   ▶/⏸   ■   »  │ PL │ VIS │            │  <- transport + PL/VIS toggles
 │ ████████████████████░░░░  0:00 / 4:32       │  <- seek bar + elapsed/total time
 │ ┌──────────────────────────────────────┐    │
 │ │  Dark Star (1969-02-27) — Fillmore   │◄── │  <- scrolling marquee
@@ -48,13 +48,23 @@ Chromeless WPF Window (no standard title bar). Compact fixed-width panel.
 | Button | Symbol | Notes |
 |--------|--------|-------|
 | Previous | « | FontSize 14 |
-| Play | ▶ | FontSize 16 |
+| Play/Pause (toggle) | ▶ / ⏸ | FontSize 16, single button that changes symbol based on playback state |
 | Stop | ■ | FontSize 14 |
-| Pause | ⏸ | FontSize 14 |
 | Next | » | FontSize 14 |
 
 All button text set directly in XAML Foreground/FontSize — no loaded resources.
 This prevents the "disappearing button graphics" bug caused by unreliable glyph loading.
+
+**Play/Pause Toggle Button:**
+- Single button that toggles between Play (▶) and Pause (⏸) symbols
+- Button content updates automatically based on playback state:
+  - Shows ▶ when playback is Stopped or Paused
+  - Shows ⏸ when playback is Playing
+- Click behavior:
+  - When showing ▶ (stopped/paused) → starts/resumes playback
+  - When showing ⏸ (playing) → pauses playback
+- UpdatePlaybackUI() method handles symbol updates in response to PlaybackStateChanged events
+- Replaces the previous design which had separate Play and Pause buttons (confusing UI)
 
 **Marquee:** Canvas + TranslateTransform animation scrolling left when text exceeds
 display width. Format: `Song Name (yyyy-MM-dd) — Venue, City, State`
