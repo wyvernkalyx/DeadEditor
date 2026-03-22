@@ -305,8 +305,9 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
 - **Concert View + PlayerWindow Undocked:** Shows `RedockPlayerButton` to bring PlayerWindow back
 
 **Playback Integration:**
-- When a concert is double-clicked or loaded, `App.PlaybackService.LoadPlaylist(_currentTracks)` is called
-- Double-clicking a track calls `_audioPlayer.Play(track)`
+- Double-clicking a concert opens the concert detail view (does NOT modify playlist)
+- Playlist is only modified by explicit user actions: double-click track, right-click → Add/Play Now, + Add button
+- Double-clicking a track adds the segue chain to playlist and plays the track
 - All transport controls, scrubber, and volume are in PlayerWindow (see [17-player-window.md](17-player-window.md))
 
 ### Media Key Support

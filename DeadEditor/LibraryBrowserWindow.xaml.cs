@@ -1071,12 +1071,6 @@ public partial class LibraryBrowserWindow : Window
             ConcertView.Visibility = Visibility.Visible;
             StatusText.Visibility = Visibility.Collapsed;
 
-            // Load playlist into PlaybackService for PlayerWindow
-            if (_currentTracks.Count > 0)
-            {
-                _audioPlayer.LoadPlaylist(_currentTracks);
-            }
-
             // Update window title
             Title = $"{show.Date} - {show.Venue}";
         }
@@ -1641,12 +1635,6 @@ public partial class LibraryBrowserWindow : Window
             LibraryView.Visibility = Visibility.Collapsed;
             ConcertView.Visibility = Visibility.Visible;
             StatusText.Visibility = Visibility.Collapsed;
-
-            // Load playlist into PlaybackService for PlayerWindow
-            if (_currentTracks.Count > 0)
-            {
-                _audioPlayer.LoadPlaylist(_currentTracks);
-            }
 
             // Update window title
             Title = $"{concertDate.Date} - {concertDate.Venue}";
