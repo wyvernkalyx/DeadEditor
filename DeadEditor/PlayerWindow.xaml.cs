@@ -32,6 +32,9 @@ namespace DeadEditor
             _player.PlaybackStateChanged += Player_PlaybackStateChanged;
             _player.TrackChanged += Player_TrackChanged;
 
+            // Synchronize window state changes to companion windows
+            this.StateChanged += PlayerWindow_StateChanged;
+
             // Set up update timer for seek bar
             _updateTimer = new DispatcherTimer
             {
@@ -241,6 +244,37 @@ namespace DeadEditor
             });
         }
 
+        /// <summary>
+        /// When PlayerWindow is minimized or restored, synchronize companion windows.
+        /// </summary>
+        private void PlayerWindow_StateChanged(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                // Minimize companion windows if they're currently visible
+                if (PlaylistWindowInstance?.IsVisible == true)
+                {
+                    PlaylistWindowInstance.WindowState = WindowState.Minimized;
+                }
+                if (VisWindowInstance?.IsVisible == true)
+                {
+                    VisWindowInstance.WindowState = WindowState.Minimized;
+                }
+            }
+            else if (WindowState == WindowState.Normal)
+            {
+                // Restore companion windows if they were minimized with the player
+                if (PlaylistWindowInstance?.WindowState == WindowState.Minimized)
+                {
+                    PlaylistWindowInstance.WindowState = WindowState.Normal;
+                }
+                if (VisWindowInstance?.WindowState == WindowState.Minimized)
+                {
+                    VisWindowInstance.WindowState = WindowState.Normal;
+                }
+            }
+        }
+
         private void UpdatePlaybackUI()
         {
             switch (_player.State)
@@ -374,6 +408,7 @@ namespace DeadEditor
             // Unsubscribe from events
             _player.PlaybackStateChanged -= Player_PlaybackStateChanged;
             _player.TrackChanged -= Player_TrackChanged;
+            this.StateChanged -= PlayerWindow_StateChanged;
             LocationChanged -= PlayerWindow_LocationChanged;
 
             _updateTimer.Stop();

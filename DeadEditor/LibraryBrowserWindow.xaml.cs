@@ -1910,7 +1910,28 @@ public partial class LibraryBrowserWindow : Window
         {
             if (window is PlayerWindow playerWindow)
             {
-                if (playerWindow.IsVisible)
+                // Check if minimized first (minimized windows still report IsVisible = true)
+                if (playerWindow.WindowState == WindowState.Minimized)
+                {
+                    // Restore all three windows from minimized state
+                    playerWindow.WindowState = WindowState.Normal;
+                    if (playerWindow.PlaylistWindowInstance?.WindowState == WindowState.Minimized)
+                    {
+                        playerWindow.PlaylistWindowInstance.WindowState = WindowState.Normal;
+                    }
+                    if (playerWindow.VisWindowInstance?.WindowState == WindowState.Minimized)
+                    {
+                        playerWindow.VisWindowInstance.WindowState = WindowState.Normal;
+                    }
+
+                    // Bring player to foreground
+                    playerWindow.Activate();
+                    playerWindow.Focus();
+
+                    // Update menu item appearance to show active state
+                    PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+                }
+                else if (playerWindow.IsVisible)
                 {
                     if (playerWindow.IsActive)
                     {

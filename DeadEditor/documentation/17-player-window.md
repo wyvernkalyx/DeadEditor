@@ -86,6 +86,36 @@ PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 
 ---
 
+## Minimize/Restore Behavior
+
+All three player windows (PlayerWindow, PlaylistWindow, VisWindow) minimize and restore together as a group.
+
+**Grouped Window State Management:**
+- When PlayerWindow is minimized → PlaylistWindow and VisWindow also minimize (if visible)
+- When PlayerWindow is restored → PlaylistWindow and VisWindow also restore (if they were minimized)
+- This ensures the player windows stay synchronized and don't get separated
+
+**Restore from Minimized State:**
+- Player button/menu in LibraryBrowserWindow ("🎵 Player" menu item or Ctrl+P)
+- Clicking while minimized → restores all three windows to Normal state and brings PlayerWindow to foreground
+- No taskbar icon needed (all three windows have `ShowInTaskbar="False"`)
+
+**Implementation Details:**
+- PlayerWindow.StateChanged event handler propagates minimize/restore to companion windows
+- Only affects windows that are currently visible (hidden windows stay hidden)
+- Library Browser's TogglePlayerWindowVisibility() checks WindowState before IsVisible
+
+**State Synchronization:**
+```
+PlayerWindow minimized → PlaylistWindow minimized (if visible)
+                      → VisWindow minimized (if visible)
+
+PlayerWindow restored  → PlaylistWindow restored (if was minimized)
+                      → VisWindow restored (if was minimized)
+```
+
+---
+
 ## PlaylistWindow Layout
 
 Separate WPF Window. Attaches below PlayerWindow by default.
