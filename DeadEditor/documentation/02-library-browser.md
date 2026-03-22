@@ -200,10 +200,18 @@ The track DataGrid includes a context menu with the following options:
 
 | Menu Item | Shortcut | Action | Plays Track? | Implementation |
 |-----------|----------|--------|--------------|----------------|
-| ▶ Play Now | (none) | Adds track to playlist and plays it | Yes | `PlayNowMenuItem_Click` → `AddTracksToPlaylist()` → `Play(track)` |
-| ＋ Add to Playlist | (none) | Adds track to playlist without playing | No | `AddToPlaylistMenuItem_Click` → `AddTracksToPlaylist()` |
+| ▶ Play Now | (none) | Adds track + forward segue chain to playlist and plays it | Yes | `PlayNowMenuItem_Click` → `GetForwardSegueChain()` → `AddTracksToPlaylist()` → `Play(track)` |
+| ＋ Add to Playlist | (none) | Adds track + forward segue chain to playlist without playing | No | `AddToPlaylistMenuItem_Click` → `GetForwardSegueChain()` → `AddTracksToPlaylist()` |
 | ✕ Remove from Playlist | (none) | Removes track from playlist | No | `RemoveFromPlaylistMenuItem_Click` → `Playlist.Remove(track)` |
 | ＋ Add Selected to Playlist | (none) | Adds all selected tracks (multi-select) | No | `AddSelectedToPlaylistMenuItem_Click` → loops selected items |
+
+**Segue Chain Behavior (Play Now & Add to Playlist):**
+- Both "Play Now" and "Add to Playlist" use the same segue chain logic as double-click
+- Uses `GetForwardSegueChain()` to walk forward through consecutive tracks with `Segue = true`
+- Example: Right-clicking "China Cat Sunflower >" → adds both "China Cat >" and "I Know You Rider"
+- Example: Right-clicking "Dark Star" (no segue) → adds only "Dark Star"
+- Stops when reaching a track that does NOT segue (no `>` marker)
+- This ensures consistent playlist behavior across all three interaction methods (double-click, Play Now, Add to Playlist)
 
 **Context Menu Smart Behavior:**
 - **Remove from Playlist** is disabled (greyed out) if the track is NOT currently in the playlist

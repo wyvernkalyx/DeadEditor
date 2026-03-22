@@ -1773,7 +1773,9 @@ public partial class LibraryBrowserWindow : Window
         var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
         if (track != null)
         {
-            AddTracksToPlaylist(new[] { track });
+            // Get the forward segue chain (track + any tracks it segues into)
+            var segueChain = GetForwardSegueChain(track, _currentTracks);
+            AddTracksToPlaylist(segueChain);
             App.PlaybackService.Play(track);
         }
     }
@@ -1786,7 +1788,9 @@ public partial class LibraryBrowserWindow : Window
         var track = GetTrackFromDataGridSelection(TracksDataGrid.SelectedItem);
         if (track != null)
         {
-            AddTracksToPlaylist(new[] { track });
+            // Get the forward segue chain (track + any tracks it segues into)
+            var segueChain = GetForwardSegueChain(track, _currentTracks);
+            AddTracksToPlaylist(segueChain);
         }
     }
 
