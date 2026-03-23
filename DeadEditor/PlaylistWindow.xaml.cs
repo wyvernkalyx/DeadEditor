@@ -29,6 +29,11 @@ namespace DeadEditor
 
         public string TrackNumber => _track.TrackNumber.ToString();
 
+        // Computed property for disc-aware sorting
+        // With disc numbers: 101, 102... 201, 202... (DiscNumber * 100 + TrackNumber)
+        // No disc numbers: 1, 2, 3... (raw TrackNumber)
+        public int SortKey => (_track.DiscNumber > 0 ? _track.DiscNumber * 100 : 0) + _track.TrackNumber;
+
         public string DisplayTitle
         {
             get
@@ -96,6 +101,11 @@ namespace DeadEditor
             // Create view model collection
             _playlistViewModels = new ObservableCollection<PlaylistTrackViewModel>();
             PlaylistDataGrid.ItemsSource = _playlistViewModels;
+
+            // Set default sort: by track number (disc-aware) ascending
+            PlaylistDataGrid.Items.SortDescriptions.Add(
+                new System.ComponentModel.SortDescription("SortKey",
+                    System.ComponentModel.ListSortDirection.Ascending));
 
             // Subscribe to playlist changes
             _player.Playlist.CollectionChanged += Playlist_CollectionChanged;

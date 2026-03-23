@@ -281,6 +281,19 @@ Separate WPF Window. Attaches below PlayerWindow by default.
 - Double-click a row → PlaybackService.Play(track)
 - Currently playing row highlighted in gold (#D7BA7D)
 
+**Sortable Columns:**
+- All columns are sortable by clicking the column header
+- Clicking the same header again reverses the sort direction (ascending ↔ descending)
+- Sort indicator arrow appears on the active column header
+- **Default sort:** Track number (#) ascending (disc-aware: 101, 102... 201, 202...)
+- **# column:** Sorts by `SortKey` computed property: `(DiscNumber * 100) + TrackNumber`
+  - Multi-disc albums: 101, 102... 201, 202... (disc-aware)
+  - Single-disc albums: 1, 2, 3, 4... (sequential)
+- **Title column:** Sorts alphabetically by normalized song name
+- **Date column:** Sorts by yyyy-MM-dd format (correct chronological order)
+- **Time column:** Sorts by duration string in MM:SS format (mostly correct, minor edge cases)
+- Playback and highlighting continue to work correctly after sorting
+
 **Context Menu:**
 - Right-click a playlist track → "🎵 Go to Concert" menu item
 - Clicking it navigates LibraryBrowserWindow to the track's parent concert

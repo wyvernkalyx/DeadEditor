@@ -72,7 +72,7 @@
                       CanUserDeleteRows="False"
                       CanUserReorderColumns="False"
                       CanUserResizeRows="False"
-                      CanUserSortColumns="False"
+                      CanUserSortColumns="True"
                       HeadersVisibility="Column"
                       GridLinesVisibility="Horizontal"
                       HorizontalGridLinesBrush="#3E3E42"
@@ -113,7 +113,7 @@
 
                 <DataGrid.Columns>
                     <!-- Track Number Column -->
-                    <DataGridTextColumn Header="#" Width="50" Binding="{Binding TrackNumber}">
+                    <DataGridTextColumn Header="#" Width="50" Binding="{Binding TrackNumber}" SortMemberPath="SortKey">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -123,7 +123,7 @@
                     </DataGridTextColumn>
 
                     <!-- Title Column -->
-                    <DataGridTextColumn Header="Title" Width="*" Binding="{Binding DisplayTitle}">
+                    <DataGridTextColumn Header="Title" Width="*" Binding="{Binding DisplayTitle}" SortMemberPath="DisplayTitle">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -133,7 +133,7 @@
                     </DataGridTextColumn>
 
                     <!-- Date Column -->
-                    <DataGridTextColumn Header="Date" Width="95" Binding="{Binding ShortDate}">
+                    <DataGridTextColumn Header="Date" Width="95" Binding="{Binding ShortDate}" SortMemberPath="ShortDate">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -143,7 +143,7 @@
                     </DataGridTextColumn>
 
                     <!-- Duration Column -->
-                    <DataGridTextColumn Header="Time" Width="60" Binding="{Binding Duration}">
+                    <DataGridTextColumn Header="Time" Width="60" Binding="{Binding Duration}" SortMemberPath="Duration">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
