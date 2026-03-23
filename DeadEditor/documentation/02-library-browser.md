@@ -176,7 +176,11 @@ Building the "By Date" view for Official Releases requires reading track metadat
 | Tracks grid | DataGrid | `TracksDataGrid` | Displays all tracks in concert, double-click row to play | `TracksDataGrid_LoadingRow` adds double-click handler | Working |
 
 **Columns:**
-- `#` - Track number (`TrackInfo.TrackNumber`)
+- `#` - Disc-aware track number (`TrackInfo.DisplayTrackNumber`)
+  - Single-disc albums: 1, 2, 3, 4...
+  - Multi-disc albums: 101, 102... (Disc 1), 201, 202... (Disc 2), 301, 302... (Disc 3)
+  - Format: `{DiscNumber}{TrackNumber:D2}` (e.g., Disc 2, Track 3 → "203")
+  - Fallback: Treats missing/zero `DiscNumber` as Disc 1
 - `Title` - Song title with segue markers (`TrackInfo.PreviewMetadata`)
 - `Duration` - Track duration (`TrackInfo.Duration`)
 

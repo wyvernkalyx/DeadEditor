@@ -579,10 +579,10 @@
                                                         </Border>
                                                     </DataTemplate>
                                                     <DataTemplate DataType="{x:Type models:TrackViewItem}">
-                                                        <TextBlock Text="{Binding Track.TrackNumber}" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Track.DisplayTrackNumber}" VerticalAlignment="Center"/>
                                                     </DataTemplate>
                                                     <DataTemplate DataType="{x:Type models:TrackInfo}">
-                                                        <TextBlock Text="{Binding TrackNumber}" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding DisplayTrackNumber}" VerticalAlignment="Center"/>
                                                     </DataTemplate>
                                                 </ContentControl.Resources>
                                             </ContentControl>

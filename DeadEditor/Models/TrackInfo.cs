@@ -12,6 +12,19 @@ namespace DeadEditor.Models
         public int TrackNumber { get; set; }           // Track # (within disc)
         public int DiscNumber { get; set; } = 1;       // Disc # (defaults to 1 for single-disc albums)
 
+        // Computed property: Disc-aware track number for display (101, 201, 301...)
+        public string DisplayTrackNumber
+        {
+            get
+            {
+                var disc = DiscNumber > 0 ? DiscNumber : 1;
+                return $"{disc}{TrackNumber:D2}";
+                // Disc 1, Track 7 → "107"
+                // Disc 2, Track 3 → "203"
+                // Disc 3, Track 12 → "312"
+            }
+        }
+
         // SongName with PropertyChanged notification for DisplayTitle binding
         public string SongName
         {
