@@ -981,19 +981,36 @@ public partial class LibraryBrowserWindow : Window
             {
                 // Multi-night: Sort by date first (yyyy-MM-dd sorts correctly as string),
                 // then disc number, then track number
-                _currentTracks = _currentTracks
-                    .OrderBy(t => t.TrackDate ?? "")
-                    .ThenBy(t => t.DiscNumber)
-                    .ThenBy(t => t.TrackNumber)
-                    .ToList();
+                // If any track has a disc number, sort by disc then track
+                // Otherwise sort by track number alone (globally sequential numbering)
+                bool hasDiscNumbers = _currentTracks.Any(t => t.DiscNumber > 0);
+
+                _currentTracks = hasDiscNumbers
+                    ? _currentTracks
+                        .OrderBy(t => t.TrackDate ?? "")
+                        .ThenBy(t => t.DiscNumber > 0 ? t.DiscNumber : 1)
+                        .ThenBy(t => t.TrackNumber)
+                        .ToList()
+                    : _currentTracks
+                        .OrderBy(t => t.TrackDate ?? "")
+                        .ThenBy(t => t.TrackNumber)
+                        .ToList();
             }
             else
             {
                 // Single-night: Sort by disc number and track number only
-                _currentTracks = _currentTracks
-                    .OrderBy(t => t.DiscNumber)
-                    .ThenBy(t => t.TrackNumber)
-                    .ToList();
+                // If any track has a disc number, sort by disc then track
+                // Otherwise sort by track number alone (globally sequential numbering)
+                bool hasDiscNumbers = _currentTracks.Any(t => t.DiscNumber > 0);
+
+                _currentTracks = hasDiscNumbers
+                    ? _currentTracks
+                        .OrderBy(t => t.DiscNumber > 0 ? t.DiscNumber : 1)
+                        .ThenBy(t => t.TrackNumber)
+                        .ToList()
+                    : _currentTracks
+                        .OrderBy(t => t.TrackNumber)
+                        .ToList();
             }
 
             // Populate TrackDate for tracks that don't have embedded dates
@@ -1608,10 +1625,18 @@ public partial class LibraryBrowserWindow : Window
             }
 
             // Sort tracks by disc number and track number (disc-aware: 101, 102... 201, 202...)
-            _currentTracks = _currentTracks
-                .OrderBy(t => t.DiscNumber)
-                .ThenBy(t => t.TrackNumber)
-                .ToList();
+            // If any track has a disc number, sort by disc then track
+            // Otherwise sort by track number alone (globally sequential numbering)
+            bool hasDiscNumbers = _currentTracks.Any(t => t.DiscNumber > 0);
+
+            _currentTracks = hasDiscNumbers
+                ? _currentTracks
+                    .OrderBy(t => t.DiscNumber > 0 ? t.DiscNumber : 1)
+                    .ThenBy(t => t.TrackNumber)
+                    .ToList()
+                : _currentTracks
+                    .OrderBy(t => t.TrackNumber)
+                    .ToList();
 
             // Populate TrackDate for tracks that don't have embedded dates
             // This ensures DisplayTitle shows "Song (yyyy-MM-dd)" format

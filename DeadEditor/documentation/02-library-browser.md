@@ -177,9 +177,14 @@ Building the "By Date" view for Official Releases requires reading track metadat
 
 **Columns:**
 - `#` - Disc-aware track number (`TrackInfo.DisplayTrackNumber`)
-  - Single-disc albums: 1, 2, 3, 4...
-  - Multi-disc albums: 101, 102... (Disc 1), 201, 202... (Disc 2), 301, 302... (Disc 3)
-  - Format: `{DiscNumber}{TrackNumber:D2}` (e.g., Disc 2, Track 3 → "203")
+  - Displays disc-aware format when FLAC files contain DISCNUMBER tags:
+    - Single-disc albums: 101, 102, 103, 104... (Disc 1)
+    - Multi-disc albums: 101, 102... (Disc 1), 201, 202... (Disc 2), 301, 302... (Disc 3)
+    - Format: `{DiscNumber}{TrackNumber:D2}` (e.g., Disc 2, Track 3 → "203")
+  - Albums without DISCNUMBER tags display sequential track numbers: 1, 2, 3... 29
+  - **Sort behavior:** Column sorts by numeric TrackNumber property (not the displayed string)
+    - With disc tags: Sorts by DiscNumber, then TrackNumber
+    - No disc tags: Sorts by TrackNumber alone (correct for sequential numbering)
   - Fallback: Treats missing/zero `DiscNumber` as Disc 1
 - `Title` - Song title with segue markers (`TrackInfo.PreviewMetadata`)
 - `Duration` - Track duration (`TrackInfo.Duration`)
@@ -1209,11 +1214,16 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
    - `ContainsVenues` = `["Fillmore East"]` (deduplicated)
 6. Grid shows **ONE row** with Album Name "Enjoying the Ride" and track count 86
 7. User double-clicks row → `OpenConcertView()` loads tracks from ALL 3 folders (line 753-779)
-8. **Multi-night sort detection** (line 934-961):
+8. **Multi-night sort detection** (line 980-1005):
    - Counts distinct TrackDate values across all tracks
-   - If 2+ distinct dates found → Sort by TrackDate (ascending), then DiscNumber, then TrackNumber
-   - If 0-1 dates → Sort by DiscNumber, then TrackNumber only
-9. All 86 tracks displayed grouped by date, then by disc/track number within each date
+   - Checks if ANY track has DiscNumber > 0 (disc-aware numbering vs sequential numbering)
+   - **If 2+ distinct dates found:**
+     - **With disc numbers:** Sort by TrackDate (ascending), then DiscNumber, then TrackNumber
+     - **No disc numbers:** Sort by TrackDate (ascending), then TrackNumber only
+   - **If 0-1 dates:**
+     - **With disc numbers:** Sort by DiscNumber, then TrackNumber
+     - **No disc numbers:** Sort by TrackNumber only (globally sequential: 1, 2, 3... 29)
+9. All 86 tracks displayed grouped by date, then sorted within each date section
 
 **Result:** Multi-folder, multi-night albums appear as ONE entry with tracks sorted chronologically by date first, preventing interleaving of different concert nights
 
