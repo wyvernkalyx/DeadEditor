@@ -47,8 +47,7 @@ public partial class LibraryBrowserWindow : Window
             if (_selectedDate != value)
             {
                 _selectedDate = value;
-                // Force refresh of date links styling
-                DateLinksItemsControl?.Items.Refresh();
+                // Note: ComboBox selection is managed via SelectedIndex reset in handler
             }
         }
     }
@@ -1040,12 +1039,12 @@ public partial class LibraryBrowserWindow : Window
 
             TrackCountText.Text = $"{_currentTracks.Count} tracks";
 
-            // Show/hide date navigation links and expand/collapse buttons based on whether this is a multi-night show
+            // Show/hide Jump to Date dropdown and expand/collapse buttons based on whether this is a multi-night show
             // For multi-night shows, also hide venue/date/location (shown in section headers instead)
             if (_concertDates.Count > 1)
             {
-                // Multi-night: Show date links and expand/collapse buttons, hide venue/date/location/boxset
-                DateLinksPanel.Visibility = Visibility.Visible;
+                // Multi-night: Show Jump to Date dropdown and expand/collapse buttons, hide venue/date/location/boxset
+                JumpToDatePanel.Visibility = Visibility.Visible;
                 ExpandCollapseButtons.Visibility = Visibility.Visible;
                 VenueText.Visibility = Visibility.Collapsed;
                 DateText.Visibility = Visibility.Collapsed;
@@ -1054,8 +1053,8 @@ public partial class LibraryBrowserWindow : Window
             }
             else
             {
-                // Single-night: Hide date links and expand/collapse buttons, show venue/date/location
-                DateLinksPanel.Visibility = Visibility.Collapsed;
+                // Single-night: Hide Jump to Date dropdown and expand/collapse buttons, show venue/date/location
+                JumpToDatePanel.Visibility = Visibility.Collapsed;
                 ExpandCollapseButtons.Visibility = Visibility.Collapsed;
                 VenueText.Visibility = Visibility.Visible;
                 DateText.Visibility = Visibility.Visible;
@@ -2042,6 +2041,17 @@ public partial class LibraryBrowserWindow : Window
         if (sender is System.Windows.Controls.Button button && button.Tag is string date)
         {
             ScrollToDate(date);
+        }
+    }
+
+    private void JumpToDateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (JumpToDateComboBox.SelectedItem is string date && !string.IsNullOrEmpty(date))
+        {
+            ScrollToDate(date);
+
+            // Reset ComboBox to placeholder (no selection) after navigation
+            JumpToDateComboBox.SelectedIndex = -1;
         }
     }
 

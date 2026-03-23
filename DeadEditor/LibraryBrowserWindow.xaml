@@ -366,87 +366,6 @@
                     <TextBlock x:Name="TrackCountText"
                                FontSize="16"
                                Foreground="#808080"/>
-
-                    <!-- Date Navigation Links (Multi-Night Shows Only) -->
-                    <StackPanel x:Name="DateLinksPanel"
-                                Visibility="Collapsed"
-                                Margin="0,20,0,0">
-                        <TextBlock Text="JUMP TO DATE"
-                                   FontSize="13"
-                                   FontWeight="SemiBold"
-                                   Foreground="#808080"
-                                   Margin="0,0,0,10"/>
-                        <ScrollViewer MaxHeight="300"
-                                      VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Disabled">
-                            <ItemsControl x:Name="DateLinksItemsControl"
-                                          ItemsSource="{Binding ConcertDates, RelativeSource={RelativeSource AncestorType=Window}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding}"
-                                                Click="DateLink_Click"
-                                                Tag="{Binding}"
-                                                Cursor="Hand"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                Padding="0,4"
-                                                HorizontalAlignment="Left"
-                                                FontSize="15">
-                                            <Button.Style>
-                                                <Style TargetType="Button">
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="Button">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock x:Name="Indicator"
-                                                                               Text="●"
-                                                                               VerticalAlignment="Center"
-                                                                               Margin="0,0,6,0"
-                                                                               Visibility="Collapsed"/>
-                                                                    <TextBlock x:Name="LinkText"
-                                                                               Text="{TemplateBinding Content}"
-                                                                               FontSize="{TemplateBinding FontSize}"
-                                                                               Padding="{TemplateBinding Padding}"
-                                                                               Cursor="{TemplateBinding Cursor}"/>
-                                                                </StackPanel>
-                                                                <ControlTemplate.Triggers>
-                                                                    <!-- Selected state: check if this date matches SelectedDate -->
-                                                                    <DataTrigger Value="True">
-                                                                        <DataTrigger.Binding>
-                                                                            <MultiBinding Converter="{StaticResource DateSelectionConverter}">
-                                                                                <Binding/>
-                                                                                <Binding Path="SelectedDate" RelativeSource="{RelativeSource AncestorType=Window}"/>
-                                                                            </MultiBinding>
-                                                                        </DataTrigger.Binding>
-                                                                        <Setter TargetName="LinkText" Property="Foreground" Value="#E5C890"/>
-                                                                        <Setter TargetName="LinkText" Property="FontWeight" Value="Bold"/>
-                                                                        <Setter TargetName="Indicator" Property="Foreground" Value="#E5C890"/>
-                                                                        <Setter TargetName="Indicator" Property="FontWeight" Value="Bold"/>
-                                                                        <Setter TargetName="Indicator" Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                    <!-- Default (not selected) state -->
-                                                                    <DataTrigger Value="False">
-                                                                        <DataTrigger.Binding>
-                                                                            <MultiBinding Converter="{StaticResource DateSelectionConverter}">
-                                                                                <Binding/>
-                                                                                <Binding Path="SelectedDate" RelativeSource="{RelativeSource AncestorType=Window}"/>
-                                                                            </MultiBinding>
-                                                                        </DataTrigger.Binding>
-                                                                        <Setter TargetName="LinkText" Property="Foreground" Value="#D7BA7D"/>
-                                                                        <Setter TargetName="LinkText" Property="FontWeight" Value="Normal"/>
-                                                                    </DataTrigger>
-                                                                </ControlTemplate.Triggers>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </Button.Style>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </StackPanel>
                 </StackPanel>
 
                 <!-- Right: Track List -->
@@ -541,6 +460,30 @@
                                         </Button.Style>
                                     </Button>
                                 </StackPanel>
+
+                                <!-- Jump to Date dropdown (multi-night shows only) -->
+                                <StackPanel x:Name="JumpToDatePanel"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed"
+                                            Margin="0,0,16,0"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Text="Jump to Date:"
+                                               FontSize="13"
+                                               Foreground="#CCCCCC"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,8,0"/>
+                                    <ComboBox x:Name="JumpToDateComboBox"
+                                              ItemsSource="{Binding ConcertDates, RelativeSource={RelativeSource AncestorType=Window}}"
+                                              Width="180"
+                                              SelectionChanged="JumpToDateComboBox_SelectionChanged">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" FontSize="14"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+
                                 <TextBlock Text="TRACKS"
                                            FontSize="16"
                                            FontWeight="SemiBold"

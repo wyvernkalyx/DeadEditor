@@ -37,7 +37,15 @@ The LibraryBrowserWindow uses a dark theme (#1E1E1E background) with four main s
   - Box set name (if applicable)
   - Track count
 - Right column:
-  - Track list DataGrid with columns: #, Title, Duration
+  - **TRACKS header** with Jump to Date dropdown (multi-night shows only):
+    - Dropdown appears above track list when album contains tracks from multiple concert dates
+    - Label: "Jump to Date:" followed by ComboBox showing all dates (width 180px)
+    - Selecting a date scrolls to that date's section header in the track list
+    - ComboBox resets to no selection after navigation (acts as navigation trigger only)
+    - Hidden for single-date concerts
+  - **Track list DataGrid** with columns: #, Title, Duration
+  - For multi-night shows: tracks grouped by date with collapsible section headers
+  - Expand/Collapse All buttons (⊞/⊟) appear with Jump to Date dropdown
   - Double-click row to play track
 
 **Bottom Section (Status Bar / Placeholder Bar):**
