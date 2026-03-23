@@ -9,6 +9,74 @@
         Topmost="True"
         ShowInTaskbar="False">
 
+    <Window.Resources>
+        <!-- Winamp-style Raised/Beveled Button Style -->
+        <Style x:Key="WinampButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="2">
+                            <!-- Raised bevel effect: light top/left, dark bottom/right -->
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#666666" Offset="0"/>
+                                    <GradientStop Color="#1a1a1a" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ContentPresenter x:Name="contentPresenter"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Margin="0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover state: slightly lighter face -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#4a4a4a"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <!-- Pressed state: invert bevel, shift content -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#1a1a1a" Offset="0"/>
+                                            <GradientStop Color="#666666" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="contentPresenter" Property="Margin" Value="1,1,0,0"/>
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#2a2a2a"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <!-- Disabled state -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#2a2a2a"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="BorderBrush">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#3a3a3a"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="#555555"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Border BorderBrush="#555555" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
@@ -62,39 +130,45 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal"
                             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Button x:Name="PreviousButton" Content="«" Width="40" Height="35"
+                            Style="{StaticResource WinampButtonStyle}"
                             Click="PreviousButton_Click"
-                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
-                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+                            Background="#3a3a3a" Foreground="#CCCCCC"
+                            FontSize="14" Margin="0,0,5,0"/>
 
                     <Button x:Name="PlayButton" Content="▶" Width="50" Height="35"
+                            Style="{StaticResource WinampButtonStyle}"
                             Click="PlayButton_Click"
-                            Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB"
-                            BorderThickness="1" FontSize="16" FontWeight="Bold" Margin="0,0,5,0"/>
+                            Background="#0E639C" Foreground="#FFFFFF"
+                            FontSize="16" FontWeight="Bold" Margin="0,0,5,0"/>
 
                     <Button x:Name="StopButton" Content="■" Width="40" Height="35"
+                            Style="{StaticResource WinampButtonStyle}"
                             Click="StopButton_Click"
-                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
-                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+                            Background="#3a3a3a" Foreground="#CCCCCC"
+                            FontSize="14" Margin="0,0,5,0"/>
 
                     <Button x:Name="NextButton" Content="»" Width="40" Height="35"
+                            Style="{StaticResource WinampButtonStyle}"
                             Click="NextButton_Click"
-                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
-                            BorderThickness="1" FontSize="14" Margin="0,0,5,0"/>
+                            Background="#3a3a3a" Foreground="#CCCCCC"
+                            FontSize="14" Margin="0,0,5,0"/>
 
                     <!-- Separator -->
                     <Border Width="1" Background="#555555" Margin="5,5,5,5"/>
 
                     <!-- PL Button -->
                     <Button x:Name="PlaylistButton" Content="PL" Width="35" Height="35"
+                            Style="{StaticResource WinampButtonStyle}"
                             Click="PlaylistButton_Click"
-                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
-                            BorderThickness="1" FontSize="10" FontWeight="Bold" Margin="5,0,5,0"/>
+                            Background="#3a3a3a" Foreground="#CCCCCC"
+                            FontSize="10" FontWeight="Bold" Margin="5,0,5,0"/>
 
                     <!-- VIS Button -->
                     <Button x:Name="VisButton" Content="VIS" Width="35" Height="35"
+                            Style="{StaticResource WinampButtonStyle}"
                             Click="VisButton_Click"
-                            Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
-                            BorderThickness="1" FontSize="9" FontWeight="Bold"/>
+                            Background="#3a3a3a" Foreground="#CCCCCC"
+                            FontSize="9" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
 
