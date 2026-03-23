@@ -46,10 +46,10 @@ public partial class App : System.Windows.Application
         playerWindow.PlaylistWindowInstance = playlistWindow;
         playlistWindow.Show();
 
-        // Create and show visualizer window (attached to playlist window)
+        // Create visualizer window (attached to playlist window)
+        // Starts hidden - user toggles with "Visualizer" button
         var visWindow = new VisWindow(playlistWindow);
         playerWindow.VisWindowInstance = visWindow;
-        visWindow.Show();
 
         // Hook Windows session ending (log off/shutdown)
         SessionEnding += App_SessionEnding;

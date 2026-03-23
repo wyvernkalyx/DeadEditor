@@ -275,17 +275,17 @@ namespace DeadEditor
             switch (_player.State)
             {
                 case PlaybackState.Playing:
-                    PlayButton.Content = "⏸";  // Show pause when playing
+                    PlayButton.Content = "\uE769";  // Pause glyph (Segoe MDL2 Assets)
                     _updateTimer.Start();
                     break;
 
                 case PlaybackState.Paused:
-                    PlayButton.Content = "▶";  // Show play when paused
+                    PlayButton.Content = "\uE768";  // Play glyph (Segoe MDL2 Assets)
                     _updateTimer.Stop();
                     break;
 
                 case PlaybackState.Stopped:
-                    PlayButton.Content = "▶";  // Show play when stopped
+                    PlayButton.Content = "\uE768";  // Play glyph (Segoe MDL2 Assets)
                     _updateTimer.Stop();
                     SeekSlider.Value = 0;
                     CurrentTimeText.Text = "0:00";

@@ -129,42 +129,42 @@
                 <!-- Transport Buttons -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal"
                             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
-                    <Button x:Name="PreviousButton" Content="«" Width="40" Height="35"
+                    <Button x:Name="PreviousButton" Content="&#xE892;" Width="40" Height="35"
                             Style="{StaticResource WinampButtonStyle}"
                             Click="PreviousButton_Click"
                             Background="#3a3a3a" Foreground="#CCCCCC"
-                            FontSize="14" Margin="0,0,5,0"/>
+                            FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0"/>
 
-                    <Button x:Name="PlayButton" Content="▶" Width="50" Height="35"
+                    <Button x:Name="PlayButton" Content="&#xE768;" Width="50" Height="35"
                             Style="{StaticResource WinampButtonStyle}"
                             Click="PlayButton_Click"
                             Background="#0E639C" Foreground="#FFFFFF"
-                            FontSize="16" FontWeight="Bold" Margin="0,0,5,0"/>
+                            FontFamily="Segoe MDL2 Assets" FontSize="16" FontWeight="Bold" Margin="0,0,5,0"/>
 
-                    <Button x:Name="StopButton" Content="■" Width="40" Height="35"
+                    <Button x:Name="StopButton" Content="&#xE71A;" Width="40" Height="35"
                             Style="{StaticResource WinampButtonStyle}"
                             Click="StopButton_Click"
                             Background="#3a3a3a" Foreground="#CCCCCC"
-                            FontSize="14" Margin="0,0,5,0"/>
+                            FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0"/>
 
-                    <Button x:Name="NextButton" Content="»" Width="40" Height="35"
+                    <Button x:Name="NextButton" Content="&#xE893;" Width="40" Height="35"
                             Style="{StaticResource WinampButtonStyle}"
                             Click="NextButton_Click"
                             Background="#3a3a3a" Foreground="#CCCCCC"
-                            FontSize="14" Margin="0,0,5,0"/>
+                            FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,5,0"/>
 
                     <!-- Separator -->
                     <Border Width="1" Background="#555555" Margin="5,5,5,5"/>
 
-                    <!-- PL Button -->
-                    <Button x:Name="PlaylistButton" Content="PL" Width="35" Height="35"
+                    <!-- Playlist Button -->
+                    <Button x:Name="PlaylistButton" Content="Playlist" Width="60" Height="35"
                             Style="{StaticResource WinampButtonStyle}"
                             Click="PlaylistButton_Click"
                             Background="#3a3a3a" Foreground="#CCCCCC"
-                            FontSize="10" FontWeight="Bold" Margin="5,0,5,0"/>
+                            FontSize="9" FontWeight="Bold" Margin="5,0,5,0"/>
 
-                    <!-- VIS Button -->
-                    <Button x:Name="VisButton" Content="VIS" Width="35" Height="35"
+                    <!-- Visualizer Button -->
+                    <Button x:Name="VisButton" Content="Visualizer" Width="70" Height="35"
                             Style="{StaticResource WinampButtonStyle}"
                             Click="VisButton_Click"
                             Background="#3a3a3a" Foreground="#CCCCCC"

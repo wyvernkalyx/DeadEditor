@@ -87,28 +87,35 @@ Chromeless WPF Window (no standard title bar). Compact fixed-width panel.
 └─────────────────────────────────────────────┘
 ```
 
-**Transport button symbols (Unicode only — no icon fonts, no Segoe MDL2):**
+**Transport button symbols (Segoe MDL2 Assets icon font):**
 
-| Button | Symbol | Notes |
-|--------|--------|-------|
-| Previous | « | FontSize 14 |
-| Play/Pause (toggle) | ▶ / ⏸ | FontSize 16, single button that changes symbol based on playback state |
-| Stop | ■ | FontSize 14 |
-| Next | » | FontSize 14 |
+| Button | Symbol | Glyph Code | FontSize | Notes |
+|--------|--------|------------|----------|-------|
+| Previous | &#xE892; (previous track) | U+E892 | 14 | Segoe MDL2 Assets |
+| Play/Pause (toggle) | &#xE768; / &#xE769; | U+E768 / U+E769 | 16 | Single button that changes glyph based on playback state |
+| Stop | &#xE71A; (stop) | U+E71A | 14 | Segoe MDL2 Assets |
+| Next | &#xE893; (next track) | U+E893 | 14 | Segoe MDL2 Assets |
 
-All button text set directly in XAML Foreground/FontSize — no loaded resources.
-This prevents the "disappearing button graphics" bug caused by unreliable glyph loading.
+All transport buttons use **Segoe MDL2 Assets** font family for consistent icon rendering.
+Button labels use standard UI font.
 
 **Play/Pause Toggle Button:**
-- Single button that toggles between Play (▶) and Pause (⏸) symbols
+- Single button that toggles between Play (U+E768) and Pause (U+E769) glyphs
 - Button content updates automatically based on playback state:
-  - Shows ▶ when playback is Stopped or Paused
-  - Shows ⏸ when playback is Playing
+  - Shows &#xE768; (Play) when playback is Stopped or Paused
+  - Shows &#xE769; (Pause) when playback is Playing
 - Click behavior:
-  - When showing ▶ (stopped/paused) → starts/resumes playback
-  - When showing ⏸ (playing) → pauses playback
-- UpdatePlaybackUI() method handles symbol updates in response to PlaybackStateChanged events
+  - When showing Play glyph (stopped/paused) → starts/resumes playback
+  - When showing Pause glyph (playing) → pauses playback
+- `UpdatePlaybackUI()` method handles glyph updates in response to PlaybackStateChanged events
+- Content set via string escape sequences (`"\uE768"`, `"\uE769"`) in code-behind
 - Replaces the previous design which had separate Play and Pause buttons (confusing UI)
+
+**Playlist and Visualizer Buttons:**
+- **Playlist button:** Text label "Playlist" (width 60px, FontSize 9, FontWeight Bold)
+- **Visualizer button:** Text label "Visualizer" (width 70px, FontSize 9, FontWeight Bold)
+- Both use the WinampButtonStyle with standard UI font (not icon font)
+- Replaces previous cryptic "PL" and "VIS" abbreviations
 
 **Marquee:** Canvas + TranslateTransform animation scrolling left when text exceeds
 display width. Format: `Song Name (yyyy-MM-dd) — Venue, City, State`
@@ -344,6 +351,11 @@ private void RestorePlaylist()
 
 ## VIS Window (stub)
 
+**Startup Behavior:**
+- VisWindow is created at app startup but **starts hidden** (not shown by default)
+- User explicitly opens it via "Visualizer" button on PlayerWindow
+- This prevents clutter on first launch - most users won't use visualizer immediately
+
 **Attachment behavior:**
 - Default: attached directly below PlaylistWindow, follows PlaylistWindow when it moves
 - Detach button (■) makes it a free-floating window with independent position
@@ -351,7 +363,7 @@ private void RestorePlaylist()
 - When detached: position persisted to settings (`VisWindowLeft`, `VisWindowTop`)
 - On app relaunch: restores to detached position if saved, otherwise attaches below PlaylistWindow
 - Content: dark background, centered text "Visualizer — coming soon"
-- VIS button on PlayerWindow toggles visibility
+- "Visualizer" button on PlayerWindow toggles visibility
 - Architecture is identical to PlaylistWindow so real visualizer content
   can replace the stub later with no structural changes
 
