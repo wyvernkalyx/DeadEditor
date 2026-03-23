@@ -183,17 +183,27 @@ PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 **Player Button/Menu in LibraryBrowserWindow:**
 - Menu item: "🎵 Player"
 - Keyboard shortcut: Ctrl+P
-- **Simple toggle:** visible → hide all; hidden → show all with position reset
+- **Three-state logic:** Hidden → show all; Minimized → restore all; Normal → hide all
 
-**Toggle Behavior:**
-- **If PlayerWindow is visible:** Hide all three windows (PlayerWindow, PlaylistWindow, VisWindow)
-- **If PlayerWindow is hidden:**
-  - Reset all three windows to default size and position
-  - Clear saved positions from settings (prevents off-screen placement)
-  - Show PlayerWindow at center-bottom of primary screen
-  - Show PlaylistWindow attached below PlayerWindow
-  - Show VisWindow attached below PlaylistWindow
-  - Activate PlayerWindow and bring to foreground
+**Toggle Behavior (Three States):**
+
+1. **If PlayerWindow is Hidden (not visible):**
+   - Reset all three windows to default size and position
+   - Clear saved positions from settings (prevents off-screen placement)
+   - Show PlayerWindow at center-bottom of primary screen
+   - Show PlaylistWindow attached below PlayerWindow
+   - Show VisWindow attached below PlaylistWindow
+   - Activate PlayerWindow and bring to foreground
+
+2. **If PlayerWindow is Minimized (visible but WindowState.Minimized):**
+   - Restore PlayerWindow to `WindowState.Normal`
+   - Restore PlaylistWindow to `WindowState.Normal` (if was minimized)
+   - Restore VisWindow to `WindowState.Normal` (if was minimized)
+   - Activate PlayerWindow and bring to foreground
+   - **Note:** Does NOT reset position — windows restore to their existing position
+
+3. **If PlayerWindow is Normal/Visible:**
+   - Hide all three windows (PlayerWindow, PlaylistWindow, VisWindow)
 
 **Position Reset on Show:**
 - **PlayerWindow:** 450×180, center-bottom of primary screen (40px from bottom for taskbar)
@@ -202,14 +212,19 @@ PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 - All three windows reset to `WindowState.Normal` (not maximized or minimized)
 - Saved position settings (`PlayerWindowLeft`, `PlaylistWindowLeft`, `VisWindowLeft/Top`) are cleared
 
-**Rationale for Position Reset:**
-- Prevents windows from appearing off-screen after monitor disconnect or resolution change
-- Provides consistent, predictable placement every time player is shown
-- User can still move/detach windows after they appear, positions will persist until next hide/show cycle
+**Rationale for Three-State Logic:**
+- **Hidden state:** Prevents windows from appearing off-screen after monitor disconnect; provides consistent placement
+- **Minimized state:** Restores windows to their existing position (does not reset) so user's layout is preserved
+- **Normal state:** Clean hide toggle for when user wants to temporarily dismiss the player group
+
+**WPF Behavior Note:**
+- Minimized windows have `IsVisible = true` but `WindowState = WindowState.Minimized`
+- The toggle must check `WindowState` explicitly to distinguish minimized from normal/visible state
+- Without this check, clicking Player button while minimized would hide the windows instead of restoring them
 
 **Implementation:**
-- `TogglePlayerWindowVisibility()` in LibraryBrowserWindow.xaml.cs (lines 1938-1970)
-- `ResetPlayerWindowPositions()` in LibraryBrowserWindow.xaml.cs (lines 1976-2013)
+- `TogglePlayerWindowVisibility()` in LibraryBrowserWindow.xaml.cs (lines 1941-1986)
+- `ResetPlayerWindowPositions()` in LibraryBrowserWindow.xaml.cs (lines 1988-2025)
 - Uses `AttachToPlayerWindow()` and `AttachToPlaylistWindow()` to snap windows together
 
 ---

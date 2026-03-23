@@ -1933,7 +1933,10 @@ public partial class LibraryBrowserWindow : Window
 
     /// <summary>
     /// Toggles PlayerWindow visibility with position reset.
-    /// Simple toggle: if visible → hide all three; if hidden → show all and reset to default position.
+    /// Three-state logic:
+    /// - Hidden → show all at default position
+    /// - Minimized → restore all to Normal
+    /// - Normal/visible → hide all
     /// </summary>
     private void TogglePlayerWindowVisibility()
     {
@@ -1942,27 +1945,40 @@ public partial class LibraryBrowserWindow : Window
         {
             if (window is PlayerWindow playerWindow)
             {
-                if (playerWindow.IsVisible)
+                if (!playerWindow.IsVisible)
                 {
-                    // Hide all three windows
+                    // Hidden → show all at default position
+                    ResetPlayerWindowPositions(playerWindow);
+                    playerWindow.Show();
+                    playerWindow.Activate();
+
+                    // Update menu item appearance to show active state
+                    PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+                }
+                else if (playerWindow.WindowState == WindowState.Minimized)
+                {
+                    // Minimized → restore all to Normal
+                    playerWindow.WindowState = WindowState.Normal;
+                    playerWindow.Activate();
+
+                    if (playerWindow.PlaylistWindowInstance?.WindowState == WindowState.Minimized)
+                        playerWindow.PlaylistWindowInstance.WindowState = WindowState.Normal;
+
+                    if (playerWindow.VisWindowInstance?.WindowState == WindowState.Minimized)
+                        playerWindow.VisWindowInstance.WindowState = WindowState.Normal;
+
+                    // Update menu item appearance to show active state
+                    PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+                }
+                else
+                {
+                    // Visible and normal → hide all
                     playerWindow.Hide();
                     playerWindow.PlaylistWindowInstance?.Hide();
                     playerWindow.VisWindowInstance?.Hide();
 
                     // Update menu item appearance to show inactive state
                     PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
-                }
-                else
-                {
-                    // Reset all windows to default size and position
-                    ResetPlayerWindowPositions(playerWindow);
-
-                    // Show player (will auto-show playlist attached below)
-                    playerWindow.Show();
-                    playerWindow.Activate();
-
-                    // Update menu item appearance to show active state
-                    PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
                 }
                 break;
             }
