@@ -117,6 +117,18 @@ namespace DeadEditor.Services
                 @"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$",
                 "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
 
+            // Remove (Reprise) or [Reprise] editorial suffixes
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*[\(\[]Reprise[\)\]]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove (Live) or [Live] standalone editorial markers (NOT "Live at/in" patterns)
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*[\(\[]Live[\)\]]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
             // Remove [M/D/YY, Venue pattern
             cleaned = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,

@@ -233,7 +233,15 @@ namespace DeadEditor.Services
                 using (var file = TagLib.File.Create(track.FilePath))
                 {
                     // Build the final title with date
+                    // Priority: track date > album date > release year (for studio tracks)
                     var date = !string.IsNullOrEmpty(track.PerformanceDate) ? track.PerformanceDate : album.AlbumDate;
+
+                    // If no concert date and release year is available, use release year (for studio tracks)
+                    if (string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(album.Year))
+                    {
+                        date = album.Year;
+                    }
+
                     var title = track.SongName ?? track.Title;
 
                     // Remove any existing date suffix to prevent duplicates
@@ -246,7 +254,16 @@ namespace DeadEditor.Services
                         title = title + " >";
                     }
 
-                    file.Tag.Title = $"{title} ({date})";
+                    // Only append date if one is available (concert date or release year)
+                    if (!string.IsNullOrEmpty(date))
+                    {
+                        file.Tag.Title = $"{title} ({date})";
+                    }
+                    else
+                    {
+                        // No date suffix if neither concert date nor release year available
+                        file.Tag.Title = title;
+                    }
                     file.Tag.Album = album.AlbumTitle;
                     file.Tag.Performers = new[] { album.Artist };
                     file.Tag.AlbumArtists = new[] { album.Artist };

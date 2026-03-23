@@ -173,17 +173,26 @@ public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
 
 1. **Per-Track Processing** (line 193-244):
    - Open file: `TagLib.File.Create(track.FilePath)`
-   - **Build Title** (line 198-211):
-     - Use performance date if track-specific, else album date (line 198)
-     - Use normalized title if exists, else original title (line 199)
-     - **Strip existing date suffixes** (line 203):
+   - **Build Title** (line 198-223):
+     - **Date Priority Logic** (line 237-243):
+       - 1st priority: `track.PerformanceDate` (track-specific concert date override)
+       - 2nd priority: `album.AlbumDate` (album-level concert date)
+       - 3rd priority: `album.Year` (release year for studio tracks without concert date)
+       - 4th priority: No date suffix (if all three are empty)
+     - Use normalized title if exists, else original title (line 245)
+     - **Strip existing date suffixes** (line 249):
        - Regex: `@"\s*\(\d{4}-\d{2}-\d{2}\)(\s*\(\d{4}-\d{2}-\d{2}\))*\s*$"`
        - Matches: " (yyyy-MM-dd)" or " (yyyy-MM-dd) (yyyy-MM-dd)" (prevents duplicate dates)
-     - **Add segue marker** (line 206-209):
+     - **Add segue marker** (line 252-255):
        - If `track.HasSegue == true`, append " >" to title
        - Segue marker comes BEFORE date suffix
-     - **Final title format:** `"{title} ({date})"` (line 211)
-       - Example: "Dark Star (1972-05-04)" or "China Cat Sunflower > (1972-05-04)"
+     - **Final title format** (line 258-266):
+       - If date is available: `"{title} ({date})"`
+         - Example: "Dark Star (1972-05-04)" (concert date)
+         - Example: "Help on the Way (2025)" (release year for studio track)
+         - Example: "China Cat Sunflower > (1972-05-04)" (with segue)
+       - If no date: `"{title}"`
+         - Example: "Help on the Way" (no date, no year)
 
 2. **Write ID3 Tags** (line 212-222):
    - `file.Tag.Title` = title with date and optional segue
@@ -215,7 +224,8 @@ public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
 - **Invalid date format:** DateTime.TryParse() returns false → Year tag not written (safe degradation, line 219)
 
 **Business Rules:**
-- **Date suffix always appended** (even if already present in original)
+- **Date suffix priority:** Track date > Album date > Release year > No suffix
+- **Release year fallback:** Studio tracks with no concert date use `album.Year` for suffix (e.g., "Song (2025)")
 - **Duplicate date prevention:** Regex strips existing dates before adding new one
 - **Segue marker placement:** Comes BEFORE date suffix (e.g., " > (date)" not "(date) >")
 - **Single artwork only:** First picture replaces all existing pictures

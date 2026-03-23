@@ -131,48 +131,61 @@ public string? Normalize(string title)
    - Regex: `@"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$"`
    - Example: "[2003 Remaster]"
 
-7. **US Date/Venue in Brackets** (line 120-124):
+7. **Reprise Editorial Suffix** (line 120-124):
+   - Regex: `@"\s*[\(\[]Reprise[\)\]]\s*$"`
+   - Case-insensitive
+   - Examples: "(Reprise)", "[Reprise]"
+   - **Rationale:** Editorial suffix marking song reprises, not part of canonical name
+
+8. **Live Editorial Suffix** (line 126-130):
+   - Regex: `@"\s*[\(\[]Live[\)\]]\s*$"`
+   - Case-insensitive
+   - Examples: "(Live)", "[Live]"
+   - **Rationale:** Standalone editorial marker (NOT "Live at/in Venue" patterns)
+   - **Note:** This only strips standalone "(Live)" or "[Live]", not venue-specific patterns like "(Live at Fillmore)"
+
+9. **US Date/Venue in Brackets** (line 132-136):
    - Regex: `@"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$"`
    - Example: "[5/7/72, Bickershaw Festival]"
 
-8. **Artist Suffix Removal** (line 126-132):
+10. **Artist Suffix Removal** (line 138-144):
    - Regex: `@"\s*-\s*[^-]+_{0,2}\s*$"`
    - Examples: " - Grateful Dead__", " - Grateful Dead", " - Artist Name"
    - **Critical:** MUST come BEFORE "(Live at...)" removal
    - **Rationale:** MusicBrainz titles have format "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching end-of-string
 
-9. **Live At/In Brackets** (line 134-138):
+11. **Live At/In Brackets** (line 146-150):
    - Regex: `@"\s*\[Live (?:at|in) [^\]]+\]\s*$"`
    - Example: "[Live at Fillmore East]"
 
-10. **Live At/In Parentheses** (line 140-144):
+12. **Live At/In Parentheses** (line 152-156):
    - Regex: `@"\s*\(Live (?:at|in) [^)]+\)\s*$"`
    - Example: "(Live at Winterland)"
 
-11. **Venue/Date in Brackets** (line 146-150):
+13. **Venue/Date in Brackets** (line 158-162):
     - Regex: `@"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$"`
     - Example: "[Kiel Opera House, St. Louis, MO 10/24/70]"
 
-12. **Segue Markers** (line 152-156):
+14. **Segue Markers** (line 164-168):
     - Regex: `@"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$"`
     - Matches: `>`, `->`, `–>`, `→`, `[>]`
 
-#### Stage 4: Direct Lookup (line 160-163)
+#### Stage 4: Direct Lookup (line 172-175)
 - Check `_aliasLookup` for exact match (case-insensitive)
 - **Fast path:** Most matches found here after cleaning
 
-#### Stages 5-8: Progressive Stripping (line 167-218)
+#### Stages 5-8: Progressive Stripping (line 179-230)
 
 Each stage strips additional patterns, then checks lookup:
 
-5. **Strip Date/Venue Again** (line 167-175): `[M/D/YY, Venue` pattern
-6. **Strip Live Info Again** (line 178-186): `[Live at...]` pattern
-7. **Strip Date+Location+Segue** (line 189-202): Combined removal
-8. **Strip Date+Segue** (line 205-218): Final date/segue removal
+5. **Strip Date/Venue Again** (line 179-187): `[M/D/YY, Venue` pattern
+6. **Strip Live Info Again** (line 190-198): `[Live at...]` pattern
+7. **Strip Date+Location+Segue** (line 201-214): Combined removal
+8. **Strip Date+Segue** (line 217-230): Final date/segue removal
 
 **Rationale:** Some titles have nested or repeated patterns not caught by initial cleaning.
 
-#### Stage 9: Dash Normalization (line 221-230)
+#### Stage 9: Dash Normalization (line 233-242)
 ```csharp
 .Replace("–", "-")  // en-dash → hyphen
 .Replace("—", "-")  // em-dash → hyphen
@@ -184,7 +197,7 @@ Each stage strips additional patterns, then checks lookup:
 
 **Rationale:** Different sources use different dash characters (Unicode variants, box-drawing characters from ASCII art).
 
-#### Stage 10: Suffix Removal (line 233-243)
+#### Stage 10: Suffix Removal (line 245-255)
 ```csharp
 .Replace(" (1)", "")
 .Replace(" (2)", "")
@@ -196,16 +209,16 @@ Each stage strips additional patterns, then checks lookup:
 
 **Rationale:** Handles "Song (1)", "Song (2)", "Song Reprise" variants.
 
-#### Stage 11: Normalized Dashes + Suffixes (line 246-256)
+#### Stage 11: Normalized Dashes + Suffixes (line 258-268)
 - Combine dash normalization and suffix removal
 - **Lookup:** Final exact match attempt
 
-#### Stage 12: Fuzzy Matching (line 259-263)
+#### Stage 12: Fuzzy Matching (line 271-275)
 - Call `FindFuzzyMatch(cleaned)` as **last resort**
 - Uses Levenshtein distance algorithm
 - Handles typos (max 2 characters or 20% of string length)
 
-#### Stage 13: No Match (line 265)
+#### Stage 13: No Match (line 277)
 - Return `null` if all stages fail
 
 **Total Stages:** 14 (1-3 cleaning, 4-13 progressive matching, 14 failure)
