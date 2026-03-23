@@ -117,18 +117,6 @@ namespace DeadEditor.Services
                 @"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$",
                 "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
 
-            // Remove (Reprise) or [Reprise] editorial suffixes
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*[\(\[]Reprise[\)\]]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove (Live) or [Live] standalone editorial markers (NOT "Live at/in" patterns)
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*[\(\[]Live[\)\]]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
             // Remove [M/D/YY, Venue pattern
             cleaned = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
@@ -161,7 +149,22 @@ namespace DeadEditor.Services
                 @"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$",
                 "").Trim();
 
+            // Remove (Reprise) or [Reprise] editorial suffixes
+            // MUST come AFTER venue pattern removal so "Song (Reprise) [Live at Venue]" works correctly
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*[\(\[]Reprise[\)\]]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
+            // Remove (Live) or [Live] standalone editorial markers (NOT "Live at/in" patterns)
+            // MUST come AFTER venue pattern removal to avoid interfering with "[Live at Venue]"
+            cleaned = System.Text.RegularExpressions.Regex.Replace(
+                cleaned,
+                @"\s*[\(\[]Live[\)\]]\s*$",
+                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
+
             // Remove segue markers at the end: >, ->, →, [>]
+            // MUST come AFTER suffix removal to clean up trailing ">" from "Song > (Reprise)" → "Song >"
             cleaned = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
                 @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",

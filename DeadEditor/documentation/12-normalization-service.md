@@ -127,65 +127,67 @@ public string? Normalize(string title)
    - Case-insensitive
    - Examples: "(Remaster)", "(2003 Remastered)", "(Remastered)"
 
-6. **Remaster Tags in Brackets** (line 124-127):
+6. **Remaster Tags in Brackets** (line 114-118):
    - Regex: `@"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$"`
    - Example: "[2003 Remaster]"
 
-7. **Reprise Editorial Suffix** (line 120-124):
-   - Regex: `@"\s*[\(\[]Reprise[\)\]]\s*$"`
-   - Case-insensitive
-   - Examples: "(Reprise)", "[Reprise]"
-   - **Rationale:** Editorial suffix marking song reprises, not part of canonical name
-
-8. **Live Editorial Suffix** (line 126-130):
-   - Regex: `@"\s*[\(\[]Live[\)\]]\s*$"`
-   - Case-insensitive
-   - Examples: "(Live)", "[Live]"
-   - **Rationale:** Standalone editorial marker (NOT "Live at/in Venue" patterns)
-   - **Note:** This only strips standalone "(Live)" or "[Live]", not venue-specific patterns like "(Live at Fillmore)"
-
-9. **US Date/Venue in Brackets** (line 132-136):
+7. **US Date/Venue in Brackets** (line 120-124):
    - Regex: `@"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$"`
    - Example: "[5/7/72, Bickershaw Festival]"
 
-10. **Artist Suffix Removal** (line 138-144):
+8. **Artist Suffix Removal** (line 126-132):
    - Regex: `@"\s*-\s*[^-]+_{0,2}\s*$"`
    - Examples: " - Grateful Dead__", " - Grateful Dead", " - Artist Name"
    - **Critical:** MUST come BEFORE "(Live at...)" removal
    - **Rationale:** MusicBrainz titles have format "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching end-of-string
 
-11. **Live At/In Brackets** (line 146-150):
+9. **Live At/In Brackets** (line 134-138):
    - Regex: `@"\s*\[Live (?:at|in) [^\]]+\]\s*$"`
    - Example: "[Live at Fillmore East]"
 
-12. **Live At/In Parentheses** (line 152-156):
+10. **Live At/In Parentheses** (line 140-144):
    - Regex: `@"\s*\(Live (?:at|in) [^)]+\)\s*$"`
    - Example: "(Live at Winterland)"
 
-13. **Venue/Date in Brackets** (line 158-162):
+11. **Venue/Date in Brackets** (line 146-150):
     - Regex: `@"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$"`
     - Example: "[Kiel Opera House, St. Louis, MO 10/24/70]"
 
-14. **Segue Markers** (line 164-168):
+12. **Reprise Editorial Suffix** (line 152-157):
+   - Regex: `@"\s*[\(\[]Reprise[\)\]]\s*$"`
+   - Case-insensitive
+   - Examples: "(Reprise)", "[Reprise]"
+   - **Rationale:** Editorial suffix marking song reprises, not part of canonical name
+   - **Critical:** MUST come AFTER venue pattern removal so "Song (Reprise) [Live at Venue]" processes correctly
+
+13. **Live Editorial Suffix** (line 159-164):
+   - Regex: `@"\s*[\(\[]Live[\)\]]\s*$"`
+   - Case-insensitive
+   - Examples: "(Live)", "[Live]"
+   - **Rationale:** Standalone editorial marker (NOT "Live at/in Venue" patterns)
+   - **Critical:** MUST come AFTER venue pattern removal to avoid interfering with "[Live at Venue]"
+
+14. **Segue Markers** (line 166-171):
     - Regex: `@"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$"`
     - Matches: `>`, `->`, `–>`, `→`, `[>]`
+    - **Critical:** MUST come AFTER suffix removal to clean up trailing ">" from "Song > (Reprise)" → "Song >"
 
-#### Stage 4: Direct Lookup (line 172-175)
+#### Stage 4: Direct Lookup (line 173-176)
 - Check `_aliasLookup` for exact match (case-insensitive)
 - **Fast path:** Most matches found here after cleaning
 
-#### Stages 5-8: Progressive Stripping (line 179-230)
+#### Stages 5-8: Progressive Stripping (line 178-229)
 
 Each stage strips additional patterns, then checks lookup:
 
-5. **Strip Date/Venue Again** (line 179-187): `[M/D/YY, Venue` pattern
-6. **Strip Live Info Again** (line 190-198): `[Live at...]` pattern
-7. **Strip Date+Location+Segue** (line 201-214): Combined removal
-8. **Strip Date+Segue** (line 217-230): Final date/segue removal
+5. **Strip Date/Venue Again** (line 178-186): `[M/D/YY, Venue` pattern
+6. **Strip Live Info Again** (line 189-197): `[Live at...]` pattern
+7. **Strip Date+Location+Segue** (line 200-213): Combined removal
+8. **Strip Date+Segue** (line 216-229): Final date/segue removal
 
 **Rationale:** Some titles have nested or repeated patterns not caught by initial cleaning.
 
-#### Stage 9: Dash Normalization (line 233-242)
+#### Stage 9: Dash Normalization (line 232-241)
 ```csharp
 .Replace("–", "-")  // en-dash → hyphen
 .Replace("—", "-")  // em-dash → hyphen
@@ -197,7 +199,7 @@ Each stage strips additional patterns, then checks lookup:
 
 **Rationale:** Different sources use different dash characters (Unicode variants, box-drawing characters from ASCII art).
 
-#### Stage 10: Suffix Removal (line 245-255)
+#### Stage 10: Suffix Removal (line 244-254)
 ```csharp
 .Replace(" (1)", "")
 .Replace(" (2)", "")
@@ -209,16 +211,16 @@ Each stage strips additional patterns, then checks lookup:
 
 **Rationale:** Handles "Song (1)", "Song (2)", "Song Reprise" variants.
 
-#### Stage 11: Normalized Dashes + Suffixes (line 258-268)
+#### Stage 11: Normalized Dashes + Suffixes (line 257-267)
 - Combine dash normalization and suffix removal
 - **Lookup:** Final exact match attempt
 
-#### Stage 12: Fuzzy Matching (line 271-275)
+#### Stage 12: Fuzzy Matching (line 270-274)
 - Call `FindFuzzyMatch(cleaned)` as **last resort**
 - Uses Levenshtein distance algorithm
 - Handles typos (max 2 characters or 20% of string length)
 
-#### Stage 13: No Match (line 277)
+#### Stage 13: No Match (line 276)
 - Return `null` if all stages fail
 
 **Total Stages:** 14 (1-3 cleaning, 4-13 progressive matching, 14 failure)
