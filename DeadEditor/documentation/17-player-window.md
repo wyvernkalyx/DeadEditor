@@ -122,6 +122,37 @@ display width. Format: `Song Name (yyyy-MM-dd) — Venue, City, State`
 
 ---
 
+## Window Properties
+
+**PlayerWindow (PlayerWindow.xaml):**
+- `ResizeMode="NoResize"` — No resize, no maximize (fixed size window)
+- `WindowStyle="None"` — Custom chrome with drag bar
+- `Topmost="True"` — Always on top of other windows
+- `ShowInTaskbar="False"` — No taskbar icon
+- Size: 450×180 (fixed)
+
+**PlaylistWindow (PlaylistWindow.xaml):**
+- `ResizeMode="CanResizeWithGrip"` — User can resize by dragging edges, **maximize button disabled**
+- `WindowStyle="None"` — Custom chrome with drag bar
+- `Topmost="True"` — Always on top
+- `ShowInTaskbar="False"` — No taskbar icon
+- Size: 450×400 (default), MinHeight=200, MinWidth=350
+
+**VisWindow (VisWindow.xaml):**
+- `ResizeMode="CanResizeWithGrip"` — User can resize by dragging edges, **maximize button disabled**
+- `WindowStyle="None"` — Custom chrome with drag bar
+- `Topmost="True"` — Always on top
+- `ShowInTaskbar="False"` — No taskbar icon
+- Size: 450×300 (default), MinHeight=150, MinWidth=350
+
+**Rationale for ResizeMode Settings:**
+- PlayerWindow is fixed size (no resize needed for compact transport controls)
+- PlaylistWindow and VisWindow allow resizing for user flexibility (larger/smaller playlist view)
+- **Maximize disabled** on all three to prevent breaking the floating window group layout
+- `CanResizeWithGrip` removes maximize button while still allowing edge/corner dragging
+
+---
+
 ## Window Positioning
 
 PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
@@ -147,6 +178,42 @@ PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 
 ---
 
+## Player Window Toggle Behavior
+
+**Player Button/Menu in LibraryBrowserWindow:**
+- Menu item: "🎵 Player"
+- Keyboard shortcut: Ctrl+P
+- **Simple toggle:** visible → hide all; hidden → show all with position reset
+
+**Toggle Behavior:**
+- **If PlayerWindow is visible:** Hide all three windows (PlayerWindow, PlaylistWindow, VisWindow)
+- **If PlayerWindow is hidden:**
+  - Reset all three windows to default size and position
+  - Clear saved positions from settings (prevents off-screen placement)
+  - Show PlayerWindow at center-bottom of primary screen
+  - Show PlaylistWindow attached below PlayerWindow
+  - Show VisWindow attached below PlaylistWindow
+  - Activate PlayerWindow and bring to foreground
+
+**Position Reset on Show:**
+- **PlayerWindow:** 450×180, center-bottom of primary screen (40px from bottom for taskbar)
+- **PlaylistWindow:** 450×400, attached directly below PlayerWindow
+- **VisWindow:** 450×300, attached directly below PlaylistWindow
+- All three windows reset to `WindowState.Normal` (not maximized or minimized)
+- Saved position settings (`PlayerWindowLeft`, `PlaylistWindowLeft`, `VisWindowLeft/Top`) are cleared
+
+**Rationale for Position Reset:**
+- Prevents windows from appearing off-screen after monitor disconnect or resolution change
+- Provides consistent, predictable placement every time player is shown
+- User can still move/detach windows after they appear, positions will persist until next hide/show cycle
+
+**Implementation:**
+- `TogglePlayerWindowVisibility()` in LibraryBrowserWindow.xaml.cs (lines 1938-1970)
+- `ResetPlayerWindowPositions()` in LibraryBrowserWindow.xaml.cs (lines 1976-2013)
+- Uses `AttachToPlayerWindow()` and `AttachToPlaylistWindow()` to snap windows together
+
+---
+
 ## Minimize/Restore Behavior
 
 All three player windows (PlayerWindow, PlaylistWindow, VisWindow) minimize and restore together as a group.
@@ -156,15 +223,10 @@ All three player windows (PlayerWindow, PlaylistWindow, VisWindow) minimize and 
 - When PlayerWindow is restored → PlaylistWindow and VisWindow also restore (if they were minimized)
 - This ensures the player windows stay synchronized and don't get separated
 
-**Restore from Minimized State:**
-- Player button/menu in LibraryBrowserWindow ("🎵 Player" menu item or Ctrl+P)
-- Clicking while minimized → restores all three windows to Normal state and brings PlayerWindow to foreground
-- No taskbar icon needed (all three windows have `ShowInTaskbar="False"`)
-
 **Implementation Details:**
 - PlayerWindow.StateChanged event handler propagates minimize/restore to companion windows
 - Only affects windows that are currently visible (hidden windows stay hidden)
-- Library Browser's TogglePlayerWindowVisibility() checks WindowState before IsVisible
+- No taskbar icon needed (all three windows have `ShowInTaskbar="False"`)
 
 **State Synchronization:**
 ```

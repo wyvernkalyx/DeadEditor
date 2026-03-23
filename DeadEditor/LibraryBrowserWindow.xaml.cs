@@ -1932,12 +1932,8 @@ public partial class LibraryBrowserWindow : Window
     }
 
     /// <summary>
-    /// Toggles PlayerWindow visibility and updates menu button state.
-    /// Also toggles PlaylistWindow and VisWindow to match.
-    /// Behavior:
-    /// - If hidden: show
-    /// - If visible but not focused: bring to foreground
-    /// - If visible and focused: hide
+    /// Toggles PlayerWindow visibility with position reset.
+    /// Simple toggle: if visible → hide all three; if hidden → show all and reset to default position.
     /// </summary>
     private void TogglePlayerWindowVisibility()
     {
@@ -1946,73 +1942,73 @@ public partial class LibraryBrowserWindow : Window
         {
             if (window is PlayerWindow playerWindow)
             {
-                // Check if minimized first (minimized windows still report IsVisible = true)
-                if (playerWindow.WindowState == WindowState.Minimized)
+                if (playerWindow.IsVisible)
                 {
-                    // Restore all three windows from minimized state
-                    playerWindow.WindowState = WindowState.Normal;
-                    if (playerWindow.PlaylistWindowInstance?.WindowState == WindowState.Minimized)
-                    {
-                        playerWindow.PlaylistWindowInstance.WindowState = WindowState.Normal;
-                    }
-                    if (playerWindow.VisWindowInstance?.WindowState == WindowState.Minimized)
-                    {
-                        playerWindow.VisWindowInstance.WindowState = WindowState.Normal;
-                    }
+                    // Hide all three windows
+                    playerWindow.Hide();
+                    playerWindow.PlaylistWindowInstance?.Hide();
+                    playerWindow.VisWindowInstance?.Hide();
 
-                    // Bring player to foreground
-                    playerWindow.Activate();
-                    playerWindow.Focus();
-
-                    // Update menu item appearance to show active state
-                    PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
-                }
-                else if (playerWindow.IsVisible)
-                {
-                    if (playerWindow.IsActive)
-                    {
-                        // Already focused — hide everything
-                        playerWindow.Hide();
-                        playerWindow.PlaylistWindowInstance?.Hide();
-                        playerWindow.VisWindowInstance?.Hide();
-
-                        // Update menu item appearance to show inactive state
-                        PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
-                    }
-                    else
-                    {
-                        // Visible but not focused — bring to front
-                        playerWindow.Activate();
-                        playerWindow.Focus();
-
-                        // Also bring companion windows to front if they're visible
-                        if (playerWindow.PlaylistWindowInstance?.IsVisible == true)
-                        {
-                            playerWindow.PlaylistWindowInstance.Activate();
-                        }
-                        if (playerWindow.VisWindowInstance?.IsVisible == true)
-                        {
-                            playerWindow.VisWindowInstance.Activate();
-                        }
-
-                        // Update menu item appearance to show active state
-                        PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
-                    }
+                    // Update menu item appearance to show inactive state
+                    PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
                 }
                 else
                 {
-                    // Hidden — show
-                    playerWindow.Show();
+                    // Reset all windows to default size and position
+                    ResetPlayerWindowPositions(playerWindow);
 
-                    // PlaylistWindow visibility is controlled by PL button on PlayerWindow
-                    // VisWindow visibility is controlled by VIS button on PlayerWindow
-                    // Don't force them visible here - let user's last state persist
+                    // Show player (will auto-show playlist attached below)
+                    playerWindow.Show();
+                    playerWindow.Activate();
 
                     // Update menu item appearance to show active state
                     PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
                 }
                 break;
             }
+        }
+    }
+
+    /// <summary>
+    /// Resets all player windows to default size and position.
+    /// Clears saved positions from settings to prevent off-screen placement.
+    /// </summary>
+    private void ResetPlayerWindowPositions(PlayerWindow playerWindow)
+    {
+        // Clear saved positions from settings
+        _librarySettings.PlayerWindowLeft = null;
+        _librarySettings.PlayerWindowTop = null;
+        _librarySettings.PlaylistWindowLeft = null;
+        _librarySettings.PlaylistWindowTop = null;
+        _librarySettings.VisWindowLeft = null;
+        _librarySettings.VisWindowTop = null;
+        _librarySettings.Save();
+
+        // Reset PlayerWindow to default size and position (center-bottom of primary screen)
+        playerWindow.WindowState = WindowState.Normal;
+        playerWindow.Width = 450;
+        playerWindow.Height = 180;
+
+        var screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+        playerWindow.Left = screen.Left + (screen.Width - playerWindow.Width) / 2;
+        playerWindow.Top = screen.Top + screen.Height - playerWindow.Height - 40; // 40px from bottom
+
+        // Reset PlaylistWindow to default size and attach below PlayerWindow
+        if (playerWindow.PlaylistWindowInstance != null)
+        {
+            playerWindow.PlaylistWindowInstance.WindowState = WindowState.Normal;
+            playerWindow.PlaylistWindowInstance.Width = 450;
+            playerWindow.PlaylistWindowInstance.Height = 400;
+            playerWindow.PlaylistWindowInstance.AttachToPlayerWindow();
+        }
+
+        // Reset VisWindow to default size and attach below PlaylistWindow
+        if (playerWindow.VisWindowInstance != null)
+        {
+            playerWindow.VisWindowInstance.WindowState = WindowState.Normal;
+            playerWindow.VisWindowInstance.Width = 450;
+            playerWindow.VisWindowInstance.Height = 300;
+            playerWindow.VisWindowInstance.AttachToPlaylistWindow();
         }
     }
 

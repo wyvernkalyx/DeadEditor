@@ -5,7 +5,7 @@
         Title="Playlist"
         Height="400" Width="450"
         WindowStyle="None"
-        ResizeMode="CanResize"
+        ResizeMode="CanResizeWithGrip"
         Background="#1E1E1E"
         Topmost="True"
         ShowInTaskbar="False"
