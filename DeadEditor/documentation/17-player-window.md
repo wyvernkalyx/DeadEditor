@@ -27,6 +27,50 @@ All NAudio logic lives here. No other class instantiates an audio player.
 
 ---
 
+## Gapless Auto-Advance
+
+**Feature:** When a track finishes playing naturally, the player automatically advances to the next track in the playlist with minimal gap.
+
+**Implementation:**
+
+The auto-advance logic is implemented in `AudioPlayerService.OnPlaybackStopped()`:
+
+1. **Detect natural end-of-track:**
+   - Uses `_userInitiatedStop` flag to distinguish user-initiated stop from natural end
+   - Flag is set to `true` in `Stop()` method before calling `_wavePlayer.Stop()`
+   - Flag is checked in `OnPlaybackStopped()` handler along with `e.Exception == null`
+   - Natural end = `!_userInitiatedStop && e.Exception == null`
+
+2. **Auto-advance logic:**
+   ```csharp
+   if (wasNaturalEnd && _currentTrackIndex < _playlist.Count - 1)
+   {
+       // Auto-advance to next track
+       Next();
+   }
+   else
+   {
+       // End of playlist or user-initiated stop
+       SetPlaybackState(PlaybackState.Stopped);
+       PlaybackStopped?.Invoke(this, EventArgs.Empty);
+   }
+   ```
+
+3. **Behavior:**
+   - **Natural end + next track exists:** Calls `Next()` → loads next file, stays in Playing state, play button remains ⏸
+   - **Natural end + last track:** Transitions to Stopped, play button returns to ▶
+   - **User clicks stop button:** Transitions to Stopped immediately, NO auto-advance
+
+**Gap Duration:**
+~50-200ms between tracks (time to dispose old `AudioFileReader`, create new reader, load next file). This is acceptable for most users but not truly gapless due to NAudio architecture (`AudioFileReader` does not support seamless chaining).
+
+**NAudio Architecture:**
+- **Output:** `WaveOutEvent` (event-based, good for WPF)
+- **Reader:** `AudioFileReader` (MediaFoundation-based, must create new instance per track)
+- True gapless would require custom `ISampleProvider` or `ConcatenatingSampleProvider` (significant refactoring)
+
+---
+
 ## PlayerWindow Layout
 
 Chromeless WPF Window (no standard title bar). Compact fixed-width panel.

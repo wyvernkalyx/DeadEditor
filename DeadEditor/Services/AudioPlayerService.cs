@@ -57,6 +57,7 @@ namespace DeadEditor.Services
         private PlaybackState _playbackState;
         private TrackInfo? _currentTrack;
         private int _currentTrackIndex = -1;
+        private bool _userInitiatedStop = false;
 
         // Playlist
         private readonly ObservableCollection<TrackInfo> _playlist;
@@ -238,6 +239,7 @@ namespace DeadEditor.Services
         {
             if (_wavePlayer != null)
             {
+                _userInitiatedStop = true;
                 _wavePlayer.Stop();
                 _wavePlayer.Dispose();
                 _wavePlayer = null;
@@ -330,8 +332,21 @@ namespace DeadEditor.Services
 
         private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
         {
-            SetPlaybackState(PlaybackState.Stopped);
-            PlaybackStopped?.Invoke(this, EventArgs.Empty);
+            // Check if this was a natural end-of-track (not user-initiated stop and no exception)
+            bool wasNaturalEnd = !_userInitiatedStop && e.Exception == null;
+            _userInitiatedStop = false;  // Reset flag
+
+            if (wasNaturalEnd && _currentTrackIndex < _playlist.Count - 1)
+            {
+                // Auto-advance to next track
+                Next();
+            }
+            else
+            {
+                // End of playlist or user-initiated stop - transition to Stopped
+                SetPlaybackState(PlaybackState.Stopped);
+                PlaybackStopped?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void Dispose()
