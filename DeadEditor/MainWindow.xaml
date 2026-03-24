@@ -103,8 +103,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- ===== SECTION 1: FOLDER BAR ===== -->
-            <Grid Grid.Row="0" Margin="0,0,0,10">
+            <!-- ===== SECTION 1: FOLDER BAR / EDITING HEADER ===== -->
+            <!-- Folder selector (Import mode only) -->
+            <Grid Grid.Row="0" x:Name="FolderSelectionGrid" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -116,6 +117,13 @@
                          VerticalAlignment="Center" IsReadOnly="True"
                          FontFamily="Consolas" FontSize="16" Background="#2D2D30"/>
             </Grid>
+
+            <!-- Editing label (Edit mode only) -->
+            <TextBlock Grid.Row="0" x:Name="EditingLabel"
+                       FontSize="20" FontWeight="SemiBold"
+                       Foreground="#FFFFFF" Margin="0,5,0,15"
+                       Visibility="Collapsed"
+                       Text="Editing: [Album Name]"/>
 
             <!-- ===== SECTION 2: ACTION BAR ===== -->
             <Grid Grid.Row="1" Margin="0,0,0,10">
@@ -162,6 +170,11 @@
                             Style="{StaticResource PrimaryButton}"
                             Click="ImportButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Import to library"/>
+                    <Button x:Name="SaveChangesButton" Content="Save Changes" Height="32"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="SaveChangesButton_Click" Margin="0,0,6,0" FontSize="16"
+                            Visibility="Collapsed"
+                            ToolTip="Save changes to files and library"/>
                     <Button x:Name="CancelButton" Content="Cancel" Height="32"
                             Click="CancelButton_Click" FontSize="16"
                             ToolTip="Close window"/>

@@ -4,13 +4,65 @@
 
 MainWindow is the concert import workflow hub for DeadEditor. It loads audio files from a folder, parses metadata from filenames and ID3 tags, normalizes song titles using fuzzy matching against the song database, and writes standardized metadata back to the files. The window supports four album types (Live Recordings, Official Releases, Studio Albums, and Box Sets) and provides specialized workflows for each. After metadata preparation, concerts can be imported into the library with proper folder structure and naming conventions. The window also supports MusicBrainz integration for studio albums via audio fingerprinting or manual search.
 
+**TWO MODES:** MainWindow operates in two distinct modes with different UI layouts and workflows:
+
+1. **Import Mode** (default): Import new concerts from external folders into the library
+2. **Edit Mode**: Edit metadata of existing library albums in place
+
+## Window Modes
+
+### Import Mode
+
+**How to open:** File menu > Import New Concert (from LibraryBrowserWindow)
+
+**UI shown:**
+- "Select Folder..." button + folder path display (top bar)
+- "Read" button (toolbar)
+- "Write to Files" + "Import to Library" buttons (bottom right)
+- Window title: "Dead Editor - Import"
+
+**Workflow:**
+1. User selects folder containing audio files
+2. User normalizes song titles, edits metadata as needed
+3. User clicks "Write to Files" to update ID3 tags
+4. User clicks "Import to Library" to copy files to library folder structure
+5. Window clears after successful import
+
+**Constructor:** `new MainWindow()` (parameterless)
+
+### Edit Mode
+
+**How to open:** "Edit Metadata" button (from concert detail view in LibraryBrowserWindow)
+
+**UI shown:**
+- "Editing: [Album Name]" label (top bar) - shows album name or date/venue
+- NO "Select Folder" button or folder path display
+- NO "Read" button (toolbar)
+- "Save Changes" button (bottom right) - combines Write + Import in one action
+- Window title: "Dead Editor - Edit Metadata"
+
+**Workflow:**
+1. Window opens with existing library album pre-loaded
+2. User edits metadata (song titles, dates, venue, artwork, etc.)
+3. User clicks "Save Changes" to write metadata AND update library record
+4. Window closes after successful save
+5. Library automatically refreshes to show changes
+
+**Constructor:** `new MainWindow(LibraryShow existingShow)` (passes existing show reference)
+
+**Key Difference:** In Edit mode, "Save Changes" performs both metadata write AND library update in a single operation, then closes the window. Files are edited in-place within the library folder - no copying occurs.
+
 ## Screen Layout
 
 The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 
-**Top Section (Action Bar):**
-- Folder selection (browse button + read-only path display)
-- Action buttons in a horizontal row: Read from Files, Normalize All Songs, Renumber Tracks, Write to Files, View Info File, Import to Library, Cancel
+**Top Section:**
+- **Import Mode:** Folder selection (browse button + read-only path display)
+- **Edit Mode:** "Editing: [Album Name]" label
+
+**Action Bar:**
+- **Import Mode:** Read, MusicBrainz, Normalize, Renumber, View Info (left) | Write to Files, Import to Library, Cancel (right)
+- **Edit Mode:** MusicBrainz, Normalize, Renumber, View Info (left) | Save Changes, Cancel (right)
 
 **Main Content (Two-Column Grid):**
 
@@ -39,24 +91,33 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 
 ## Interactive Elements
 
-### Folder Selection Section
+### Folder Selection / Editing Header Section
+
+**Import Mode:**
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
 | Select Folder button | Button | `BrowseButton` | Opens folder browser dialog, calls LoadFolder() with selected path | `FolderBrowserDialog.ShowDialog()` → `LoadFolder()` | Working |
 | Folder path display | TextBox | `FolderPathTextBox` | Read-only display of selected folder path | N/A (display only) | Working |
 
-### Action Buttons Section
+**Edit Mode:**
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
-| Read from Files | Button | `ReadButton` | Re-loads current folder (redundant, auto-loads on browse) | `LoadFolder(FolderPathTextBox.Text)` | Working (unnecessary) |
-| Normalize All Songs | Button | `NormalizeButton` | Normalizes all track titles using fuzzy matching, highlights unmatched songs in yellow/gold | `_normalizationService.NormalizeAll(_tracks)` | Working |
-| Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention based on current row order (use after drag-to-reorder) | Disc-aware sequential numbering (line 424-451) | Working |
-| Write to Files | Button | `WriteButton` | Writes metadata to audio files after confirmation | `_metadataService.WriteMetadata(_albumInfo, _tracks)` | Working |
-| View Info File | Button | `ViewInfoButton` | Opens non-modal window showing .txt info file content | Opens new Window with TextBox (line 823-851) | Working |
-| Import to Library | Button | `ImportButton` | Imports concert to library folder structure with progress bar | `_libraryImportService.ImportToLibrary(...)` | Working |
-| Cancel | Button | `CancelButton` | Closes window without saving | `this.Close()` | Working |
+| Editing label | TextBlock | `EditingLabel` | Displays "Editing: [Album Name]" or "Editing: [Date] - [Venue]" | N/A (display only) | Working |
+
+### Action Buttons Section
+
+| Element | Type | Name | Action | API/Service Call | Status | Visible In |
+|---------|------|------|--------|-----------------|--------|------------|
+| Read from Files | Button | `ReadButton` | Re-loads current folder (redundant, auto-loads on browse) | `LoadFolder(FolderPathTextBox.Text)` | Working (unnecessary) | Import mode only |
+| Normalize All Songs | Button | `NormalizeButton` | Normalizes all track titles using fuzzy matching, highlights unmatched songs in yellow/gold | `_normalizationService.NormalizeAll(_tracks)` | Working | Both modes |
+| Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention based on current row order (use after drag-to-reorder) | Disc-aware sequential numbering (line 424-451) | Working | Both modes |
+| Write to Files | Button | `WriteButton` | Writes metadata to audio files after confirmation | `_metadataService.WriteMetadata(_albumInfo, _tracks)` | Working | Import mode only |
+| View Info File | Button | `ViewInfoButton` | Opens non-modal window showing .txt info file content | Opens new Window with TextBox (line 823-851) | Working | Both modes |
+| Import to Library | Button | `ImportButton` | Imports concert to library folder structure with progress bar | `_libraryImportService.ImportToLibrary(...)` | Working | Import mode only |
+| Save Changes | Button | `SaveChangesButton` | Writes metadata to files AND updates library record in one operation, then closes window | `_metadataService.WriteMetadata()` → `_libraryImportService.ImportToLibrary()` → `Close()` | Working | Edit mode only |
+| Cancel | Button | `CancelButton` | Closes window without saving | `this.Close()` | Working | Both modes |
 
 ### Album Information Panel
 

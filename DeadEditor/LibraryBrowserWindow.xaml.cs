@@ -2062,10 +2062,9 @@ public partial class LibraryBrowserWindow : Window
             return;
         }
 
-        // Open the Import Wizard with the current show's folder
-        var importWindow = new MainWindow();
+        // Open MainWindow in Edit mode with the current show
+        var importWindow = new MainWindow(_currentShow);
         importWindow.Owner = this;
-        importWindow.LoadFolder(_currentShow.FolderPath);
         importWindow.Closed += (s, e) => LoadShows(); // Reload library when edit completes
         importWindow.Show();
 

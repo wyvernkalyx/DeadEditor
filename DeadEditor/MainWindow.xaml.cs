@@ -25,9 +25,18 @@ namespace DeadEditor;
 /// Album info bar with unified fields for all types.
 /// Date auto-append when track date differs from album date.
 /// MusicBrainz as simple populate action (no confirmation dialog).
+///
+/// TWO MODES:
+/// - Import Mode: Select new folder, read files, write metadata, import to library
+/// - Edit Mode: Edit existing library album, save changes in place
 /// </summary>
 public partial class MainWindow : Window
 {
+    // Window mode
+    public enum WindowMode { Import, Edit }
+    private WindowMode _mode = WindowMode.Import;
+    private LibraryShow? _existingShow = null; // Store reference when in Edit mode
+
     // Services
     private readonly MetadataService _metadataService;
     private readonly NormalizationService _normalizationService;
@@ -45,9 +54,35 @@ public partial class MainWindow : Window
     private AudioPlayerService _audioPlayer => App.PlaybackService;
 
 
+    // Import mode constructor (default)
     public MainWindow()
     {
         InitializeComponent();
+
+        _mode = WindowMode.Import;
+        _metadataService = new MetadataService();
+        _normalizationService = new NormalizationService();
+        _libraryImportService = new LibraryImportService(_metadataService);
+        _librarySettings = LibrarySettings.Load();
+        _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
+
+        // Setup DataGrid
+        TracksDataGrid.ItemsSource = _tracks;
+
+        // Apply mode-specific UI changes
+        ApplyMode();
+
+        // Restore window position
+        RestoreWindowPosition();
+    }
+
+    // Edit mode constructor (for editing existing library albums)
+    public MainWindow(LibraryShow existingShow)
+    {
+        InitializeComponent();
+
+        _mode = WindowMode.Edit;
+        _existingShow = existingShow;
 
         _metadataService = new MetadataService();
         _normalizationService = new NormalizationService();
@@ -55,11 +90,17 @@ public partial class MainWindow : Window
         _librarySettings = LibrarySettings.Load();
         _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
 
-        // Restore window position
-        RestoreWindowPosition();
-
         // Setup DataGrid
         TracksDataGrid.ItemsSource = _tracks;
+
+        // Apply mode-specific UI changes
+        ApplyMode();
+
+        // Load the existing show data
+        LoadFolder(existingShow.FolderPath);
+
+        // Restore window position
+        RestoreWindowPosition();
     }
 
     private void RestoreWindowPosition()
@@ -74,6 +115,51 @@ public partial class MainWindow : Window
         {
             Width = _librarySettings.MainWindowWidth.Value;
             Height = _librarySettings.MainWindowHeight.Value;
+        }
+    }
+
+    /// <summary>
+    /// Apply mode-specific UI changes based on current window mode.
+    /// Called from constructor after InitializeComponent().
+    /// </summary>
+    private void ApplyMode()
+    {
+        if (_mode == WindowMode.Import)
+        {
+            // Import mode: show folder selector, show Read button
+            FolderSelectionGrid.Visibility = Visibility.Visible;
+            EditingLabel.Visibility = Visibility.Collapsed;
+            ReadButton.Visibility = Visibility.Visible;
+
+            // Show Write + Import buttons, hide Save Changes
+            WriteButton.Visibility = Visibility.Visible;
+            ImportButton.Visibility = Visibility.Visible;
+            SaveChangesButton.Visibility = Visibility.Collapsed;
+
+            Title = "Dead Editor - Import";
+        }
+        else // Edit mode
+        {
+            // Edit mode: hide folder selector, show album name label
+            FolderSelectionGrid.Visibility = Visibility.Collapsed;
+            EditingLabel.Visibility = Visibility.Visible;
+            ReadButton.Visibility = Visibility.Collapsed;
+
+            // Hide Write + Import buttons, show Save Changes
+            WriteButton.Visibility = Visibility.Collapsed;
+            ImportButton.Visibility = Visibility.Collapsed;
+            SaveChangesButton.Visibility = Visibility.Visible;
+
+            // Set editing label text
+            if (_existingShow != null)
+            {
+                string albumDesc = !string.IsNullOrEmpty(_existingShow.AlbumName)
+                    ? _existingShow.AlbumName
+                    : $"{_existingShow.Date} - {_existingShow.Venue}";
+                EditingLabel.Text = $"Editing: {albumDesc}";
+            }
+
+            Title = "Dead Editor - Edit Metadata";
         }
     }
 
@@ -955,6 +1041,96 @@ public partial class MainWindow : Window
             WriteButton.IsEnabled = true;
             await ShowNotificationAsync("Import Failed", $"Error importing to library:\n\n{ex.Message}\n\nStack trace:\n{ex.StackTrace}");
             StatusTextBlock.Text = $"Import failed: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Save Changes button handler (Edit mode only)
+    /// Combines Write to Files + Import to Library in one operation for editing existing albums.
+    /// Writes metadata to files in place, then calls ImportToLibrary to ensure library record is updated.
+    /// </summary>
+    private async void SaveChangesButton_Click(object sender, RoutedEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("=== SaveChangesButton_Click START ===");
+
+        if (_tracks.Count == 0 || _albumInfo == null)
+        {
+            await ShowNotificationAsync("No Files", "No tracks loaded to save.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_librarySettings.LibraryRootPath))
+        {
+            await ShowNotificationAsync("Library Not Set",
+                "Library path not set. Please configure it in Settings (from Library window).");
+            return;
+        }
+
+        bool confirmed = await ShowNotificationAsync("Confirm Save",
+            $"This will save changes to {_tracks.Count} audio files and update the library record.\n\nContinue?",
+            showYesNo: true);
+
+        if (!confirmed) return;
+
+        try
+        {
+            SaveChangesButton.IsEnabled = false;
+            StatusTextBlock.Text = "Saving changes...";
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.Value = 0;
+
+            var trackList = _tracks.Select(t => t.Track).ToList();
+
+            // Step 1: Write metadata to files (in place)
+            StatusTextBlock.Text = "Writing metadata to files...";
+            ProgressBar.Value = 25;
+
+            _metadataService.WriteMetadata(_albumInfo, trackList);
+
+            _albumInfo.IsModified = false;
+            foreach (var track in _tracks)
+            {
+                track.Track.IsModified = false;
+            }
+
+            // Step 2: Update library record by calling ImportToLibrary
+            // This ensures the library folder structure and files are up-to-date
+            // Since files are already in the library, this will overwrite in place
+            StatusTextBlock.Text = "Updating library record...";
+            ProgressBar.Value = 50;
+
+            var progress = new Progress<(int current, int total, string status)>(report =>
+            {
+                ProgressBar.Value = 50 + (report.current * 50.0) / report.total;
+                StatusTextBlock.Text = report.status;
+            });
+
+            await Task.Run(() =>
+            {
+                _libraryImportService.ImportToLibrary(
+                    _librarySettings.LibraryRootPath,
+                    _albumInfo,
+                    trackList,
+                    progress,
+                    _librarySettings.OfficialReleasesPath);
+            });
+
+            ProgressBar.Visibility = Visibility.Collapsed;
+            StatusTextBlock.Text = $"Successfully saved changes to {_tracks.Count} files";
+
+            await ShowNotificationAsync("Save Complete",
+                $"Successfully saved changes to {_tracks.Count} files and updated library record.");
+
+            // Close window (triggers library refresh in LibraryBrowserWindow via Closed event)
+            this.Close();
+        }
+        catch (Exception ex)
+        {
+            ProgressBar.Visibility = Visibility.Collapsed;
+            SaveChangesButton.IsEnabled = true;
+            await ShowNotificationAsync("Save Failed", $"Error saving changes:\n\n{ex.Message}\n\nStack trace:\n{ex.StackTrace}");
+            StatusTextBlock.Text = $"Save failed: {ex.Message}";
         }
     }
 
