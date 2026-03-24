@@ -229,28 +229,41 @@ PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 
 ---
 
-## Minimize/Restore Behavior
+## Minimize/Restore/Close Behavior
 
-All three player windows (PlayerWindow, PlaylistWindow, VisWindow) minimize and restore together as a group.
+All three player windows (PlayerWindow, PlaylistWindow, VisWindow) minimize, restore, and close together as a group.
 
 **Grouped Window State Management:**
-- When PlayerWindow is minimized → PlaylistWindow and VisWindow also minimize (if visible)
-- When PlayerWindow is restored → PlaylistWindow and VisWindow also restore (if they were minimized)
+- When PlayerWindow is minimized → PlaylistWindow and VisWindow also hide (if visible)
+- When PlayerWindow is restored → Companion windows remain hidden (restore via Player button in Library Browser)
+- When PlayerWindow is closed (× button) → PlaylistWindow and VisWindow also hide
 - This ensures the player windows stay synchronized and don't get separated
 
 **Implementation Details:**
-- PlayerWindow.StateChanged event handler propagates minimize/restore to companion windows
-- Only affects windows that are currently visible (hidden windows stay hidden)
+- PlayerWindow.StateChanged event handler hides companion windows on minimize
+- PlayerWindow.OnClosing() method hides companion windows on close
+- Uses Hide() instead of Close() to keep windows reusable
+- Uses Hide() instead of Minimize() because companion windows have `ShowInTaskbar="False"` and can't be independently recovered
+- Restoring from minimize: User must use Player button (Ctrl+P) in LibraryBrowserWindow to show all windows together
 - No taskbar icon needed (all three windows have `ShowInTaskbar="False"`)
 
 **State Synchronization:**
 ```
-PlayerWindow minimized → PlaylistWindow minimized (if visible)
-                      → VisWindow minimized (if visible)
+PlayerWindow minimized → PlaylistWindow hidden (if visible)
+                      → VisWindow hidden (if visible)
 
-PlayerWindow restored  → PlaylistWindow restored (if was minimized)
-                      → VisWindow restored (if was minimized)
+PlayerWindow restored  → Companion windows remain hidden
+                      → Use Player button (Ctrl+P) to show all
+
+PlayerWindow closed (×)→ PlaylistWindow hidden
+                      → VisWindow hidden
 ```
+
+**Window Lifecycle:**
+- Windows are created once at app startup and reused
+- Close button (×) hides windows rather than disposing them
+- User can re-show via LibraryBrowserWindow Player menu (Ctrl+P)
+- Using Hide() instead of Close() preserves window state and avoids re-initialization cost
 
 ---
 

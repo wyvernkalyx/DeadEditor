@@ -241,32 +241,28 @@ namespace DeadEditor
 
         /// <summary>
         /// When PlayerWindow is minimized or restored, synchronize companion windows.
+        /// Uses Hide() instead of minimizing to prevent orphaned windows (since they have ShowInTaskbar=False).
         /// </summary>
         private void PlayerWindow_StateChanged(object? sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized)
             {
-                // Minimize companion windows if they're currently visible
+                // Hide companion windows if they're currently visible
+                // (Use Hide() not Minimize() since they have ShowInTaskbar=False and can't be recovered independently)
                 if (PlaylistWindowInstance?.IsVisible == true)
                 {
-                    PlaylistWindowInstance.WindowState = WindowState.Minimized;
+                    PlaylistWindowInstance.Hide();
                 }
                 if (VisWindowInstance?.IsVisible == true)
                 {
-                    VisWindowInstance.WindowState = WindowState.Minimized;
+                    VisWindowInstance.Hide();
                 }
             }
             else if (WindowState == WindowState.Normal)
             {
-                // Restore companion windows if they were minimized with the player
-                if (PlaylistWindowInstance?.WindowState == WindowState.Minimized)
-                {
-                    PlaylistWindowInstance.WindowState = WindowState.Normal;
-                }
-                if (VisWindowInstance?.WindowState == WindowState.Minimized)
-                {
-                    VisWindowInstance.WindowState = WindowState.Normal;
-                }
+                // Restore companion windows if they were hidden when player was minimized
+                // Note: This only shows windows that were visible before minimize (hidden windows stay hidden)
+                // The Player button restore path in LibraryBrowserWindow handles showing all windows together
             }
         }
 
@@ -405,6 +401,10 @@ namespace DeadEditor
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            // Hide companion windows when PlayerWindow closes
+            PlaylistWindowInstance?.Hide();
+            VisWindowInstance?.Hide();
+
             // Unsubscribe from events
             _player.PlaybackStateChanged -= Player_PlaybackStateChanged;
             _player.TrackChanged -= Player_TrackChanged;
