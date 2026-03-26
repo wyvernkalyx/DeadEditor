@@ -136,6 +136,10 @@ public partial class MainWindow : Window
             ImportButton.Visibility = Visibility.Visible;
             SaveChangesButton.Visibility = Visibility.Collapsed;
 
+            // Enable Normalize and Renumber buttons in import mode
+            NormalizeButton.IsEnabled = true;
+            RenumberButton.IsEnabled = true;
+
             Title = "Dead Editor - Import";
         }
         else // Edit mode
@@ -150,12 +154,36 @@ public partial class MainWindow : Window
             ImportButton.Visibility = Visibility.Collapsed;
             SaveChangesButton.Visibility = Visibility.Visible;
 
-            // Set editing label text
+            // Disable Normalize and Renumber buttons in edit mode
+            // Edit mode displays FLAC tags as-is - no transformations
+            NormalizeButton.IsEnabled = false;
+            RenumberButton.IsEnabled = false;
+
+            // Set editing label text (FIX 2: improved logic for official releases)
             if (_existingShow != null)
             {
-                string albumDesc = !string.IsNullOrEmpty(_existingShow.AlbumName)
-                    ? _existingShow.AlbumName
-                    : $"{_existingShow.Date} - {_existingShow.Venue}";
+                string albumDesc;
+
+                // Priority: AlbumName > Date > folder name
+                if (!string.IsNullOrEmpty(_existingShow.AlbumName))
+                {
+                    albumDesc = _existingShow.AlbumName;
+                }
+                else if (!string.IsNullOrEmpty(_existingShow.Date))
+                {
+                    // Build date-based description
+                    var parts = new List<string>();
+                    parts.Add(_existingShow.Date);
+                    if (!string.IsNullOrEmpty(_existingShow.Venue))
+                        parts.Add(_existingShow.Venue);
+                    albumDesc = string.Join(" - ", parts);
+                }
+                else
+                {
+                    // Fallback to folder name
+                    albumDesc = Path.GetFileName(_existingShow.FolderPath);
+                }
+
                 EditingLabel.Text = $"Editing: {albumDesc}";
             }
 
@@ -196,11 +224,8 @@ public partial class MainWindow : Window
             FolderPathTextBox.Text = folderPath;
             StatusTextBlock.Text = "Reading files...";
 
-            // Read tracks
-            var trackList = _metadataService.ReadFolder(folderPath)
-                .OrderBy(t => t.DiscNumber)
-                .ThenBy(t => t.TrackNumber)
-                .ToList();
+            // Read tracks - pass editMode flag to skip transformations in edit mode
+            var trackList = _metadataService.ReadFolder(folderPath, editMode: _mode == WindowMode.Edit);
 
             if (trackList.Count == 0)
             {
@@ -210,13 +235,104 @@ public partial class MainWindow : Window
             }
 
             // Read album info
-            _albumInfo = _metadataService.ReadAlbumInfo(folderPath, trackList);
+            // In edit mode, use the LibraryShow data instead of re-reading from FLAC
+            if (_mode == WindowMode.Edit && _existingShow != null)
+            {
+                // Populate AlbumInfo from the stored LibraryShow data
+                _albumInfo = new AlbumInfo
+                {
+                    FolderPath = _existingShow.FolderPath,
+                    Type = _existingShow.Type,
+                    Artist = "Grateful Dead", // Will be overridden from FLAC below
+                    AlbumDate = _existingShow.Date ?? "",
+                    Venue = _existingShow.Venue ?? "",
+                    City = _existingShow.City ?? "",
+                    State = _existingShow.State ?? "",
+                    CityState = !string.IsNullOrEmpty(_existingShow.Location) ? _existingShow.Location :
+                               (!string.IsNullOrEmpty(_existingShow.City) && !string.IsNullOrEmpty(_existingShow.State) ? $"{_existingShow.City}, {_existingShow.State}" : ""),
+                    AlbumName = _existingShow.AlbumName ?? "",
+                    Year = _existingShow.ReleaseYear?.ToString() ?? "",
+                    OfficialRelease = _existingShow.OfficialRelease ?? "",
+                    Edition = _existingShow.Edition ?? ""
+                };
+
+                // Still need to read artist, artwork, and info file from FLAC tags
+                var firstFile = trackList.FirstOrDefault()?.FilePath;
+                if (firstFile != null)
+                {
+                    using (var file = TagLib.File.Create(firstFile))
+                    {
+                        // Read artist
+                        _albumInfo.Artist = file.Tag.FirstPerformer ?? "Grateful Dead";
+
+                        // Read artwork from first track
+                        var pictures = file.Tag.Pictures;
+                        if (pictures.Length > 0)
+                        {
+                            _albumInfo.ArtworkData = pictures[0].Data.Data;
+                            _albumInfo.ArtworkMimeType = pictures[0].MimeType;
+                        }
+                    }
+                }
+
+                // Read info file
+                try
+                {
+                    var txtFiles = Directory.GetFiles(folderPath, "*.txt");
+                    if (txtFiles.Length > 0)
+                    {
+                        _albumInfo.InfoFileContent = File.ReadAllText(txtFiles[0]);
+                        _albumInfo.InfoFileName = Path.GetFileName(txtFiles[0]);
+                    }
+                }
+                catch
+                {
+                    // Ignore errors reading info file
+                }
+            }
+            else
+            {
+                // Import mode: read album info from FLAC files as before
+                _albumInfo = _metadataService.ReadAlbumInfo(folderPath, trackList);
+            }
+
+            // FIX 5: Sort tracks using multi-night logic (for edit mode especially)
+            // Check if this is a multi-night album by looking for multiple distinct track dates
+            var distinctDates = trackList.Where(t => !string.IsNullOrEmpty(t.TrackDate))
+                                        .Select(t => t.TrackDate)
+                                        .Distinct()
+                                        .Count();
+
+            var hasDiscNumbers = trackList.Any(t => t.DiscNumber > 1);
+
+            // Multi-night sort: TrackDate → DiscNumber → TrackNumber
+            // Single-night sort: DiscNumber → TrackNumber
+            if (distinctDates > 1)
+            {
+                // Multi-night: sort by date first (empty dates go to end)
+                trackList = trackList.OrderBy(t => string.IsNullOrEmpty(t.TrackDate) ? "9999-99-99" : t.TrackDate)
+                                    .ThenBy(t => t.DiscNumber)
+                                    .ThenBy(t => t.TrackNumber)
+                                    .ToList();
+            }
+            else if (hasDiscNumbers)
+            {
+                // Single-night with disc numbers: sort by disc then track
+                trackList = trackList.OrderBy(t => t.DiscNumber)
+                                    .ThenBy(t => t.TrackNumber)
+                                    .ToList();
+            }
+            else
+            {
+                // Single-night sequential: sort by track number only
+                trackList = trackList.OrderBy(t => t.TrackNumber).ToList();
+            }
 
             // Convert to ViewModels
             _tracks.Clear();
             foreach (var track in trackList)
             {
-                _tracks.Add(new TrackInfoViewModel(track, _albumInfo));
+                _tracks.Add(new TrackInfoViewModel(track, _albumInfo, isEditMode: _mode == WindowMode.Edit));
             }
 
             // Load playlist for playback
@@ -1298,13 +1414,15 @@ public class TrackInfoViewModel : INotifyPropertyChanged
 {
     public TrackInfo Track { get; }
     private readonly AlbumInfo _albumInfo;
+    private readonly bool _isEditMode;
     private string _displayTitle;
     private string _inheritedDate;
 
-    public TrackInfoViewModel(TrackInfo track, AlbumInfo albumInfo)
+    public TrackInfoViewModel(TrackInfo track, AlbumInfo albumInfo, bool isEditMode = false)
     {
         Track = track;
         _albumInfo = albumInfo;
+        _isEditMode = isEditMode;
         _displayTitle = "";
         _inheritedDate = "";
         UpdateDisplayTitle();
@@ -1356,8 +1474,12 @@ public class TrackInfoViewModel : INotifyPropertyChanged
         {
             Track.TrackNumber = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(DisplayTrackNumber)); // Also notify DisplayTrackNumber changed
         }
     }
+
+    // Read-only property that displays disc-aware track numbers (101, 201, 301, etc.)
+    public string DisplayTrackNumber => Track.DisplayTrackNumber;
 
     public int DiscNumber
     {
@@ -1367,6 +1489,7 @@ public class TrackInfoViewModel : INotifyPropertyChanged
             Track.DiscNumber = value;
             Track.IsModified = true;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(DisplayTrackNumber)); // Also notify DisplayTrackNumber changed
         }
     }
 
@@ -1407,29 +1530,50 @@ public class TrackInfoViewModel : INotifyPropertyChanged
 
     public void UpdateDisplayTitle()
     {
-        var effectiveDate = string.IsNullOrEmpty(Track.TrackDate) ? _albumInfo?.AlbumDate : Track.TrackDate;
-        var songName = Track.SongName ?? Track.Title ?? "";
-
-        // Append segue marker if segue is checked
-        if (Track.Segue)
+        if (_isEditMode)
         {
-            songName += " >";
-        }
-
-        // ALWAYS append date to title (even if it matches album date)
-        if (!string.IsNullOrEmpty(effectiveDate))
-        {
-            DisplayTitle = $"{songName} ({effectiveDate})";
+            // EDIT MODE: Display the raw SongName as-is from FLAC tags
+            // The TITLE tag already contains the final formatted value (e.g., "Help on the Way > (1975-08-12)")
+            // Do NOT append dates or transform in any way
+            DisplayTitle = Track.SongName ?? Track.Title ?? "";
         }
         else
         {
-            DisplayTitle = songName;
+            // IMPORT MODE: Build display title with date appending
+            var effectiveDate = string.IsNullOrEmpty(Track.TrackDate) ? _albumInfo?.AlbumDate : Track.TrackDate;
+            var songName = Track.SongName ?? Track.Title ?? "";
+
+            // Append segue marker if segue is checked
+            if (Track.Segue)
+            {
+                songName += " >";
+            }
+
+            // ALWAYS append date to title (even if it matches album date)
+            if (!string.IsNullOrEmpty(effectiveDate))
+            {
+                DisplayTitle = $"{songName} ({effectiveDate})";
+            }
+            else
+            {
+                DisplayTitle = songName;
+            }
         }
     }
 
     public void UpdateInheritedDate()
     {
-        InheritedDate = _albumInfo?.AlbumDate ?? "";
+        if (_isEditMode)
+        {
+            // EDIT MODE: Do NOT inherit album date to tracks
+            // Show the track's own date if it has one, otherwise empty
+            InheritedDate = Track.TrackDate ?? "";
+        }
+        else
+        {
+            // IMPORT MODE: Inherit album date if track has no specific date
+            InheritedDate = _albumInfo?.AlbumDate ?? "";
+        }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

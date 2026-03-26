@@ -35,7 +35,12 @@ MainWindow is the concert import workflow hub for DeadEditor. It loads audio fil
 **How to open:** "Edit Metadata" button (from concert detail view in LibraryBrowserWindow)
 
 **UI shown:**
-- "Editing: [Album Name]" label (top bar) - shows album name or date/venue
+- "Editing: [Album Name]" label (top bar) - **FIX 2:** Shows album description using priority logic: AlbumName > Date+Venue > folder name
+  - **Examples:**
+    - Official releases: "Editing: Blues for Allah 50th Anniversary (2025)"
+    - Live recordings: "Editing: 1975-08-12 - Great American Music Hall, San Francisco, CA"
+    - Multi-date albums with no AlbumName: "Editing: [folder name]"
+  - **Previously:** Could show trailing " - " for albums with empty Date/Venue
 - NO "Select Folder" button or folder path display
 - NO "Read" button (toolbar)
 - "Save Changes" button (bottom right) - combines Write + Import in one action
@@ -195,7 +200,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Row drag-to-reorder | DataGridRow | N/A | Drag rows to reorder tracks, visual drop indicator shows insertion point | `Row_PreviewMouseLeftButtonDown` → `Row_MouseMove` → `Row_Drop` → reorders `_tracks` collection | Working |
 
 **Columns (in display order):**
-- `#` - Track number (TrackNumber) - **Editable:** Click cell and type new number, rows stay in place. **Sortable:** Single-key sort by track number only
+- `#` - **Disc-aware track number (DisplayTrackNumber, read-only)** - **FIX 3:** Changed from editable TrackNumber to read-only DisplayTrackNumber. Shows disc-aware format (101, 102, 201, 202, 301, 302...) instead of raw 1, 2, 3. Format: `{DiscNumber}{TrackNumber:D2}`. Single-disc albums show 101, 102, 103... Multi-disc albums show 101, 102... (Disc 1), 201, 202... (Disc 2). **Not sortable** (use Disc column for sorting)
 - `Disc` - Disc number (DiscNumber) - **Editable:** Click cell and type new disc number for multi-disc albums. **Sortable:** Compound sort by disc number (primary), then track number (secondary). Click header to sort ascending (Disc 1 Track 1...N, Disc 2 Track 1...N), click again for descending (Disc 3 Track 1...N, Disc 2 Track 1...N, Disc 1 Track 1...N)
 - `Title` - Display title (normalized or original) (DisplayTitle) - Takes remaining width when window resizes. **Sortable:** Alphabetical sort
 - `→` - Segue checkbox (Segue) - **Positioned immediately after Title** with no gap. **Not sortable**
@@ -262,15 +267,30 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
    - User selects folder containing FLAC/MP3 files
 
 2. **Handler calls `LoadFolder(folderPath)` (line 101)**
-   - `_metadataService.ReadFolder(folderPath)` reads all audio files and parses ID3 tags
-   - Tracks sorted by disc number, then track number (line 111-114)
+   - **FIX 4 & 5:** `_metadataService.ReadFolder(folderPath, editMode: _mode == WindowMode.Edit)` reads all audio files
+     - **Import Mode (editMode = false):** Runs full transformation pipeline
+       - Calls `ParseTitleAndDate()` to extract song name and date from titles
+       - Strips segue markers from SongName (FIX 1)
+       - Runs `DetectSegues()` to auto-identify common segue pairs
+     - **Edit Mode (editMode = true):** Reads tags as-is, no transformations
+       - FLAC file tags ARE the source of truth (already contain final formatted metadata)
+       - SongName = raw TITLE tag (e.g., "Help on the Way > (1975-08-12)")
+       - Skips ParseTitleAndDate and DetectSegues
+   - **FIX 5:** Multi-night sort logic applied to track list
+     - Detects multi-night albums by counting distinct TrackDate values
+     - **Multi-night (2+ dates):** Sort by TrackDate → DiscNumber → TrackNumber
+     - **Single-night with discs:** Sort by DiscNumber → TrackNumber
+     - **Single-night sequential:** Sort by TrackNumber only
    - If no audio files found → shows "No Files" notification, exits workflow
    - `_metadataService.ReadAlbumInfo(folderPath, _tracks)` parses folder name and reads info file (line 124)
+     - **FIX 2:** No longer fabricates "{Year}-01-01" dates from Year tag
+     - **FIX 1:** If ParseAlbumTitle() doesn't match concert-style patterns, raw ALBUM tag stored in AlbumName (handles official releases)
      - Folder name format: `yyyy-MM-dd [Venue], [City, State]` or `[Album Name] ([Year])`
      - Reads `.txt` info file if present (e.g., `2024-10-31.txt`)
    - `RefreshUI()` populates all fields (line 127)
      - Sets album type radio button (defaults to Live Recording)
      - Populates Date, Venue, City, State fields from parsed folder name
+     - **For official releases:** Populates AlbumName field from raw ALBUM tag (via Fix 1)
      - Loads artwork if `cover.jpg` or `folder.jpg` exists
      - Enables "View Info File" button if info file content exists
    - Status: "X tracks loaded"
@@ -623,6 +643,11 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 **Files:**
 - Audio files (FLAC/MP3) from user-selected folder
 - Existing ID3 tags in audio files (if present)
+  - **IMPORTANT - Album-Level Field Mapping:** `ReadAlbumInfo()` reads from first track's FLAC file using three-tier approach:
+    1. **Tier 1:** Try custom FLAC Vorbis Comment fields first (ALBUMDATE, VENUE, CITYSTATE, ALBUMNAME, ALBUMTYPE)
+    2. **Tier 2:** Fallback to `ParseAlbumTitle()` to extract metadata from ALBUM tag using 4 regex patterns (concert-based formats)
+    3. **Tier 3 (FIX 1):** If no pattern matches and AlbumName still empty, use raw ALBUM tag value as AlbumName
+  - **Why Tier 3 Needed:** Official releases like "Blues for Allah 50th Anniversary (2025)" don't match concert-style regex patterns, so raw ALBUM tag must be preserved
 - Optional `.txt` info file in concert folder (e.g., `2024-10-31.txt`)
 - Optional album artwork (`cover.jpg`, `folder.jpg`, or user-selected image file)
 - `Data/songs.json` - Song database for normalization

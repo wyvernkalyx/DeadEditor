@@ -12,7 +12,9 @@ namespace DeadEditor.Services
         /// <summary>
         /// Reads metadata from all audio files (FLAC/MP3) in a folder
         /// </summary>
-        public List<TrackInfo> ReadFolder(string folderPath)
+        /// <param name="folderPath">Path to folder containing audio files</param>
+        /// <param name="editMode">If true, reads tags as-is without parsing/transforming (for editing already-imported files). If false, runs full import pipeline.</param>
+        public List<TrackInfo> ReadFolder(string folderPath, bool editMode = false)
         {
             var tracks = new List<TrackInfo>();
 
@@ -30,24 +32,49 @@ namespace DeadEditor.Services
                     {
                         var rawTitle = file.Tag.Title ?? Path.GetFileNameWithoutExtension(filePath);
 
-                        // Parse title to separate song name from trailing date
-                        var (songName, extractedDate) = ParseTitleAndDate(rawTitle);
+                        TrackInfo track;
 
-                        var track = new TrackInfo
+                        if (editMode)
                         {
-                            FilePath = filePath,
-                            FileName = Path.GetFileName(filePath),
-                            TrackNumber = (int)file.Tag.Track,
-                            DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
-                            SongName = songName,
-                            RawTitle = rawTitle,  // Store original title for library browser display
-                            TrackDate = extractedDate ?? "",  // Use extracted date or empty string
-                            Duration = file.Properties.Duration.ToString(@"mm\:ss"),
-                            IsModified = false
-                        };
+                            // EDIT MODE: Read tags as-is, no transformations
+                            // The TITLE tag already contains the final formatted value from import (e.g., "Help on the Way > (1975-08-12)")
+                            // Just display it exactly as stored in the file
+                            track = new TrackInfo
+                            {
+                                FilePath = filePath,
+                                FileName = Path.GetFileName(filePath),
+                                TrackNumber = (int)file.Tag.Track,
+                                DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
+                                SongName = rawTitle,  // Use raw title as-is (no parsing)
+                                RawTitle = rawTitle,
+                                TrackDate = "",  // Don't try to extract date in edit mode
+                                Duration = file.Properties.Duration.ToString(@"mm\:ss"),
+                                HasSegue = HasSegueMarker(rawTitle),  // Detect from title for display
+                                IsModified = false
+                            };
+                        }
+                        else
+                        {
+                            // IMPORT MODE: Parse and transform title
+                            // Parse title to separate song name from trailing date
+                            var (songName, extractedDate) = ParseTitleAndDate(rawTitle);
 
-                        // Check for existing segue markers before cleaning
-                        track.HasSegue = HasSegueMarker(rawTitle);
+                            track = new TrackInfo
+                            {
+                                FilePath = filePath,
+                                FileName = Path.GetFileName(filePath),
+                                TrackNumber = (int)file.Tag.Track,
+                                DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
+                                SongName = songName,
+                                RawTitle = rawTitle,  // Store original title for library browser display
+                                TrackDate = extractedDate ?? "",  // Use extracted date or empty string
+                                Duration = file.Properties.Duration.ToString(@"mm\:ss"),
+                                IsModified = false
+                            };
+
+                            // Check for existing segue markers before cleaning
+                            track.HasSegue = HasSegueMarker(rawTitle);
+                        }
 
                         // DON'T populate TrackDate with album date here!
                         // TrackDate should ONLY contain track-specific dates extracted from title.
@@ -78,8 +105,11 @@ namespace DeadEditor.Services
 
             var orderedTracks = tracks.OrderBy(t => t.TrackNumber).ToList();
 
-            // Auto-detect segues based on common patterns
-            DetectSegues(orderedTracks);
+            // Auto-detect segues based on common patterns (ONLY in import mode)
+            if (!editMode)
+            {
+                DetectSegues(orderedTracks);
+            }
 
             return orderedTracks;
         }
@@ -182,14 +212,31 @@ namespace DeadEditor.Services
                         if (!string.IsNullOrEmpty(album))
                         {
                             ParseAlbumTitle(album, albumInfo);
+
+                            // FIX 1: If ParseAlbumTitle didn't match any pattern and didn't set AlbumName,
+                            // use the raw ALBUM tag value as the album/release name.
+                            // This handles official releases like "Blues for Allah 50th Anniversary (2025)"
+                            // that don't match the concert-based regex patterns.
+                            if (string.IsNullOrEmpty(albumInfo.AlbumName))
+                            {
+                                albumInfo.AlbumName = album;
+                            }
                         }
 
-                        // Try to get date
+                        // Try to get full date from album tag
                         if (file.Tag.Year > 0)
                         {
-                            // Year only - might need to extract full date from album
+                            // Extract full date from album tag if present (e.g., "1977-05-08 - Venue...")
                             var dateFromAlbum = ExtractDateFromAlbum(album);
-                            albumInfo.AlbumDate = dateFromAlbum ?? $"{file.Tag.Year}-01-01";
+                            if (dateFromAlbum != null)
+                            {
+                                albumInfo.AlbumDate = dateFromAlbum;
+                            }
+                            // Do NOT fabricate a date from Year tag alone.
+                            // The Year tag is a publication/release year, NOT a concert date.
+                            // For official releases, concert dates come from individual track titles.
+                            // Store the year separately in albumInfo.Year for display purposes.
+                            albumInfo.Year = file.Tag.Year.ToString();
                         }
                     }
 
@@ -347,6 +394,10 @@ namespace DeadEditor.Services
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
+                // Strip trailing segue markers (" >" or " > ") from song name
+                // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
+                songName = Regex.Replace(songName, @"\s*>?\s*$", "").Trim();
+
                 var month = int.Parse(match.Groups[2].Value);
                 var day = int.Parse(match.Groups[3].Value);
                 var year = int.Parse(match.Groups[4].Value);
@@ -372,12 +423,18 @@ namespace DeadEditor.Services
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
+                // Strip trailing segue markers (" >" or " > ") from song name
+                // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
+                songName = Regex.Replace(songName, @"\s*>?\s*$", "").Trim();
+
                 var date = match.Groups[2].Value;
                 return (songName, date);
             }
 
             // No date found - return original title with no date
-            return (title, null);
+            // Still strip segue markers from song name if present
+            var cleanTitle = Regex.Replace(title, @"\s*>?\s*$", "").Trim();
+            return (cleanTitle, null);
         }
 
         private string? ExtractDateFromTitle(string title)

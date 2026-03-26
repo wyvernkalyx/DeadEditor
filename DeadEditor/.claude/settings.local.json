@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git commit -m \"$(cat <<''EOF''\nFix: Player toggle button now brings PlayerWindow to foreground if visible\n\nChanged TogglePlayerWindowVisibility() behavior to have three states:\n- If hidden → show (unchanged)\n- If visible but not focused → bring to foreground (NEW)\n- If visible and focused → hide (unchanged)\n\nImplementation:\n- Check playerWindow.IsActive to determine if window has focus\n- If not active: call playerWindow.Activate() and Focus()\n- Also activate companion windows (PlaylistWindow, VisWindow) if visible\n- Works identically with toolbar button and Ctrl+P shortcut\n\nBehavior:\n- Player visible and focused → press button → hides\n- Player visible but behind main window → press button → comes to front\n- Player hidden → press button → shows\n- Companion windows follow PlayerWindow when activated\n\nFiles changed:\n- LibraryBrowserWindow.xaml.cs: Enhanced TogglePlayerWindowVisibility()\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(dotnet run --project DeadEditor.csproj)",
+      "Bash(taskkill //F //IM DeadEditor.exe //T)",
+      "Bash(taskkill //F //IM dotnet.exe //T)",
+      "Bash(dotnet build DeadEditor.csproj)",
+      "Bash(dotnet clean)",
+      "Bash(git add -A)"
     ],
     "deny": [],
     "ask": []

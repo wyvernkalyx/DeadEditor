@@ -1,6 +1,7 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -401,20 +402,44 @@ namespace DeadEditor
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            // Hide companion windows when PlayerWindow closes
+            System.Diagnostics.Debug.WriteLine($"[PLAYER] OnClosing entered. App.IsShuttingDown={App.IsShuttingDown}");
+
+            if (App.IsShuttingDown)
+            {
+                System.Diagnostics.Debug.WriteLine($"[PLAYER] Allowing close - app shutting down");
+
+                // App is shutting down - allow window to close normally
+                PlaylistWindowInstance?.Hide();
+                VisWindowInstance?.Hide();
+
+                // Unsubscribe from events
+                _player.PlaybackStateChanged -= Player_PlaybackStateChanged;
+                _player.TrackChanged -= Player_TrackChanged;
+                this.StateChanged -= PlayerWindow_StateChanged;
+                LocationChanged -= PlayerWindow_LocationChanged;
+
+                _updateTimer.Stop();
+                _marqueeTimer.Stop();
+
+                base.OnClosing(e);
+                return;
+            }
+
+            // User clicked X button - hide instead of close
+            System.Diagnostics.Debug.WriteLine($"[PLAYER] Setting e.Cancel=true, calling Hide()");
+            e.Cancel = true;
+
+            // IMPORTANT: Must call base.OnClosing(e) to allow WPF to process e.Cancel
+            base.OnClosing(e);
+
+            // Hide all three windows
+            this.Hide();
+            System.Diagnostics.Debug.WriteLine($"[PLAYER] After Hide(): IsVisible={this.IsVisible}, IsLoaded={this.IsLoaded}");
             PlaylistWindowInstance?.Hide();
             VisWindowInstance?.Hide();
 
-            // Unsubscribe from events
-            _player.PlaybackStateChanged -= Player_PlaybackStateChanged;
-            _player.TrackChanged -= Player_TrackChanged;
-            this.StateChanged -= PlayerWindow_StateChanged;
-            LocationChanged -= PlayerWindow_LocationChanged;
-
-            _updateTimer.Stop();
-            _marqueeTimer.Stop();
-
-            base.OnClosing(e);
+            // Music continues playing in the background (PlaybackService survives)
+            // The Player toggle in LibraryBrowserWindow can show the window again
         }
     }
 }

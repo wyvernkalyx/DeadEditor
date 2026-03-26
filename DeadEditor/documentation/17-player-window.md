@@ -184,6 +184,7 @@ PlayerWindow is a separate WPF Window (not embedded in LibraryBrowserWindow).
 - Menu item: "🎵 Player"
 - Keyboard shortcut: Ctrl+P
 - **Three-state logic:** Hidden → show all; Minimized → restore all; Normal → hide all
+- **Direct reference:** LibraryBrowserWindow stores a direct reference to PlayerWindow (`_playerWindowRef`) instead of searching `Application.Current.Windows`, because hidden windows are not reliably found in the Windows collection
 
 **Toggle Behavior (Three States):**
 
@@ -241,10 +242,16 @@ All three player windows (PlayerWindow, PlaylistWindow, VisWindow) minimize, res
 
 **Implementation Details:**
 - PlayerWindow.StateChanged event handler hides companion windows on minimize
-- PlayerWindow.OnClosing() method hides companion windows on close
+- PlayerWindow.OnClosing() method intercepts close attempts and hides windows instead
+- **Shutdown detection:** Uses explicit `App.IsShuttingDown` flag to distinguish app shutdown from user clicking X
+  - `App.IsShuttingDown` is set to `true` in `App.OnExit()` before cleanup begins
+  - If `App.IsShuttingDown == true` → Allow PlayerWindow to close normally (app shutdown)
+  - Otherwise → Cancel close event (`e.Cancel = true`), hide all three windows instead (user clicked X)
+  - **CRITICAL:** Must call `base.OnClosing(e)` after setting `e.Cancel = true` to allow WPF to process the cancel flag
+  - This approach is more reliable than counting windows or checking window states
 - Uses Hide() instead of Close() to keep windows reusable
 - Uses Hide() instead of Minimize() because companion windows have `ShowInTaskbar="False"` and can't be independently recovered
-- Restoring from minimize: User must use Player button (Ctrl+P) in LibraryBrowserWindow to show all windows together
+- Restoring from minimize/hide: User must use Player button (Ctrl+P) in LibraryBrowserWindow to show all windows together
 - No taskbar icon needed (all three windows have `ShowInTaskbar="False"`)
 
 **State Synchronization:**

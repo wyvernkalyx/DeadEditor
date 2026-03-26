@@ -35,6 +35,10 @@ public partial class LibraryBrowserWindow : Window
     private ObservableCollection<string> _concertDates = new();
     private string _selectedDate = "";
 
+    // Direct reference to PlayerWindow (more reliable than searching Application.Current.Windows)
+    // Hidden windows are not always found in the Windows collection
+    private PlayerWindow? _playerWindowRef = null;
+
     // Public properties for XAML binding
     public Dictionary<string, (string venue, string location)> DateVenueMap => _dateVenueMap;
     public ObservableCollection<string> ConcertDates => _concertDates;
@@ -80,6 +84,10 @@ public partial class LibraryBrowserWindow : Window
         {
             if (window is PlayerWindow playerWindow)
             {
+                // Store direct reference (more reliable than searching Application.Current.Windows later)
+                _playerWindowRef = playerWindow;
+                System.Diagnostics.Debug.WriteLine($"[INIT] Setting _playerWindowRef. Found={_playerWindowRef != null}");
+
                 playerWindow.IsVisibleChanged += PlayerWindow_IsVisibleChanged;
 
                 // Set initial menu item state
@@ -1965,13 +1973,82 @@ public partial class LibraryBrowserWindow : Window
     /// </summary>
     private void TogglePlayerWindowVisibility()
     {
-        // Find PlayerWindow in app windows
+        System.Diagnostics.Debug.WriteLine($"[TOGGLE] Called. _playerWindowRef is {(_playerWindowRef == null ? "NULL" : "SET")}");
+
+        // Use direct reference if available (more reliable than searching Application.Current.Windows)
+        if (_playerWindowRef != null)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TOGGLE] Ref: IsVisible={_playerWindowRef.IsVisible}, WindowState={_playerWindowRef.WindowState}, IsLoaded={_playerWindowRef.IsLoaded}");
+
+            if (!_playerWindowRef.IsVisible)
+            {
+                System.Diagnostics.Debug.WriteLine("[TOGGLE] Taking branch: HIDDEN - calling Show()");
+
+                // Hidden → show all at default position
+                ResetPlayerWindowPositions(_playerWindowRef);
+                _playerWindowRef.Show();
+                _playerWindowRef.Activate();
+
+                // Update menu item appearance to show active state
+                PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+            }
+            else if (_playerWindowRef.WindowState == WindowState.Minimized)
+            {
+                System.Diagnostics.Debug.WriteLine("[TOGGLE] Taking branch: MINIMIZED - restoring");
+
+                // Minimized → restore all to Normal
+                _playerWindowRef.WindowState = WindowState.Normal;
+                _playerWindowRef.Activate();
+
+                if (_playerWindowRef.PlaylistWindowInstance?.WindowState == WindowState.Minimized)
+                    _playerWindowRef.PlaylistWindowInstance.WindowState = WindowState.Normal;
+
+                if (_playerWindowRef.VisWindowInstance?.WindowState == WindowState.Minimized)
+                    _playerWindowRef.VisWindowInstance.WindowState = WindowState.Normal;
+
+                // Update menu item appearance to show active state
+                PlayerToggleMenuItem.FontWeight = FontWeights.Bold;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[TOGGLE] Taking branch: VISIBLE - calling Hide()");
+
+                // Visible and normal → hide all
+                _playerWindowRef.Hide();
+                _playerWindowRef.PlaylistWindowInstance?.Hide();
+                _playerWindowRef.VisWindowInstance?.Hide();
+
+                // Update menu item appearance to show inactive state
+                PlayerToggleMenuItem.FontWeight = FontWeights.Normal;
+            }
+
+            System.Diagnostics.Debug.WriteLine("[TOGGLE] Completed (via direct reference)");
+            return;
+        }
+
+        // Fallback: search Application.Current.Windows
+        System.Diagnostics.Debug.WriteLine("[TOGGLE] _playerWindowRef is NULL, falling back to Windows search");
+        System.Diagnostics.Debug.WriteLine($"[TOGGLE] Application.Current.Windows.Count = {System.Windows.Application.Current.Windows.Count}");
+        foreach (Window w in System.Windows.Application.Current.Windows)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TOGGLE]   Window: {w.GetType().Name}, Visible={w.IsVisible}");
+        }
+
         foreach (Window window in System.Windows.Application.Current.Windows)
         {
+            System.Diagnostics.Debug.WriteLine($"[LibraryBrowser] Checking window: {window.GetType().Name} (Visible={window.IsVisible})");
+
             if (window is PlayerWindow playerWindow)
             {
+                System.Diagnostics.Debug.WriteLine($"[LibraryBrowser] Found PlayerWindow via search (Visible={playerWindow.IsVisible}, State={playerWindow.WindowState})");
+
+                // Store reference for next time
+                _playerWindowRef = playerWindow;
+
                 if (!playerWindow.IsVisible)
                 {
+                    System.Diagnostics.Debug.WriteLine("[LibraryBrowser] PlayerWindow is hidden - showing and resetting positions");
+
                     // Hidden → show all at default position
                     ResetPlayerWindowPositions(playerWindow);
                     playerWindow.Show();
@@ -1982,6 +2059,8 @@ public partial class LibraryBrowserWindow : Window
                 }
                 else if (playerWindow.WindowState == WindowState.Minimized)
                 {
+                    System.Diagnostics.Debug.WriteLine("[LibraryBrowser] PlayerWindow is minimized - restoring");
+
                     // Minimized → restore all to Normal
                     playerWindow.WindowState = WindowState.Normal;
                     playerWindow.Activate();
@@ -1997,6 +2076,8 @@ public partial class LibraryBrowserWindow : Window
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine("[LibraryBrowser] PlayerWindow is visible - hiding all");
+
                     // Visible and normal → hide all
                     playerWindow.Hide();
                     playerWindow.PlaylistWindowInstance?.Hide();
@@ -2008,6 +2089,8 @@ public partial class LibraryBrowserWindow : Window
                 break;
             }
         }
+
+        System.Diagnostics.Debug.WriteLine("[LibraryBrowser] TogglePlayerWindowVisibility completed");
     }
 
     /// <summary>

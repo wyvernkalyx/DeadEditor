@@ -30,15 +30,30 @@ The **MetadataService** is the core business logic layer for reading and writing
 
 **Signature:**
 ```csharp
-public List<TrackInfo> ReadFolder(string folderPath)
+public List<TrackInfo> ReadFolder(string folderPath, bool editMode = false)
 ```
 
-**Purpose:** Reads metadata from all audio files (FLAC and MP3) in a folder, extracts track information, detects segues, and returns ordered track list.
+**Purpose:** Reads metadata from all audio files (FLAC and MP3) in a folder, extracts track information, detects segues, and returns ordered track list. Supports two modes: import mode (full transformation pipeline) and edit mode (read-only, no transformations).
 
 **Parameters:**
 - `folderPath` (string) - Absolute path to folder containing audio files
+- `editMode` (bool, optional, default = false) - If true, reads tags as-is without parsing/transforming (for editing already-imported files). If false, runs full import pipeline with ParseTitleAndDate and DetectSegues.
 
 **Return Value:** `List<TrackInfo>` - Track metadata ordered by track number (1, 2, 3...)
+
+**Mode Behaviors:**
+
+**Import Mode (editMode = false):**
+- Runs `ParseTitleAndDate()` to extract song name and date from titles like "Bertha (1971-04-27)"
+- Strips segue markers from SongName (segue state captured in HasSegue boolean)
+- Runs `DetectSegues()` to auto-identify common segue pairs
+- Used when importing new concerts from raw files
+
+**Edit Mode (editMode = true):**
+- Reads TITLE tag as-is into SongName (no parsing or transformation)
+- FLAC file tags ARE the source of truth (already contain final formatted metadata from previous import)
+- Skips ParseTitleAndDate and DetectSegues (transformations already applied during import)
+- Used when opening already-imported concerts for editing in MainWindow
 
 **Business Logic:**
 
@@ -121,17 +136,40 @@ public AlbumInfo ReadAlbumInfo(string folderPath, List<TrackInfo> tracks)
    - Extract folder name: `Path.GetFileName(folderPath)`
    - Call `ParseFolderName(folderName, albumInfo)` to extract official release, date, venue
 
-3. **Read First File's ID3 Tags** (line 136-166):
+3. **Read First File's ID3 Tags** (line 171-241):
    - Get first track's file path: `tracks.FirstOrDefault()?.FilePath`
    - If file exists, open with TagLib-Sharp
    - **Artist:** `file.Tag.FirstPerformer` (fallback to "Grateful Dead")
-   - **Album Title:** Parse via `ParseAlbumTitle(album, albumInfo)` (line 147)
-   - **Date:**
-     - If `file.Tag.Year > 0`, attempt to extract full date from album string
-     - Fallback to "{Year}-01-01" if no full date found (line 155)
-   - **Artwork:** Read `file.Tag.Pictures[0]` if exists (line 159-164)
-     - Store raw bytes: `albumInfo.ArtworkData = pictures[0].Data.Data`
-     - Store MIME type: `albumInfo.ArtworkMimeType = pictures[0].MimeType`
+
+   **3a. Try Custom FLAC Vorbis Comment Fields First** (line 178-206):
+   - For FLAC files, reads custom fields written by WriteMetadata():
+     - `ALBUMDATE` → `AlbumInfo.AlbumDate`
+     - `VENUE` → `AlbumInfo.Venue`
+     - `CITYSTATE` → `AlbumInfo.CityState`
+     - `ALBUMNAME` → `AlbumInfo.AlbumName`
+     - `ALBUMTYPE` → `AlbumInfo.Type`
+   - If `ALBUMDATE` is populated, treats custom fields as authoritative (skips step 3b)
+
+   **3b. Fallback: Parse Standard Tags** (line 208-241):
+   - Only runs if no custom fields found
+   - **Album Title:** Parse via `ParseAlbumTitle(album, albumInfo)` (line 214)
+     - Tries 4 regex patterns to extract date/venue/city/state from ALBUM tag
+     - If no patterns match, the ALBUM tag value is lost
+   - **FIX 1 (NEW):** Fallback to store raw ALBUM tag in AlbumName (line 216-223)
+     - If `ParseAlbumTitle()` didn't set AlbumName, use raw ALBUM tag value
+     - Handles official releases like "Blues for Allah 50th Anniversary (2025)"
+     - Preserves the album name including year suffix
+   - **Date (FIX 2):**
+     - If `file.Tag.Year > 0`, attempt to extract full date from album string via `ExtractDateFromAlbum()`
+     - **Only set AlbumDate if full yyyy-MM-dd date is found** (no fabrication)
+     - Store Year separately in `albumInfo.Year` for display purposes
+     - **REMOVED:** No longer falls back to "{Year}-01-01" fake date
+     - **Rationale:** Year tag is publication/release year (e.g., 2025), NOT concert date (e.g., 1975-08-12). For official releases, concert dates come from individual track titles.
+
+   **3c. Artwork** (line 243-248):
+   - Read `file.Tag.Pictures[0]` if exists
+   - Store raw bytes: `albumInfo.ArtworkData = pictures[0].Data.Data`
+   - Store MIME type: `albumInfo.ArtworkMimeType = pictures[0].MimeType`
 
 4. **Read Info File** (line 168-183):
    - Find all `.txt` files: `Directory.GetFiles(folderPath, "*.txt")`
@@ -330,15 +368,18 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 1. Return immediately if title is null/whitespace
 2. Try Pattern 1 (MusicBrainz M/D/YYYY format):
    - Extract song name from group 1, trim whitespace
+   - **Strip trailing segue markers** from song name (Regex: `@"\s*>?\s*$"`)
    - Extract month/day/year from groups 2-4
    - Convert to yyyy-MM-dd format
    - Return tuple
 3. If no match, try Pattern 2 (yyyy-MM-dd format):
    - Extract song name from group 1, trim whitespace
+   - **Strip trailing segue markers** from song name (Regex: `@"\s*>?\s*$"`)
    - Extract date from group 2 (already yyyy-MM-dd)
    - Return tuple
 4. If no match from either pattern:
-   - Return (original title, null)
+   - **Strip trailing segue markers** from title
+   - Return (cleaned title, null)
 
 **Business Rules:**
 - **MusicBrainz priority:** Pattern 1 (M/D/YYYY) checked first to handle MusicBrainz titles
@@ -349,6 +390,7 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 - **Whitespace handling:** Trims trailing spaces from song name
 - **Graceful fallback:** Returns original title unchanged if no date pattern found
 - **Prevents date doubling:** ParseTitleAndDate strips existing dates during ReadFolder, preventing duplicate dates when re-importing already-formatted files
+- **FIX 1: Segue marker stripping:** All three return paths strip trailing " >" from songName to prevent double ">>" in DisplayTitle. The segue state is captured by the HasSegue boolean flag - it should not also live in the SongName string.
 
 **Usage in ReadFolder:**
 ```csharp
@@ -364,7 +406,15 @@ var (songName2, extractedDate2) = ParseTitleAndDate(rawTitle2);
 // songName2 = "Bertha"
 // extractedDate2 = "1971-04-27"
 
-track.SongName = songName;       // Clean song name
+// Example 3: Title with segue marker (FIX 1)
+var rawTitle3 = file.Tag.Title;  // "Help on the Way > (1975-08-12)"
+var (songName3, extractedDate3) = ParseTitleAndDate(rawTitle3);
+// songName3 = "Help on the Way" (segue marker stripped!)
+// extractedDate3 = "1975-08-12"
+// HasSegue flag is set separately by HasSegueMarker(rawTitle3) = true
+// DisplayTitle will later append " >" based on HasSegue flag
+
+track.SongName = songName;       // Clean song name (no segue marker)
 track.RawTitle = rawTitle;       // Original title preserved for display
 track.TrackDate = extractedDate ?? "";  // Date or empty string
 ```

@@ -1,0 +1,78 @@
+<UserControl x:Class="DeadEditor.SidebarPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="52"
+             Background="#252526">
+
+    <UserControl.Resources>
+        <!-- Sidebar Button Style -->
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="52"/>
+            <Setter Property="Height" Value="52"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#999999"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2D2D30"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="Active">
+                    <Setter Property="Background" Value="#0E639C"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- Library icon -->
+            <RowDefinition Height="Auto"/>  <!-- Import icon -->
+            <RowDefinition Height="*"/>     <!-- Spacer -->
+            <RowDefinition Height="Auto"/>  <!-- Settings icon -->
+        </Grid.RowDefinitions>
+
+        <!-- Library Icon -->
+        <Button Grid.Row="0"
+                x:Name="LibraryButton"
+                Click="LibraryButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Library">
+            <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
+        </Button>
+
+        <!-- Import Icon -->
+        <Button Grid.Row="1"
+                x:Name="ImportButton"
+                Click="ImportButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Import">
+            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
+        </Button>
+
+        <!-- Settings Icon -->
+        <Button Grid.Row="3"
+                x:Name="SettingsButton"
+                Click="SettingsButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Settings">
+            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
+        </Button>
+    </Grid>
+</UserControl>

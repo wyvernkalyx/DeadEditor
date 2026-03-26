@@ -331,9 +331,9 @@
                             </Style>
                         </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <!-- Track Number (editable) -->
-                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber, UpdateSourceTrigger=PropertyChanged}"
-                                                Width="40" IsReadOnly="False">
+                            <!-- Track Number (display-only, shows disc-aware format like 101, 201) -->
+                            <DataGridTextColumn Header="#" Binding="{Binding DisplayTrackNumber}"
+                                                Width="40" IsReadOnly="True">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Right"/>

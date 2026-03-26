@@ -16,6 +16,13 @@ public partial class App : System.Windows.Application
     /// </summary>
     public static AudioPlayerService PlaybackService => AudioPlayerService.Instance;
 
+    /// <summary>
+    /// Flag indicating whether the application is shutting down.
+    /// Set to true in OnExit before cleanup.
+    /// Used by child windows to distinguish app shutdown from user clicking X.
+    /// </summary>
+    public static bool IsShuttingDown { get; private set; } = false;
+
     protected override void OnStartup(System.Windows.StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -29,6 +36,12 @@ public partial class App : System.Windows.Application
         // Restore saved playlist from settings
         RestorePlaylist();
 
+        // PHASE 1: Launch ShellWindow (new single-window architecture)
+        var shellWindow = new ShellWindow();
+        shellWindow.Show();
+        MainWindow = shellWindow;
+
+        /* OLD MULTI-WINDOW ARCHITECTURE (kept for reference during Phase 1)
         // Create and show main library browser window
         var libraryWindow = new LibraryBrowserWindow();
         libraryWindow.Show();
@@ -50,6 +63,7 @@ public partial class App : System.Windows.Application
         // Starts hidden - user toggles with "Visualizer" button
         var visWindow = new VisWindow(playlistWindow);
         playerWindow.VisWindowInstance = visWindow;
+        */
 
         // Hook Windows session ending (log off/shutdown)
         SessionEnding += App_SessionEnding;
@@ -121,6 +135,9 @@ public partial class App : System.Windows.Application
     protected override void OnExit(System.Windows.ExitEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("[App] OnExit called - stopping playback and cleaning up");
+
+        // Set shutdown flag so child windows know the app is closing
+        IsShuttingDown = true;
 
         // Stop playback explicitly before dispose
         PlaybackService.Stop();
