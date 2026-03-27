@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:models="clr-namespace:DeadEditor.Models"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              Background="#1E1E1E"
@@ -16,10 +17,26 @@
 
         <!-- Left: Album Art + Metadata -->
         <StackPanel Grid.Column="0">
-            <!-- Album Art Placeholder -->
-            <Border Width="180" Height="180" Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="1">
-                <TextBlock Text="🎵" FontSize="60" Foreground="#666666" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Border>
+            <!-- Album Art -->
+            <Grid Width="180" Height="180">
+                <!-- Actual album art image -->
+                <Image x:Name="AlbumArtImage"
+                       Stretch="Uniform"
+                       Visibility="Collapsed"/>
+
+                <!-- Placeholder (shown when no artwork) -->
+                <Border x:Name="ArtworkPlaceholder"
+                        Background="#2D2D30"
+                        BorderBrush="#3F3F46"
+                        BorderThickness="1"
+                        Visibility="Visible">
+                    <TextBlock Text="🎵"
+                               FontSize="60"
+                               Foreground="#666666"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+            </Grid>
 
             <!-- Metadata -->
             <TextBlock x:Name="VenueText" Text="Venue / Album"
@@ -107,9 +124,108 @@
                 </DataGrid.Resources>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="50"/>
-                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
-                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="80"/>
+                    <!-- Track Number Column - shows chevron for headers, number for tracks -->
+                    <DataGridTemplateColumn Header="#" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding}" VerticalAlignment="Center">
+                                    <ContentControl.Resources>
+                                        <DataTemplate DataType="{x:Type models:DateHeaderItem}">
+                                            <Border Background="#1A1A2E" BorderBrush="#D7BA7D" BorderThickness="3,0,0,0" MinHeight="36" Padding="14,0,0,0">
+                                                <TextBlock Text="{Binding ChevronIcon}"
+                                                           FontWeight="Bold"
+                                                           FontSize="15"
+                                                           Foreground="#FFFFFF"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TrackViewItem}">
+                                            <TextBlock Text="{Binding Track.TrackNumber}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TrackInfo}">
+                                            <TextBlock Text="{Binding TrackNumber}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </ContentControl.Resources>
+                                </ContentControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Title Column - shows date + track count + Add All for headers, track title for tracks -->
+                    <DataGridTemplateColumn Header="Title" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding}" VerticalAlignment="Center">
+                                    <ContentControl.Resources>
+                                        <DataTemplate DataType="{x:Type models:DateHeaderItem}">
+                                            <Border Background="#1A1A2E" MinHeight="36" Padding="0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0"
+                                                               Text="{Binding Date}"
+                                                               FontWeight="Bold"
+                                                               FontSize="15"
+                                                               Foreground="#FFFFFF"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,20,0"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding TrackCount, StringFormat='{}{0} tracks'}"
+                                                               FontSize="13"
+                                                               Foreground="#CCCCCC"
+                                                               VerticalAlignment="Center"/>
+                                                    <Button Grid.Column="3"
+                                                            Content="＋ Add All"
+                                                            Click="AddAllTracksButton_Click"
+                                                            Tag="{Binding Date}"
+                                                            Background="#2D2D30"
+                                                            Foreground="#FFFFFF"
+                                                            BorderBrush="#555555"
+                                                            BorderThickness="1"
+                                                            Padding="10,4"
+                                                            Margin="0,0,10,0"
+                                                            FontSize="13"
+                                                            Cursor="Hand"
+                                                            VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TrackViewItem}">
+                                            <TextBlock Text="{Binding Track.Title}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TrackInfo}">
+                                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </ContentControl.Resources>
+                                </ContentControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Duration Column - empty for headers, duration for tracks -->
+                    <DataGridTemplateColumn Header="Duration" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding}" VerticalAlignment="Center">
+                                    <ContentControl.Resources>
+                                        <DataTemplate DataType="{x:Type models:DateHeaderItem}">
+                                            <Border Background="#1A1A2E" MinHeight="36" Padding="0"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TrackViewItem}">
+                                            <TextBlock Text="{Binding Track.Duration}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TrackInfo}">
+                                            <TextBlock Text="{Binding Duration}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </ContentControl.Resources>
+                                </ContentControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
