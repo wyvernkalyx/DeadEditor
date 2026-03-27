@@ -10,12 +10,12 @@
     <UserControl.Resources>
         <Style x:Key="BackButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="12,8"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="MinHeight" Value="44"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -31,6 +31,7 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#3E3E42"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -41,14 +42,14 @@
         <Grid x:Name="LibraryHeader" Height="50" Visibility="Collapsed">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
                 <TextBlock Text="Library"
-                           Foreground="#FFFFFF"
+                           Foreground="#E0E0E0"
                            FontSize="18"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock x:Name="ConcertCountText"
                            Text="0 concerts"
-                           Foreground="#999999"
+                           Foreground="#888888"
                            FontSize="14"
                            VerticalAlignment="Center"
                            Margin="20,0,0,0"/>
@@ -66,13 +67,13 @@
 
                 <TextBlock x:Name="AlbumNameText"
                            Text="Album Name"
-                           Foreground="#FFFFFF"
-                           FontSize="16"
-                           FontWeight="SemiBold"
+                           Foreground="#E0E0E0"
+                           FontSize="18"
+                           FontWeight="Bold"
                            VerticalAlignment="Center"
                            Margin="0,0,15,0"/>
 
-                <Border Background="#094771" CornerRadius="3" Padding="10,6">
+                <Border Background="#007ACC" CornerRadius="4" Padding="10,6">
                     <TextBlock x:Name="AlbumTypeText"
                                Text="Official Release"
                                Foreground="#FFFFFF"
@@ -85,8 +86,9 @@
         <Grid x:Name="PlaceholderHeader" Height="50" Visibility="Visible">
             <TextBlock x:Name="PlaceholderText"
                        Text="Placeholder"
-                       Foreground="#CCCCCC"
-                       FontSize="16"
+                       Foreground="#E0E0E0"
+                       FontSize="18"
+                       FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        Margin="20,0,0,0"/>
         </Grid>

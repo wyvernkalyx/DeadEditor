@@ -10,10 +10,10 @@
     <UserControl.Resources>
         <!-- Sidebar Button Style -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="52"/>
-            <Setter Property="Height" Value="52"/>
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#999999"/>
+            <Setter Property="Foreground" Value="#888888"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
@@ -31,10 +31,11 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#2D2D30"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
                 </Trigger>
                 <Trigger Property="Tag" Value="Active">
-                    <Setter Property="Background" Value="#0E639C"/>
-                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#007ACC"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -54,7 +55,7 @@
                 Click="LibraryButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"
                 ToolTip="Library">
-            <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
+            <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
         </Button>
 
         <!-- Import Icon -->
@@ -63,7 +64,7 @@
                 Click="ImportButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"
                 ToolTip="Import">
-            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
+            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
         </Button>
 
         <!-- Settings Icon -->
@@ -72,7 +73,7 @@
                 Click="SettingsButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"
                 ToolTip="Settings">
-            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
+            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
         </Button>
     </Grid>
 </UserControl>

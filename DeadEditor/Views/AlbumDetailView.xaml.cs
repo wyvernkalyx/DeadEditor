@@ -172,7 +172,7 @@ namespace DeadEditor
                                 FilePath = file,
                                 FileName = Path.GetFileName(file),
                                 TrackNumber = tagFile.Tag.Track > 0 ? (int)tagFile.Tag.Track : _tracks.Count + 1,
-                                Title = title,
+                                RawTitle = title,  // Store full FLAC title as-is (includes date suffix)
                                 Duration = tagFile.Properties.Duration.ToString(@"m\:ss"),
                                 TrackDate = trackDate
                             };
