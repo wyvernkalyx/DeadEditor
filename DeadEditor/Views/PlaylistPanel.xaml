@@ -40,6 +40,8 @@
         <Style x:Key="PlaylistRowStyle" TargetType="DataGridRow">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="FontSize" Value="15"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#2D2D30"/>
@@ -58,9 +60,9 @@
         <Style x:Key="PlaylistHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#2D2D30"/>
             <Setter Property="Foreground" Value="#999999"/>
-            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="Padding" Value="10,6,10,6"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="BorderBrush" Value="#3E3E42"/>
         </Style>
@@ -69,45 +71,57 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>  <!-- Header -->
-            <RowDefinition Height="*"/>     <!-- Track list -->
+            <RowDefinition Height="Auto"/>  <!-- Track list (200px when expanded, 0 when collapsed) -->
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="#2D2D30" Height="32">
+        <!-- Header (clickable to toggle) -->
+        <Border Grid.Row="0" Background="#2D2D30" Height="36" Cursor="Hand" MouseLeftButtonUp="Header_Click">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,0,0,0">
+                <!-- Chevron toggle -->
+                <TextBlock Grid.Column="0"
+                          x:Name="ChevronIcon"
+                          Text="▶"
+                          Foreground="#CCCCCC"
+                          FontSize="14"
+                          FontWeight="Bold"
+                          VerticalAlignment="Center"
+                          Margin="12,0,8,0"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock Text="Playlist"
                               Foreground="#CCCCCC"
-                              FontSize="13"
+                              FontSize="15"
                               FontWeight="SemiBold"
                               VerticalAlignment="Center"/>
                     <TextBlock x:Name="TrackCountText"
                               Text="0 tracks"
                               Foreground="#999999"
-                              FontSize="12"
+                              FontSize="14"
                               VerticalAlignment="Center"
-                              Margin="10,0,0,0"/>
+                              Margin="12,0,0,0"/>
                 </StackPanel>
 
-                <Button Grid.Column="2"
+                <Button Grid.Column="3"
                         x:Name="ClearButton"
                         Click="ClearButton_Click"
                         Style="{StaticResource HeaderButtonStyle}"
                         ToolTip="Clear Playlist"
-                        Margin="0,0,5,0">
-                    <TextBlock Text="Clear" FontSize="11"/>
+                        Margin="0,0,8,0">
+                    <TextBlock Text="Clear" FontSize="14"/>
                 </Button>
             </Grid>
         </Border>
 
-        <!-- Track List -->
-        <DataGrid Grid.Row="1"
+        <!-- Track List (collapsed by default) -->
+        <Border Grid.Row="1" x:Name="TrackListBorder" Height="0" Background="#1E1E1E">
+            <DataGrid
                   x:Name="PlaylistDataGrid"
                   AutoGenerateColumns="False"
                   Background="#1E1E1E"
@@ -131,5 +145,6 @@
                 <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="60" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+        </Border>
     </Grid>
 </UserControl>

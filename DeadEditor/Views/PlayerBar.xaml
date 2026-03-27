@@ -10,8 +10,8 @@
     <UserControl.Resources>
         <!-- Player Button Style -->
         <Style x:Key="PlayerButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -22,7 +22,7 @@
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="3">
+                                CornerRadius="4">
                             <ContentPresenter HorizontalAlignment="Center"
                                             VerticalAlignment="Center"/>
                         </Border>
@@ -43,13 +43,14 @@
         <Style x:Key="SeekSliderStyle" TargetType="Slider">
             <Setter Property="Foreground" Value="#007ACC"/>
             <Setter Property="Background" Value="#3E3E42"/>
-            <Setter Property="Height" Value="20"/>
+            <Setter Property="Height" Value="24"/>
         </Style>
 
         <!-- Volume Slider Style -->
         <Style x:Key="VolumeSliderStyle" TargetType="Slider">
             <Setter Property="Foreground" Value="#007ACC"/>
             <Setter Property="Background" Value="#3E3E42"/>
+            <Setter Property="Height" Value="24"/>
         </Style>
     </UserControl.Resources>
 
@@ -66,7 +67,7 @@
                     Click="PreviousButton_Click"
                     Style="{StaticResource PlayerButtonStyle}"
                     ToolTip="Previous Track">
-                <TextBlock Text="&#xE892;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                <TextBlock Text="&#xE892;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
             </Button>
 
             <Button x:Name="PlayButton"
@@ -77,14 +78,14 @@
                 <TextBlock x:Name="PlayButtonIcon"
                           Text="&#xE768;"
                           FontFamily="Segoe MDL2 Assets"
-                          FontSize="20"/>
+                          FontSize="24"/>
             </Button>
 
             <Button x:Name="NextButton"
                     Click="NextButton_Click"
                     Style="{StaticResource PlayerButtonStyle}"
                     ToolTip="Next Track">
-                <TextBlock Text="&#xE893;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                <TextBlock Text="&#xE893;" FontFamily="Segoe MDL2 Assets" FontSize="20"/>
             </Button>
         </StackPanel>
 
@@ -100,7 +101,7 @@
                 <TextBlock x:Name="MarqueeText"
                           Text="No track playing"
                           Foreground="#CCCCCC"
-                          FontSize="14"
+                          FontSize="16"
                           VerticalAlignment="Center">
                     <TextBlock.RenderTransform>
                         <TranslateTransform x:Name="MarqueeTransform" X="0"/>
@@ -129,16 +130,16 @@
                     <TextBlock x:Name="CurrentTimeText"
                               Text="0:00"
                               Foreground="#999999"
-                              FontSize="12"
+                              FontSize="14"
                               VerticalAlignment="Center"/>
                     <TextBlock Text=" / "
                               Foreground="#666666"
-                              FontSize="12"
+                              FontSize="14"
                               VerticalAlignment="Center"/>
                     <TextBlock x:Name="TotalTimeText"
                               Text="0:00"
                               Foreground="#999999"
-                              FontSize="12"
+                              FontSize="14"
                               VerticalAlignment="Center"/>
                 </StackPanel>
             </Grid>

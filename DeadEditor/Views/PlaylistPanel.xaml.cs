@@ -15,6 +15,8 @@ namespace DeadEditor
     {
         private readonly AudioPlayerService _player;
         private readonly ObservableCollection<PlaylistTrackViewModel> _playlistViewModels;
+        private bool _isExpanded = false;
+        private const double ExpandedHeight = 200;
 
         public PlaylistPanel()
         {
@@ -36,6 +38,10 @@ namespace DeadEditor
 
             // Subscribe to unloaded event to cleanup
             Unloaded += PlaylistPanel_Unloaded;
+
+            // Start collapsed
+            TrackListBorder.Height = 0;
+            ChevronIcon.Text = "▶";
         }
 
         private void PlaylistPanel_Unloaded(object sender, RoutedEventArgs e)
@@ -102,6 +108,23 @@ namespace DeadEditor
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             _player.Playlist.Clear();
+        }
+
+        private void Header_Click(object sender, MouseButtonEventArgs e)
+        {
+            // Toggle playlist expansion
+            _isExpanded = !_isExpanded;
+
+            if (_isExpanded)
+            {
+                TrackListBorder.Height = ExpandedHeight;
+                ChevronIcon.Text = "▼";
+            }
+            else
+            {
+                TrackListBorder.Height = 0;
+                ChevronIcon.Text = "▶";
+            }
         }
     }
 }
