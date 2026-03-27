@@ -5,13 +5,74 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#1E1E1E">
+             Background="#1E1E1E"
+             Loaded="LibraryGridView_Loaded">
 
     <Grid>
-        <TextBlock Text="Library View (Placeholder)"
-                   Foreground="#CCCCCC"
-                   FontSize="24"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+        <DataGrid x:Name="ShowsDataGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  SelectionMode="Single"
+                  IsReadOnly="True"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="None"
+                  Background="#252526"
+                  RowBackground="#252526"
+                  AlternatingRowBackground="#2D2D30"
+                  Foreground="#CCCCCC"
+                  BorderThickness="0"
+                  Margin="20"
+                  MouseDoubleClick="ShowsDataGrid_MouseDoubleClick">
+
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#2D2D30"/>
+                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    <Setter Property="BorderBrush" Value="#3F3F46"/>
+                </Style>
+
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#2D2D30"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#094771"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Background="{TemplateBinding Background}"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="" Binding="{Binding TypeIcon}" Width="40"/>
+                <DataGridTextColumn Header="Date / Album" Binding="{Binding PrimaryInfo}" Width="200"/>
+                <DataGridTextColumn Header="Venue / Year" Binding="{Binding SecondaryInfo}" Width="250"/>
+                <DataGridTextColumn Header="Location / Edition" Binding="{Binding TertiaryInfo}" Width="200"/>
+                <DataGridTextColumn Header="Official Release" Binding="{Binding OfficialRelease}" Width="*"/>
+                <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

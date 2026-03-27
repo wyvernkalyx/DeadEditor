@@ -1,6 +1,6 @@
 using DeadEditor.Models;
+using DeadEditor.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -14,19 +14,26 @@ namespace DeadEditor
     public partial class ShellWindow : Window, INotifyPropertyChanged
     {
         private readonly LibrarySettings _settings;
-        private readonly Stack<System.Windows.Controls.UserControl> _navigationStack = new();
+        private readonly NavigationService _navigationService;
         private System.Windows.Controls.UserControl? _currentView;
 
-        // View instances (created on demand)
-        private System.Windows.Controls.UserControl? _libraryView;
+        // View instances (kept alive to preserve state)
+        private LibraryGridView? _libraryView;
         private System.Windows.Controls.UserControl? _importView;
         private System.Windows.Controls.UserControl? _settingsView;
+
+        // Public property for child views to access navigation
+        public NavigationService Navigation => _navigationService;
 
         public ShellWindow()
         {
             InitializeComponent();
 
             _settings = LibrarySettings.Load();
+            _navigationService = new NavigationService();
+
+            // Subscribe to navigation events
+            _navigationService.NavigationRequested += NavigationService_NavigationRequested;
 
             // Set data context for binding
             DataContext = this;
@@ -89,6 +96,36 @@ namespace DeadEditor
 
         // ===== NAVIGATION =====
 
+        private void NavigationService_NavigationRequested(object? sender, NavigationEventArgs e)
+        {
+            // Update current view
+            CurrentView = e.View;
+
+            // Update header bar based on view type
+            UpdateHeaderBar(e.View, e.Context);
+        }
+
+        private void UpdateHeaderBar(System.Windows.Controls.UserControl view, object? context)
+        {
+            // HeaderBar will be updated based on the current view type
+            if (view is LibraryGridView libraryView)
+            {
+                HeaderBar.ShowLibraryHeader(libraryView);
+            }
+            else if (view is AlbumDetailView albumView)
+            {
+                HeaderBar.ShowAlbumDetailHeader(albumView, context);
+            }
+            else if (view is ImportView)
+            {
+                HeaderBar.ShowImportHeader();
+            }
+            else if (view is SettingsView)
+            {
+                HeaderBar.ShowSettingsHeader();
+            }
+        }
+
         private void SidebarPanel_NavigationRequested(object sender, string destination)
         {
             switch (destination)
@@ -107,14 +144,14 @@ namespace DeadEditor
 
         private void NavigateToLibrary()
         {
+            // Create library view on first access (kept alive thereafter)
             if (_libraryView == null)
             {
-                _libraryView = new LibraryGridView();
+                _libraryView = new LibraryGridView(this);
             }
 
-            CurrentView = _libraryView;
-            _navigationStack.Clear();
-            _navigationStack.Push(_libraryView);
+            // Navigate to root (clears back stack)
+            _navigationService.NavigateToRoot(_libraryView);
         }
 
         private void NavigateToImport()
@@ -124,9 +161,7 @@ namespace DeadEditor
                 _importView = new ImportView();
             }
 
-            CurrentView = _importView;
-            _navigationStack.Clear();
-            _navigationStack.Push(_importView);
+            _navigationService.NavigateToRoot(_importView);
         }
 
         private void NavigateToSettings()
@@ -136,12 +171,7 @@ namespace DeadEditor
                 _settingsView = new SettingsView();
             }
 
-            CurrentView = _settingsView;
-            _navigationStack.Clear();
-            _navigationStack.Push(_settingsView);
+            _navigationService.NavigateToRoot(_settingsView);
         }
-
-        // Future: NavigateTo(UserControl view) for drill-in navigation
-        // Future: GoBack() for back navigation
     }
 }

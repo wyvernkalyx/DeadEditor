@@ -7,11 +7,87 @@
              d:DesignHeight="50" d:DesignWidth="800"
              Background="#2D2D30">
 
-    <Grid Height="50">
-        <TextBlock Text="Header Bar (Placeholder)"
-                   Foreground="#CCCCCC"
-                   VerticalAlignment="Center"
-                   Margin="20,0,0,0"
-                   FontSize="14"/>
+    <UserControl.Resources>
+        <Style x:Key="BackButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3E3E42"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Library Header: "Library  {count} concerts" -->
+        <Grid x:Name="LibraryHeader" Height="50" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <TextBlock Text="Library"
+                           Foreground="#FFFFFF"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock x:Name="ConcertCountText"
+                           Text="0 concerts"
+                           Foreground="#999999"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           Margin="20,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Album Detail Header: "[← Library]  {Album Name}  {Type}" -->
+        <Grid x:Name="AlbumDetailHeader" Height="50" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Button x:Name="BackButton"
+                        Click="BackButton_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        Content="← Library"
+                        Margin="0,0,20,0"/>
+
+                <TextBlock x:Name="AlbumNameText"
+                           Text="Album Name"
+                           Foreground="#FFFFFF"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,15,0"/>
+
+                <Border Background="#094771" CornerRadius="3" Padding="8,4">
+                    <TextBlock x:Name="AlbumTypeText"
+                               Text="Official Release"
+                               Foreground="#FFFFFF"
+                               FontSize="12"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <!-- Placeholder Header -->
+        <Grid x:Name="PlaceholderHeader" Height="50" Visibility="Visible">
+            <TextBlock x:Name="PlaceholderText"
+                       Text="Placeholder"
+                       Foreground="#CCCCCC"
+                       FontSize="16"
+                       VerticalAlignment="Center"
+                       Margin="20,0,0,0"/>
+        </Grid>
     </Grid>
 </UserControl>
