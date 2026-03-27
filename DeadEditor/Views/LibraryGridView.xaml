@@ -30,14 +30,17 @@
                     <Setter Property="Foreground" Value="#CCCCCC"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                     <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="Padding" Value="12,10"/>
                     <Setter Property="BorderThickness" Value="0,0,1,1"/>
                     <Setter Property="BorderBrush" Value="#3F3F46"/>
+                    <Setter Property="MinHeight" Value="40"/>
                 </Style>
 
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="#CCCCCC"/>
+                    <Setter Property="MinHeight" Value="32"/>
+                    <Setter Property="FontSize" Value="16"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#2D2D30"/>

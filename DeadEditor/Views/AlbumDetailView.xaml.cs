@@ -363,9 +363,21 @@ namespace DeadEditor
             }
         }
 
+        private void TracksDataGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // Single-click handler: Only handle DateHeaderItem clicks (toggle expand/collapse)
+            var selectedItem = TracksDataGrid.SelectedItem;
+
+            if (selectedItem is DateHeaderItem header)
+            {
+                // Clicked on header - toggle expansion
+                ToggleDateSection(header);
+            }
+        }
+
         private void TracksDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Handle both TrackInfo (single-night) and TrackViewItem (multi-night) clicks
+            // Double-click handler: Play tracks or toggle headers
             var selectedItem = TracksDataGrid.SelectedItem;
             TrackInfo? track = null;
 
@@ -379,7 +391,7 @@ namespace DeadEditor
             }
             else if (selectedItem is DateHeaderItem header)
             {
-                // Clicked on header - toggle expansion
+                // Clicked on header - toggle expansion (also works with double-click)
                 ToggleDateSection(header);
                 return;
             }
