@@ -97,15 +97,15 @@
 
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="#CCCCCC"/>
-                        <Setter Property="MinHeight" Value="32"/>
-                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Foreground" Value="#E0E0E0"/>
+                        <Setter Property="MinHeight" Value="36"/>
+                        <Setter Property="FontSize" Value="15"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#2D2D30"/>
+                                <Setter Property="Background" Value="#2A2D30"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#094771"/>
+                                <Setter Property="Background" Value="#37373D"/>
                                 <Setter Property="Foreground" Value="#FFFFFF"/>
                             </Trigger>
                         </Style.Triggers>
@@ -135,19 +135,19 @@
                                 <ContentControl Content="{Binding}" VerticalAlignment="Center">
                                     <ContentControl.Resources>
                                         <DataTemplate DataType="{x:Type models:DateHeaderItem}">
-                                            <Border Background="#1A1A2E" BorderBrush="#D7BA7D" BorderThickness="3,0,0,0" MinHeight="40" Padding="16,0,0,0">
+                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,1" MinHeight="40" Padding="12,0,0,0">
                                                 <TextBlock Text="{Binding ChevronIcon}"
                                                            FontWeight="Bold"
-                                                           FontSize="18"
-                                                           Foreground="#FFFFFF"
+                                                           FontSize="16"
+                                                           Foreground="#E0E0E0"
                                                            VerticalAlignment="Center"/>
                                             </Border>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackViewItem}">
-                                            <TextBlock Text="{Binding Track.TrackNumber}" FontSize="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Track.TrackNumber}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackInfo}">
-                                            <TextBlock Text="{Binding TrackNumber}" FontSize="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding TrackNumber}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </ContentControl.Resources>
                                 </ContentControl>
@@ -162,7 +162,7 @@
                                 <ContentControl Content="{Binding}" VerticalAlignment="Center">
                                     <ContentControl.Resources>
                                         <DataTemplate DataType="{x:Type models:DateHeaderItem}">
-                                            <Border Background="#1A1A2E" MinHeight="40" Padding="0">
+                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,1" MinHeight="40" Padding="0">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
@@ -172,38 +172,61 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Grid.Column="0"
                                                                Text="{Binding Date}"
-                                                               FontWeight="Bold"
+                                                               FontWeight="SemiBold"
                                                                FontSize="16"
-                                                               Foreground="#FFFFFF"
+                                                               Foreground="#E0E0E0"
                                                                VerticalAlignment="Center"
-                                                               Margin="0,0,24,0"/>
+                                                               Margin="0,0,20,0"/>
                                                     <TextBlock Grid.Column="1"
                                                                Text="{Binding TrackCount, StringFormat='{}{0} tracks'}"
                                                                FontSize="14"
-                                                               Foreground="#CCCCCC"
+                                                               Foreground="#888888"
                                                                VerticalAlignment="Center"/>
                                                     <Button Grid.Column="3"
                                                             Content="＋ Add All"
                                                             Click="AddAllTracksButton_Click"
                                                             Tag="{Binding Date}"
-                                                            Background="#2D2D30"
-                                                            Foreground="#FFFFFF"
-                                                            BorderBrush="#555555"
+                                                            Background="Transparent"
+                                                            Foreground="#E0E0E0"
+                                                            BorderBrush="#3E3E42"
                                                             BorderThickness="1"
-                                                            Padding="12,6"
-                                                            Margin="0,0,12,0"
+                                                            Padding="10,5"
+                                                            Margin="0,0,10,0"
                                                             FontSize="13"
                                                             Cursor="Hand"
-                                                            MinHeight="32"
-                                                            VerticalAlignment="Center"/>
+                                                            MinHeight="28"
+                                                            VerticalAlignment="Center">
+                                                        <Button.Style>
+                                                            <Style TargetType="Button">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="Button">
+                                                                            <Border Background="{TemplateBinding Background}"
+                                                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                                                    Padding="{TemplateBinding Padding}"
+                                                                                    CornerRadius="3">
+                                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                            </Border>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                    <Setter Property="Background" Value="#3E3E42"/>
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </Button.Style>
+                                                    </Button>
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackViewItem}">
-                                            <TextBlock Text="{Binding Track.Title}" FontSize="16" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Track.Title}" FontSize="15" Foreground="#E0E0E0" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackInfo}">
-                                            <TextBlock Text="{Binding Title}" FontSize="16" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Title}" FontSize="15" Foreground="#E0E0E0" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </ContentControl.Resources>
                                 </ContentControl>
@@ -218,13 +241,13 @@
                                 <ContentControl Content="{Binding}" VerticalAlignment="Center">
                                     <ContentControl.Resources>
                                         <DataTemplate DataType="{x:Type models:DateHeaderItem}">
-                                            <Border Background="#1A1A2E" MinHeight="40" Padding="0"/>
+                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,1" MinHeight="40" Padding="0"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackViewItem}">
-                                            <TextBlock Text="{Binding Track.Duration}" FontSize="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Track.Duration}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackInfo}">
-                                            <TextBlock Text="{Binding Duration}" FontSize="14" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Duration}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </ContentControl.Resources>
                                 </ContentControl>

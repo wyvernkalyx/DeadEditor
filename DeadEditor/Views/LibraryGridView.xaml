@@ -38,15 +38,15 @@
 
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="#CCCCCC"/>
-                    <Setter Property="MinHeight" Value="32"/>
-                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                    <Setter Property="MinHeight" Value="36"/>
+                    <Setter Property="FontSize" Value="15"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#2D2D30"/>
+                            <Setter Property="Background" Value="#2A2D30"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#094771"/>
+                            <Setter Property="Background" Value="#37373D"/>
                             <Setter Property="Foreground" Value="#FFFFFF"/>
                         </Trigger>
                     </Style.Triggers>
