@@ -234,7 +234,7 @@ public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
 
 2. **Write ID3 Tags** (line 212-222):
    - `file.Tag.Title` = title with date and optional segue
-   - `file.Tag.Album` = album.AlbumTitle
+   - `file.Tag.Album` = for Official Releases: `album.AlbumName` (release name only); for Audience Recordings: `album.AlbumTitle` (date-venue-city format)
    - `file.Tag.Performers` = [album.Artist] (array with single artist)
    - `file.Tag.AlbumArtists` = [album.Artist]
    - `file.Tag.Track` = track.TrackNumber (cast to uint)

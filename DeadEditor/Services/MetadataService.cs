@@ -312,7 +312,17 @@ namespace DeadEditor.Services
                         // No date suffix if neither concert date nor release year available
                         file.Tag.Title = title;
                     }
-                    file.Tag.Album = album.AlbumTitle;
+                    // For Official Releases, ALBUM tag = release name only.
+                    // Venue/City go in separate VENUE/CITYSTATE Xiph tags.
+                    // For Audience Recordings, ALBUM tag = "Date - Venue - City, ST".
+                    if (album.Type == AlbumType.OfficialRelease && !string.IsNullOrEmpty(album.AlbumName))
+                    {
+                        file.Tag.Album = album.AlbumName;
+                    }
+                    else
+                    {
+                        file.Tag.Album = album.AlbumTitle;
+                    }
                     file.Tag.Performers = new[] { album.Artist };
                     file.Tag.AlbumArtists = new[] { album.Artist };
                     file.Tag.Track = (uint)track.TrackNumber;
