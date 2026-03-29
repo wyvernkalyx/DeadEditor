@@ -29,18 +29,25 @@ Live music metadata suffers from:
 
 | Working on... | Read first | Lines | Purpose |
 |--------------|------------|-------|---------|
-| **Windows** | | | |
-| `MainWindow.xaml/.cs` | [documentation/01-main-window.md](documentation/01-main-window.md) | ~8,000 words | Import workflow, playback controls, drag-drop |
-| `LibraryBrowserWindow.xaml/.cs` | [documentation/02-library-browser.md](documentation/02-library-browser.md) | ~9,000 words | Library grid, quick search, concert playback |
+| **Shell** | | | |
+| `ShellWindow.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) | ~430 lines | Single-window shell, sidebar, navigation, view switching |
+| `Services/NavigationService.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Navigation | ~130 lines | View stack, forward/back/root navigation |
+| **Views (UserControls in Views/)** | | | |
+| `Views/LibraryGridView.xaml/.cs` | [documentation/02-library-browser.md](documentation/02-library-browser.md) | - | Library grid, quick search, concert list |
+| `Views/AlbumDetailView.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Album Detail | - | Album art, track list, date grouping, playback |
+| `Views/ImportView.xaml/.cs` | [documentation/01-main-window.md](documentation/01-main-window.md) | - | Import workflow, folder selection, normalize, renumber |
+| `Views/EditMetadataView.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Edit Metadata | - | Edit FLAC tags in-place, save changes |
+| `Views/SettingsView.xaml/.cs` | [documentation/06-settings-window.md](documentation/06-settings-window.md) | - | Library paths, fpcalc, primary artist, reset data |
+| `Views/HeaderBar.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Header Bar | - | Context-sensitive header with nav + action buttons |
+| `Views/SidebarPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Sidebar | - | Library/Import/Settings icon navigation |
+| `Views/PlayerBar.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Player Bar | - | Transport controls, progress, volume |
+| `Views/PlaylistPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Playlist | - | Compact track list, always visible |
+| **Dialogs (modal, overlay shell)** | | | |
 | `AdvancedSearchDialog.xaml/.cs` | [documentation/03-advanced-search-dialog.md](documentation/03-advanced-search-dialog.md) | ~9,500 words | 3-tab search (Contains/Exclude/Sequence) |
-| **Dialogs** | | | |
 | `AddSongDialog.xaml/.cs` | [documentation/04-add-song-dialog.md](documentation/04-add-song-dialog.md) | ~7,600 words | Add songs to database with artist support |
 | `ManageSongsDialog.xaml/.cs` | [documentation/05-manage-songs-dialog.md](documentation/05-manage-songs-dialog.md) | ~8,200 words | Browse songs, filter, export to text |
-| `SettingsWindow.xaml/.cs` | [documentation/06-settings-window.md](documentation/06-settings-window.md) | ~9,800 words | Configure library paths, primary artist, reset data |
 | `ReleaseSelectorDialog.xaml/.cs` | [documentation/07-release-selector-dialog.md](documentation/07-release-selector-dialog.md) | ~7,400 words | Select from multiple MusicBrainz releases |
 | `AlbumSearchDialog.xaml/.cs` | [documentation/08-album-search-dialog.md](documentation/08-album-search-dialog.md) | ~7,000 words | Manual MusicBrainz search by name |
-| `EditMetadataWindow.xaml/.cs` | *Not yet documented* | - | Edit concert metadata after import |
-| `InfoFileViewer.xaml/.cs` | *Not yet documented* | - | Display .txt info files |
 | **Services** | | | |
 | `MetadataService.cs` | [documentation/11-metadata-service.md](documentation/11-metadata-service.md) | ~8,000 words | ID3 tags, ParseAlbumTitle regex, box set vs official release |
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
@@ -338,15 +345,22 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `LibraryImportService.cs` - Concert import from folder structure
 - `MusicBrainzService.cs` - MusicBrainz API integration
 
-#### Windows/Dialogs
-- `MainWindow.xaml/.cs` - Import workflow, playback controls
-- `LibraryBrowserWindow.xaml/.cs` - Library grid view, search
+#### Shell + Views
+- `ShellWindow.xaml/.cs` - Single-window shell, sidebar, navigation
+- `Views/LibraryGridView.xaml/.cs` - Library grid, search, concert list
+- `Views/AlbumDetailView.xaml/.cs` - Album art, track list, date grouping
+- `Views/ImportView.xaml/.cs` - Import workflow, normalize, renumber
+- `Views/EditMetadataView.xaml/.cs` - Edit FLAC tags in-place
+- `Views/SettingsView.xaml/.cs` - Library paths, fpcalc, primary artist
+- `Views/HeaderBar.xaml/.cs` - Context-sensitive header bar
+- `Views/SidebarPanel.xaml/.cs` - Sidebar navigation icons
+- `Views/PlayerBar.xaml/.cs` - Transport controls, progress, volume
+- `Views/PlaylistPanel.xaml/.cs` - Compact playlist panel
+
+#### Dialogs (modal)
 - `AdvancedSearchDialog.xaml/.cs` - 3-tab search (Contains/Exclude/Sequence)
 - `AddSongDialog.xaml/.cs` - Add songs on-the-fly
 - `ManageSongsDialog.xaml/.cs` - Browse/export song database
-- `SettingsWindow.xaml/.cs` - Configure library paths
-- `EditMetadataWindow.xaml/.cs` - Edit imported concert metadata
-- `InfoFileViewer.xaml/.cs` - Display .txt info files
 - `ReleaseSelectorDialog.xaml/.cs` - Select from multiple MusicBrainz releases
 
 #### Data
@@ -575,8 +589,8 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 
 ## End of Document
 
-**Last Updated:** 2026-03-01
-**Current Commit:** 006d170
+**Last Updated:** 2026-03-28
+**Architecture:** Single-window shell (Phase 6 complete — search/filter, keyboard shortcuts, UI polish)
 **Song Database:** 598 songs (594 Grateful Dead, 4 NRPS)
 **Documentation:** 15 comprehensive documentation files covering all windows, dialogs, services, and data models
 

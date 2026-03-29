@@ -39,9 +39,13 @@
             </Grid>
 
             <!-- Metadata -->
-            <TextBlock x:Name="VenueText" Text="Venue / Album"
-                       Foreground="#E0E0E0" FontSize="18" FontWeight="Bold"
+            <TextBlock x:Name="AlbumNameDetailText" Text=""
+                       Foreground="#E0E0E0" FontSize="20" FontWeight="Bold"
                        Margin="0,12,0,6" TextWrapping="Wrap"/>
+
+            <TextBlock x:Name="VenueText" Text="Venue / Album"
+                       Foreground="#CCCCCC" FontSize="15"
+                       Margin="0,0,0,6" TextWrapping="Wrap"/>
 
             <TextBlock x:Name="LocationText" Text="Location / Year"
                        Foreground="#E0E0E0" FontSize="15"
@@ -63,15 +67,28 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="TRACKS"
-                       Foreground="#E0E0E0" FontSize="16" FontWeight="SemiBold"
-                       Margin="0,0,0,14"/>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,14">
+                <TextBlock Text="TRACKS"
+                           Foreground="#E0E0E0" FontSize="16" FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+
+                <Button x:Name="ExpandAllButton" Content="Expand All"
+                        Click="ExpandAllButton_Click"
+                        Background="Transparent" Foreground="#888888" BorderThickness="0"
+                        Padding="8,4" Margin="16,0,0,0" FontSize="13" Cursor="Hand"
+                        Visibility="Collapsed" VerticalAlignment="Center"/>
+
+                <Button x:Name="CollapseAllButton" Content="Collapse All"
+                        Click="CollapseAllButton_Click"
+                        Background="Transparent" Foreground="#888888" BorderThickness="0"
+                        Padding="8,4" Margin="4,0,0,0" FontSize="13" Cursor="Hand"
+                        Visibility="Collapsed" VerticalAlignment="Center"/>
+            </StackPanel>
 
             <DataGrid Grid.Row="1"
                       x:Name="TracksDataGrid"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
-                      SelectionMode="Single"
                       IsReadOnly="True"
                       HeadersVisibility="Column"
                       GridLinesVisibility="None"
@@ -80,15 +97,25 @@
                       AlternatingRowBackground="#2D2D30"
                       Foreground="#CCCCCC"
                       BorderThickness="0"
+                      SelectionMode="Extended"
                       MouseLeftButtonUp="TracksDataGrid_MouseLeftButtonUp"
-                      MouseDoubleClick="TracksDataGrid_MouseDoubleClick">
+                      MouseDoubleClick="TracksDataGrid_MouseDoubleClick"
+                      MouseRightButtonUp="TracksDataGrid_MouseRightButtonUp"
+                      Sorting="TracksDataGrid_Sorting"
+                      CanUserSortColumns="True">
 
                 <DataGrid.Resources>
+                    <!-- Override WPF system selection colors -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#37373D"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E0E0E0"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="#2A2D3E"/>
                         <Setter Property="Foreground" Value="#E0E0E0"/>
                         <Setter Property="FontWeight" Value="SemiBold"/>
-                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontSize" Value="15"/>
                         <Setter Property="Padding" Value="12,10"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
                         <Setter Property="BorderBrush" Value="#3E3E42"/>
@@ -98,8 +125,8 @@
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="Foreground" Value="#E0E0E0"/>
-                        <Setter Property="MinHeight" Value="36"/>
-                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="MinHeight" Value="38"/>
+                        <Setter Property="FontSize" Value="16"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#2A2D30"/>
@@ -129,25 +156,26 @@
 
                 <DataGrid.Columns>
                     <!-- Track Number Column - shows chevron for headers, number for tracks -->
-                    <DataGridTemplateColumn Header="#" Width="60">
+                    <DataGridTemplateColumn Header="#" Width="Auto" MinWidth="40" SortMemberPath="TrackNumber">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ContentControl Content="{Binding}" VerticalAlignment="Center">
                                     <ContentControl.Resources>
                                         <DataTemplate DataType="{x:Type models:DateHeaderItem}">
-                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,1" MinHeight="40" Padding="12,0,0,0">
+                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,0" MinHeight="44" Padding="12,0,0,0" Margin="-6,0,-18,0">
                                                 <TextBlock Text="{Binding ChevronIcon}"
                                                            FontWeight="Bold"
-                                                           FontSize="16"
+                                                           FontSize="18"
                                                            Foreground="#E0E0E0"
-                                                           VerticalAlignment="Center"/>
+                                                           VerticalAlignment="Center"
+                                                           Margin="0,0,8,0"/>
                                             </Border>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackViewItem}">
-                                            <TextBlock Text="{Binding Track.TrackNumber}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Track.TrackNumber}" FontSize="15" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackInfo}">
-                                            <TextBlock Text="{Binding TrackNumber}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding TrackNumber}" FontSize="15" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </ContentControl.Resources>
                                 </ContentControl>
@@ -156,13 +184,13 @@
                     </DataGridTemplateColumn>
 
                     <!-- Title Column - shows date + track count + Add All for headers, track title for tracks -->
-                    <DataGridTemplateColumn Header="Title" Width="*">
+                    <DataGridTemplateColumn Header="Title" Width="Auto" MinWidth="250" SortMemberPath="Title">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ContentControl Content="{Binding}" VerticalAlignment="Center">
                                     <ContentControl.Resources>
                                         <DataTemplate DataType="{x:Type models:DateHeaderItem}">
-                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,1" MinHeight="40" Padding="0">
+                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,0" MinHeight="44" Padding="0" Margin="-18,0,-18,0">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
@@ -173,13 +201,13 @@
                                                     <TextBlock Grid.Column="0"
                                                                Text="{Binding Date}"
                                                                FontWeight="SemiBold"
-                                                               FontSize="16"
+                                                               FontSize="18"
                                                                Foreground="#E0E0E0"
                                                                VerticalAlignment="Center"
                                                                Margin="0,0,20,0"/>
                                                     <TextBlock Grid.Column="1"
                                                                Text="{Binding TrackCount, StringFormat='{}{0} tracks'}"
-                                                               FontSize="14"
+                                                               FontSize="15"
                                                                Foreground="#888888"
                                                                VerticalAlignment="Center"/>
                                                     <Button Grid.Column="3"
@@ -235,19 +263,19 @@
                     </DataGridTemplateColumn>
 
                     <!-- Duration Column - empty for headers, duration for tracks -->
-                    <DataGridTemplateColumn Header="Duration" Width="80">
+                    <DataGridTemplateColumn Header="Duration" Width="Auto" MinWidth="60" SortMemberPath="Duration">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ContentControl Content="{Binding}" VerticalAlignment="Center">
                                     <ContentControl.Resources>
                                         <DataTemplate DataType="{x:Type models:DateHeaderItem}">
-                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,1" MinHeight="40" Padding="0"/>
+                                            <Border Background="#2A2D3E" BorderBrush="#3E3E42" BorderThickness="0,1,0,0" MinHeight="44" Padding="0" Margin="-18,0,-6,0"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackViewItem}">
-                                            <TextBlock Text="{Binding Track.Duration}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Track.Duration}" FontSize="15" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                         <DataTemplate DataType="{x:Type models:TrackInfo}">
-                                            <TextBlock Text="{Binding Duration}" FontSize="14" Foreground="#888888" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Duration}" FontSize="15" Foreground="#888888" VerticalAlignment="Center"/>
                                         </DataTemplate>
                                     </ContentControl.Resources>
                                 </ContentControl>

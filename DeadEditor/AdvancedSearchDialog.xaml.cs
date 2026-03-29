@@ -19,7 +19,8 @@ namespace DeadEditor
         private readonly NormalizationService _normalizationService;
         private readonly MetadataService _metadataService;
         private readonly LibrarySettings _librarySettings;
-        private readonly LibraryBrowserWindow? _libraryBrowserWindow;
+        // Navigation callback for navigating to album by path (replaces old LibraryBrowserWindow reference)
+        private readonly Action<string>? _navigateToAlbumCallback;
         private List<SongCheckItem> _songCheckItems = new();
         private List<SequenceItem> _sequenceItems = new();
         private List<CheckBox> _allSongCheckBoxes = new();
@@ -34,13 +35,13 @@ namespace DeadEditor
         public AdvancedSearchDialog(NormalizationService normalizationService,
                                      MetadataService metadataService,
                                      LibrarySettings librarySettings,
-                                     LibraryBrowserWindow? libraryBrowserWindow = null)
+                                     Action<string>? navigateToAlbumCallback = null)
         {
             InitializeComponent();
             _normalizationService = normalizationService;
             _metadataService = metadataService;
             _librarySettings = librarySettings;
-            _libraryBrowserWindow = libraryBrowserWindow;
+            _navigateToAlbumCallback = navigateToAlbumCallback;
             LoadSongs();
         }
 
@@ -444,7 +445,7 @@ namespace DeadEditor
                 Close();
 
                 // Navigate to the album in the library browser
-                _libraryBrowserWindow?.NavigateToAlbumByPath(result.AlbumPath);
+                _navigateToAlbumCallback?.Invoke(result.AlbumPath);
             }
         }
     }

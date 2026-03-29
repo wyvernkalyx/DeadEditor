@@ -55,7 +55,7 @@
                 Click="LibraryButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"
                 ToolTip="Library">
-            <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
+            <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
         </Button>
 
         <!-- Import Icon -->
@@ -64,7 +64,7 @@
                 Click="ImportButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"
                 ToolTip="Import">
-            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
+            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
         </Button>
 
         <!-- Settings Icon -->
@@ -73,7 +73,7 @@
                 Click="SettingsButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"
                 ToolTip="Settings">
-            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
+            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
         </Button>
     </Grid>
 </UserControl>

@@ -153,18 +153,8 @@ namespace DeadEditor
             {
                 var track = _player.CurrentTrack;
 
-                // Format: "Song Name (yyyy-MM-dd)"
-                var songName = track.SongName ?? track.Title;
-                var date = track.TrackDate ?? "";
-
-                if (!string.IsNullOrEmpty(date))
-                {
-                    MarqueeText.Text = $"{songName} ({date})";
-                }
-                else
-                {
-                    MarqueeText.Text = songName;
-                }
+                // Use DisplayTitle which already formats "Song > (Date)" correctly
+                MarqueeText.Text = track.DisplayTitle;
 
                 // Update total time
                 TotalTimeText.Text = FormatTime(_player.TotalDuration);

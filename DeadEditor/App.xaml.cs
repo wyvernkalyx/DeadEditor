@@ -36,34 +36,10 @@ public partial class App : System.Windows.Application
         // Restore saved playlist from settings
         RestorePlaylist();
 
-        // PHASE 1: Launch ShellWindow (new single-window architecture)
+        // Launch ShellWindow (single-window architecture)
         var shellWindow = new ShellWindow();
         shellWindow.Show();
         MainWindow = shellWindow;
-
-        /* OLD MULTI-WINDOW ARCHITECTURE (kept for reference during Phase 1)
-        // Create and show main library browser window
-        var libraryWindow = new LibraryBrowserWindow();
-        libraryWindow.Show();
-
-        // Set as main window - closing this window will trigger app shutdown
-        MainWindow = libraryWindow;
-
-        // Create and show player window (free-floating, no docking)
-        var playerWindow = new PlayerWindow();
-        playerWindow.Show();
-        System.Diagnostics.Debug.WriteLine($"[App] PlayerWindow created and shown at Left={playerWindow.Left}, Top={playerWindow.Top}");
-
-        // Create and show playlist window (attached to player window)
-        var playlistWindow = new PlaylistWindow(playerWindow);
-        playerWindow.PlaylistWindowInstance = playlistWindow;
-        playlistWindow.Show();
-
-        // Create visualizer window (attached to playlist window)
-        // Starts hidden - user toggles with "Visualizer" button
-        var visWindow = new VisWindow(playlistWindow);
-        playerWindow.VisWindowInstance = visWindow;
-        */
 
         // Hook Windows session ending (log off/shutdown)
         SessionEnding += App_SessionEnding;

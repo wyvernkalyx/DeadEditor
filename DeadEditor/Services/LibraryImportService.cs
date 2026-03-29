@@ -81,7 +81,8 @@ namespace DeadEditor.Services
             else // AudienceRecording
             {
                 // Audience recording: Group tracks by date (for multi-show imports)
-                var tracksByDate = tracks.GroupBy(t => t.PerformanceDate ?? albumInfo.Date ?? "");
+                var tracksByDate = tracks.GroupBy(t =>
+                    string.IsNullOrEmpty(t.PerformanceDate) ? (albumInfo.Date ?? "") : t.PerformanceDate);
 
                 foreach (var dateGroup in tracksByDate)
                 {

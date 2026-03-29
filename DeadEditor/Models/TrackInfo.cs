@@ -42,6 +42,7 @@ namespace DeadEditor.Models
 
         public string RawTitle { get; set; }           // Original title as stored in file (includes date/segue)
         public string TrackDate { get; set; }          // Track-specific date override (yyyy-MM-dd format, empty = inherit from album)
+        public string AlbumDate { get; set; }          // Album-level date for display fallback (not persisted to tags)
         public bool Segue { get; set; }                // Transitions to next track (renamed from HasSegue for consistency)
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
         public bool IsModified { get; set; }           // Has user made changes?
@@ -91,9 +92,11 @@ namespace DeadEditor.Models
                 }
 
                 // Add date if present (must come after segue)
-                if (!string.IsNullOrEmpty(TrackDate))
+                // Use track-specific date, falling back to album date for display
+                var effectiveDate = !string.IsNullOrEmpty(TrackDate) ? TrackDate : AlbumDate;
+                if (!string.IsNullOrEmpty(effectiveDate))
                 {
-                    title = $"{title} ({TrackDate})";
+                    title = $"{title} ({effectiveDate})";
                 }
 
                 return title;

@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace DeadEditor.Models
 {
     public enum AlbumType
@@ -123,7 +125,10 @@ namespace DeadEditor.Models
                     // Official Release without Date+Venue (studio album): "Album Name (Year)"
                     else if (!string.IsNullOrEmpty(AlbumName))
                     {
-                        var title = !string.IsNullOrEmpty(Year)
+                        // Don't append Year if AlbumName already contains a parenthesized year
+                        // e.g., "Europe '72 (2003 Reissue)" already has "(2003" — don't append "(1972)"
+                        var hasYearInParens = Regex.IsMatch(AlbumName, @"\(\d{4}");
+                        var title = (!string.IsNullOrEmpty(Year) && !hasYearInParens)
                             ? $"{AlbumName} ({Year})"
                             : AlbumName;
                         if (!string.IsNullOrEmpty(CollectionName))
@@ -134,6 +139,21 @@ namespace DeadEditor.Models
                 }
                 else // AudienceRecording
                 {
+                    // When no concert date, fall back to album name format
+                    // (e.g., non-concert folders parsed before user sets the type)
+                    if (string.IsNullOrEmpty(AlbumDate) && string.IsNullOrEmpty(Venue) && !string.IsNullOrEmpty(AlbumName))
+                    {
+                        // Don't append Year if AlbumName already contains a parenthesized year
+                        // e.g., "Europe '72 (2003 Reissue)" already has "(2003" — don't append "(1972)"
+                        var hasYearInParens = Regex.IsMatch(AlbumName, @"\(\d{4}");
+                        var title = (!string.IsNullOrEmpty(Year) && !hasYearInParens)
+                            ? $"{AlbumName} ({Year})"
+                            : AlbumName;
+                        if (!string.IsNullOrEmpty(CollectionName))
+                            title += $" : {CollectionName}";
+                        return title;
+                    }
+
                     // Audience recording format: "Date - Venue - City, State" [- Album Name]
                     var baseTitle = $"{AlbumDate} - {Venue} - {CityState}";
                     if (!string.IsNullOrEmpty(AlbumName))

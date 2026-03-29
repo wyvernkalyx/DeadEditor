@@ -33,6 +33,9 @@ namespace DeadEditor.Models
         public int TrackCount { get; set; }
         public List<string> FolderPaths { get; set; } = new List<string>();
 
+        // Cached track/song titles for quick search (populated during library load)
+        public List<string> TrackTitles { get; set; } = new List<string>();
+
         // Backward-compatible property for code not yet updated
         public string FolderPath
         {

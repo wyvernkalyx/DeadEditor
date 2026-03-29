@@ -40,8 +40,8 @@
         <Style x:Key="PlaylistRowStyle" TargetType="DataGridRow">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
-            <Setter Property="MinHeight" Value="28"/>
-            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="FontSize" Value="16"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#2D2D30"/>
@@ -75,7 +75,8 @@
         </Grid.RowDefinitions>
 
         <!-- Header (clickable to toggle) -->
-        <Border Grid.Row="0" Background="#2D2D30" Height="36" Cursor="Hand" MouseLeftButtonUp="Header_Click">
+        <Border Grid.Row="0" Background="#2D2D30" Height="36" Cursor="Hand" MouseLeftButtonUp="Header_Click"
+                BorderBrush="#3E3E42" BorderThickness="0,1,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -137,6 +138,14 @@
                   MouseDoubleClick="PlaylistDataGrid_MouseDoubleClick"
                   RowStyle="{StaticResource PlaylistRowStyle}"
                   ColumnHeaderStyle="{StaticResource PlaylistHeaderStyle}">
+
+            <DataGrid.Resources>
+                <!-- Override WPF system selection colors -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#37373D"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E0E0E0"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+            </DataGrid.Resources>
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="40" IsReadOnly="True"/>

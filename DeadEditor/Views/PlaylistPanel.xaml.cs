@@ -9,8 +9,6 @@ using System.Windows.Input;
 
 namespace DeadEditor
 {
-    // Note: PlaylistTrackViewModel is defined in PlaylistWindow.xaml.cs and reused here
-
     public partial class PlaylistPanel : System.Windows.Controls.UserControl
     {
         private readonly AudioPlayerService _player;
@@ -108,6 +106,20 @@ namespace DeadEditor
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             _player.Playlist.Clear();
+        }
+
+        /// <summary>
+        /// Removes the selected track from the playlist. Returns true if a track was removed.
+        /// Called by ShellWindow for the Delete keyboard shortcut.
+        /// </summary>
+        public bool TryRemoveSelectedTrack()
+        {
+            if (PlaylistDataGrid.SelectedItem is PlaylistTrackViewModel vm)
+            {
+                _player.Playlist.Remove(vm.Track);
+                return true;
+            }
+            return false;
         }
 
         private void Header_Click(object sender, MouseButtonEventArgs e)

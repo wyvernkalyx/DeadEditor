@@ -213,7 +213,12 @@ namespace DeadEditor.Services
 
                 _currentTrack = track;
                 LoadFile(track.FilePath);
-                Play();
+
+                // Start playback directly (don't call parameterless Play() which
+                // would re-enter Case 3 and redundantly LoadFile a second time)
+                _wavePlayer!.Play();
+                SetPlaybackState(PlaybackState.Playing);
+
                 TrackChanged?.Invoke(this, EventArgs.Empty);
 
                 System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play(TrackInfo) completed successfully");
@@ -240,6 +245,9 @@ namespace DeadEditor.Services
             if (_wavePlayer != null)
             {
                 _userInitiatedStop = true;
+                // Unsubscribe BEFORE stopping to prevent the old player's async
+                // PlaybackStopped event from clobbering state after a new player starts
+                _wavePlayer.PlaybackStopped -= OnPlaybackStopped;
                 _wavePlayer.Stop();
                 _wavePlayer.Dispose();
                 _wavePlayer = null;
@@ -332,6 +340,12 @@ namespace DeadEditor.Services
 
         private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
         {
+            // NAudio's WaveOutEvent may fire PlaybackStopped when Pause() is called
+            // (the background read thread stops). Ignore this event if we're paused —
+            // the Paused state was explicitly set by the user and must be preserved.
+            if (_playbackState == PlaybackState.Paused)
+                return;
+
             // Check if this was a natural end-of-track (not user-initiated stop and no exception)
             bool wasNaturalEnd = !_userInitiatedStop && e.Exception == null;
             _userInitiatedStop = false;  // Reset flag

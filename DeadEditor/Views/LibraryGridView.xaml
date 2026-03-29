@@ -25,11 +25,17 @@
                   MouseDoubleClick="ShowsDataGrid_MouseDoubleClick">
 
             <DataGrid.Resources>
+                <!-- Override WPF system selection colors -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#37373D"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E0E0E0"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="#2A2D3E"/>
                     <Setter Property="Foreground" Value="#E0E0E0"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
-                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="FontSize" Value="15"/>
                     <Setter Property="Padding" Value="12,10"/>
                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                     <Setter Property="BorderBrush" Value="#3E3E42"/>
@@ -39,11 +45,12 @@
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="#E0E0E0"/>
-                    <Setter Property="MinHeight" Value="36"/>
-                    <Setter Property="FontSize" Value="15"/>
+                    <Setter Property="MinHeight" Value="40"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#2A2D30"/>
+                            <Setter Property="Background" Value="#2A2D3A"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="#37373D"/>
@@ -69,12 +76,11 @@
             </DataGrid.Resources>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="" Binding="{Binding TypeIcon}" Width="40"/>
-                <DataGridTextColumn Header="Date / Album" Binding="{Binding PrimaryInfo}" Width="200"/>
-                <DataGridTextColumn Header="Venue / Year" Binding="{Binding SecondaryInfo}" Width="250"/>
-                <DataGridTextColumn Header="Location / Edition" Binding="{Binding TertiaryInfo}" Width="200"/>
-                <DataGridTextColumn Header="Official Release" Binding="{Binding OfficialRelease}" Width="*"/>
-                <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="80"/>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="100"/>
+                <DataGridTextColumn Header="Album Name" Binding="{Binding AlbumName}" Width="Auto" MinWidth="150"/>
+                <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="Auto" MinWidth="120"/>
+                <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="Auto" MinWidth="120"/>
+                <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="Auto" MinWidth="60"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

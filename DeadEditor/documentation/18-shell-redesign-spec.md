@@ -82,22 +82,26 @@ A single-window shell eliminates all of these permanently.
 
 ### Library Grid View
 ```
-Library    3 concerts          [Show: All ▼]  [Search: ___________]  [Advanced Search]
+Library    3 of 15 concerts          [Show: All ▼]  [Search: ___________]  [Advanced Search]
 ```
 - Title: "Library"
-- Concert count
-- Show filter dropdown
-- Search field
-- Advanced Search button
+- Concert count (shows "X of Y concerts" when filtered, "Y concerts" when unfiltered)
+- Show type filter dropdown: All, Official Releases, Audience Recordings, By Date
+- Search field: case-insensitive partial match against Date, Venue, City, State, Location, AlbumName, OfficialRelease, Edition, ReleaseYear, and track/song titles (cached on LibraryShow.TrackTitles at load time)
+- Clear button (✕) appears when search has text
+- Placeholder text "Search library..." when empty
+- Search and type filter combine (both applied together)
+- Advanced Search button → opens AdvancedSearchDialog modal
 
 ### Album Detail View
 ```
-[← Library]  Blues for Allah 50th Anniversary    Official Release          [Edit Metadata]
+[← Library]  Blues for Allah 50th Anniversary    Official Release          [Edit Metadata]  [Delete]
 ```
 - Back button: "← Library" (returns to library grid)
 - Album name (bold)
 - Album type badge
 - "Edit Metadata" button (navigates to edit view)
+- "Delete" button (red/danger styled) — confirmation dialog, sends files to Recycle Bin, removes from library, navigates back to grid
 
 ### Edit Metadata View
 ```
@@ -135,9 +139,15 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
 **Source:** Converted from LibraryBrowserWindow's DataGrid and search logic.
 
 **Content:**
-- DataGrid with columns: Date | Venue | City, State | Album Name | Tracks
-- Click a row → navigates to Album Detail view
-- Double-click a track (if track detail is expanded) → adds to playlist and plays
+- DataGrid with fixed columns (same layout for all album types):
+  - **By Album mode** (default): Date | Album Name | Venue | City, State | Tracks
+  - **By Date mode**: Date | Venue | City, State | From Album | Tracks
+- "By Date" mode explodes multi-date albums into one row per concert date
+  - Dates extracted from track title suffixes (e.g., "Dark Star (1972-05-04)")
+  - Track count shows tracks for that specific date, not the whole album
+  - "From Album" shows the parent album name
+  - Sorted chronologically (oldest first)
+- Click/double-click a row → navigates to Album Detail view (in By Date mode, navigates to parent album)
 
 **Data:** Loaded from library scan on startup, same as current LibraryBrowserWindow.
 
@@ -361,11 +371,19 @@ The single application window. Contains:
 - Update CLAUDE.md documentation lookup table
 - Update all documentation files
 
-### Phase 6: Polish
+### Phase 6: Polish + Search/Filter (COMPLETED)
+- Library grid search: real-time text filtering by Date, Venue, City/State, AlbumName, OfficialRelease, Year, Edition
+- Library grid type filter: dropdown for All / Official Releases / Audience Recordings
+- Combined search + type filter with "X of Y concerts" display
+- Advanced Search button wired to AdvancedSearchDialog
+- Keyboard shortcuts:
+  - **Space**: Play/Pause toggle (global, works from any view when not typing)
+  - **Ctrl+F**: Focus the search box in Library Grid header
+  - **Escape**: Clear search text, or navigate back one level
+  - **Delete**: Remove selected track from playlist
+- UI polish: dark-themed context menus, visual separators between sections, cursor feedback on clickable rows
 - State preservation on navigation
-- Keyboard shortcuts
 - Window title updates based on current view
-- UI scaling verification at 125% / 2560x1440
 
 ---
 

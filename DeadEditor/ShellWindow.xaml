@@ -6,10 +6,13 @@
         xmlns:local="clr-namespace:DeadEditor"
         mc:Ignorable="d"
         Title="Dead Editor"
+        Icon="pack://application:,,,/Resources/app-icon.ico"
         Width="1600" Height="1000"
         WindowState="Maximized"
         Background="#1E1E1E"
-        Closing="ShellWindow_Closing">
+        FontSize="16"
+        Closing="ShellWindow_Closing"
+        PreviewKeyDown="ShellWindow_PreviewKeyDown">
 
     <Grid>
         <Grid.ColumnDefinitions>

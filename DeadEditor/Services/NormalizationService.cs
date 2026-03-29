@@ -126,9 +126,11 @@ namespace DeadEditor.Services
             // Remove artist suffix (e.g., " - Grateful Dead__", " - Artist Name")
             // MUST come BEFORE "(Live at...)" removal because MusicBrainz titles have format:
             // "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching
+            // Requires whitespace before the dash (\s+) to distinguish " - Artist" from hyphenated
+            // words like "Brown-Eyed" where the dash is part of the song name
             cleaned = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
-                @"\s*-\s*[^-]+_{0,2}\s*$",
+                @"\s+-\s+[^-]+_{0,2}\s*$",
                 "").Trim();
 
             // Remove [Live in...] or [Live at...] patterns (square brackets)
@@ -352,16 +354,21 @@ namespace DeadEditor.Services
             int matched = 0;
             foreach (var track in tracks)
             {
-                // First, normalize any slash-formatted dates in the title
-                // This ensures dates like "(1971/07/02 Filmore West)" become "(1971-07-02)"
-                var dateNormalizedTitle = NormalizeDateInTitle(track.Title);
-                if (dateNormalizedTitle != track.Title)
+                // Use SongName for matching — it's already been cleaned by ParseTitleAndDate
+                // during ReadFolder (date/tour suffixes stripped, segue markers removed).
+                // Fall back to Title (RawTitle) only if SongName is empty.
+                var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
+
+                // Normalize any slash-formatted dates remaining in the title
+                // (handles cases ParseTitleAndDate didn't recognize, e.g. "(1971/07/02 Filmore West)")
+                var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize);
+                if (dateNormalizedTitle != titleToNormalize)
                 {
-                    track.Title = dateNormalizedTitle;  // Update the title with normalized date
+                    titleToNormalize = dateNormalizedTitle;
                 }
 
                 // Then normalize the song name for matching
-                var normalized = Normalize(track.Title);
+                var normalized = Normalize(titleToNormalize);
                 if (normalized != null)
                 {
                     track.SongName = normalized;

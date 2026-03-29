@@ -4,14 +4,175 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-             Background="#1E1E1E">
+             d:DesignHeight="700" d:DesignWidth="800"
+             Background="#1E1E1E"
+             Loaded="SettingsView_Loaded">
 
-    <Grid>
-        <TextBlock Text="Settings View (Placeholder)"
-                   Foreground="#CCCCCC"
-                   FontSize="24"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-    </Grid>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3E3E42"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="30,20">
+        <StackPanel MaxWidth="700" HorizontalAlignment="Left">
+
+            <!-- ===== LIBRARY SETTINGS ===== -->
+            <TextBlock Text="Library Settings" FontSize="20" FontWeight="Bold" Foreground="#E0E0E0" Margin="0,0,0,20"/>
+
+            <!-- Library Root Path -->
+            <TextBlock Text="Library Root Path (Audience Recordings)" FontSize="14" Margin="0,0,0,6"/>
+            <Grid Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="LibraryRootTextBox" IsReadOnly="True" Height="34"/>
+                <Button Grid.Column="1" Content="Browse..." Margin="10,0,0,0" Click="BrowseLibraryButton_Click" Height="34"/>
+            </Grid>
+
+            <!-- Official Releases Path -->
+            <TextBlock Text="Official Releases Path (Dave's Picks, Road Trips, etc.)" FontSize="14" Margin="0,0,0,6"/>
+            <Grid Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="OfficialReleasesTextBox" IsReadOnly="True" Height="34"/>
+                <Button Grid.Column="1" Content="Browse..." Margin="10,0,0,0" Click="BrowseOfficialReleasesButton_Click" Height="34"/>
+            </Grid>
+
+            <!-- fpcalc.exe Path -->
+            <TextBlock Text="fpcalc.exe Path (MusicBrainz Fingerprinting)" FontSize="14" Margin="0,0,0,4"/>
+            <TextBlock Text="Required for MusicBrainz audio fingerprinting. Download from https://acoustid.org/chromaprint"
+                       FontSize="12" Foreground="#888888" Margin="0,0,0,6"/>
+            <Grid Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="FpcalcPathTextBox" IsReadOnly="True" Height="34"/>
+                <Button Grid.Column="1" Content="Browse..." Margin="10,0,0,0" Click="BrowseFpcalcButton_Click" Height="34"/>
+            </Grid>
+
+            <!-- Primary Artist Name -->
+            <TextBlock Text="Primary Artist Name" FontSize="14" Margin="0,0,0,4"/>
+            <TextBlock Text="Leave empty to show all artists from MusicBrainz matches"
+                       FontSize="12" Foreground="#888888" Margin="0,0,0,6"/>
+            <TextBox x:Name="PrimaryArtistTextBox" Height="34" Margin="0,0,0,18"/>
+
+            <!-- Save Settings Button -->
+            <Button x:Name="SaveSettingsButton" Content="Save Settings" Click="SaveSettingsButton_Click"
+                    Height="38" Width="160" HorizontalAlignment="Left" Margin="0,0,0,30"
+                    FontWeight="SemiBold">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#0E639C"/>
+                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                        <Setter Property="BorderBrush" Value="#1177BB"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Padding" Value="14,8"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}"
+                                            CornerRadius="4">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1177BB"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Separator -->
+            <Border BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
+
+            <!-- ===== SONG DATABASE ===== -->
+            <TextBlock Text="Song Database" FontSize="20" FontWeight="Bold" Foreground="#E0E0E0" Margin="0,0,0,8"/>
+            <TextBlock Text="Add songs to the database without recompiling the application."
+                       FontSize="14" Foreground="#888888" Margin="0,0,0,14"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
+                <Button x:Name="AddSongButton" Content="Add Song..." Click="AddSongButton_Click"
+                        Height="38" Margin="0,0,12,0"/>
+                <Button x:Name="ManageSongsButton" Content="Manage Songs..." Click="ManageSongsButton_Click"
+                        Height="38"/>
+            </StackPanel>
+
+            <!-- Separator -->
+            <Border BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
+
+            <!-- ===== DATA MANAGEMENT ===== -->
+            <TextBlock Text="Data Management" FontSize="20" FontWeight="Bold" Foreground="#E0E0E0" Margin="0,0,0,8"/>
+            <TextBlock Text="Reset all library data. Files will be moved to the Recycle Bin. Settings and paths are preserved."
+                       FontSize="14" Foreground="#888888" TextWrapping="Wrap" Margin="0,0,0,14"/>
+
+            <Button x:Name="ResetDataButton" Content="Reset All Data" Click="ResetDataButton_Click"
+                    Height="38" Width="180" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#442222"/>
+                        <Setter Property="Foreground" Value="#FF8888"/>
+                        <Setter Property="BorderBrush" Value="#663333"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Padding" Value="14,8"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}"
+                                            CornerRadius="4">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#663333"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Status -->
+            <TextBlock x:Name="StatusText" Text="" FontSize="14" Foreground="#888888" Margin="0,0,0,20"/>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

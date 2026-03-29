@@ -211,13 +211,14 @@ namespace DeadEditor.Services
                         var album = file.Tag.Album;
                         if (!string.IsNullOrEmpty(album))
                         {
-                            ParseAlbumTitle(album, albumInfo);
+                            bool matched = ParseAlbumTitle(album, albumInfo);
 
-                            // FIX 1: If ParseAlbumTitle didn't match any pattern and didn't set AlbumName,
-                            // use the raw ALBUM tag value as the album/release name.
-                            // This handles official releases like "Blues for Allah 50th Anniversary (2025)"
-                            // that don't match the concert-based regex patterns.
-                            if (string.IsNullOrEmpty(albumInfo.AlbumName))
+                            // Only use the raw ALBUM tag as album name when ParseAlbumTitle
+                            // didn't match any known pattern (e.g. "Blues for Allah 50th Anniversary (2025)").
+                            // When a pattern DID match (e.g. "1971-02-19 - Capitol Theatre - Port Chester, NY"),
+                            // the fields are already populated correctly — setting AlbumName to the full
+                            // tag would cause the folder name preview to double up.
+                            if (!matched && string.IsNullOrEmpty(albumInfo.AlbumName))
                             {
                                 albumInfo.AlbumName = album;
                             }
@@ -396,7 +397,7 @@ namespace DeadEditor.Services
                 var songName = match.Groups[1].Value.Trim();
                 // Strip trailing segue markers (" >" or " > ") from song name
                 // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
-                songName = Regex.Replace(songName, @"\s*>?\s*$", "").Trim();
+                songName = Regex.Replace(songName, @"\s*[-–]?\s*>\s*$", "").Trim();
 
                 var month = int.Parse(match.Groups[2].Value);
                 var day = int.Parse(match.Groups[3].Value);
@@ -407,33 +408,50 @@ namespace DeadEditor.Services
                 return (songName, date);
             }
 
-            // PATTERN 2: yyyy-MM-dd date in parentheses (existing pattern)
-            // 1. "Song (yyyy-MM-dd)" - simple format
-            // 2. "Song (yyyy-MM-dd - venue info)" - with venue/location/album info after date
+            // PATTERN 2: yyyy-MM-dd date in parentheses (with any optional suffix)
+            // Matches the LAST parenthetical that starts with yyyy-MM-dd.
+            // The non-greedy .+? skips parentheticals that don't start with a date,
+            // so subtitles like "(Two Souls In Communion)" are preserved in the song name.
             // Examples:
-            //   "Bertha (1971-04-27)"
-            //   "Bertha (1971-04-27 - New York, NY - Fillmore East - Skull & Roses)"
-            //   "Mama Tried (1971-04-26 - New York, NY - Fillmore East)"
+            //   "Bertha (1971-04-27)" → ("Bertha", "1971-04-27")
+            //   "Mama Tried (1971-04-26 - New York, NY - Fillmore East)" → ("Mama Tried", "1971-04-26")
+            //   "He's Gone (1972-05-10 Europe '72)" → ("He's Gone", "1972-05-10")
+            //   "The Stranger (Two Souls In Communion) (1972-05-10 Europe '72)" → ("The Stranger (Two Souls In Communion)", "1972-05-10")
             //
             // Captures:
-            //   Group 1: Song name (everything before opening paren)
+            //   Group 1: Song name (everything before the date parenthetical, may include earlier parentheticals)
             //   Group 2: Date in yyyy-MM-dd format
-            //   (Discards everything after the date)
-            match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$");
+            //   (Discards everything after the date inside the parentheses)
+            match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})[^)]*\)\s*$");
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
                 // Strip trailing segue markers (" >" or " > ") from song name
                 // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
-                songName = Regex.Replace(songName, @"\s*>?\s*$", "").Trim();
+                songName = Regex.Replace(songName, @"\s*[-–]?\s*>\s*$", "").Trim();
 
                 var date = match.Groups[2].Value;
                 return (songName, date);
             }
 
+            // PATTERN 3: Year-only + tour/album name in parentheses
+            // Matches the LAST parenthetical that starts with a 4-digit year followed by
+            // a dash separator and descriptive text (tour name, album name, etc.).
+            // Only the suffix is stripped; no full date is extracted (year alone isn't a concert date).
+            // Examples:
+            //   "Good Lovin' (1972 - Europe '72)" → ("Good Lovin'", null)
+            //   "The Stranger (Two Souls In Communion) (1972 - Europe '72)" → ("The Stranger (Two Souls In Communion)", null)
+            match = Regex.Match(title, @"^(.+?)\s*\((\d{4})\s*[-–]\s*[^)]+\)\s*$");
+            if (match.Success)
+            {
+                var songName = match.Groups[1].Value.Trim();
+                songName = Regex.Replace(songName, @"\s*[-–]?\s*>\s*$", "").Trim();
+                return (songName, null);
+            }
+
             // No date found - return original title with no date
             // Still strip segue markers from song name if present
-            var cleanTitle = Regex.Replace(title, @"\s*>?\s*$", "").Trim();
+            var cleanTitle = Regex.Replace(title, @"\s*[-–]?\s*>\s*$", "").Trim();
             return (cleanTitle, null);
         }
 
@@ -568,6 +586,14 @@ namespace DeadEditor.Services
                 remainingText = remainingText.Replace(dateMatch.Groups[1].Value, "").Trim();
             }
 
+            // If no yyyy-MM-dd concert date found, this isn't a concert folder
+            // (e.g., "Europe '72 (2003)" or "Blues for Allah 50th Anniversary (2025)")
+            // Don't parse as venue/city/state — the album name will come from the ALBUM tag
+            if (!dateMatch.Success)
+            {
+                return;
+            }
+
             // Step 3: Remove artist name from the beginning if present
             remainingText = Regex.Replace(remainingText, @"^Grateful Dead\s*-?\s*", "", RegexOptions.IgnoreCase).Trim();
             remainingText = Regex.Replace(remainingText, @"^New Riders of the Purple Sage\s*-?\s*", "", RegexOptions.IgnoreCase).Trim();
@@ -626,7 +652,7 @@ namespace DeadEditor.Services
             }
         }
 
-        private void ParseAlbumTitle(string album, AlbumInfo info)
+        private bool ParseAlbumTitle(string album, AlbumInfo info)
         {
             // Pattern 1: Check for Box Set format first: ": Box Set Name" (NO space before colon)
             // Box Set: "1972-09-15 - Boston Music Hall - Boston, MA: Enjoying the Ride"
@@ -645,7 +671,7 @@ namespace DeadEditor.Services
                 info.CityState = $"{city}, {state}";
                 info.AlbumName = boxSetMatch.Groups[5].Value.Trim();
                 info.Type = AlbumType.OfficialRelease;
-                return;
+                return true;
             }
 
             // Pattern 2: Check for Official Release format: " : Release Name" (space before colon)
@@ -664,7 +690,7 @@ namespace DeadEditor.Services
                 info.CityState = $"{city}, {state}";
                 info.AlbumName = officialMatch.Groups[5].Value.Trim();
                 info.Type = AlbumType.AudienceRecording;
-                return;
+                return true;
             }
 
             // Pattern 3: Live recording or Official Release with " - " separator for album name
@@ -692,7 +718,7 @@ namespace DeadEditor.Services
                 {
                     info.Type = AlbumType.AudienceRecording;
                 }
-                return;
+                return true;
             }
 
             // Pattern 4: "Venue, City, State (M/D/YY & M/D/YY) [Live]" or similar
@@ -721,7 +747,31 @@ namespace DeadEditor.Services
                 {
                     info.AlbumName = releaseMatch.Groups[1].Value.Trim();
                 }
+                return true;
             }
+
+            // Pattern 5: Space-separated audience recording: "yyyy-MM-dd Venue, City, ST"
+            // Common format for taper recordings where date is followed by space (not dash)
+            // Examples:
+            //   "1968-08-21 Fillmore West, San Francisco, CA"
+            //   "1977-05-08 Barton Hall, Cornell University, Ithaca, NY"
+            var spaceSepMatch = Regex.Match(
+                album,
+                @"^(\d{4}-\d{2}-\d{2})\s+(.+?),\s+([^,]+),\s*([A-Z]{2})$");
+
+            if (spaceSepMatch.Success)
+            {
+                info.AlbumDate = spaceSepMatch.Groups[1].Value;
+                info.Venue = spaceSepMatch.Groups[2].Value.Trim();
+                var city = spaceSepMatch.Groups[3].Value.Trim();
+                var state = spaceSepMatch.Groups[4].Value.Trim();
+                info.CityState = $"{city}, {state}";
+                info.Type = AlbumType.AudienceRecording;
+                return true;
+            }
+
+            // No pattern matched
+            return false;
         }
     }
 }

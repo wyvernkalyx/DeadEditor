@@ -153,7 +153,7 @@ public AlbumInfo ReadAlbumInfo(string folderPath, List<TrackInfo> tracks)
    **3b. Fallback: Parse Standard Tags** (line 208-241):
    - Only runs if no custom fields found
    - **Album Title:** Parse via `ParseAlbumTitle(album, albumInfo)` (line 214)
-     - Tries 4 regex patterns to extract date/venue/city/state from ALBUM tag
+     - Tries 5 regex patterns to extract date/venue/city/state from ALBUM tag
      - If no patterns match, the ALBUM tag value is lost
    - **FIX 1 (NEW):** Fallback to store raw ALBUM tag in AlbumName (line 216-223)
      - If `ParseAlbumTitle()` didn't set AlbumName, use raw ALBUM tag value
@@ -330,19 +330,34 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 - `\)` - Closing paren
 - `(?:\s*-\s*.+)?$` - Optional artist suffix (e.g., " - Grateful Dead__")
 
-**Pattern 2: yyyy-MM-dd format**
+**Pattern 2: yyyy-MM-dd date with any suffix**
 ```csharp
-@"^(.+?)\s*\((\d{4}-\d{2}-\d{2})(?:\s*-.*?)?\)\s*$"
+@"^(.+?)\s*\((\d{4}-\d{2}-\d{2})[^)]*\)\s*$"
 ```
 
 **Pattern Explanation:**
-- `^(.+?)` - Capture group 1: Song name (non-greedy, everything before opening paren)
+- `^(.+?)` - Capture group 1: Song name (non-greedy). Because it's non-greedy, the regex engine skips parentheticals that don't start with a date (e.g., "(Two Souls In Communion)") and only matches the LAST parenthetical that contains a yyyy-MM-dd date.
 - `\s*` - Optional whitespace before paren
 - `\(` - Opening parenthesis (escaped)
 - `(\d{4}-\d{2}-\d{2})` - Capture group 2: Date in yyyy-MM-dd format
-- `(?:\s*-.*?)?` - Non-capturing group (optional): Space, dash, and any remaining text (venue/location/album)
+- `[^)]*` - Any remaining text inside parentheses (venue, tour name, location — all discarded)
 - `\)` - Closing parenthesis (escaped)
 - `\s*$` - Optional trailing whitespace
+
+**Pattern 3: Year-only + tour/album name**
+```csharp
+@"^(.+?)\s*\((\d{4})\s*[-–]\s*[^)]+\)\s*$"
+```
+
+**Pattern Explanation:**
+- `^(.+?)` - Capture group 1: Song name (non-greedy, same subtitle-preserving behavior as Pattern 2)
+- `\s*\(` - Opening parenthesis
+- `(\d{4})` - Capture group 2: 4-digit year (not used — year alone isn't a concert date)
+- `\s*[-–]\s*` - Dash separator (hyphen or en-dash) with optional spaces
+- `[^)]+` - Tour/album name text (e.g., "Europe '72")
+- `\)\s*$` - Closing parenthesis, end of string
+
+**Note:** Pattern 3 strips the year+tour suffix but returns `null` for date because a year alone is not a full concert date.
 
 **Supported Formats:**
 
@@ -355,29 +370,45 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 3. **Simple yyyy-MM-dd date:** `"Bertha (1971-04-27)"`
    - Returns: `("Bertha", "1971-04-27")`
 
-4. **Date with venue:** `"Mama Tried (1971-04-26 - New York, NY - Fillmore East)"`
+4. **Date with venue (dash-separated):** `"Mama Tried (1971-04-26 - New York, NY - Fillmore East)"`
    - Returns: `("Mama Tried", "1971-04-26")`
 
 5. **Date with full metadata:** `"Johnny B. Goode (1971-03-24 - San Francisco, CA - Winterland - Skull & Roses)"`
    - Returns: `("Johnny B. Goode", "1971-03-24")`
 
-6. **No date:** `"Radio AD"`
-   - Returns: `("Radio AD", null)`
+6. **Full date + tour name (space-separated):** `"He's Gone (1972-05-10 Europe '72)"`
+   - Returns: `("He's Gone", "1972-05-10")`
+
+7. **Song with subtitle + full date + tour:** `"The Stranger (Two Souls In Communion) (1972-05-10 Europe '72)"`
+   - Returns: `("The Stranger (Two Souls In Communion)", "1972-05-10")`
+
+8. **Year-only + tour name:** `"Good Lovin' (1972 - Europe '72)"`
+   - Returns: `("Good Lovin'", null)` — suffix stripped, no full date extracted
+
+9. **Song with subtitle + year-only + tour:** `"The Stranger (Two Souls In Communion) (1972 - Europe '72)"`
+   - Returns: `("The Stranger (Two Souls In Communion)", null)`
+
+10. **No date:** `"Radio AD"`
+    - Returns: `("Radio AD", null)`
 
 **Business Logic:**
 1. Return immediately if title is null/whitespace
 2. Try Pattern 1 (MusicBrainz M/D/YYYY format):
    - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name (Regex: `@"\s*>?\s*$"`)
+   - **Strip trailing segue markers** from song name (Regex: `@"\s*[-–]?\s*>\s*$"`)
    - Extract month/day/year from groups 2-4
    - Convert to yyyy-MM-dd format
    - Return tuple
-3. If no match, try Pattern 2 (yyyy-MM-dd format):
+3. If no match, try Pattern 2 (yyyy-MM-dd with any suffix):
    - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name (Regex: `@"\s*>?\s*$"`)
+   - **Strip trailing segue markers** from song name (Regex: `@"\s*[-–]?\s*>\s*$"`)
    - Extract date from group 2 (already yyyy-MM-dd)
    - Return tuple
-4. If no match from either pattern:
+4. If no match, try Pattern 3 (year-only + tour name):
+   - Extract song name from group 1, trim whitespace
+   - **Strip trailing segue markers** from song name
+   - Return (songName, null) — suffix stripped but no full date to extract
+5. If no match from any pattern:
    - **Strip trailing segue markers** from title
    - Return (cleaned title, null)
 
@@ -390,7 +421,7 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 - **Whitespace handling:** Trims trailing spaces from song name
 - **Graceful fallback:** Returns original title unchanged if no date pattern found
 - **Prevents date doubling:** ParseTitleAndDate strips existing dates during ReadFolder, preventing duplicate dates when re-importing already-formatted files
-- **FIX 1: Segue marker stripping:** All three return paths strip trailing " >" from songName to prevent double ">>" in DisplayTitle. The segue state is captured by the HasSegue boolean flag - it should not also live in the SongName string.
+- **FIX 1: Segue marker stripping:** All four return paths strip trailing segue markers (" >", " ->", " - >", " –>") from songName using `@"\s*[-–]?\s*>\s*$"`. This handles all common taper conventions for arrow notation. The segue state is captured by the HasSegue boolean flag — it should not also live in the SongName string.
 
 **Usage in ReadFolder:**
 ```csharp
@@ -713,7 +744,7 @@ private void ParseAlbumTitle(string album, AlbumInfo info)
 - `album` (string) - Album tag value from ID3
 - `info` (AlbumInfo) - Object to populate (modified in-place)
 
-**Business Logic (4 patterns, checked in priority order):**
+**Business Logic (5 patterns, checked in priority order):**
 
 ---
 
@@ -822,6 +853,34 @@ private void ParseAlbumTitle(string album, AlbumInfo info)
 - `info.Venue`, `info.City`, `info.State`
 - `info.Date` (converted from US format)
 - `info.OfficialRelease` (if bracketed text exists and not "Live")
+
+---
+
+#### Pattern 5: Space-Separated Audience Recording
+
+**Regex:**
+```regex
+^(\d{4}-\d{2}-\d{2})\s+(.+?),\s+([^,]+),\s*([A-Z]{2})$
+```
+
+**No Dashes:** Date followed by space (not " - "), comma-separated venue/city/state
+
+**Matches:**
+- `"1968-08-21 Fillmore West, San Francisco, CA"`
+- `"1977-05-08 Barton Hall, Cornell University, Ithaca, NY"`
+
+**Breakdown:**
+- Group 1: `\d{4}-\d{2}-\d{2}` - Date (yyyy-MM-dd)
+- `\s+` - Space separator (not dash)
+- Group 2: `.+?` - Venue (non-greedy, up to first comma that leads to a valid City, ST ending)
+- Group 3: `[^,]+` - City
+- Group 4: `[A-Z]{2}` - State (2-letter uppercase)
+
+**Sets:**
+- `info.AlbumDate`, `info.Venue`, `info.CityState`
+- `info.Type = AlbumType.AudienceRecording`
+
+**Returns:** Early return
 
 ---
 

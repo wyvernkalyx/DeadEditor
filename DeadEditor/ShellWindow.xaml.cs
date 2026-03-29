@@ -1,9 +1,13 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DeadEditor
 {
@@ -34,6 +38,13 @@ namespace DeadEditor
 
             // Subscribe to navigation events
             _navigationService.NavigationRequested += NavigationService_NavigationRequested;
+
+            // Subscribe to header bar events
+            HeaderBar.ImportCancelRequested += HeaderBar_ImportCancelRequested;
+            HeaderBar.EditMetadataRequested += HeaderBar_EditMetadataRequested;
+            HeaderBar.LibraryFilterChanged += HeaderBar_LibraryFilterChanged;
+            HeaderBar.AdvancedSearchRequested += HeaderBar_AdvancedSearchRequested;
+            HeaderBar.DeleteAlbumRequested += HeaderBar_DeleteAlbumRequested;
 
             // Set data context for binding
             DataContext = this;
@@ -94,6 +105,78 @@ namespace DeadEditor
             _settings.Save();
         }
 
+        // ===== KEYBOARD SHORTCUTS =====
+
+        private void ShellWindow_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Don't intercept keys when user is typing in a text box
+            var focusedElement = Keyboard.FocusedElement;
+            bool isTypingInTextBox = focusedElement is System.Windows.Controls.TextBox;
+
+            // Ctrl+F: Focus search box in Library Grid
+            if (e.Key == Key.F && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                HeaderBar.FocusSearch();
+                e.Handled = true;
+                return;
+            }
+
+            // Escape: Clear search or navigate back
+            if (e.Key == Key.Escape)
+            {
+                // If typing in search box, clear it and unfocus
+                if (isTypingInTextBox && focusedElement is System.Windows.Controls.TextBox textBox)
+                {
+                    if (!string.IsNullOrEmpty(textBox.Text))
+                    {
+                        textBox.Text = "";
+                        e.Handled = true;
+                        return;
+                    }
+                    // Move focus away from the text box
+                    Keyboard.ClearFocus();
+                    FocusManager.SetFocusedElement(this, this);
+                    e.Handled = true;
+                    return;
+                }
+
+                // If not in library grid, navigate back
+                if (CurrentView is not LibraryGridView && _navigationService.CanGoBack)
+                {
+                    _navigationService.GoBack();
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            // Space: Play/Pause toggle (only when not typing in a text box)
+            if (e.Key == Key.Space && !isTypingInTextBox)
+            {
+                var player = App.PlaybackService;
+                if (player.State == PlaybackState.Playing)
+                {
+                    player.Pause();
+                }
+                else
+                {
+                    player.Play();
+                }
+                e.Handled = true;
+                return;
+            }
+
+            // Delete: Remove selected track from playlist (when playlist is focused)
+            if (e.Key == Key.Delete && !isTypingInTextBox)
+            {
+                // Check if the playlist panel's DataGrid has a selected item
+                if (PlaylistPanel.TryRemoveSelectedTrack())
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        }
+
         // ===== NAVIGATION =====
 
         private void NavigationService_NavigationRequested(object? sender, NavigationEventArgs e)
@@ -103,6 +186,9 @@ namespace DeadEditor
 
             // Update header bar based on view type
             UpdateHeaderBar(e.View, e.Context);
+
+            // Update sidebar active indicator to match current view
+            SidebarPanel.SetActiveForView(e.View);
         }
 
         private void UpdateHeaderBar(System.Windows.Controls.UserControl view, object? context)
@@ -116,6 +202,10 @@ namespace DeadEditor
             {
                 HeaderBar.ShowAlbumDetailHeader(albumView, context);
             }
+            else if (view is EditMetadataView editView)
+            {
+                HeaderBar.ShowEditMetadataHeader(editView);
+            }
             else if (view is ImportView)
             {
                 HeaderBar.ShowImportHeader();
@@ -124,6 +214,140 @@ namespace DeadEditor
             {
                 HeaderBar.ShowSettingsHeader();
             }
+        }
+
+        private void HeaderBar_LibraryFilterChanged(object? sender, LibraryFilterEventArgs e)
+        {
+            if (_libraryView != null)
+            {
+                _libraryView.ApplyFilter(e.SearchText, e.TypeFilter);
+                HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount);
+            }
+        }
+
+        private void HeaderBar_AdvancedSearchRequested(object? sender, EventArgs e)
+        {
+            // Open the Advanced Search dialog
+            try
+            {
+                var normService = new Services.NormalizationService();
+                var metaService = new Services.MetadataService();
+
+                var dialog = new AdvancedSearchDialog(
+                    normService, metaService, _settings,
+                    navigateToAlbumCallback: (folderPath) =>
+                    {
+                        // Navigate to the album from the search result
+                        if (_libraryView != null)
+                        {
+                            // Find the show matching this folder path
+                            // For now, just switch to library view
+                            NavigateToLibrary();
+                        }
+                    });
+                dialog.Owner = this;
+                dialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ShellWindow] Advanced Search error: {ex.Message}");
+            }
+        }
+
+        private void HeaderBar_DeleteAlbumRequested(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentContext is not LibraryShow show)
+                return;
+
+            // Count files across all folders
+            var folders = show.FolderPaths.Any() ? show.FolderPaths : new List<string> { show.FolderPath };
+            int fileCount = 0;
+            foreach (var folder in folders)
+            {
+                if (Directory.Exists(folder))
+                {
+                    fileCount += Directory.GetFiles(folder, "*.flac").Length;
+                    fileCount += Directory.GetFiles(folder, "*.mp3").Length;
+                }
+            }
+
+            // Build display name
+            var displayName = !string.IsNullOrEmpty(show.OfficialRelease) ? show.OfficialRelease
+                : !string.IsNullOrEmpty(show.AlbumName) ? show.AlbumName
+                : !string.IsNullOrEmpty(show.Venue) ? $"{show.Date} {show.Venue}"
+                : show.Date;
+
+            var result = System.Windows.MessageBox.Show(
+                $"Delete '{displayName}'?\n\n" +
+                $"This will send {fileCount} audio file{(fileCount == 1 ? "" : "s")} to the Recycle Bin.\n\n" +
+                $"This action can be undone by restoring from the Recycle Bin.",
+                "Delete Album",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                // Send each folder's contents to Recycle Bin
+                foreach (var folder in folders)
+                {
+                    if (!Directory.Exists(folder))
+                        continue;
+
+                    // Send the entire folder to Recycle Bin
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(
+                        folder,
+                        Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                        Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                }
+
+                // Navigate back to Library and refresh
+                NavigateToLibrary();
+                _libraryView?.ReloadLibrary();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(
+                    $"Error deleting album:\n\n{ex.Message}",
+                    "Delete Failed",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void HeaderBar_EditMetadataRequested(object? sender, EventArgs e)
+        {
+            // Get the current LibraryShow from the navigation context
+            if (_navigationService.CurrentContext is LibraryShow show)
+            {
+                var editView = new EditMetadataView(this, show);
+
+                // When save completes, refresh the library grid
+                editView.SaveCompleted += (s, args) =>
+                {
+                    _libraryView?.ReloadLibrary();
+                };
+
+                _navigationService.NavigateTo(editView, show);
+            }
+        }
+
+        private void HeaderBar_ImportCancelRequested(object? sender, EventArgs e)
+        {
+            if (_importView is ImportView importView && importView.HasUnsavedWork)
+            {
+                var result = System.Windows.MessageBox.Show(
+                    "You have tracks loaded that haven't been imported. Leave Import?",
+                    "Leave Import",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes) return;
+            }
+
+            NavigateToLibrary();
         }
 
         private void SidebarPanel_NavigationRequested(object sender, string destination)
@@ -148,6 +372,11 @@ namespace DeadEditor
             if (_libraryView == null)
             {
                 _libraryView = new LibraryGridView(this);
+                // Subscribe to concert count changes
+                _libraryView.ConcertCountChanged += (s, count) =>
+                {
+                    HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount);
+                };
             }
 
             // Navigate to root (clears back stack)
@@ -158,7 +387,16 @@ namespace DeadEditor
         {
             if (_importView == null)
             {
-                _importView = new ImportView();
+                var importView = new ImportView();
+
+                // When an import completes, refresh the library grid
+                importView.ImportCompleted += (s, destinationPath) =>
+                {
+                    // Reload library data so the new album shows up immediately
+                    _libraryView?.ReloadLibrary();
+                };
+
+                _importView = importView;
             }
 
             _navigationService.NavigateToRoot(_importView);

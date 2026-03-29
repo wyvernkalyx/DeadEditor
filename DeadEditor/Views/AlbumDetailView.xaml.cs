@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace DeadEditor
@@ -19,8 +20,13 @@ namespace DeadEditor
         private readonly MetadataService _metadataService;
         private List<TrackInfo> _tracks = new();
         private ObservableCollection<ConcertViewItem> _concertViewItems = new();
+        private bool _isMultiNight;
+        private bool _isFlatSorted; // True when user clicked a column header to sort flat
 
-        public string AlbumName => _show.Type == AlbumType.OfficialRelease ? _show.AlbumName : _show.Venue;
+        public string AlbumName =>
+            !string.IsNullOrEmpty(_show.OfficialRelease) ? _show.OfficialRelease
+            : !string.IsNullOrEmpty(_show.AlbumName) ? _show.AlbumName
+            : _show.Venue;
 
         public AlbumDetailView(ShellWindow shell, LibraryShow show)
         {
@@ -39,10 +45,17 @@ namespace DeadEditor
 
         private void LoadAlbumData()
         {
-            // Set metadata labels
+            // Determine the display name: OfficialRelease > AlbumName > Venue
+            var displayName = !string.IsNullOrEmpty(_show.OfficialRelease) ? _show.OfficialRelease
+                            : !string.IsNullOrEmpty(_show.AlbumName) ? _show.AlbumName
+                            : _show.Venue;
+
+            AlbumNameDetailText.Text = displayName;
+
+            // Set metadata labels below album name
             if (_show.Type == AlbumType.OfficialRelease)
             {
-                VenueText.Text = _show.AlbumName;
+                VenueText.Text = !string.IsNullOrEmpty(_show.Venue) ? _show.Venue : "";
                 LocationText.Text = _show.ReleaseYear.HasValue ? $"Released {_show.ReleaseYear}" : "";
                 DateText.Text = "";
             }
@@ -92,15 +105,17 @@ namespace DeadEditor
                     }
                 }
 
-                // If no file-based artwork, try embedded APIC in first FLAC
+                // If no file-based artwork, try embedded art in first audio file (FLAC or MP3)
                 if (bitmap == null)
                 {
-                    var flacFiles = Directory.GetFiles(folder, "*.flac");
-                    if (flacFiles.Length > 0)
+                    var audioFiles = Directory.GetFiles(folder, "*.flac")
+                        .Concat(Directory.GetFiles(folder, "*.mp3"))
+                        .ToArray();
+                    if (audioFiles.Length > 0)
                     {
                         try
                         {
-                            using var tagFile = TagLib.File.Create(flacFiles[0]);
+                            using var tagFile = TagLib.File.Create(audioFiles[0]);
                             if (tagFile.Tag.Pictures.Length > 0)
                             {
                                 var pic = tagFile.Tag.Pictures[0];
@@ -167,14 +182,30 @@ namespace DeadEditor
                             var dateMatch = Regex.Match(title, @"(\d{4}-\d{2}-\d{2})");
                             var trackDate = dateMatch.Success ? dateMatch.Groups[1].Value : null;
 
+                            // Parse SongName from the raw title: strip date suffix and segue marker
+                            var songName = title;
+                            bool hasSegue = false;
+
+                            // Detect and strip segue marker
+                            if (songName.Contains(" >"))
+                            {
+                                hasSegue = true;
+                                songName = Regex.Replace(songName, @"\s*>\s*", "").Trim();
+                            }
+
+                            // Strip date suffix like "(1971-02-19)"
+                            songName = Regex.Replace(songName, @"\s*\(\d{4}-\d{2}-\d{2}\)\s*$", "").Trim();
+
                             var track = new TrackInfo
                             {
                                 FilePath = file,
                                 FileName = Path.GetFileName(file),
                                 TrackNumber = tagFile.Tag.Track > 0 ? (int)tagFile.Tag.Track : _tracks.Count + 1,
+                                SongName = songName,
                                 RawTitle = title,  // Store full FLAC title as-is (includes date suffix)
                                 Duration = tagFile.Properties.Duration.ToString(@"m\:ss"),
-                                TrackDate = trackDate
+                                TrackDate = trackDate,
+                                Segue = hasSegue
                             };
 
                             _tracks.Add(track);
@@ -203,8 +234,11 @@ namespace DeadEditor
                 .Distinct()
                 .Count();
 
+            _isMultiNight = distinctDates > 1;
+            _isFlatSorted = false;
+
             // Sort tracks
-            if (distinctDates > 1)
+            if (_isMultiNight)
             {
                 // Multi-night: Sort by date first, then track number
                 _tracks = _tracks
@@ -219,11 +253,15 @@ namespace DeadEditor
             }
 
             // Build view based on date count
-            if (distinctDates > 1)
+            if (_isMultiNight)
             {
                 // Multi-night: Build collapsible sections
                 BuildCollapsibleConcertView();
                 TracksDataGrid.ItemsSource = _concertViewItems;
+
+                // Show expand/collapse buttons for multi-night albums
+                ExpandAllButton.Visibility = Visibility.Visible;
+                CollapseAllButton.Visibility = Visibility.Visible;
             }
             else
             {
@@ -282,6 +320,8 @@ namespace DeadEditor
 
         private void ToggleDateSection(DateHeaderItem header)
         {
+            RestoreGroupedView();
+
             if (header.IsExpanded)
             {
                 // Collapse this header
@@ -340,6 +380,119 @@ namespace DeadEditor
             }
         }
 
+        private void ExpandAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            RestoreGroupedView();
+            var allHeaders = _concertViewItems.OfType<DateHeaderItem>().ToList();
+            foreach (var header in allHeaders)
+            {
+                if (!header.IsExpanded)
+                {
+                    var headerIndex = _concertViewItems.IndexOf(header);
+                    var dateTracks = _tracks.Where(t => t.TrackDate == header.Date).ToList();
+
+                    int insertIndex = headerIndex + 1;
+                    foreach (var track in dateTracks)
+                    {
+                        _concertViewItems.Insert(insertIndex, new TrackViewItem
+                        {
+                            Track = track,
+                            ParentHeader = header
+                        });
+                        insertIndex++;
+                    }
+
+                    header.IsExpanded = true;
+                }
+            }
+        }
+
+        private void CollapseAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            RestoreGroupedView();
+            var allHeaders = _concertViewItems.OfType<DateHeaderItem>().ToList();
+            foreach (var header in allHeaders)
+            {
+                if (header.IsExpanded)
+                {
+                    var tracksToRemove = _concertViewItems
+                        .OfType<TrackViewItem>()
+                        .Where(t => t.ParentHeader == header)
+                        .ToList();
+
+                    foreach (var track in tracksToRemove)
+                    {
+                        _concertViewItems.Remove(track);
+                    }
+
+                    header.IsExpanded = false;
+                }
+            }
+        }
+
+        // ===== COLUMN SORTING =====
+
+        private void TracksDataGrid_Sorting(object sender, System.Windows.Controls.DataGridSortingEventArgs e)
+        {
+            e.Handled = true; // We handle sorting ourselves
+
+            var sortPath = e.Column.SortMemberPath;
+            if (string.IsNullOrEmpty(sortPath)) return;
+
+            // Toggle direction
+            var direction = e.Column.SortDirection == System.ComponentModel.ListSortDirection.Ascending
+                ? System.ComponentModel.ListSortDirection.Descending
+                : System.ComponentModel.ListSortDirection.Ascending;
+
+            // Clear sort indicators on all columns
+            foreach (var col in TracksDataGrid.Columns)
+                col.SortDirection = null;
+            e.Column.SortDirection = direction;
+
+            // Sort flat track list
+            IOrderedEnumerable<TrackInfo> sorted = sortPath switch
+            {
+                "TrackNumber" => direction == System.ComponentModel.ListSortDirection.Ascending
+                    ? _tracks.OrderBy(t => t.TrackNumber)
+                    : _tracks.OrderByDescending(t => t.TrackNumber),
+                "Title" => direction == System.ComponentModel.ListSortDirection.Ascending
+                    ? _tracks.OrderBy(t => t.Title, StringComparer.OrdinalIgnoreCase)
+                    : _tracks.OrderByDescending(t => t.Title, StringComparer.OrdinalIgnoreCase),
+                "Duration" => direction == System.ComponentModel.ListSortDirection.Ascending
+                    ? _tracks.OrderBy(t => t.Duration)
+                    : _tracks.OrderByDescending(t => t.Duration),
+                _ => _tracks.OrderBy(t => t.TrackNumber)
+            };
+
+            // Switch to flat view (no date group headers)
+            _isFlatSorted = true;
+            TracksDataGrid.ItemsSource = sorted.ToList();
+        }
+
+        /// <summary>
+        /// Restores the grouped/collapsible date view after flat sorting.
+        /// Called by Expand All, Collapse All, or date header clicks.
+        /// </summary>
+        private void RestoreGroupedView()
+        {
+            if (!_isFlatSorted) return;
+            _isFlatSorted = false;
+
+            // Clear sort indicators
+            foreach (var col in TracksDataGrid.Columns)
+                col.SortDirection = null;
+
+            if (_isMultiNight)
+            {
+                BuildCollapsibleConcertView();
+                TracksDataGrid.ItemsSource = _concertViewItems;
+            }
+            else
+            {
+                TracksDataGrid.ItemsSource = _tracks;
+            }
+        }
+
         private void AddAllTracksButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not System.Windows.Controls.Button button || button.Tag is not string date)
@@ -391,25 +544,185 @@ namespace DeadEditor
             }
             else if (selectedItem is DateHeaderItem header)
             {
-                // Clicked on header - toggle expansion (also works with double-click)
                 ToggleDateSection(header);
                 return;
             }
 
             if (track != null)
             {
-                // Add track to playlist and play
-                var playlist = App.PlaybackService.Playlist;
-
-                // Check if already in playlist
-                if (!playlist.Contains(track))
-                {
-                    playlist.Add(track);
-                }
-
-                // Play the track
-                App.PlaybackService.Play(track);
+                PlayNow(track);
             }
+        }
+
+        // ===== CONTEXT MENU =====
+
+        private void TracksDataGrid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // Get the item under the cursor
+            var hit = VisualTreeHelper.HitTest(TracksDataGrid, e.GetPosition(TracksDataGrid));
+            if (hit == null) return;
+
+            // Walk up the visual tree to find the DataGridRow
+            var element = hit.VisualHit as FrameworkElement;
+            while (element != null && element is not System.Windows.Controls.DataGridRow)
+            {
+                element = VisualTreeHelper.GetParent(element) as FrameworkElement;
+            }
+
+            if (element is not System.Windows.Controls.DataGridRow row) return;
+
+            // Don't show context menu on date header rows
+            if (row.Item is DateHeaderItem) return;
+
+            // Resolve the TrackInfo from the row item
+            TrackInfo? clickedTrack = row.Item switch
+            {
+                TrackInfo t => t,
+                TrackViewItem tvi => tvi.Track,
+                _ => null
+            };
+            if (clickedTrack == null) return;
+
+            // Build dark-themed context menu
+            var menu = new System.Windows.Controls.ContextMenu
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
+                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0)),
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42)),
+                BorderThickness = new Thickness(1),
+                Padding = new Thickness(2)
+            };
+
+            var menuItemStyle = new Style(typeof(System.Windows.Controls.MenuItem));
+            menuItemStyle.Setters.Add(new Setter(System.Windows.Controls.MenuItem.ForegroundProperty,
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0))));
+            menuItemStyle.Setters.Add(new Setter(System.Windows.Controls.MenuItem.PaddingProperty, new Thickness(8, 6, 20, 6)));
+            menuItemStyle.Setters.Add(new Setter(System.Windows.Controls.MenuItem.FontSizeProperty, 14.0));
+
+            var playNowItem = new System.Windows.Controls.MenuItem { Header = "▶  Play Now", Style = menuItemStyle };
+            playNowItem.Click += (s, args) => PlayNow(clickedTrack);
+            menu.Items.Add(playNowItem);
+
+            var addItem = new System.Windows.Controls.MenuItem { Header = "＋  Add to Playlist", Style = menuItemStyle };
+            addItem.Click += (s, args) =>
+            {
+                int added = AddToPlaylistWithSegueChain(clickedTrack);
+                ShowTemporaryStatus($"{added} track{(added == 1 ? "" : "s")} added to playlist");
+            };
+            menu.Items.Add(addItem);
+
+            // "Add Selected" — only when multiple tracks are selected
+            var selectedTracks = GetSelectedTracks();
+            if (selectedTracks.Count > 1)
+            {
+                var addSelectedItem = new System.Windows.Controls.MenuItem
+                {
+                    Header = $"＋  Add {selectedTracks.Count} Selected to Playlist",
+                    Style = menuItemStyle
+                };
+                addSelectedItem.Click += (s, args) =>
+                {
+                    int added = 0;
+                    var playlist = App.PlaybackService.Playlist;
+                    foreach (var track in selectedTracks)
+                    {
+                        if (!playlist.Contains(track))
+                        {
+                            playlist.Add(track);
+                            added++;
+                        }
+                    }
+                    ShowTemporaryStatus($"{added} track{(added == 1 ? "" : "s")} added to playlist");
+                };
+                menu.Items.Add(addSelectedItem);
+            }
+
+            menu.IsOpen = true;
+            e.Handled = true;
+        }
+
+        // ===== PLAYLIST HELPERS =====
+
+        /// <summary>
+        /// Returns the segue chain starting from the given track.
+        /// If the track has Segue=true, walks forward through _tracks
+        /// adding consecutive tracks until a non-segue track is reached (inclusive).
+        /// </summary>
+        private List<TrackInfo> GetSegueChain(TrackInfo track)
+        {
+            var chain = new List<TrackInfo> { track };
+            int startIndex = _tracks.IndexOf(track);
+
+            if (startIndex >= 0 && track.Segue)
+            {
+                for (int i = startIndex + 1; i < _tracks.Count; i++)
+                {
+                    chain.Add(_tracks[i]);
+                    if (!_tracks[i].Segue) break;
+                }
+            }
+
+            return chain;
+        }
+
+        /// <summary>
+        /// Adds a track and its segue chain to the playlist without playing.
+        /// Returns the number of tracks actually added (excludes duplicates).
+        /// </summary>
+        private int AddToPlaylistWithSegueChain(TrackInfo track)
+        {
+            var chain = GetSegueChain(track);
+            var playlist = App.PlaybackService.Playlist;
+            int added = 0;
+
+            foreach (var chainTrack in chain)
+            {
+                if (!playlist.Contains(chainTrack))
+                {
+                    playlist.Add(chainTrack);
+                    added++;
+                }
+            }
+
+            return added;
+        }
+
+        /// <summary>
+        /// Adds track + segue chain to playlist and starts playing immediately.
+        /// </summary>
+        private void PlayNow(TrackInfo track)
+        {
+            AddToPlaylistWithSegueChain(track);
+            App.PlaybackService.Play(track);
+        }
+
+        /// <summary>
+        /// Returns all selected TrackInfo items from the DataGrid (skips headers).
+        /// </summary>
+        private List<TrackInfo> GetSelectedTracks()
+        {
+            var tracks = new List<TrackInfo>();
+            foreach (var item in TracksDataGrid.SelectedItems)
+            {
+                if (item is TrackInfo t)
+                    tracks.Add(t);
+                else if (item is TrackViewItem tvi)
+                    tracks.Add(tvi.Track);
+            }
+            return tracks;
+        }
+
+        /// <summary>
+        /// Shows a temporary status message in the track count area, then reverts.
+        /// </summary>
+        private async void ShowTemporaryStatus(string message)
+        {
+            var original = TrackCountText.Text;
+            TrackCountText.Text = message;
+            TrackCountText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x00, 0x7A, 0xCC));
+            await System.Threading.Tasks.Task.Delay(2000);
+            TrackCountText.Text = original;
+            TrackCountText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
         }
 
         public void NavigateBack()

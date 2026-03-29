@@ -136,9 +136,10 @@ public string? Normalize(string title)
    - Example: "[5/7/72, Bickershaw Festival]"
 
 8. **Artist Suffix Removal** (line 126-132):
-   - Regex: `@"\s*-\s*[^-]+_{0,2}\s*$"`
+   - Regex: `@"\s+-\s+[^-]+_{0,2}\s*$"`
    - Examples: " - Grateful Dead__", " - Grateful Dead", " - Artist Name"
    - **Critical:** MUST come BEFORE "(Live at...)" removal
+   - **Critical:** Requires whitespace on BOTH sides of the dash (`\s+`) to distinguish " - Artist" from hyphenated song names like "Brown-Eyed Women" where the dash is part of the word
    - **Rationale:** MusicBrainz titles have format "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching end-of-string
 
 9. **Live At/In Brackets** (line 134-138):
@@ -353,16 +354,21 @@ public int NormalizeAll(List<TrackInfo> tracks)
 int matched = 0;
 foreach (var track in tracks)
 {
-    // First, normalize any slash-formatted dates in the title
-    // This ensures dates like "(1971/07/02 Filmore West)" become "(1971-07-02)"
-    var dateNormalizedTitle = NormalizeDateInTitle(track.Title);
-    if (dateNormalizedTitle != track.Title)
+    // Use SongName for matching — it's already been cleaned by ParseTitleAndDate
+    // during ReadFolder (date/tour suffixes stripped, segue markers removed).
+    // Fall back to Title (RawTitle) only if SongName is empty.
+    var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
+
+    // Normalize any slash-formatted dates remaining in the title
+    // (handles cases ParseTitleAndDate didn't recognize, e.g. "(1971/07/02 Filmore West)")
+    var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize);
+    if (dateNormalizedTitle != titleToNormalize)
     {
-        track.Title = dateNormalizedTitle;  // Update the title with normalized date
+        titleToNormalize = dateNormalizedTitle;
     }
 
     // Then normalize the song name for matching
-    var normalized = Normalize(track.Title);
+    var normalized = Normalize(titleToNormalize);
     if (normalized != null)
     {
         track.SongName = normalized;   // Set normalized song name
@@ -377,8 +383,9 @@ foreach (var track in tracks)
 return matched;
 ```
 
+**Key Design Decision:** NormalizeAll uses `track.SongName` (not `track.Title`) for matching. During ReadFolder, `ParseTitleAndDate` strips date/tour suffixes from the raw title and stores the clean song name in `SongName`. The `Title` property returns `RawTitle` (the original tag value), which may still contain date+tour suffixes like "(1972-05-10 Europe '72)" that the normalization pipeline doesn't know how to strip. Using the already-cleaned `SongName` ensures these tracks match correctly.
+
 **Side Effects:**
-- Modifies `track.Title` to normalize slash-formatted dates to yyyy-MM-dd format
 - Modifies `track.SongName` for each successful match with the canonical song name from the database
 - Sets `track.IsMatched = true` for matched songs (displayed in white in import grid)
 - Sets `track.IsMatched = false` for unmatched songs (displayed in gold #D7BA7D in import grid to indicate they need attention)

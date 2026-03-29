@@ -4,14 +4,559 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="700" d:DesignWidth="1200"
              Background="#1E1E1E">
 
-    <Grid>
-        <TextBlock Text="Import View (Placeholder)"
-                   Foreground="#CCCCCC"
-                   FontSize="24"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="MinHeight" Value="34"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#999999"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="0,0,0,4"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3E3E42"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Background" Value="#0E639C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#1177BB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#0E7A0D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#13A10E"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#252526"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="RowBackground" Value="#1E1E1E"/>
+            <Setter Property="AlternatingRowBackground" Value="#252526"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#3F3F46"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <!-- Action Bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Album Info Bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Main Content (Track List + Artwork) -->
+            <RowDefinition Height="*"/>
+            <!-- Status Bar -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===== SECTION 1: ACTION BAR ===== -->
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Action Buttons -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Button x:Name="ReadButton" Content="Read" Height="32"
+                        Click="ReadButton_Click" Margin="0,0,6,0" FontSize="16"
+                        ToolTip="Re-read metadata from audio files"/>
+                <Button x:Name="MusicBrainzButton" Content="🔎 MusicBrainz" Height="32"
+                        Style="{StaticResource AccentButton}"
+                        Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
+                        ToolTip="Lookup album on MusicBrainz"/>
+                <Button x:Name="NormalizeButton" Content="✨ Normalize" Height="32"
+                        Style="{StaticResource AccentButton}"
+                        Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="16"
+                        ToolTip="Normalize all song titles"/>
+                <Button x:Name="RenumberButton" Content="Renumber" Height="32"
+                        Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
+                        ToolTip="Renumber tracks sequentially"/>
+                <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
+                        Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="16"
+                        IsEnabled="False"
+                        ToolTip="View info file"/>
+            </StackPanel>
+
+            <!-- Center: Status Text -->
+            <TextBlock Grid.Column="1" x:Name="StatusTextBlock"
+                       Text="Ready — select a folder to begin" FontSize="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Foreground="#CCCCCC"/>
+
+            <!-- Right: Write/Import Buttons -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button x:Name="WriteButton" Content="Write to Files" Height="32"
+                        Click="WriteButton_Click" Margin="0,0,6,0" FontSize="16"
+                        ToolTip="Write metadata to audio files"/>
+                <Button x:Name="ImportButton" Content="Import to Library" Height="32"
+                        Style="{StaticResource PrimaryButton}"
+                        Click="ImportButton_Click" Margin="0,0,6,0" FontSize="16"
+                        ToolTip="Import to library"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ===== SECTION 2: ALBUM INFO BAR ===== -->
+        <Border Grid.Row="1" BorderBrush="#555555" BorderThickness="1"
+                Background="#2D2D30" Padding="10" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <!-- Artist ~15% -->
+                    <ColumnDefinition Width="15*"/>
+                    <!-- Concert Date ~12% -->
+                    <ColumnDefinition Width="12*"/>
+                    <!-- Venue ~20% -->
+                    <ColumnDefinition Width="20*"/>
+                    <!-- City, State ~15% -->
+                    <ColumnDefinition Width="15*"/>
+                    <!-- Album / Release ~25% -->
+                    <ColumnDefinition Width="25*"/>
+                    <!-- Year ~8% -->
+                    <ColumnDefinition Width="8*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Artist -->
+                <Label Grid.Row="0" Grid.Column="0" Content="ARTIST" VerticalAlignment="Top"/>
+                <TextBox Grid.Row="1" Grid.Column="0" x:Name="ArtistTextBox"
+                         Margin="0,0,5,0" TextChanged="AlbumInfo_Changed"/>
+
+                <!-- Concert Date -->
+                <Label Grid.Row="0" Grid.Column="1" Content="DATE" VerticalAlignment="Top" Margin="5,0,0,0"/>
+                <TextBox Grid.Row="1" Grid.Column="1" x:Name="AlbumDateTextBox"
+                         Margin="5,0,5,0" TextChanged="AlbumInfo_Changed"
+                         ToolTip="yyyy-MM-dd (performance date)"/>
+
+                <!-- Venue -->
+                <Label Grid.Row="0" Grid.Column="2" Content="VENUE" VerticalAlignment="Top" Margin="5,0,0,0"/>
+                <TextBox Grid.Row="1" Grid.Column="2" x:Name="VenueTextBox"
+                         Margin="5,0,5,0" TextChanged="AlbumInfo_Changed"/>
+
+                <!-- City, State -->
+                <Label Grid.Row="0" Grid.Column="3" Content="CITY, STATE" VerticalAlignment="Top" Margin="5,0,0,0"/>
+                <TextBox Grid.Row="1" Grid.Column="3" x:Name="CityStateTextBox"
+                         Margin="5,0,5,0" TextChanged="AlbumInfo_Changed"
+                         ToolTip="City, ST"/>
+
+                <!-- Album / Release Name -->
+                <Label Grid.Row="0" Grid.Column="4" Content="ALBUM / RELEASE" VerticalAlignment="Top" Margin="5,0,0,0"/>
+                <TextBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameTextBox"
+                         Margin="5,0,5,0"
+                         TextChanged="AlbumInfo_Changed"
+                         ToolTip="Optional"/>
+
+                <!-- Release Year -->
+                <Label Grid.Row="0" Grid.Column="5" Content="YEAR" VerticalAlignment="Top" Margin="5,0,0,0"/>
+                <TextBox Grid.Row="1" Grid.Column="5" x:Name="YearTextBox"
+                         Margin="5,0,0,0" TextChanged="AlbumInfo_Changed"
+                         ToolTip="Release/publication year"/>
+            </Grid>
+        </Border>
+
+        <!-- ===== SECTION 3: MAIN CONTENT (Track List + Artwork Panel) ===== -->
+        <Grid Grid.Row="2" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Track List -->
+            <Grid Grid.Column="0" Margin="0,0,10,0">
+                <Border BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E">
+                    <DataGrid x:Name="TracksDataGrid"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeRows="False"
+                          SelectionMode="Single"
+                          SelectionChanged="TracksDataGrid_SelectionChanged"
+                          LoadingRow="TracksDataGrid_LoadingRow"
+                          CellEditEnding="TracksDataGrid_CellEditEnding"
+                          PreparingCellForEdit="TracksDataGrid_PreparingCellForEdit"
+                          Sorting="TracksDataGrid_Sorting"
+                          MouseRightButtonUp="TracksDataGrid_MouseRightButtonUp"
+                          Background="#1E1E1E"
+                          Foreground="#FFFFFF"
+                          RowBackground="#1E1E1E"
+                          AlternatingRowBackground="#252526"
+                          BorderThickness="0"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#3F3F46"
+                          FontSize="18"
+                          RowHeight="28">
+                    <DataGrid.Resources>
+                        <!-- Selection colors: muted dark theme to keep text readable -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#37373D"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E0E0E0"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+                        <Style x:Key="EditableCellStyle" TargetType="DataGridCell">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="6,2"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#37373D"/>
+                                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                                </Trigger>
+                                <Trigger Property="IsEditing" Value="True">
+                                    <Setter Property="Background" Value="#3C3C3C"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#2D2D30"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="BorderBrush" Value="#3F3F46"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            <Setter Property="Padding" Value="6,4"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="13"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="#1E1E1E"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="#252526"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#37373D"/>
+                                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#2A2D2E"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <!-- Track Number (raw value from FLAC TRACKNUMBER tag) -->
+                        <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}"
+                                            Width="40" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Disc Number (editable) -->
+                        <DataGridTextColumn Header="Disc" Binding="{Binding DiscNumber, UpdateSourceTrigger=PropertyChanged}"
+                                            Width="50" IsReadOnly="False">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                            <DataGridTextColumn.EditingElementStyle>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                    <Setter Property="Background" Value="#3C3C3C"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </DataGridTextColumn.EditingElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Title (editable, shows display title with date appended) -->
+                        <DataGridTemplateColumn Header="Title" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DisplayTitle}"
+                                               VerticalAlignment="Center"
+                                               Padding="4,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMatched}" Value="False">
+                                                        <Setter Property="Foreground" Value="#D7BA7D"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
+                                             Background="#3C3C3C"
+                                             Foreground="#FFFFFF"
+                                             BorderThickness="0"
+                                             Padding="4,0"
+                                             VerticalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Segue Checkbox -->
+                        <DataGridCheckBoxColumn Header="→" Binding="{Binding Segue, UpdateSourceTrigger=PropertyChanged}"
+                                                Width="40">
+                            <DataGridCheckBoxColumn.ElementStyle>
+                                <Style TargetType="CheckBox">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridCheckBoxColumn.ElementStyle>
+                        </DataGridCheckBoxColumn>
+
+                        <!-- Track Date (editable) -->
+                        <DataGridTemplateColumn Header="Date" Width="110">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock VerticalAlignment="Center" Padding="4,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="{Binding TrackDate}"/>
+                                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                <Setter Property="FontStyle" Value="Normal"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TrackDate}" Value="">
+                                                        <Setter Property="Text" Value="{Binding InheritedDate}"/>
+                                                        <Setter Property="Foreground" Value="#8FA3B8"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding TrackDate}" Value="{x:Null}">
+                                                        <Setter Property="Text" Value="{Binding InheritedDate}"/>
+                                                        <Setter Property="Foreground" Value="#8FA3B8"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding TrackDate, UpdateSourceTrigger=PropertyChanged}"
+                                             Background="#3C3C3C"
+                                             Foreground="#FFFFFF"
+                                             BorderThickness="0"
+                                             Padding="4,0"
+                                             VerticalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Duration (read-only) -->
+                        <DataGridTextColumn Header="Time" Binding="{Binding Duration}"
+                                            Width="60" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                    <Setter Property="Foreground" Value="#CCCCCC"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <!-- Drop indicator line -->
+                <Border x:Name="DropIndicator"
+                        Background="#007ACC"
+                        Height="3"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Visibility="Collapsed"
+                        IsHitTestVisible="False"
+                        Margin="5,0,5,0"/>
+            </Grid>
+
+            <!-- Artwork Panel -->
+            <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="1"
+                    Background="#2D2D30" Padding="15" Width="450">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <!-- Artwork Display -->
+                        <Border BorderBrush="#555555" BorderThickness="1"
+                                Width="400" Height="400"
+                                Background="#1E1E1E" Margin="0,0,0,15">
+                            <Grid>
+                                <TextBlock x:Name="NoArtworkText" Text="No Artwork"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Foreground="#777777" FontStyle="Italic" FontSize="18"/>
+                                <Image x:Name="ArtworkImage" Stretch="Uniform" Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Artwork Buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                            <Button x:Name="ChangeArtworkButton" Content="Change..."
+                                    Width="130" Height="36" Margin="0,0,8,0"
+                                    Click="ChangeArtworkButton_Click" FontSize="16"/>
+                            <Button x:Name="RemoveArtworkButton" Content="Remove"
+                                    Width="130" Height="36" Margin="8,0,0,0"
+                                    Click="RemoveArtworkButton_Click" FontSize="16"/>
+                        </StackPanel>
+
+                        <Separator Margin="0,0,0,15" Background="#555555"/>
+
+                        <!-- Album Type Dropdown -->
+                        <Label Content="ALBUM TYPE" Margin="0,0,0,5" FontSize="18"/>
+                        <ComboBox x:Name="AlbumTypeComboBox" MinHeight="40" MinWidth="260" Margin="0,0,0,20"
+                                  SelectionChanged="AlbumTypeComboBox_SelectionChanged"
+                                  FontSize="18" Padding="8,6"
+                                  VerticalContentAlignment="Center">
+                            <ComboBoxItem Content="Auto-detect" IsSelected="True"/>
+                            <ComboBoxItem Content="Audience Recording"/>
+                            <ComboBoxItem Content="Official Release"/>
+                        </ComboBox>
+
+                        <Separator Margin="0,0,0,15" Background="#555555"/>
+
+                        <!-- Folder Name Preview -->
+                        <Label Content="FOLDER NAME PREVIEW" Margin="0,0,0,5" FontSize="18"/>
+                        <Border BorderBrush="#555555" BorderThickness="1"
+                                Background="#1E1E1E" Padding="10" Margin="0,0,0,15" MinHeight="80">
+                            <TextBlock x:Name="FolderPreviewTextBlock"
+                                       TextWrapping="Wrap"
+                                       Foreground="#D7BA7D"
+                                       FontSize="18"
+                                       LineHeight="22"/>
+                        </Border>
+
+                        <!-- Write Path -->
+                        <Label Content="WRITE PATH" Margin="0,0,0,5" FontSize="18"/>
+                        <Border BorderBrush="#555555" BorderThickness="1"
+                                Background="#1E1E1E" Padding="10" MinHeight="70">
+                            <TextBlock x:Name="WritePathTextBlock"
+                                       TextWrapping="Wrap"
+                                       Foreground="#999999"
+                                       FontSize="18"
+                                       FontFamily="Consolas"
+                                       LineHeight="22"/>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- ===== SECTION 4: STATUS BAR ===== -->
+        <Border Grid.Row="3" BorderBrush="#555555" BorderThickness="1,0,0,0"
+                Background="#252526" Padding="8,4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ProgressBar Grid.Row="1" x:Name="ProgressBar"
+                             Height="3" Visibility="Collapsed"
+                             Minimum="0" Maximum="100"
+                             Background="#1E1E1E"
+                             Foreground="#0E639C"
+                             BorderThickness="0"/>
+            </Grid>
+        </Border>
+
+        <!-- Notification Panel (Modal Overlay) -->
+        <Grid x:Name="NotificationPanel" Grid.RowSpan="4" Panel.ZIndex="1000" Visibility="Collapsed">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.7"/>
+            </Grid.Background>
+            <Border Background="#2D2D30"
+                    BorderBrush="#007ACC"
+                    BorderThickness="2"
+                    CornerRadius="6"
+                    MaxWidth="600"
+                    MaxHeight="400"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Padding="25"
+                    MouseDown="NotificationPanel_MouseDown">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="30"
+                                      ShadowDepth="0" Opacity="0.8"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" x:Name="NotificationTitle"
+                               FontSize="18" FontWeight="Bold"
+                               Margin="0,0,0,15" Foreground="#FFFFFF"/>
+                    <ScrollViewer Grid.Row="1" MaxHeight="250"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Margin="0,0,0,20">
+                        <TextBlock x:Name="NotificationMessage"
+                                   TextWrapping="Wrap" FontSize="16"
+                                   Foreground="#CCCCCC" LineHeight="20"/>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <Button x:Name="NotificationYesButton" Content="Yes"
+                                Width="100" Height="36" Margin="5"
+                                Click="NotificationYes_Click" Visibility="Collapsed"
+                                FontSize="16" FontWeight="SemiBold"/>
+                        <Button x:Name="NotificationNoButton" Content="No"
+                                Width="100" Height="36" Margin="5"
+                                Click="NotificationNo_Click" Visibility="Collapsed"
+                                FontSize="16"/>
+                        <Button x:Name="NotificationOkButton" Content="OK"
+                                Width="100" Height="36" Margin="5"
+                                Click="NotificationOk_Click"
+                                FontSize="16" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
