@@ -318,10 +318,14 @@ namespace DeadEditor.Services
                     file.Tag.Track = (uint)track.TrackNumber;
                     file.Tag.Disc = (uint)track.DiscNumber;
 
-                    // Parse year from date
+                    // Write year: prefer AlbumDate, fall back to Year field
                     if (DateTime.TryParse(album.AlbumDate, out var parsedDate))
                     {
                         file.Tag.Year = (uint)parsedDate.Year;
+                    }
+                    else if (int.TryParse(album.Year, out var yearValue) && yearValue > 0)
+                    {
+                        file.Tag.Year = (uint)yearValue;
                     }
 
                     // Store individual metadata fields in custom tags (for FLAC files)

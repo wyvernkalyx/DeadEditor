@@ -239,7 +239,7 @@ public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
    - `file.Tag.AlbumArtists` = [album.Artist]
    - `file.Tag.Track` = track.TrackNumber (cast to uint)
    - `file.Tag.Disc` = track.DiscNumber (cast to uint)
-   - `file.Tag.Year` = parsed from album.Date (line 219-222)
+   - `file.Tag.Year` = parsed from album.AlbumDate if valid date, else from album.Year if numeric (supports Official Releases with year but no concert date)
 
 3. **Embed Artwork** (line 224-240):
    - If `album.ArtworkData` and `album.ArtworkMimeType` exist:

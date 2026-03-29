@@ -369,6 +369,51 @@ namespace DeadEditor
             return titles;
         }
 
+        /// <summary>
+        /// Reads custom Xiph Vorbis Comment fields (VENUE, CITYSTATE) from the first FLAC file
+        /// in a folder and populates the LibraryShow. These fields are written by WriteMetadata
+        /// during import/edit and allow Official Release metadata to round-trip through FLAC tags.
+        /// </summary>
+        private static void ReadCustomFieldsIntoShow(LibraryShow show, string folderPath)
+        {
+            try
+            {
+                var firstFlac = Directory.GetFiles(folderPath, "*.flac").FirstOrDefault();
+                if (firstFlac == null) return;
+
+                using var tagFile = TagLib.File.Create(firstFlac);
+                if (tagFile is TagLib.Flac.File flacFile)
+                {
+                    var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                    if (xiph == null) return;
+
+                    var venue = xiph.GetFirstField("VENUE");
+                    var cityState = xiph.GetFirstField("CITYSTATE");
+
+                    if (!string.IsNullOrEmpty(venue))
+                        show.Venue = venue;
+
+                    if (!string.IsNullOrEmpty(cityState))
+                    {
+                        show.Location = cityState;
+                        var parts = cityState.Split(new[] { ", " }, 2, StringSplitOptions.None);
+                        show.City = parts.Length > 0 ? parts[0] : "";
+                        show.State = parts.Length > 1 ? parts[1] : "";
+                    }
+
+                    // Read year from FLAC tag if not already set from folder name
+                    if (show.ReleaseYear == null && tagFile.Tag.Year > 0)
+                    {
+                        show.ReleaseYear = (int)tagFile.Tag.Year;
+                    }
+                }
+            }
+            catch
+            {
+                // Skip if file can't be read
+            }
+        }
+
         // ===== LIBRARY LOADING =====
 
         private void LoadAudienceRecordings()
@@ -454,7 +499,7 @@ namespace DeadEditor
                     var studioTitles = ReadTrackTitles(albumFolder);
                     var studioDates = ExtractDatesFromTitles(studioTitles);
 
-                    _shows.Add(new LibraryShow
+                    var studioShow = new LibraryShow
                     {
                         Type = AlbumType.OfficialRelease,
                         AlbumName = albumName,
@@ -464,7 +509,9 @@ namespace DeadEditor
                         TrackCount = audioFiles.Length,
                         FolderPath = albumFolder,
                         TrackTitles = studioTitles
-                    });
+                    };
+                    ReadCustomFieldsIntoShow(studioShow, albumFolder);
+                    _shows.Add(studioShow);
                 }
             }
 
@@ -483,7 +530,7 @@ namespace DeadEditor
                     var seriesTitles = ReadTrackTitles(releaseFolder);
                     var seriesDates = ExtractDatesFromTitles(seriesTitles);
 
-                    _shows.Add(new LibraryShow
+                    var seriesShow = new LibraryShow
                     {
                         Type = AlbumType.OfficialRelease,
                         AlbumName = folderName,
@@ -493,7 +540,9 @@ namespace DeadEditor
                         TrackCount = audioFiles.Length,
                         FolderPath = releaseFolder,
                         TrackTitles = seriesTitles
-                    });
+                    };
+                    ReadCustomFieldsIntoShow(seriesShow, releaseFolder);
+                    _shows.Add(seriesShow);
                 }
             }
         }
