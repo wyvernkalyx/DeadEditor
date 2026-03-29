@@ -380,6 +380,7 @@ namespace DeadEditor
 
             if (e.PropertyName == nameof(TrackInfo.Segue) ||
                 e.PropertyName == nameof(TrackInfo.SongName) ||
+                e.PropertyName == nameof(TrackInfo.RawTitle) ||
                 e.PropertyName == nameof(TrackInfo.TrackDate) ||
                 e.PropertyName == nameof(TrackInfo.DiscNumber))
             {
@@ -410,6 +411,27 @@ namespace DeadEditor
             }
         }
 
+        /// <summary>
+        /// Rebuild RawTitle from normalized components (SongName + Segue + TrackDate).
+        /// Called after NormalizeAll so the grid (bound to RawTitle) shows the corrected title.
+        /// This is also what WriteMetadata will use as the basis for the FLAC TITLE tag.
+        /// </summary>
+        private void ReconstructRawTitles()
+        {
+            foreach (var track in _tracks)
+            {
+                var title = track.SongName ?? "";
+
+                if (track.Segue)
+                    title += " >";
+
+                if (!string.IsNullOrEmpty(track.TrackDate))
+                    title += $" ({track.TrackDate})";
+
+                track.RawTitle = title;
+            }
+        }
+
         // ===== NORMALIZE / RENUMBER =====
 
         private void NormalizeButton_Click(object sender, RoutedEventArgs e)
@@ -429,11 +451,7 @@ namespace DeadEditor
                 // cleanup that import mode gets during ReadFolder.
                 foreach (var track in _tracks)
                 {
-                    // Preserve raw title for reconstruction after normalization
-                    if (string.IsNullOrEmpty(track.RawTitle))
-                        track.RawTitle = track.SongName;
-
-                    var (cleanName, date) = _metadataService.ParseTitleAndDate(track.SongName);
+                    var (cleanName, date) = _metadataService.ParseTitleAndDate(track.RawTitle);
                     track.SongName = cleanName;
                     if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
                         track.TrackDate = date;
@@ -441,10 +459,9 @@ namespace DeadEditor
 
                 int matched = _normalizationService.NormalizeAll(_tracks);
 
-                // DisplayTitle is a computed property on TrackInfo that auto-reconstructs
-                // from SongName + Segue + TrackDate (e.g., "Dark Star > (1968-02-23)").
-                // PropertyChanged fires when SongName/Segue/TrackDate change, so the
-                // grid binding to DisplayTitle updates automatically.
+                // Reconstruct RawTitle from normalized components so the grid
+                // (bound to RawTitle) shows the corrected title.
+                ReconstructRawTitles();
 
                 TracksDataGrid.Items.Refresh();
                 _hasUnsavedChanges = true;
@@ -467,6 +484,7 @@ namespace DeadEditor
 
                     if (dialog.ShowDialog() == true && dialog.ChangesMade)
                     {
+                        ReconstructRawTitles();
                         TracksDataGrid.Items.Refresh();
                         int nowMatched = _tracks.Count(t => t.IsMatched == true);
                         StatusTextBlock.Text = $"Corrections applied. Matched {nowMatched} of {_tracks.Count} songs";

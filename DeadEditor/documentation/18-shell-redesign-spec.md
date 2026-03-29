@@ -174,12 +174,12 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
 **Content:**
 - Album info bar: Artist | Concert Date | Venue | City, State | Album/Release Name | Release Year (all editable TextBoxes)
 - Track grid: # | Disc | Title | Segue (→) | Date | Time
-  - **Title column:** Displays `DisplayTitle` (computed: SongName + segue + date), edits `SongName` on double-click
-  - **Editable columns:** Title (double-click to edit SongName), Date (double-click), Disc (double-click), Segue (checkbox, single-click toggle)
+  - **Title column:** Displays `RawTitle` (exact FLAC TITLE tag value). Double-click to edit directly.
+  - **Editable columns:** Title (double-click to edit RawTitle), Date (double-click), Disc (double-click), Segue (checkbox, single-click toggle)
   - **Read-only columns:** Track # (display only), Time (computed from audio file)
 - All fields populated from LibraryShow data (album-level) and FLAC tags (track-level)
 - Edit mode behavior: read and display as-is, no transforms
-- Normalize button: cleans raw FLAC titles via ParseTitleAndDate, then runs NormalizeAll. DisplayTitle auto-reconstructs from components.
+- Normalize button: cleans raw FLAC titles via ParseTitleAndDate, runs NormalizeAll, then reconstructs RawTitle from normalized SongName + Segue + TrackDate so the grid shows the corrected result.
 - Renumber button: renumbers tracks using disc-aware 101/201/301 convention
 - Change tracking: any edit to album fields or track cells sets `_hasUnsavedChanges`
 - Album Type display in artwork panel area

@@ -6,6 +6,7 @@ namespace DeadEditor.Models
     {
         private bool? _isMatched;
         private string _songName;
+        private string _rawTitle;
         private int _discNumber = 1;
         private string _trackDate;
         private bool _segue;
@@ -55,7 +56,18 @@ namespace DeadEditor.Models
             }
         }
 
-        public string RawTitle { get; set; }           // Original title as stored in file (includes date/segue)
+        public string RawTitle                           // Original title as stored in file (includes date/segue)
+        {
+            get => _rawTitle;
+            set
+            {
+                if (_rawTitle != value)
+                {
+                    _rawTitle = value;
+                    OnPropertyChanged(nameof(RawTitle));
+                }
+            }
+        }
         public string TrackDate
         {
             get => _trackDate;
