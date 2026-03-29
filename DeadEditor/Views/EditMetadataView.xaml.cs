@@ -441,6 +441,11 @@ namespace DeadEditor
 
                 int matched = _normalizationService.NormalizeAll(_tracks);
 
+                // DisplayTitle is a computed property on TrackInfo that auto-reconstructs
+                // from SongName + Segue + TrackDate (e.g., "Dark Star > (1968-02-23)").
+                // PropertyChanged fires when SongName/Segue/TrackDate change, so the
+                // grid binding to DisplayTitle updates automatically.
+
                 TracksDataGrid.Items.Refresh();
                 _hasUnsavedChanges = true;
 

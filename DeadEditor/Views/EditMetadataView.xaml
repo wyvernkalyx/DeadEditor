@@ -174,20 +174,24 @@
                         <DataGridTextColumn Header="Disc" Width="Auto" MinWidth="40"
                                             Binding="{Binding DiscNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <!-- Title (editable via double-click) -->
-                        <DataGridTextColumn Header="Title" Width="Auto" MinWidth="250"
-                                            Binding="{Binding SongName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
-                            <DataGridTextColumn.EditingElementStyle>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="Background" Value="#3C3C3C"/>
-                                    <Setter Property="Foreground" Value="#FFFFFF"/>
-                                    <Setter Property="CaretBrush" Value="#FFFFFF"/>
-                                    <Setter Property="BorderBrush" Value="#007ACC"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="Padding" Value="4,2"/>
-                                </Style>
-                            </DataGridTextColumn.EditingElementStyle>
-                        </DataGridTextColumn>
+                        <!-- Title: shows DisplayTitle (with segue + date), edits SongName -->
+                        <DataGridTemplateColumn Header="Title" Width="Auto" MinWidth="250">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DisplayTitle}" VerticalAlignment="Center"
+                                               Padding="6,2"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding SongName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                             Background="#3C3C3C" Foreground="#FFFFFF"
+                                             CaretBrush="#FFFFFF" BorderBrush="#007ACC"
+                                             BorderThickness="1" Padding="4,2"
+                                             VerticalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
 
                         <!-- Segue (checkbox, single-click toggle) -->
                         <DataGridCheckBoxColumn Header="→" Width="Auto" MinWidth="30"
