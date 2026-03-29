@@ -428,6 +428,7 @@ namespace DeadEditor
                 {
                     show.ReleaseYear = (int)tagFile.Tag.Year;
                 }
+
             }
             catch
             {
