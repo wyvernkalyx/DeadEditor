@@ -424,6 +424,21 @@ namespace DeadEditor
             {
                 StatusTextBlock.Text = "Normalizing...";
 
+                // Clean SongName before normalizing — edit mode loads raw FLAC titles
+                // (e.g., "Dark Star > > (1968-02-23)") which need the same ParseTitleAndDate
+                // cleanup that import mode gets during ReadFolder.
+                foreach (var track in _tracks)
+                {
+                    // Preserve raw title for reconstruction after normalization
+                    if (string.IsNullOrEmpty(track.RawTitle))
+                        track.RawTitle = track.SongName;
+
+                    var (cleanName, date) = _metadataService.ParseTitleAndDate(track.SongName);
+                    track.SongName = cleanName;
+                    if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
+                        track.TrackDate = date;
+                }
+
                 int matched = _normalizationService.NormalizeAll(_tracks);
 
                 TracksDataGrid.Items.Refresh();

@@ -303,7 +303,7 @@ private bool HasSegueMarker(string title)
 
 **Signature:**
 ```csharp
-private (string songName, string? date) ParseTitleAndDate(string title)
+public (string songName, string? date) ParseTitleAndDate(string title)
 ```
 
 **Purpose:** Parse track title to separate song name from trailing date suffix, handling both MusicBrainz format (M/D/YYYY in "Live at..." parentheses) and DeadEditor format (yyyy-MM-dd). This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields.
@@ -395,13 +395,13 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 1. Return immediately if title is null/whitespace
 2. Try Pattern 1 (MusicBrainz M/D/YYYY format):
    - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name (Regex: `@"\s*[-–]?\s*>\s*$"`)
+   - **Strip trailing segue markers** from song name (Regex: `@"(\s*[-–]?\s*>)+\s*$"`)
    - Extract month/day/year from groups 2-4
    - Convert to yyyy-MM-dd format
    - Return tuple
 3. If no match, try Pattern 2 (yyyy-MM-dd with any suffix):
    - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name (Regex: `@"\s*[-–]?\s*>\s*$"`)
+   - **Strip trailing segue markers** from song name (Regex: `@"(\s*[-–]?\s*>)+\s*$"`)
    - Extract date from group 2 (already yyyy-MM-dd)
    - Return tuple
 4. If no match, try Pattern 3 (year-only + tour name):
@@ -421,7 +421,8 @@ private (string songName, string? date) ParseTitleAndDate(string title)
 - **Whitespace handling:** Trims trailing spaces from song name
 - **Graceful fallback:** Returns original title unchanged if no date pattern found
 - **Prevents date doubling:** ParseTitleAndDate strips existing dates during ReadFolder, preventing duplicate dates when re-importing already-formatted files
-- **FIX 1: Segue marker stripping:** All four return paths strip trailing segue markers (" >", " ->", " - >", " –>") from songName using `@"\s*[-–]?\s*>\s*$"`. This handles all common taper conventions for arrow notation. The segue state is captured by the HasSegue boolean flag — it should not also live in the SongName string.
+- **FIX 1: Segue marker stripping:** All four return paths strip trailing segue markers (" >", " ->", " - >", " –>") from songName using greedy regex `@"(\s*[-–]?\s*>)+\s*$"`. The `+` quantifier handles multiple/doubled segue markers (e.g., "Dark Star > >" → "Dark Star"). The segue state is captured by the HasSegue boolean flag — it should not also live in the SongName string.
+- **Public visibility:** ParseTitleAndDate is public so EditMetadataView can call it to clean raw FLAC titles before normalization, giving the normalizer the same clean input it gets in import mode.
 
 **Usage in ReadFolder:**
 ```csharp
@@ -448,6 +449,12 @@ var (songName3, extractedDate3) = ParseTitleAndDate(rawTitle3);
 track.SongName = songName;       // Clean song name (no segue marker)
 track.RawTitle = rawTitle;       // Original title preserved for display
 track.TrackDate = extractedDate ?? "";  // Date or empty string
+
+// Example 4: Double segue marker (greedy regex fix)
+var rawTitle4 = file.Tag.Title;  // "Dark Star > > (1968-02-23)"
+var (songName4, extractedDate4) = ParseTitleAndDate(rawTitle4);
+// songName4 = "Dark Star" (both segue markers stripped!)
+// extractedDate4 = "1968-02-23"
 ```
 
 **Why This Matters:**

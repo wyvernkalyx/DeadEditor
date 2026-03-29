@@ -374,7 +374,7 @@ namespace DeadEditor.Services
         /// </summary>
         /// <param name="title">Full title from ID3 tag, e.g. "Bertha (1971-04-27)"</param>
         /// <returns>Tuple of (songName, date). Date is null if no date found.</returns>
-        private (string songName, string? date) ParseTitleAndDate(string title)
+        public (string songName, string? date) ParseTitleAndDate(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return (title, null);
@@ -397,7 +397,7 @@ namespace DeadEditor.Services
                 var songName = match.Groups[1].Value.Trim();
                 // Strip trailing segue markers (" >" or " > ") from song name
                 // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
-                songName = Regex.Replace(songName, @"\s*[-–]?\s*>\s*$", "").Trim();
+                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
 
                 var month = int.Parse(match.Groups[2].Value);
                 var day = int.Parse(match.Groups[3].Value);
@@ -426,9 +426,9 @@ namespace DeadEditor.Services
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
-                // Strip trailing segue markers (" >" or " > ") from song name
+                // Strip trailing segue markers (" >" or " > " or " > > ") from song name
                 // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
-                songName = Regex.Replace(songName, @"\s*[-–]?\s*>\s*$", "").Trim();
+                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
 
                 var date = match.Groups[2].Value;
                 return (songName, date);
@@ -445,13 +445,13 @@ namespace DeadEditor.Services
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
-                songName = Regex.Replace(songName, @"\s*[-–]?\s*>\s*$", "").Trim();
+                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
                 return (songName, null);
             }
 
             // No date found - return original title with no date
             // Still strip segue markers from song name if present
-            var cleanTitle = Regex.Replace(title, @"\s*[-–]?\s*>\s*$", "").Trim();
+            var cleanTitle = Regex.Replace(title, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
             return (cleanTitle, null);
         }
 
