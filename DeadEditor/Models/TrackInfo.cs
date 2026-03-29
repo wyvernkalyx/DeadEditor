@@ -6,11 +6,26 @@ namespace DeadEditor.Models
     {
         private bool? _isMatched;
         private string _songName;
+        private int _discNumber = 1;
+        private string _trackDate;
+        private bool _segue;
 
         public string FilePath { get; set; }           // Full path to FLAC file
         public string FileName { get; set; }           // Just the filename
         public int TrackNumber { get; set; }           // Track # (within disc)
-        public int DiscNumber { get; set; } = 1;       // Disc # (defaults to 1 for single-disc albums)
+        public int DiscNumber
+        {
+            get => _discNumber;
+            set
+            {
+                if (_discNumber != value)
+                {
+                    _discNumber = value;
+                    OnPropertyChanged(nameof(DiscNumber));
+                    OnPropertyChanged(nameof(DisplayTrackNumber));
+                }
+            }
+        }
 
         // Computed property: Disc-aware track number for display (101, 201, 301...)
         public string DisplayTrackNumber
@@ -41,9 +56,34 @@ namespace DeadEditor.Models
         }
 
         public string RawTitle { get; set; }           // Original title as stored in file (includes date/segue)
-        public string TrackDate { get; set; }          // Track-specific date override (yyyy-MM-dd format, empty = inherit from album)
+        public string TrackDate
+        {
+            get => _trackDate;
+            set
+            {
+                if (_trackDate != value)
+                {
+                    _trackDate = value;
+                    OnPropertyChanged(nameof(TrackDate));
+                    OnPropertyChanged(nameof(DisplayTitle));
+                }
+            }
+        }
         public string AlbumDate { get; set; }          // Album-level date for display fallback (not persisted to tags)
-        public bool Segue { get; set; }                // Transitions to next track (renamed from HasSegue for consistency)
+        public bool Segue
+        {
+            get => _segue;
+            set
+            {
+                if (_segue != value)
+                {
+                    _segue = value;
+                    OnPropertyChanged(nameof(Segue));
+                    OnPropertyChanged(nameof(SegueDisplay));
+                    OnPropertyChanged(nameof(DisplayTitle));
+                }
+            }
+        }
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
         public bool IsModified { get; set; }           // Has user made changes?
 

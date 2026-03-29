@@ -15,6 +15,7 @@ namespace DeadEditor
         private readonly ShellWindow _shell;
         private readonly LibraryShow _show;
         private readonly MetadataService _metadataService;
+        private readonly NormalizationService _normalizationService;
 
         private AlbumInfo? _albumInfo;
         private List<TrackInfo> _tracks = new();
@@ -42,6 +43,7 @@ namespace DeadEditor
             _shell = shell;
             _show = show;
             _metadataService = new MetadataService();
+            _normalizationService = new NormalizationService();
         }
 
         private void EditMetadataView_Loaded(object sender, RoutedEventArgs e)
@@ -146,6 +148,12 @@ namespace DeadEditor
                 else
                 {
                     _tracks = _tracks.OrderBy(t => t.TrackNumber).ToList();
+                }
+
+                // Subscribe to property changes on each track for change tracking
+                foreach (var track in _tracks)
+                {
+                    track.PropertyChanged += Track_PropertyChanged;
                 }
 
                 // Bind tracks to DataGrid
@@ -361,6 +369,120 @@ namespace DeadEditor
         public void NavigateBack()
         {
             CancelEdit();
+        }
+
+        // ===== TRACK GRID EDITING =====
+
+        private void Track_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            // Track any property change (Segue checkbox, etc.) as unsaved
+            if (_isUpdating) return;
+
+            if (e.PropertyName == nameof(TrackInfo.Segue) ||
+                e.PropertyName == nameof(TrackInfo.SongName) ||
+                e.PropertyName == nameof(TrackInfo.TrackDate) ||
+                e.PropertyName == nameof(TrackInfo.DiscNumber))
+            {
+                _hasUnsavedChanges = true;
+                if (sender is TrackInfo track)
+                {
+                    track.IsModified = true;
+                }
+            }
+        }
+
+        private void TracksDataGrid_BeginningEdit(object sender, System.Windows.Controls.DataGridBeginningEditEventArgs e)
+        {
+            // Nothing to block — editable columns are already controlled by IsReadOnly per-column
+        }
+
+        private void TracksDataGrid_CellEditEnding(object sender, System.Windows.Controls.DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == System.Windows.Controls.DataGridEditAction.Commit)
+            {
+                _hasUnsavedChanges = true;
+
+                // Mark the individual track as modified
+                if (e.Row.Item is TrackInfo track)
+                {
+                    track.IsModified = true;
+                }
+            }
+        }
+
+        // ===== NORMALIZE / RENUMBER =====
+
+        private void NormalizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tracks.Count == 0)
+            {
+                StatusTextBlock.Text = "No tracks to normalize";
+                return;
+            }
+
+            try
+            {
+                StatusTextBlock.Text = "Normalizing...";
+
+                int matched = _normalizationService.NormalizeAll(_tracks);
+
+                TracksDataGrid.Items.Refresh();
+                _hasUnsavedChanges = true;
+
+                int unmatched = _tracks.Count - matched;
+                StatusTextBlock.Text = $"Matched {matched} of {_tracks.Count} songs" +
+                    (unmatched > 0 ? $" ({unmatched} unmatched)" : "");
+
+                if (unmatched > 0)
+                {
+                    var unmatchedTracks = _tracks
+                        .Where(t => t.IsMatched == false)
+                        .ToList();
+
+                    var parentWindow = Window.GetWindow(this);
+                    var dialog = new UnmatchedSongsDialog(unmatchedTracks, _normalizationService)
+                    {
+                        Owner = parentWindow
+                    };
+
+                    if (dialog.ShowDialog() == true && dialog.ChangesMade)
+                    {
+                        TracksDataGrid.Items.Refresh();
+                        int nowMatched = _tracks.Count(t => t.IsMatched == true);
+                        StatusTextBlock.Text = $"Corrections applied. Matched {nowMatched} of {_tracks.Count} songs";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Normalization error: {ex.Message}";
+            }
+        }
+
+        private void RenumberButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tracks.Count == 0) return;
+
+            var tracksByDisc = _tracks
+                .GroupBy(t => t.DiscNumber > 0 ? t.DiscNumber : 1)
+                .OrderBy(g => g.Key);
+
+            foreach (var discGroup in tracksByDisc)
+            {
+                int discNumber = discGroup.Key;
+                int trackIndex = 1;
+
+                foreach (var track in discGroup)
+                {
+                    track.TrackNumber = (discNumber * 100) + trackIndex;
+                    track.IsModified = true;
+                    trackIndex++;
+                }
+            }
+
+            TracksDataGrid.Items.Refresh();
+            _hasUnsavedChanges = true;
+            StatusTextBlock.Text = "Tracks renumbered using disc-aware 101/201/301 convention";
         }
     }
 }

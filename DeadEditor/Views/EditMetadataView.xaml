@@ -107,8 +107,8 @@
                           CanUserDeleteRows="False"
                           CanUserReorderColumns="False"
                           CanUserResizeRows="False"
-                          IsReadOnly="True"
                           SelectionMode="Single"
+                          SelectionUnit="CellOrRowHeader"
                           Background="#1E1E1E"
                           Foreground="#FFFFFF"
                           RowBackground="#1E1E1E"
@@ -118,7 +118,9 @@
                           GridLinesVisibility="Horizontal"
                           HorizontalGridLinesBrush="#3F3F46"
                           FontSize="16"
-                          RowHeight="28">
+                          RowHeight="28"
+                          CellEditEnding="TracksDataGrid_CellEditEnding"
+                          BeginningEdit="TracksDataGrid_BeginningEdit">
 
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
@@ -163,32 +165,64 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        <!-- Track # (raw FLAC TRACKNUMBER tag, no disc-aware formatting in edit mode) -->
+                        <!-- Track # (read-only display) -->
                         <DataGridTextColumn Header="#" Width="Auto" MinWidth="40"
                                             Binding="{Binding TrackNumber}"
                                             IsReadOnly="True"/>
 
-                        <!-- Disc -->
+                        <!-- Disc (editable) -->
                         <DataGridTextColumn Header="Disc" Width="Auto" MinWidth="40"
-                                            Binding="{Binding DiscNumber}"
-                                            IsReadOnly="True"/>
+                                            Binding="{Binding DiscNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <!-- Title (raw FLAC tag) -->
+                        <!-- Title (editable via double-click) -->
                         <DataGridTextColumn Header="Title" Width="Auto" MinWidth="250"
-                                            Binding="{Binding SongName}"
-                                            IsReadOnly="True"/>
+                                            Binding="{Binding SongName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+                            <DataGridTextColumn.EditingElementStyle>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="#3C3C3C"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    <Setter Property="CaretBrush" Value="#FFFFFF"/>
+                                    <Setter Property="BorderBrush" Value="#007ACC"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Padding" Value="4,2"/>
+                                </Style>
+                            </DataGridTextColumn.EditingElementStyle>
+                        </DataGridTextColumn>
 
-                        <!-- Segue -->
-                        <DataGridTextColumn Header="→" Width="Auto" MinWidth="30"
-                                            Binding="{Binding SegueDisplay}"
-                                            IsReadOnly="True"/>
+                        <!-- Segue (checkbox, single-click toggle) -->
+                        <DataGridCheckBoxColumn Header="→" Width="Auto" MinWidth="30"
+                                                Binding="{Binding Segue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridCheckBoxColumn.ElementStyle>
+                                <Style TargetType="CheckBox">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="IsHitTestVisible" Value="True"/>
+                                </Style>
+                            </DataGridCheckBoxColumn.ElementStyle>
+                            <DataGridCheckBoxColumn.EditingElementStyle>
+                                <Style TargetType="CheckBox">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridCheckBoxColumn.EditingElementStyle>
+                        </DataGridCheckBoxColumn>
 
-                        <!-- Date -->
+                        <!-- Date (editable) -->
                         <DataGridTextColumn Header="Date" Width="Auto" MinWidth="100"
-                                            Binding="{Binding TrackDate}"
-                                            IsReadOnly="True"/>
+                                            Binding="{Binding TrackDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+                            <DataGridTextColumn.EditingElementStyle>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="#3C3C3C"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    <Setter Property="CaretBrush" Value="#FFFFFF"/>
+                                    <Setter Property="BorderBrush" Value="#007ACC"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Padding" Value="4,2"/>
+                                </Style>
+                            </DataGridTextColumn.EditingElementStyle>
+                        </DataGridTextColumn>
 
-                        <!-- Duration -->
+                        <!-- Duration (read-only) -->
                         <DataGridTextColumn Header="Time" Width="Auto" MinWidth="60"
                                             Binding="{Binding Duration}"
                                             IsReadOnly="True"/>
@@ -231,6 +265,20 @@
                            FontSize="14"
                            Margin="0,8,0,0"
                            HorizontalAlignment="Center"/>
+
+                <!-- Action buttons -->
+                <Button x:Name="NormalizeButton" Content="Normalize"
+                        Height="32" Width="160" Margin="0,16,0,0"
+                        Click="NormalizeButton_Click" FontSize="14"
+                        Background="#3C3C3C" Foreground="#FFFFFF"
+                        BorderBrush="#555555"
+                        ToolTip="Normalize song titles using fuzzy matching"/>
+                <Button x:Name="RenumberButton" Content="Renumber"
+                        Height="32" Width="160" Margin="0,6,0,0"
+                        Click="RenumberButton_Click" FontSize="14"
+                        Background="#3C3C3C" Foreground="#FFFFFF"
+                        BorderBrush="#555555"
+                        ToolTip="Renumber tracks sequentially (disc-aware)"/>
             </StackPanel>
         </Grid>
 

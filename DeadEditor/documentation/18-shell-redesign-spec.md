@@ -172,12 +172,26 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
 **Source:** Converted from MainWindow in edit mode.
 
 **Content:**
-- Album info bar: Artist | Concert Date | Venue | City, State | Album/Release Name | Release Year
+- Album info bar: Artist | Concert Date | Venue | City, State | Album/Release Name | Release Year (all editable TextBoxes)
 - Track grid: # | Disc | Title | Segue (→) | Date | Time
+  - **Editable columns:** Title (double-click to edit), Date (double-click), Disc (double-click), Segue (checkbox, single-click toggle)
+  - **Read-only columns:** Track # (display only), Time (computed from audio file)
 - All fields populated from LibraryShow data (album-level) and FLAC tags (track-level)
 - Edit mode behavior: read and display as-is, no transforms
-- Normalize and Renumber buttons disabled (edit mode)
-- Album Type dropdown in artwork panel area
+- Change tracking: any edit to album fields or track cells sets `_hasUnsavedChanges`
+- Album Type display in artwork panel area
+
+**Save Changes behavior:**
+- Writes all track-level tags (TITLE, TRACKNUMBER, DISCNUMBER, DATE) per track
+- Writes album-level tags (ARTIST, ALBUM, YEAR) to every FLAC file
+- Writes custom FLAC Xiph fields (ALBUMDATE, VENUE, CITYSTATE, ALBUMNAME, ALBUMTYPE)
+- Updates LibraryShow in-place (no library re-scan needed)
+- Navigates back to Album Detail on success
+- Shows error message and stays on Edit view on failure
+
+**Cancel behavior:**
+- If unsaved changes exist: confirmation dialog "Discard changes?" [Yes/No]
+- Discards all in-memory edits and navigates back to Album Detail
 
 **Navigation:**
 - Reached by clicking "Edit Metadata" from Album Detail view
