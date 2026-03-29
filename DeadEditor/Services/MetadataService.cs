@@ -175,34 +175,59 @@ namespace DeadEditor.Services
                 {
                     albumInfo.Artist = file.Tag.FirstPerformer ?? "Grateful Dead";
 
-                    // Try to read custom metadata fields first (for FLAC files)
+                    // Try to read custom metadata fields first (FLAC or MP3)
                     bool hasCustomFields = false;
+                    string? albumDate = null, venue = null, cityState = null, albumName = null, albumType = null;
+
                     if (file is TagLib.Flac.File flacFile)
                     {
                         var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
                         if (xiph != null)
                         {
-                            var albumDate = xiph.GetFirstField("ALBUMDATE");
-                            var venue = xiph.GetFirstField("VENUE");
-                            var cityState = xiph.GetFirstField("CITYSTATE");
-                            var albumName = xiph.GetFirstField("ALBUMNAME");
-                            var albumType = xiph.GetFirstField("ALBUMTYPE");
-
-                            if (!string.IsNullOrEmpty(albumDate))
-                            {
-                                albumInfo.AlbumDate = albumDate;
-                                albumInfo.Venue = venue ?? "";
-                                albumInfo.CityState = cityState ?? "";
-                                albumInfo.AlbumName = albumName ?? "";
-
-                                if (Enum.TryParse<AlbumType>(albumType, out var type))
-                                {
-                                    albumInfo.Type = type;
-                                }
-
-                                hasCustomFields = true;
-                            }
+                            albumDate = xiph.GetFirstField("ALBUMDATE");
+                            venue = xiph.GetFirstField("VENUE");
+                            cityState = xiph.GetFirstField("CITYSTATE");
+                            albumName = xiph.GetFirstField("ALBUMNAME");
+                            albumType = xiph.GetFirstField("ALBUMTYPE");
                         }
+                    }
+                    else
+                    {
+                        var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2);
+                        if (id3v2 != null)
+                        {
+                            albumDate = GetId3v2TextField(id3v2, "ALBUMDATE");
+                            venue = GetId3v2TextField(id3v2, "VENUE");
+                            cityState = GetId3v2TextField(id3v2, "CITYSTATE");
+                            albumName = GetId3v2TextField(id3v2, "ALBUMNAME");
+                            albumType = GetId3v2TextField(id3v2, "ALBUMTYPE");
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(albumDate))
+                    {
+                        albumInfo.AlbumDate = albumDate;
+                        albumInfo.Venue = venue ?? "";
+                        albumInfo.CityState = cityState ?? "";
+                        albumInfo.AlbumName = albumName ?? "";
+
+                        if (Enum.TryParse<AlbumType>(albumType, out var type))
+                        {
+                            albumInfo.Type = type;
+                        }
+
+                        hasCustomFields = true;
+                    }
+                    else if (!string.IsNullOrEmpty(venue) || !string.IsNullOrEmpty(cityState))
+                    {
+                        // Official Releases may have VENUE/CITYSTATE but no ALBUMDATE
+                        albumInfo.Venue = venue ?? "";
+                        albumInfo.CityState = cityState ?? "";
+                        if (!string.IsNullOrEmpty(albumName))
+                            albumInfo.AlbumName = albumName;
+                        if (Enum.TryParse<AlbumType>(albumType, out var type))
+                            albumInfo.Type = type;
+                        hasCustomFields = true;
                     }
 
                     // Fallback: Try to parse album title if no custom fields found
@@ -338,9 +363,10 @@ namespace DeadEditor.Services
                         file.Tag.Year = (uint)yearValue;
                     }
 
-                    // Store individual metadata fields in custom tags (for FLAC files)
+                    // Store individual metadata fields in custom tags
                     if (file is TagLib.Flac.File flacFile)
                     {
+                        // FLAC: Xiph Vorbis Comment fields
                         var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
                         if (xiph != null)
                         {
@@ -349,6 +375,19 @@ namespace DeadEditor.Services
                             xiph.SetField("CITYSTATE", album.CityState);
                             xiph.SetField("ALBUMNAME", album.AlbumName ?? "");
                             xiph.SetField("ALBUMTYPE", album.Type.ToString());
+                        }
+                    }
+                    else
+                    {
+                        // MP3/other: ID3v2 TXXX (user-defined text) frames
+                        var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2, true);
+                        if (id3v2 != null)
+                        {
+                            SetId3v2TextField(id3v2, "ALBUMDATE", album.AlbumDate);
+                            SetId3v2TextField(id3v2, "VENUE", album.Venue);
+                            SetId3v2TextField(id3v2, "CITYSTATE", album.CityState);
+                            SetId3v2TextField(id3v2, "ALBUMNAME", album.AlbumName ?? "");
+                            SetId3v2TextField(id3v2, "ALBUMTYPE", album.Type.ToString());
                         }
                     }
 
@@ -376,6 +415,28 @@ namespace DeadEditor.Services
         }
 
         // Helper methods
+        // ===== ID3v2 TXXX helpers for MP3 custom fields =====
+
+        private static void SetId3v2TextField(TagLib.Id3v2.Tag tag, string description, string value)
+        {
+            // Remove existing frame with this description
+            var existing = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, false);
+            if (existing != null)
+                tag.RemoveFrame(existing);
+
+            // Add new frame (even if value is empty, to be consistent with FLAC behavior)
+            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, true);
+            frame.Text = new[] { value ?? "" };
+        }
+
+        private static string? GetId3v2TextField(TagLib.Id3v2.Tag tag, string description)
+        {
+            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, false);
+            if (frame != null && frame.Text.Length > 0)
+                return frame.Text[0];
+            return null;
+        }
+
         private bool HasSegueMarker(string title)
         {
             // Check for common segue markers: >, ->, →, [>], etc.

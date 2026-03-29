@@ -378,34 +378,55 @@ namespace DeadEditor
         {
             try
             {
-                var firstFlac = Directory.GetFiles(folderPath, "*.flac").FirstOrDefault();
-                if (firstFlac == null) return;
+                // Find first audio file (FLAC or MP3)
+                var firstAudio = Directory.GetFiles(folderPath, "*.flac").FirstOrDefault()
+                              ?? Directory.GetFiles(folderPath, "*.mp3").FirstOrDefault();
+                if (firstAudio == null) return;
 
-                using var tagFile = TagLib.File.Create(firstFlac);
+                using var tagFile = TagLib.File.Create(firstAudio);
+
+                string? venue = null;
+                string? cityState = null;
+
                 if (tagFile is TagLib.Flac.File flacFile)
                 {
+                    // FLAC: read from Xiph Vorbis Comments
                     var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
-                    if (xiph == null) return;
-
-                    var venue = xiph.GetFirstField("VENUE");
-                    var cityState = xiph.GetFirstField("CITYSTATE");
-
-                    if (!string.IsNullOrEmpty(venue))
-                        show.Venue = venue;
-
-                    if (!string.IsNullOrEmpty(cityState))
+                    if (xiph != null)
                     {
-                        show.Location = cityState;
-                        var parts = cityState.Split(new[] { ", " }, 2, StringSplitOptions.None);
-                        show.City = parts.Length > 0 ? parts[0] : "";
-                        show.State = parts.Length > 1 ? parts[1] : "";
+                        venue = xiph.GetFirstField("VENUE");
+                        cityState = xiph.GetFirstField("CITYSTATE");
                     }
-
-                    // Read year from FLAC tag if not already set from folder name
-                    if (show.ReleaseYear == null && tagFile.Tag.Year > 0)
+                }
+                else
+                {
+                    // MP3/other: read from ID3v2 TXXX frames
+                    var id3v2 = (TagLib.Id3v2.Tag?)tagFile.GetTag(TagLib.TagTypes.Id3v2);
+                    if (id3v2 != null)
                     {
-                        show.ReleaseYear = (int)tagFile.Tag.Year;
+                        var venueFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "VENUE", false);
+                        if (venueFrame?.Text.Length > 0) venue = venueFrame.Text[0];
+
+                        var cityFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "CITYSTATE", false);
+                        if (cityFrame?.Text.Length > 0) cityState = cityFrame.Text[0];
                     }
+                }
+
+                if (!string.IsNullOrEmpty(venue))
+                    show.Venue = venue;
+
+                if (!string.IsNullOrEmpty(cityState))
+                {
+                    show.Location = cityState;
+                    var parts = cityState.Split(new[] { ", " }, 2, StringSplitOptions.None);
+                    show.City = parts.Length > 0 ? parts[0] : "";
+                    show.State = parts.Length > 1 ? parts[1] : "";
+                }
+
+                // Read year from tag if not already set from folder name
+                if (show.ReleaseYear == null && tagFile.Tag.Year > 0)
+                {
+                    show.ReleaseYear = (int)tagFile.Tag.Year;
                 }
             }
             catch

@@ -141,14 +141,17 @@ public AlbumInfo ReadAlbumInfo(string folderPath, List<TrackInfo> tracks)
    - If file exists, open with TagLib-Sharp
    - **Artist:** `file.Tag.FirstPerformer` (fallback to "Grateful Dead")
 
-   **3a. Try Custom FLAC Vorbis Comment Fields First** (line 178-206):
-   - For FLAC files, reads custom fields written by WriteMetadata():
+   **3a. Try Custom Fields First** (line 178-220):
+   - For FLAC files: reads Xiph Vorbis Comment fields
+   - For MP3 files: reads ID3v2 TXXX (user-defined text) frames
+   - Fields read (same names for both formats):
      - `ALBUMDATE` → `AlbumInfo.AlbumDate`
      - `VENUE` → `AlbumInfo.Venue`
      - `CITYSTATE` → `AlbumInfo.CityState`
      - `ALBUMNAME` → `AlbumInfo.AlbumName`
      - `ALBUMTYPE` → `AlbumInfo.Type`
    - If `ALBUMDATE` is populated, treats custom fields as authoritative (skips step 3b)
+   - If `VENUE` or `CITYSTATE` is populated but no `ALBUMDATE` (Official Releases), still reads them
 
    **3b. Fallback: Parse Standard Tags** (line 208-241):
    - Only runs if no custom fields found
