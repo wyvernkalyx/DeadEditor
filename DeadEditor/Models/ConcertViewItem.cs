@@ -46,7 +46,7 @@ public class DateHeaderItem : ConcertViewItem
     /// <summary>
     /// Chevron icon: "▼" when expanded, "▶" when collapsed
     /// </summary>
-    public string ChevronIcon => IsExpanded ? "▼" : "▶";
+    public string ChevronIcon => IsExpanded ? "▼ " : "▶ ";
 
     /// <summary>
     /// Full header text: "yyyy-MM-dd — Venue, City, ST"
