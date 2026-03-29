@@ -174,6 +174,9 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
 **Content:**
 - Album info bar: Artist | Concert Date | Venue | City, State | Album/Release Name | Release Year (all editable TextBoxes)
 - Track grid: # | Disc | Title | Segue (→) | Date | Time
+- **Action bar** above album info: Normalize + Renumber buttons (left), normalization status text (right)
+  - Normalize button uses AccentButton style (blue, matching Import view)
+  - Status text shows "Matched X of Y songs" after normalizing
   - **Title column:** Displays `RawTitle` (exact FLAC TITLE tag value). Double-click to edit directly.
   - **Editable columns:** Title (double-click to edit RawTitle), Date (double-click), Disc (double-click), Segue (checkbox, single-click toggle)
   - **Read-only columns:** Track # (display only), Time (computed from audio file)
@@ -181,7 +184,11 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
 - Edit mode behavior: read and display as-is, no transforms
 - Normalize button: cleans raw FLAC titles via ParseTitleAndDate, runs NormalizeAll, then reconstructs RawTitle from normalized SongName + Segue + TrackDate so the grid shows the corrected result.
 - Renumber button: renumbers tracks using disc-aware 101/201/301 convention
-- Change tracking: any edit to album fields or track cells sets `_hasUnsavedChanges`
+- **Artwork panel:** Change + Remove buttons below album art
+  - Change: opens file picker (jpg/png), previews immediately, writes to FLAC on save
+  - Remove: shows placeholder, removes APIC tags from all FLAC files on save
+  - Save also writes/deletes cover.jpg in album folder(s)
+- Change tracking: any edit to album fields, track cells, or artwork sets `_hasUnsavedChanges`
 - Album Type display in artwork panel area
 
 **Save Changes behavior:**

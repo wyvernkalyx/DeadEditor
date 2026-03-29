@@ -22,6 +22,12 @@ namespace DeadEditor
         private bool _isUpdating = false;
         private bool _hasUnsavedChanges = false;
 
+        // Artwork editing state
+        private enum ArtworkState { Unchanged, Changed, Removed }
+        private ArtworkState _artworkState = ArtworkState.Unchanged;
+        private byte[]? _newArtworkData;
+        private string? _newArtworkMimeType;
+
         /// <summary>
         /// The album name for the header bar back button text.
         /// </summary>
@@ -269,6 +275,61 @@ namespace DeadEditor
             _hasUnsavedChanges = true;
         }
 
+        // ===== ARTWORK EDITING =====
+
+        private void ChangeArtworkButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Select Album Artwork",
+                Filter = "Image Files|*.jpg;*.jpeg;*.png|JPEG|*.jpg;*.jpeg|PNG|*.png",
+                CheckFileExists = true
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    _newArtworkData = File.ReadAllBytes(dialog.FileName);
+                    _newArtworkMimeType = dialog.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                        ? "image/png" : "image/jpeg";
+                    _artworkState = ArtworkState.Changed;
+                    _hasUnsavedChanges = true;
+
+                    // Preview the new artwork
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.StreamSource = new MemoryStream(_newArtworkData);
+                    bitmap.EndInit();
+
+                    AlbumArtImage.Source = bitmap;
+                    AlbumArtImage.Visibility = Visibility.Visible;
+                    ArtworkPlaceholder.Visibility = Visibility.Collapsed;
+
+                    StatusTextBlock.Text = "Artwork changed (save to apply)";
+                }
+                catch (Exception ex)
+                {
+                    StatusTextBlock.Text = $"Error loading image: {ex.Message}";
+                }
+            }
+        }
+
+        private void RemoveArtworkButton_Click(object sender, RoutedEventArgs e)
+        {
+            _newArtworkData = null;
+            _newArtworkMimeType = null;
+            _artworkState = ArtworkState.Removed;
+            _hasUnsavedChanges = true;
+
+            AlbumArtImage.Source = null;
+            AlbumArtImage.Visibility = Visibility.Collapsed;
+            ArtworkPlaceholder.Visibility = Visibility.Visible;
+
+            StatusTextBlock.Text = "Artwork removed (save to apply)";
+        }
+
         // ===== SAVE / CANCEL =====
 
         /// <summary>
@@ -289,10 +350,44 @@ namespace DeadEditor
                 ProgressBar.Visibility = Visibility.Visible;
                 ProgressBar.IsIndeterminate = true;
 
+                // Apply artwork changes to AlbumInfo before writing
+                if (_artworkState == ArtworkState.Changed && _newArtworkData != null)
+                {
+                    _albumInfo.ArtworkData = _newArtworkData;
+                    _albumInfo.ArtworkMimeType = _newArtworkMimeType;
+                }
+                else if (_artworkState == ArtworkState.Removed)
+                {
+                    _albumInfo.ArtworkData = null;
+                    _albumInfo.ArtworkMimeType = null;
+                }
+
                 // Write metadata to FLAC files IN-PLACE (no copy, no new folder)
+                var folders = _show.FolderPaths.Any() ? _show.FolderPaths : new List<string> { _show.FolderPath };
                 await Task.Run(() =>
                 {
                     _metadataService.WriteMetadata(_albumInfo, _tracks);
+
+                    // Handle cover.jpg file alongside FLAC tag artwork
+                    foreach (var folder in folders)
+                    {
+                        if (!Directory.Exists(folder)) continue;
+
+                        if (_artworkState == ArtworkState.Changed && _newArtworkData != null)
+                        {
+                            // Save as cover.jpg in album folder
+                            var coverPath = Path.Combine(folder, "cover.jpg");
+                            File.WriteAllBytes(coverPath, _newArtworkData);
+                        }
+                        else if (_artworkState == ArtworkState.Removed)
+                        {
+                            // Delete cover.jpg and folder.jpg if they exist
+                            var coverPath = Path.Combine(folder, "cover.jpg");
+                            var folderJpg = Path.Combine(folder, "folder.jpg");
+                            if (File.Exists(coverPath)) File.Delete(coverPath);
+                            if (File.Exists(folderJpg)) File.Delete(folderJpg);
+                        }
+                    }
                 });
 
                 // Update the LibraryShow object in-place so the library grid
@@ -467,8 +562,10 @@ namespace DeadEditor
                 _hasUnsavedChanges = true;
 
                 int unmatched = _tracks.Count - matched;
-                StatusTextBlock.Text = $"Matched {matched} of {_tracks.Count} songs" +
+                var normalizeStatus = $"Matched {matched} of {_tracks.Count} songs" +
                     (unmatched > 0 ? $" ({unmatched} unmatched)" : "");
+                NormalizeStatusText.Text = normalizeStatus;
+                StatusTextBlock.Text = normalizeStatus;
 
                 if (unmatched > 0)
                 {
@@ -487,7 +584,9 @@ namespace DeadEditor
                         ReconstructRawTitles();
                         TracksDataGrid.Items.Refresh();
                         int nowMatched = _tracks.Count(t => t.IsMatched == true);
-                        StatusTextBlock.Text = $"Corrections applied. Matched {nowMatched} of {_tracks.Count} songs";
+                        var correctionStatus = $"Corrections applied. Matched {nowMatched} of {_tracks.Count} songs";
+                        NormalizeStatusText.Text = correctionStatus;
+                        StatusTextBlock.Text = correctionStatus;
                     }
                 }
             }

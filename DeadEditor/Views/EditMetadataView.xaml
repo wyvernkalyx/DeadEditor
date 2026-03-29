@@ -27,10 +27,21 @@
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Padding" Value="0,0,0,4"/>
         </Style>
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Background" Value="#0E639C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#1177BB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <!-- Action Bar (Normalize / Renumber) -->
+            <RowDefinition Height="Auto"/>
             <!-- Album Info Bar -->
             <RowDefinition Height="Auto"/>
             <!-- Main Content (Track List + Artwork) -->
@@ -39,8 +50,39 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- ===== SECTION 0: ACTION BAR ===== -->
+        <Border Grid.Row="0" BorderBrush="#3F3F46" BorderThickness="0,0,0,1"
+                Padding="0,0,0,8" Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Action Buttons -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button x:Name="NormalizeButton" Content="Normalize" Height="32"
+                            Style="{StaticResource AccentButton}"
+                            Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="16"
+                            ToolTip="Normalize song titles using fuzzy matching"/>
+                    <Button x:Name="RenumberButton" Content="Renumber" Height="32"
+                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
+                            Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
+                            Padding="12,6" Cursor="Hand"
+                            ToolTip="Renumber tracks sequentially (disc-aware)"/>
+                </StackPanel>
+
+                <!-- Right: Normalization status -->
+                <TextBlock Grid.Column="2" x:Name="NormalizeStatusText"
+                           Text="" FontSize="14"
+                           VerticalAlignment="Center"
+                           Foreground="#888888"/>
+            </Grid>
+        </Border>
+
         <!-- ===== SECTION 1: ALBUM INFO BAR ===== -->
-        <Border Grid.Row="0" BorderBrush="#555555" BorderThickness="1"
+        <Border Grid.Row="1" BorderBrush="#555555" BorderThickness="1"
                 Background="#2D2D30" Padding="10" Margin="0,0,0,10">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -93,7 +135,7 @@
         </Border>
 
         <!-- ===== SECTION 2: MAIN CONTENT (Track List + Artwork) ===== -->
-        <Grid Grid.Row="1" Margin="0,0,0,10">
+        <Grid Grid.Row="2" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="200"/>
@@ -190,7 +232,7 @@
                         </DataGridTextColumn>
 
                         <!-- Segue (checkbox, single-click toggle) -->
-                        <DataGridCheckBoxColumn Header="→" Width="Auto" MinWidth="30"
+                        <DataGridCheckBoxColumn Header="&#x2192;" Width="Auto" MinWidth="30"
                                                 Binding="{Binding Segue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridCheckBoxColumn.ElementStyle>
                                 <Style TargetType="CheckBox">
@@ -250,7 +292,21 @@
                     </Border>
                 </Grid>
 
-                <!-- Album Type (read-only display for now) -->
+                <!-- Artwork buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                    <Button x:Name="ChangeArtworkButton" Content="Change" Height="26"
+                            Click="ChangeArtworkButton_Click" Margin="0,0,4,0" FontSize="12"
+                            Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                            Padding="10,2" Cursor="Hand"
+                            ToolTip="Select new album artwork"/>
+                    <Button x:Name="RemoveArtworkButton" Content="Remove" Height="26"
+                            Click="RemoveArtworkButton_Click" FontSize="12"
+                            Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                            Padding="10,2" Cursor="Hand"
+                            ToolTip="Remove album artwork"/>
+                </StackPanel>
+
+                <!-- Album Type -->
                 <TextBlock x:Name="AlbumTypeText"
                            Text="Album Type"
                            Foreground="#888888"
@@ -265,25 +321,11 @@
                            FontSize="14"
                            Margin="0,8,0,0"
                            HorizontalAlignment="Center"/>
-
-                <!-- Action buttons -->
-                <Button x:Name="NormalizeButton" Content="Normalize"
-                        Height="32" Width="160" Margin="0,16,0,0"
-                        Click="NormalizeButton_Click" FontSize="14"
-                        Background="#3C3C3C" Foreground="#FFFFFF"
-                        BorderBrush="#555555"
-                        ToolTip="Normalize song titles using fuzzy matching"/>
-                <Button x:Name="RenumberButton" Content="Renumber"
-                        Height="32" Width="160" Margin="0,6,0,0"
-                        Click="RenumberButton_Click" FontSize="14"
-                        Background="#3C3C3C" Foreground="#FFFFFF"
-                        BorderBrush="#555555"
-                        ToolTip="Renumber tracks sequentially (disc-aware)"/>
             </StackPanel>
         </Grid>
 
         <!-- ===== SECTION 3: STATUS BAR ===== -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
