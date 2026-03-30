@@ -79,7 +79,7 @@ namespace DeadEditor
             LibraryHeader.Visibility = Visibility.Visible;
 
             // Update concert count (filtered vs total)
-            UpdateConcertCount(libraryView.FilteredCount, libraryView.ConcertCount);
+            UpdateConcertCount(libraryView.FilteredCount, libraryView.ConcertCount, libraryView.IsByDateMode);
         }
 
         public void ShowAlbumDetailHeader(AlbumDetailView albumView, object? context)
@@ -198,17 +198,21 @@ namespace DeadEditor
         }
 
         /// <summary>
-        /// Updates the concert count display. Shows "X of Y concerts" when filtered.
+        /// Updates the concert count display. Shows "X of Y concerts" when filtered,
+        /// or "X dates" in By Date mode.
         /// </summary>
-        public void UpdateConcertCount(int filteredCount, int totalCount)
+        public void UpdateConcertCount(int filteredCount, int totalCount, bool isByDateMode = false)
         {
+            var unit = isByDateMode ? "dates" : "concerts";
+            var singularUnit = isByDateMode ? "date" : "concert";
+
             if (filteredCount == totalCount)
             {
-                ConcertCountText.Text = totalCount == 1 ? "1 concert" : $"{totalCount} concerts";
+                ConcertCountText.Text = totalCount == 1 ? $"1 {singularUnit}" : $"{totalCount} {unit}";
             }
             else
             {
-                ConcertCountText.Text = $"{filteredCount} of {totalCount} concerts";
+                ConcertCountText.Text = $"{filteredCount} of {totalCount} {unit}";
             }
         }
     }

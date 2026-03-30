@@ -375,7 +375,7 @@ namespace DeadEditor
                 // Subscribe to concert count changes
                 _libraryView.ConcertCountChanged += (s, count) =>
                 {
-                    HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount);
+                    HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount, _libraryView.IsByDateMode);
                 };
             }
 

@@ -27,6 +27,7 @@ namespace DeadEditor
 
         public int ConcertCount => _shows.Count;
         public int FilteredCount => _isByDateMode ? _filteredDateRows.Count : _filteredShows.Count;
+        public bool IsByDateMode => _isByDateMode;
 
         // Event to notify when concert count changes
         public event EventHandler<int>? ConcertCountChanged;
@@ -262,6 +263,20 @@ namespace DeadEditor
                     });
                 }
             }
+            // Enrich venue/city from shows.json for rows that are missing venue info
+            // (e.g., multi-date box set tracks that only have the album-level venue)
+            foreach (var row in _dateRows)
+            {
+                var showInfo = ShowLookupService.Instance.GetShowByDate(row.Date);
+                if (showInfo == null) continue;
+
+                if (string.IsNullOrEmpty(row.Venue))
+                    row.Venue = showInfo.Venue;
+
+                if (string.IsNullOrEmpty(row.CityState))
+                    row.CityState = showInfo.FormattedLocation;
+            }
+
             _dateRows = _dateRows.OrderBy(r => r.Date).ToList();
         }
 
