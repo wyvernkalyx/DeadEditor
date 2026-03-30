@@ -45,6 +45,9 @@ namespace DeadEditor
             HeaderBar.LibraryFilterChanged += HeaderBar_LibraryFilterChanged;
             HeaderBar.AdvancedSearchRequested += HeaderBar_AdvancedSearchRequested;
             HeaderBar.DeleteAlbumRequested += HeaderBar_DeleteAlbumRequested;
+            HeaderBar.EditDatesRequested += HeaderBar_EditDatesRequested;
+            HeaderBar.SaveDatesRequested += HeaderBar_SaveDatesRequested;
+            HeaderBar.CancelDatesRequested += HeaderBar_CancelDatesRequested;
 
             // Set data context for binding
             DataContext = this;
@@ -315,6 +318,24 @@ namespace DeadEditor
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        private void HeaderBar_EditDatesRequested(object? sender, EventArgs e)
+        {
+            _libraryView?.EnterDateEditMode();
+            HeaderBar.UpdateDateEditButtons(true, true);
+        }
+
+        private void HeaderBar_SaveDatesRequested(object? sender, EventArgs e)
+        {
+            _libraryView?.SaveDateEdits();
+            HeaderBar.UpdateDateEditButtons(true, false);
+        }
+
+        private void HeaderBar_CancelDatesRequested(object? sender, EventArgs e)
+        {
+            _libraryView?.CancelDateEdits();
+            HeaderBar.UpdateDateEditButtons(true, false);
         }
 
         private void HeaderBar_EditMetadataRequested(object? sender, EventArgs e)

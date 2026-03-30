@@ -190,6 +190,90 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                <!-- Edit Dates button (By Date mode only, read-only state) -->
+                <Button x:Name="EditDatesButton"
+                        Content="Edit Dates"
+                        Click="EditDatesButton_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        FontSize="14"
+                        Visibility="Collapsed"/>
+
+                <!-- Save / Cancel buttons (By Date edit mode only) -->
+                <Button x:Name="SaveDatesButton"
+                        Content="Save"
+                        Click="SaveDatesButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        MinHeight="36"
+                        Margin="0,0,6,0"
+                        Visibility="Collapsed">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#0E7A0D"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Setter Property="BorderBrush" Value="#13A10E"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#13A10E"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="CancelDatesButton"
+                        Content="Cancel"
+                        Click="CancelDatesButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="14"
+                        MinHeight="36"
+                        Margin="0,0,8,0"
+                        Visibility="Collapsed">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#3E3E42"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="BorderBrush" Value="#555555"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#555555"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
                 <!-- Search Box -->
                 <Grid Margin="12,0,0,0">
                     <TextBox x:Name="SearchBox"

@@ -26,6 +26,11 @@ namespace DeadEditor
         /// <summary>Fired when Delete is clicked from the Album Detail header.</summary>
         public event EventHandler? DeleteAlbumRequested;
 
+        /// <summary>Fired when Edit Dates / Save / Cancel buttons are clicked.</summary>
+        public event EventHandler? EditDatesRequested;
+        public event EventHandler? SaveDatesRequested;
+        public event EventHandler? CancelDatesRequested;
+
         public HeaderBar()
         {
             InitializeComponent();
@@ -174,6 +179,10 @@ namespace DeadEditor
             // Guard: this fires during InitializeComponent before other controls exist
             if (SearchBox == null) return;
             RaiseFilterChanged();
+
+            // Show/hide Edit Dates button based on mode
+            bool isByDate = TypeFilter == "By Date";
+            UpdateDateEditButtons(isByDate, false);
         }
 
         private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
@@ -190,6 +199,34 @@ namespace DeadEditor
         private void DeleteAlbumButton_Click(object sender, RoutedEventArgs e)
         {
             DeleteAlbumRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void EditDatesButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditDatesRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SaveDatesButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveDatesRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void CancelDatesButton_Click(object sender, RoutedEventArgs e)
+        {
+            CancelDatesRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Updates the edit mode button visibility for By Date view.
+        /// </summary>
+        public void UpdateDateEditButtons(bool isByDateMode, bool isEditMode)
+        {
+            EditDatesButton.Visibility = (isByDateMode && !isEditMode) ? Visibility.Visible : Visibility.Collapsed;
+            SaveDatesButton.Visibility = (isByDateMode && isEditMode) ? Visibility.Visible : Visibility.Collapsed;
+            CancelDatesButton.Visibility = (isByDateMode && isEditMode) ? Visibility.Visible : Visibility.Collapsed;
+
+            // Disable Show dropdown during editing to prevent switching away mid-edit
+            ShowTypeFilter.IsEnabled = !isEditMode;
         }
 
         private void RaiseFilterChanged()

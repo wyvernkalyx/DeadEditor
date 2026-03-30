@@ -22,12 +22,15 @@ namespace DeadEditor
 
         // By Date mode
         private bool _isByDateMode = false;
+        private bool _isDateEditMode = false;
         private List<DateRow> _dateRows = new();
         private List<DateRow> _filteredDateRows = new();
+        private Dictionary<string, (string Venue, string CityState)>? _editSnapshot;
 
         public int ConcertCount => _shows.Count;
         public int FilteredCount => _isByDateMode ? _filteredDateRows.Count : _filteredShows.Count;
         public bool IsByDateMode => _isByDateMode;
+        public bool IsDateEditMode => _isDateEditMode;
 
         // Event to notify when concert count changes
         public event EventHandler<int>? ConcertCountChanged;
@@ -111,7 +114,8 @@ namespace DeadEditor
             ShowsDataGrid.Columns.Add(MakeColumn("City, State", "CityState", 120, editable: true));
             ShowsDataGrid.Columns.Add(MakeColumn("From Album", "FromAlbum", 150));
             ShowsDataGrid.Columns.Add(MakeColumn("Tracks", "TrackCount", 60));
-            ShowsDataGrid.IsReadOnly = false;
+            // Grid starts read-only — editing enabled explicitly via EnterEditMode()
+            ShowsDataGrid.IsReadOnly = true;
         }
 
         private static DataGridTextColumn MakeColumn(string header, string bindingPath, double minWidth, bool editable = false)
@@ -146,6 +150,88 @@ namespace DeadEditor
             style.Setters.Add(new Setter(System.Windows.Controls.TextBox.CaretBrushProperty, new System.Windows.Media.SolidColorBrush(
                 (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFFFFF"))));
             return style;
+        }
+
+        // ===== EDIT MODE =====
+
+        /// <summary>
+        /// Enters edit mode for By Date view — snapshots current values and enables editing.
+        /// </summary>
+        public void EnterDateEditMode()
+        {
+            if (!_isByDateMode || _isDateEditMode) return;
+
+            // Snapshot current values for Cancel
+            _editSnapshot = new Dictionary<string, (string, string)>();
+            foreach (var row in _dateRows)
+            {
+                _editSnapshot[row.Date] = (row.Venue, row.CityState);
+            }
+
+            _isDateEditMode = true;
+            ShowsDataGrid.IsReadOnly = false;
+        }
+
+        /// <summary>
+        /// Saves all pending edits to shows.json and exits edit mode.
+        /// </summary>
+        public void SaveDateEdits()
+        {
+            if (!_isDateEditMode) return;
+
+            // Commit any active cell edit
+            ShowsDataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+            ShowsDataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+
+            // Persist all rows that changed
+            if (_editSnapshot != null)
+            {
+                bool anyChanged = false;
+                foreach (var row in _dateRows)
+                {
+                    if (_editSnapshot.TryGetValue(row.Date, out var old)
+                        && (old.Venue != row.Venue || old.CityState != row.CityState))
+                    {
+                        PersistDateRowToShows(row, save: false);
+                        anyChanged = true;
+                    }
+                }
+                if (anyChanged)
+                    ShowLookupService.Instance.SaveToFile();
+            }
+
+            _editSnapshot = null;
+            _isDateEditMode = false;
+            ShowsDataGrid.IsReadOnly = true;
+        }
+
+        /// <summary>
+        /// Discards all pending edits and exits edit mode.
+        /// </summary>
+        public void CancelDateEdits()
+        {
+            if (!_isDateEditMode) return;
+
+            // Cancel any active cell edit
+            ShowsDataGrid.CancelEdit(DataGridEditingUnit.Cell);
+            ShowsDataGrid.CancelEdit(DataGridEditingUnit.Row);
+
+            // Restore from snapshot
+            if (_editSnapshot != null)
+            {
+                foreach (var row in _dateRows)
+                {
+                    if (_editSnapshot.TryGetValue(row.Date, out var old))
+                    {
+                        row.Venue = old.Venue;
+                        row.CityState = old.CityState;
+                    }
+                }
+            }
+
+            _editSnapshot = null;
+            _isDateEditMode = false;
+            ShowsDataGrid.IsReadOnly = true;
         }
 
         // ===== FILTERING =====
@@ -186,9 +272,11 @@ namespace DeadEditor
                 return;
             }
 
-            // Exiting By Date mode — restore album columns
+            // Exiting By Date mode — cancel any pending edits and restore album columns
             if (_isByDateMode)
             {
+                if (_isDateEditMode)
+                    CancelDateEdits();
                 _isByDateMode = false;
                 SetAlbumColumns();
             }
@@ -627,17 +715,10 @@ namespace DeadEditor
 
         private void ShowsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.EditAction == DataGridEditAction.Cancel) return;
-            if (e.Row.Item is not DateRow row) return;
-
-            // Let the binding update first, then persist
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                PersistDateRowToShows(row);
-            }), System.Windows.Threading.DispatcherPriority.Background);
+            // Edits are batched — Save button persists all at once
         }
 
-        private static void PersistDateRowToShows(DateRow row)
+        private static void PersistDateRowToShows(DateRow row, bool save = true)
         {
             if (string.IsNullOrEmpty(row.Date)) return;
 
@@ -678,16 +759,16 @@ namespace DeadEditor
             }
 
             ShowLookupService.Instance.UpdateShow(row.Date, row.Venue, city, state, country);
-            ShowLookupService.Instance.SaveToFile();
+            if (save)
+                ShowLookupService.Instance.SaveToFile();
         }
 
         // ===== NAVIGATION =====
 
         private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // In By Date mode, double-click on editable columns starts editing (handled by DataGrid)
-            // Only navigate on read-only columns (Date, FromAlbum, Tracks)
-            if (_isByDateMode && ShowsDataGrid.CurrentCell.Column != null
+            // In edit mode, double-click on editable columns starts inline editing
+            if (_isDateEditMode && ShowsDataGrid.CurrentCell.Column != null
                 && !ShowsDataGrid.CurrentCell.Column.IsReadOnly)
             {
                 return;
