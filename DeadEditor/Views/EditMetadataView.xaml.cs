@@ -2,6 +2,7 @@ using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -389,6 +390,38 @@ namespace DeadEditor
                         }
                     }
                 });
+
+                // Diagnostic: verify tags were actually written to disk
+                if (_tracks.Count > 0)
+                {
+                    var testPath = _tracks[0].FilePath;
+                    Debug.WriteLine($"[SAVE VERIFY] Verifying: {testPath}");
+                    using var testFile = TagLib.File.Create(testPath);
+
+                    Debug.WriteLine($"[SAVE VERIFY] ALBUM = '{testFile.Tag.Album}'");
+
+                    if (testFile.GetTag(TagLib.TagTypes.Xiph) is TagLib.Ogg.XiphComment xiph)
+                    {
+                        var venue = xiph.GetFirstField("VENUE");
+                        var cityState = xiph.GetFirstField("CITYSTATE");
+                        var albumDate = xiph.GetFirstField("ALBUMDATE");
+                        var albumName = xiph.GetFirstField("ALBUMNAME");
+                        var albumType = xiph.GetFirstField("ALBUMTYPE");
+                        Debug.WriteLine($"[SAVE VERIFY] VENUE = '{venue}'");
+                        Debug.WriteLine($"[SAVE VERIFY] CITYSTATE = '{cityState}'");
+                        Debug.WriteLine($"[SAVE VERIFY] ALBUMDATE = '{albumDate}'");
+                        Debug.WriteLine($"[SAVE VERIFY] ALBUMNAME = '{albumName}'");
+                        Debug.WriteLine($"[SAVE VERIFY] ALBUMTYPE = '{albumType}'");
+                    }
+
+                    if (testFile.GetTag(TagLib.TagTypes.Id3v2) is TagLib.Id3v2.Tag id3Tag)
+                    {
+                        foreach (var frame in id3Tag.GetFrames<TagLib.Id3v2.UserTextInformationFrame>())
+                        {
+                            Debug.WriteLine($"[SAVE VERIFY] TXXX: '{frame.Description}' = '{string.Join("; ", frame.Text)}'");
+                        }
+                    }
+                }
 
                 // Update the LibraryShow object in-place so the library grid
                 // reflects the edited fields without creating a duplicate entry.

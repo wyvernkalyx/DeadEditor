@@ -2,6 +2,7 @@ using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -378,6 +379,10 @@ namespace DeadEditor
         {
             try
             {
+                Debug.WriteLine($"[READ CUSTOM] Folder: {folderPath}");
+                Debug.WriteLine($"[READ CUSTOM] FLAC count: {Directory.GetFiles(folderPath, "*.flac").Length}");
+                Debug.WriteLine($"[READ CUSTOM] MP3 count: {Directory.GetFiles(folderPath, "*.mp3").Length}");
+
                 // Find first audio file (FLAC or MP3)
                 var firstAudio = Directory.GetFiles(folderPath, "*.flac").FirstOrDefault()
                               ?? Directory.GetFiles(folderPath, "*.mp3").FirstOrDefault();
@@ -429,6 +434,9 @@ namespace DeadEditor
                     show.ReleaseYear = (int)tagFile.Tag.Year;
                 }
 
+                Debug.WriteLine($"[READ CUSTOM] Result: Venue='{show.Venue}', " +
+                    $"City='{show.City}', State='{show.State}', " +
+                    $"Location='{show.Location}', Year='{show.ReleaseYear}'");
             }
             catch
             {
@@ -479,7 +487,7 @@ namespace DeadEditor
 
                         var audioFiles = Directory.GetFiles(showFolder, "*.flac").Concat(Directory.GetFiles(showFolder, "*.mp3")).ToArray();
 
-                        _shows.Add(new LibraryShow
+                        var show = new LibraryShow
                         {
                             Type = AlbumType.AudienceRecording,
                             Date = date,
@@ -490,7 +498,13 @@ namespace DeadEditor
                             TrackCount = audioFiles.Length,
                             FolderPath = showFolder,
                             TrackTitles = ReadTrackTitles(showFolder)
-                        });
+                        };
+
+                        // Override folder-name-parsed values with custom FLAC tags if present
+                        // (written by Edit Metadata save)
+                        ReadCustomFieldsIntoShow(show, showFolder);
+
+                        _shows.Add(show);
                     }
                 }
             }
