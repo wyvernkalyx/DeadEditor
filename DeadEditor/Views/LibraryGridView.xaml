@@ -22,7 +22,8 @@
                   Foreground="#CCCCCC"
                   BorderThickness="0"
                   Margin="20"
-                  MouseDoubleClick="ShowsDataGrid_MouseDoubleClick">
+                  MouseDoubleClick="ShowsDataGrid_MouseDoubleClick"
+                  CellEditEnding="ShowsDataGrid_CellEditEnding">
 
             <DataGrid.Resources>
                 <!-- Override WPF system selection colors -->

@@ -100,27 +100,52 @@ namespace DeadEditor
             ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 120));
             ShowsDataGrid.Columns.Add(MakeColumn("City, State", "Location", 120));
             ShowsDataGrid.Columns.Add(MakeColumn("Tracks", "TrackCount", 60));
+            ShowsDataGrid.IsReadOnly = true;
         }
 
         private void SetDateColumns()
         {
             ShowsDataGrid.Columns.Clear();
             ShowsDataGrid.Columns.Add(MakeColumn("Date", "Date", 100));
-            ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 120));
-            ShowsDataGrid.Columns.Add(MakeColumn("City, State", "CityState", 120));
+            ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 120, editable: true));
+            ShowsDataGrid.Columns.Add(MakeColumn("City, State", "CityState", 120, editable: true));
             ShowsDataGrid.Columns.Add(MakeColumn("From Album", "FromAlbum", 150));
             ShowsDataGrid.Columns.Add(MakeColumn("Tracks", "TrackCount", 60));
+            ShowsDataGrid.IsReadOnly = false;
         }
 
-        private static DataGridTextColumn MakeColumn(string header, string bindingPath, double minWidth)
+        private static DataGridTextColumn MakeColumn(string header, string bindingPath, double minWidth, bool editable = false)
         {
+            var binding = new WpfBinding(bindingPath);
+            if (editable)
+                binding.Mode = System.Windows.Data.BindingMode.TwoWay;
+
             return new DataGridTextColumn
             {
                 Header = header,
-                Binding = new WpfBinding(bindingPath),
+                Binding = binding,
                 Width = DataGridLength.Auto,
-                MinWidth = minWidth
+                MinWidth = minWidth,
+                IsReadOnly = !editable,
+                // Dark-themed editing style for editable cells
+                EditingElementStyle = editable ? CreateEditingStyle() : null
             };
+        }
+
+        private static Style CreateEditingStyle()
+        {
+            var style = new Style(typeof(System.Windows.Controls.TextBox));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.BackgroundProperty, new System.Windows.Media.SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#1E1E1E"))));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.ForegroundProperty, new System.Windows.Media.SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFFFFF"))));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.BorderBrushProperty, new System.Windows.Media.SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#007ACC"))));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.BorderThicknessProperty, new Thickness(1)));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.PaddingProperty, new Thickness(4, 2, 4, 2)));
+            style.Setters.Add(new Setter(System.Windows.Controls.TextBox.CaretBrushProperty, new System.Windows.Media.SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFFFFF"))));
+            return style;
         }
 
         // ===== FILTERING =====
@@ -598,10 +623,76 @@ namespace DeadEditor
             }
         }
 
+        // ===== INLINE EDITING (By Date mode) =====
+
+        private void ShowsDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Cancel) return;
+            if (e.Row.Item is not DateRow row) return;
+
+            // Let the binding update first, then persist
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                PersistDateRowToShows(row);
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private static void PersistDateRowToShows(DateRow row)
+        {
+            if (string.IsNullOrEmpty(row.Date)) return;
+
+            // Parse CityState into city + state/country
+            var existing = ShowLookupService.Instance.GetShowByDate(row.Date);
+            string city = "";
+            string state = "";
+            string country = existing?.Country ?? "US";
+
+            if (!string.IsNullOrEmpty(row.CityState))
+            {
+                var parts = row.CityState.Split(new[] { ", " }, 2, StringSplitOptions.None);
+                city = parts[0].Trim();
+                if (parts.Length > 1)
+                {
+                    var code = parts[1].Trim();
+                    if (code.Length == 2 && code == code.ToUpper())
+                    {
+                        // 2-letter uppercase code — could be US state or country
+                        if (existing != null && existing.Country != "US")
+                        {
+                            // Non-US show: treat as country code, keep existing state
+                            country = code;
+                            state = existing.State;
+                        }
+                        else
+                        {
+                            state = code;
+                            country = "US";
+                        }
+                    }
+                    else
+                    {
+                        // Longer code or mixed case — treat as state, preserve country
+                        state = code;
+                    }
+                }
+            }
+
+            ShowLookupService.Instance.UpdateShow(row.Date, row.Venue, city, state, country);
+            ShowLookupService.Instance.SaveToFile();
+        }
+
         // ===== NAVIGATION =====
 
         private void ShowsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            // In By Date mode, double-click on editable columns starts editing (handled by DataGrid)
+            // Only navigate on read-only columns (Date, FromAlbum, Tracks)
+            if (_isByDateMode && ShowsDataGrid.CurrentCell.Column != null
+                && !ShowsDataGrid.CurrentCell.Column.IsReadOnly)
+            {
+                return;
+            }
+
             LibraryShow? show = null;
 
             if (ShowsDataGrid.SelectedItem is LibraryShow directShow)
