@@ -45,6 +45,11 @@ namespace DeadEditor
             UpdatePlaybackUI();
             UpdateTrackUI();
 
+            // Restore persisted volume
+            var settings = LibrarySettings.Load();
+            VolumeSlider.Value = settings.VolumePercent;
+            _player.Volume = (float)(settings.VolumePercent / 100.0);
+
             // Subscribe to unloaded event to cleanup
             Unloaded += PlayerBar_Unloaded;
         }
@@ -103,6 +108,11 @@ namespace DeadEditor
             if (_player != null)
             {
                 _player.Volume = (float)(e.NewValue / 100.0);
+
+                // Persist volume setting
+                var settings = LibrarySettings.Load();
+                settings.VolumePercent = (int)e.NewValue;
+                settings.Save();
             }
         }
 

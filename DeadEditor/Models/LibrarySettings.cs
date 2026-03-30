@@ -11,6 +11,7 @@ namespace DeadEditor.Models
         public string PrimaryArtistName { get; set; } = "Grateful Dead"; // Primary artist for MusicBrainz filtering
         public string? LastBoxSetName { get; set; }                    // Remember last box set name for faster imports
         public bool DismissedFpcalcWarning { get; set; } = false;      // User has dismissed the fpcalc.exe startup warning
+        public int VolumePercent { get; set; } = 75;                     // Volume slider 0-100, persisted between sessions
 
         // Playlist persistence
         public List<string> SavedPlaylistPaths { get; set; } = new();  // File paths of tracks in saved playlist

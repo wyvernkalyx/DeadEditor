@@ -52,6 +52,7 @@ namespace DeadEditor.Services
         private AudioFileReader? _audioFileReader;
         private string? _currentFilePath;
         private bool _isSeeking;
+        private float _volume = 0.75f;  // Cached volume level — applied to new AudioFileReaders
 
         // Playback state
         private PlaybackState _playbackState;
@@ -88,12 +89,13 @@ namespace DeadEditor.Services
 
         public float Volume
         {
-            get => _audioFileReader?.Volume ?? 0.75f;
+            get => _volume;
             set
             {
+                _volume = Math.Clamp(value, 0f, 1f);
                 if (_audioFileReader != null)
                 {
-                    _audioFileReader.Volume = Math.Clamp(value, 0f, 1f);
+                    _audioFileReader.Volume = _volume;
                 }
             }
         }
@@ -123,6 +125,7 @@ namespace DeadEditor.Services
                 System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] LoadFile: {filePath}");
 
                 _audioFileReader = new AudioFileReader(filePath);
+                _audioFileReader.Volume = _volume;  // Apply cached volume to new reader
 
                 _wavePlayer = new WaveOutEvent();
                 _wavePlayer.Init(_audioFileReader);
