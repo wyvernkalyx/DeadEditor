@@ -149,15 +149,9 @@
     </UserControl.Resources>
 
     <Grid>
-        <!-- Library Header: "Library  {count} concerts  [Show: All ▼]  [Search: ___]  [Advanced Search]" -->
+        <!-- Library Header: "Library [Show: ▼] N dates [Edit Dates] [Search] [Advanced Search]" -->
         <Grid x:Name="LibraryHeader" Height="50" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
                 <TextBlock Text="Library"
                            Foreground="#E0E0E0"
                            FontSize="20"
@@ -187,9 +181,7 @@
                            FontSize="16"
                            VerticalAlignment="Center"
                            Margin="16,0,0,0"/>
-            </StackPanel>
 
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
                 <!-- Edit Dates button (By Date mode only, read-only state) -->
                 <Button x:Name="EditDatesButton"
                         Content="Edit Dates"
