@@ -1,0 +1,87 @@
+{
+  "series": [
+    {
+      "name": "Dave's Picks",
+      "template": "Dave's Picks Vol. {N}",
+      "volumes": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58]
+    },
+    {
+      "name": "Dick's Picks",
+      "template": "Dick's Picks Volume {N}",
+      "volumes": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]
+    },
+    {
+      "name": "Road Trips",
+      "template": "Road Trips Vol. {N} No. {M}",
+      "volumes": [
+        {"vol": 1, "num": 1},
+        {"vol": 1, "num": 2},
+        {"vol": 1, "num": 3},
+        {"vol": 1, "num": 4},
+        {"vol": 2, "num": 1},
+        {"vol": 2, "num": 2},
+        {"vol": 2, "num": 3},
+        {"vol": 2, "num": 4},
+        {"vol": 3, "num": 1},
+        {"vol": 3, "num": 2},
+        {"vol": 3, "num": 3},
+        {"vol": 3, "num": 4},
+        {"vol": 4, "num": 1},
+        {"vol": 4, "num": 2},
+        {"vol": 4, "num": 3},
+        {"vol": 4, "num": 4},
+        {"vol": 4, "num": 5}
+      ]
+    },
+    {
+      "name": "Download Series",
+      "template": "Download Series Vol. {N}",
+      "volumes": [1,2,3,4,5,6,7,8,9,10,11,12]
+    }
+  ],
+  "standalone": [
+    "Enjoying the Ride",
+    "Get Shown the Light",
+    "Blues for Allah 50th Anniversary",
+    "Europe '72",
+    "Europe '72 (2003 Reissue)",
+    "Europe '72 Volume 2",
+    "Live/Dead",
+    "Skull & Roses",
+    "Wake of the Flood",
+    "From the Mars Hotel",
+    "Steal Your Face",
+    "Terrapin Station",
+    "Shakedown Street",
+    "Go to Heaven",
+    "Reckoning",
+    "Dead Set",
+    "In the Dark",
+    "Built to Last",
+    "Without a Net",
+    "One from the Vault",
+    "Two from the Vault",
+    "Three from the Vault",
+    "Hundred Year Hall",
+    "Dozin' at the Knick",
+    "So Many Roads (1965-1995)",
+    "Fallout from the Phil Zone",
+    "Ladies and Gentlemen... the Grateful Dead",
+    "Truckin' Up to Buffalo",
+    "Sunshine Daydream",
+    "Pacific Northwest '73-'74: The Complete Recordings",
+    "Cornell 5/8/77",
+    "May 1977: Get Shown the Light",
+    "Saint of Circumstance",
+    "Listen to the River",
+    "Red Rocks 7/8/78",
+    "Winterland June 1977: The Complete Recordings",
+    "To Terrapin: Hartford '77",
+    "Nightfall of Diamonds",
+    "Ready or Not",
+    "30 Trips Around the Sun",
+    "The Best of the Grateful Dead Live",
+    "Download Series: Family Dog at the Great Highway",
+    "Fare Thee Well"
+  ]
+}

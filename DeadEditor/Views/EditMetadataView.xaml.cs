@@ -274,6 +274,82 @@ namespace DeadEditor
             _albumInfo.IsModified = true;
 
             _hasUnsavedChanges = true;
+
+            // Show autocomplete suggestions when Album Name field changes
+            if (sender == AlbumNameTextBox && !_isSelectingSuggestion)
+            {
+                UpdateAlbumNameSuggestions();
+            }
+        }
+
+        // ===== ALBUM NAME AUTOCOMPLETE =====
+
+        private bool _isSelectingSuggestion = false;
+
+        private void UpdateAlbumNameSuggestions()
+        {
+            var text = AlbumNameTextBox.Text;
+            var suggestions = ReleaseLookupService.Instance.GetSuggestions(text);
+
+            if (suggestions.Count > 0)
+            {
+                AlbumNameSuggestions.ItemsSource = suggestions;
+                AlbumNamePopup.IsOpen = true;
+            }
+            else
+            {
+                AlbumNamePopup.IsOpen = false;
+            }
+        }
+
+        private void AlbumNameTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (!AlbumNamePopup.IsOpen) return;
+
+            if (e.Key == System.Windows.Input.Key.Down)
+            {
+                AlbumNameSuggestions.Focus();
+                if (AlbumNameSuggestions.Items.Count > 0)
+                    AlbumNameSuggestions.SelectedIndex = 0;
+                e.Handled = true;
+            }
+            else if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                AlbumNamePopup.IsOpen = false;
+                e.Handled = true;
+            }
+            else if (e.Key == System.Windows.Input.Key.Enter && AlbumNameSuggestions.SelectedItem != null)
+            {
+                AcceptSuggestion(AlbumNameSuggestions.SelectedItem.ToString()!);
+                e.Handled = true;
+            }
+        }
+
+        private void AlbumNameTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (!AlbumNameSuggestions.IsKeyboardFocusWithin)
+                    AlbumNamePopup.IsOpen = false;
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private void AlbumNameSuggestions_MouseClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (AlbumNameSuggestions.SelectedItem is string selected)
+            {
+                AcceptSuggestion(selected);
+            }
+        }
+
+        private void AcceptSuggestion(string name)
+        {
+            _isSelectingSuggestion = true;
+            AlbumNameTextBox.Text = name;
+            AlbumNameTextBox.CaretIndex = name.Length;
+            AlbumNamePopup.IsOpen = false;
+            _isSelectingSuggestion = false;
+            AlbumNameTextBox.Focus();
         }
 
         // ===== ARTWORK EDITING =====

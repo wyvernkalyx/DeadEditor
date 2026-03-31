@@ -168,12 +168,57 @@
                          Margin="5,0,5,0" TextChanged="AlbumInfo_Changed"
                          ToolTip="City, ST"/>
 
-                <!-- Album / Release Name -->
+                <!-- Album / Release Name (with autocomplete) -->
                 <Label Grid.Row="0" Grid.Column="4" Content="ALBUM / RELEASE" VerticalAlignment="Top" Margin="5,0,0,0"/>
-                <TextBox Grid.Row="1" Grid.Column="4" x:Name="AlbumNameTextBox"
-                         Margin="5,0,5,0"
-                         TextChanged="AlbumInfo_Changed"
-                         ToolTip="Optional"/>
+                <Grid Grid.Row="1" Grid.Column="4" Margin="5,0,5,0">
+                    <TextBox x:Name="AlbumNameTextBox"
+                             TextChanged="AlbumInfo_Changed"
+                             PreviewKeyDown="AlbumNameTextBox_PreviewKeyDown"
+                             LostFocus="AlbumNameTextBox_LostFocus"
+                             ToolTip="Optional — type to search known releases"/>
+                    <Popup x:Name="AlbumNamePopup"
+                           PlacementTarget="{Binding ElementName=AlbumNameTextBox}"
+                           Placement="Bottom"
+                           StaysOpen="False"
+                           AllowsTransparency="True"
+                           PopupAnimation="Fade">
+                        <Border Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="1" CornerRadius="2"
+                                MaxHeight="300" MinWidth="200">
+                            <ListBox x:Name="AlbumNameSuggestions"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="#CCCCCC"
+                                     FontSize="14"
+                                     SelectionChanged="AlbumNameSuggestions_SelectionChanged"
+                                     MouseLeftButtonUp="AlbumNameSuggestions_MouseClick">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Padding" Value="8,5"/>
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Border x:Name="Bd" Background="Transparent" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#3E3E42"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="Bd" Property="Background" Value="#094771"/>
+                                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                            </ListBox>
+                        </Border>
+                    </Popup>
+                </Grid>
 
                 <!-- Release Year -->
                 <Label Grid.Row="0" Grid.Column="5" Content="YEAR" VerticalAlignment="Top" Margin="5,0,0,0"/>
@@ -323,7 +368,7 @@
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Foreground" Value="#FFFFFF"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsMatched}" Value="False">
+                                                    <DataTrigger Binding="{Binding Track.IsMatched}" Value="False">
                                                         <Setter Property="Foreground" Value="#D7BA7D"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
