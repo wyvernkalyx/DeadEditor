@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,9 +28,16 @@ namespace DeadEditor
         private List<DateRow> _filteredDateRows = new();
         private Dictionary<string, (string Venue, string CityState)>? _editSnapshot;
 
+        // Shows I Don't Have mode
+        private bool _isMissingShowsMode = false;
+        private List<DateRow> _missingShowRows = new();
+        private List<DateRow> _filteredMissingRows = new();
+
         public int ConcertCount => _shows.Count;
-        public int FilteredCount => _isByDateMode ? _filteredDateRows.Count : _filteredShows.Count;
+        public int FilteredCount => _isMissingShowsMode ? _filteredMissingRows.Count
+            : _isByDateMode ? _filteredDateRows.Count : _filteredShows.Count;
         public bool IsByDateMode => _isByDateMode;
+        public bool IsMissingShowsMode => _isMissingShowsMode;
         public bool IsDateEditMode => _isDateEditMode;
 
         // Event to notify when concert count changes
@@ -42,41 +50,63 @@ namespace DeadEditor
             _settings = LibrarySettings.Load();
         }
 
-        private void LibraryGridView_Loaded(object sender, RoutedEventArgs e)
+        private async void LibraryGridView_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadShows();
+            await LoadShowsAsync();
         }
 
         /// <summary>
         /// Public method called by ShellWindow after an import completes,
         /// so the grid refreshes to show the newly imported album.
         /// </summary>
-        public void ReloadLibrary()
+        public async void ReloadLibrary()
         {
             // Re-read settings in case the library path changed
             _settings.LibraryRootPath = LibrarySettings.Load().LibraryRootPath;
             _settings.OfficialReleasesPath = LibrarySettings.Load().OfficialReleasesPath;
-            LoadShows();
+            await LoadShowsAsync();
         }
 
-        private void LoadShows()
+        private async Task LoadShowsAsync()
         {
-            _shows.Clear();
+            // Show loading indicator while scanning
+            LoadingIndicator.Visibility = Visibility.Visible;
 
-            // Load audience recordings
-            if (!string.IsNullOrEmpty(_settings.LibraryRootPath) && Directory.Exists(_settings.LibraryRootPath))
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[STARTUP] LoadShowsAsync begin: {sw.ElapsedMilliseconds}ms");
+
+            // Capture settings for background thread
+            var libraryRoot = _settings.LibraryRootPath;
+            var officialPath = _settings.OfficialReleasesPath;
+
+            // Run all heavy I/O (folder scanning, TagLib reads) on a background thread
+            var shows = await Task.Run(() =>
             {
-                LoadAudienceRecordings();
-            }
+                var result = new List<LibraryShow>();
 
-            // Load official releases
-            if (!string.IsNullOrEmpty(_settings.OfficialReleasesPath) && Directory.Exists(_settings.OfficialReleasesPath))
-            {
-                LoadOfficialReleases();
-            }
+                if (!string.IsNullOrEmpty(libraryRoot) && Directory.Exists(libraryRoot))
+                {
+                    LoadAudienceRecordingsInto(result, libraryRoot);
+                    Debug.WriteLine($"[STARTUP] Audience recordings scanned: {sw.ElapsedMilliseconds}ms ({result.Count} shows)");
+                }
 
-            // Sort by date descending (newest first)
-            _shows = _shows.OrderByDescending(s => s.Date).ToList();
+                int audienceCount = result.Count;
+
+                if (!string.IsNullOrEmpty(officialPath) && Directory.Exists(officialPath))
+                {
+                    LoadOfficialReleasesInto(result, officialPath);
+                    Debug.WriteLine($"[STARTUP] Official releases scanned: {sw.ElapsedMilliseconds}ms ({result.Count - audienceCount} releases)");
+                }
+
+                // Sort by date descending (newest first)
+                result = result.OrderByDescending(s => s.Date).ToList();
+                return result;
+            });
+
+            Debug.WriteLine($"[STARTUP] Background scan complete: {sw.ElapsedMilliseconds}ms — {shows.Count} total shows");
+
+            // Back on UI thread — populate the grid
+            _shows = shows;
 
             if (_isByDateMode)
             {
@@ -91,6 +121,11 @@ namespace DeadEditor
                 ShowsDataGrid.ItemsSource = _filteredShows;
                 ConcertCountChanged?.Invoke(this, _shows.Count);
             }
+
+            // Hide loading indicator
+            LoadingIndicator.Visibility = Visibility.Collapsed;
+
+            Debug.WriteLine($"[STARTUP] Grid populated, window visible: {sw.ElapsedMilliseconds}ms");
         }
 
         // ===== COLUMN MANAGEMENT =====
@@ -98,6 +133,7 @@ namespace DeadEditor
         private void SetAlbumColumns()
         {
             ShowsDataGrid.Columns.Clear();
+            ShowsDataGrid.Columns.Add(MakeHeadyColumn());
             ShowsDataGrid.Columns.Add(MakeColumn("Date", "Date", 100));
             ShowsDataGrid.Columns.Add(MakeColumn("Album Name", "AlbumName", 150));
             ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 120));
@@ -109,6 +145,7 @@ namespace DeadEditor
         private void SetDateColumns()
         {
             ShowsDataGrid.Columns.Clear();
+            ShowsDataGrid.Columns.Add(MakeHeadyColumn());
             ShowsDataGrid.Columns.Add(MakeColumn("Date", "Date", 100));
             ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 120, editable: true));
             ShowsDataGrid.Columns.Add(MakeColumn("City, State", "CityState", 120, editable: true));
@@ -116,6 +153,46 @@ namespace DeadEditor
             ShowsDataGrid.Columns.Add(MakeColumn("Tracks", "TrackCount", 60));
             // Grid starts read-only — editing enabled explicitly via EnterEditMode()
             ShowsDataGrid.IsReadOnly = true;
+        }
+
+        private void SetMissingShowColumns()
+        {
+            ShowsDataGrid.Columns.Clear();
+            ShowsDataGrid.Columns.Add(MakeHeadyColumn());
+            ShowsDataGrid.Columns.Add(MakeColumn("Date", "Date", 100));
+            ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 200));
+            ShowsDataGrid.Columns.Add(MakeColumn("City, State", "CityState", 150));
+            ShowsDataGrid.IsReadOnly = true;
+        }
+
+        /// <summary>
+        /// Creates a narrow column that displays a gold ⚡ icon for rows with heady versions.
+        /// </summary>
+        private static DataGridTemplateColumn MakeHeadyColumn()
+        {
+            // Build the DataTemplate with a TextBlock bound to HeadyIcon
+            var factory = new System.Windows.FrameworkElementFactory(typeof(System.Windows.Controls.TextBlock));
+            factory.SetBinding(System.Windows.Controls.TextBlock.TextProperty, new WpfBinding("HeadyIcon"));
+            factory.SetBinding(System.Windows.Controls.TextBlock.ToolTipProperty, new WpfBinding("HeadyTooltip"));
+            factory.SetValue(System.Windows.Controls.TextBlock.FontSizeProperty, 16.0);
+            factory.SetValue(System.Windows.Controls.TextBlock.ForegroundProperty,
+                new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#D4A017")));
+            factory.SetValue(System.Windows.FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
+            factory.SetValue(System.Windows.FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
+            factory.SetValue(System.Windows.Controls.TextBlock.CursorProperty, System.Windows.Input.Cursors.Hand);
+
+            var template = new DataTemplate { VisualTree = factory };
+
+            return new DataGridTemplateColumn
+            {
+                Header = "\u26A1",
+                CellTemplate = template,
+                Width = new DataGridLength(30),
+                MinWidth = 30,
+                MaxWidth = 36,
+                IsReadOnly = true
+            };
         }
 
         private static DataGridTextColumn MakeColumn(string header, string bindingPath, double minWidth, bool editable = false)
@@ -242,6 +319,49 @@ namespace DeadEditor
         /// </summary>
         public void ApplyFilter(string searchText, string typeFilter)
         {
+            // Handle "Shows I Don't Have" mode
+            if (typeFilter == "Shows I Don't Have")
+            {
+                if (!_isMissingShowsMode)
+                {
+                    // Exit other modes first
+                    if (_isByDateMode)
+                    {
+                        if (_isDateEditMode) CancelDateEdits();
+                        _isByDateMode = false;
+                    }
+                    _isMissingShowsMode = true;
+                    BuildMissingShowRows();
+                    SetMissingShowColumns();
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    var search = searchText.Trim();
+                    _filteredMissingRows = _missingShowRows.Where(r =>
+                        IsHeadySearch(search) ? !string.IsNullOrEmpty(r.HeadyIcon)
+                        : (ContainsIgnoreCase(r.Date, search)
+                        || ContainsIgnoreCase(r.Venue, search)
+                        || ContainsIgnoreCase(r.CityState, search))
+                    ).ToList();
+                }
+                else
+                {
+                    _filteredMissingRows = new List<DateRow>(_missingShowRows);
+                }
+
+                ShowsDataGrid.ItemsSource = _filteredMissingRows;
+                ConcertCountChanged?.Invoke(this, _filteredMissingRows.Count);
+                return;
+            }
+
+            // Exiting missing shows mode
+            if (_isMissingShowsMode)
+            {
+                _isMissingShowsMode = false;
+                SetAlbumColumns();
+            }
+
             // Handle "By Date" mode
             if (typeFilter == "By Date")
             {
@@ -256,10 +376,11 @@ namespace DeadEditor
                 {
                     var search = searchText.Trim();
                     _filteredDateRows = _dateRows.Where(r =>
-                        ContainsIgnoreCase(r.Date, search)
+                        IsHeadySearch(search) ? !string.IsNullOrEmpty(r.HeadyIcon)
+                        : (ContainsIgnoreCase(r.Date, search)
                         || ContainsIgnoreCase(r.Venue, search)
                         || ContainsIgnoreCase(r.CityState, search)
-                        || ContainsIgnoreCase(r.FromAlbum, search)
+                        || ContainsIgnoreCase(r.FromAlbum, search))
                     ).ToList();
                 }
                 else
@@ -393,6 +514,41 @@ namespace DeadEditor
             _dateRows = _dateRows.OrderBy(r => r.Date).ToList();
         }
 
+        // ===== SHOWS I DON'T HAVE MODE =====
+
+        private void BuildMissingShowRows()
+        {
+            _missingShowRows.Clear();
+
+            // Collect all dates the user owns (from library shows + multi-date albums)
+            var ownedDates = new HashSet<string>();
+            foreach (var show in _shows)
+            {
+                if (!string.IsNullOrEmpty(show.Date))
+                    ownedDates.Add(show.Date);
+                foreach (var d in show.ContainsDates)
+                    ownedDates.Add(d);
+            }
+
+            // Get all dates from shows.json and find the ones not owned
+            var allDates = ShowLookupService.Instance.GetAllDates();
+            foreach (var date in allDates.OrderBy(d => d))
+            {
+                if (ownedDates.Contains(date)) continue;
+
+                var showInfo = ShowLookupService.Instance.GetShowByDate(date);
+                _missingShowRows.Add(new DateRow
+                {
+                    Date = date,
+                    Venue = showInfo?.Venue ?? "",
+                    CityState = showInfo?.FormattedLocation ?? "",
+                    FromAlbum = "",
+                    TrackCount = 0,
+                    SourceShow = null!
+                });
+            }
+        }
+
         /// <summary>
         /// Extracts unique yyyy-MM-dd dates from track title suffixes like "Song (1972-05-04)".
         /// </summary>
@@ -430,8 +586,21 @@ namespace DeadEditor
 
         // ===== SEARCH =====
 
+        /// <summary>
+        /// Returns true if the search text is the special "heady" keyword.
+        /// </summary>
+        private static bool IsHeadySearch(string search)
+        {
+            return search.Equals("heady", StringComparison.OrdinalIgnoreCase)
+                || search == "\u26A1";
+        }
+
         private static bool MatchesSearch(LibraryShow show, string search)
         {
+            // Special "heady" keyword: filter to shows with heady versions
+            if (IsHeadySearch(search))
+                return !string.IsNullOrEmpty(show.HeadyIcon);
+
             if (ContainsIgnoreCase(show.Date, search)
                 || ContainsIgnoreCase(show.Venue, search)
                 || ContainsIgnoreCase(show.City, search)
@@ -460,44 +629,6 @@ namespace DeadEditor
                 && source.Contains(search, StringComparison.OrdinalIgnoreCase);
         }
 
-        // ===== TRACK TITLE LOADING =====
-
-        /// <summary>
-        /// Reads FLAC/MP3 TITLE tags from audio files in a folder and returns them as a list.
-        /// Used to populate LibraryShow.TrackTitles for search matching.
-        /// </summary>
-        private static List<string> ReadTrackTitles(string folderPath)
-        {
-            var titles = new List<string>();
-            try
-            {
-                var audioFiles = Directory.GetFiles(folderPath, "*.flac")
-                    .Concat(Directory.GetFiles(folderPath, "*.mp3"));
-
-                foreach (var file in audioFiles)
-                {
-                    try
-                    {
-                        using var tagFile = TagLib.File.Create(file);
-                        var title = tagFile.Tag.Title;
-                        if (!string.IsNullOrEmpty(title))
-                        {
-                            titles.Add(title);
-                        }
-                    }
-                    catch
-                    {
-                        // Skip files that can't be read
-                    }
-                }
-            }
-            catch
-            {
-                // Skip folders that can't be enumerated
-            }
-            return titles;
-        }
-
         /// <summary>
         /// Reads custom Xiph Vorbis Comment fields (VENUE, CITYSTATE) from the first FLAC file
         /// in a folder and populates the LibraryShow. These fields are written by WriteMetadata
@@ -507,10 +638,6 @@ namespace DeadEditor
         {
             try
             {
-                Debug.WriteLine($"[READ CUSTOM] Folder: {folderPath}");
-                Debug.WriteLine($"[READ CUSTOM] FLAC count: {Directory.GetFiles(folderPath, "*.flac").Length}");
-                Debug.WriteLine($"[READ CUSTOM] MP3 count: {Directory.GetFiles(folderPath, "*.mp3").Length}");
-
                 // Find first audio file (FLAC or MP3)
                 var firstAudio = Directory.GetFiles(folderPath, "*.flac").FirstOrDefault()
                               ?? Directory.GetFiles(folderPath, "*.mp3").FirstOrDefault();
@@ -562,9 +689,6 @@ namespace DeadEditor
                     show.ReleaseYear = (int)tagFile.Tag.Year;
                 }
 
-                Debug.WriteLine($"[READ CUSTOM] Result: Venue='{show.Venue}', " +
-                    $"City='{show.City}', State='{show.State}', " +
-                    $"Location='{show.Location}', Year='{show.ReleaseYear}'");
             }
             catch
             {
@@ -574,9 +698,9 @@ namespace DeadEditor
 
         // ===== LIBRARY LOADING =====
 
-        private void LoadAudienceRecordings()
+        private static void LoadAudienceRecordingsInto(List<LibraryShow> shows, string libraryRootPath)
         {
-            var topFolders = Directory.GetDirectories(_settings.LibraryRootPath);
+            var topFolders = Directory.GetDirectories(libraryRootPath);
 
             foreach (var yearFolder in topFolders)
             {
@@ -613,7 +737,8 @@ namespace DeadEditor
                             state = venueParts.Length > 2 ? venueParts[2] : "";
                         }
 
-                        var audioFiles = Directory.GetFiles(showFolder, "*.flac").Concat(Directory.GetFiles(showFolder, "*.mp3")).ToArray();
+                        var flacCount = Directory.GetFiles(showFolder, "*.flac").Length;
+                        var mp3Count = Directory.GetFiles(showFolder, "*.mp3").Length;
 
                         var show = new LibraryShow
                         {
@@ -623,31 +748,31 @@ namespace DeadEditor
                             City = city,
                             State = state,
                             Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state) ? $"{city}, {state}" : city + state,
-                            TrackCount = audioFiles.Length,
-                            FolderPath = showFolder,
-                            TrackTitles = ReadTrackTitles(showFolder)
+                            TrackCount = flacCount + mp3Count,
+                            FolderPath = showFolder
                         };
 
                         // Override folder-name-parsed values with custom FLAC tags if present
                         // (written by Edit Metadata save)
                         ReadCustomFieldsIntoShow(show, showFolder);
 
-                        _shows.Add(show);
+                        shows.Add(show);
                     }
                 }
             }
         }
 
-        private void LoadOfficialReleases()
+        private static void LoadOfficialReleasesInto(List<LibraryShow> shows, string officialReleasesPath)
         {
             // Load from Studio Albums folder
-            var studioPath = Path.Combine(_settings.OfficialReleasesPath, "Studio Albums");
+            var studioPath = Path.Combine(officialReleasesPath, "Studio Albums");
             if (Directory.Exists(studioPath))
             {
                 foreach (var albumFolder in Directory.GetDirectories(studioPath))
                 {
                     var folderName = Path.GetFileName(albumFolder);
-                    var audioFiles = Directory.GetFiles(albumFolder, "*.flac").Concat(Directory.GetFiles(albumFolder, "*.mp3")).ToArray();
+                    var flacCount = Directory.GetFiles(albumFolder, "*.flac").Length;
+                    var mp3Count = Directory.GetFiles(albumFolder, "*.mp3").Length;
 
                     string albumName = folderName;
                     int? year = null;
@@ -660,53 +785,42 @@ namespace DeadEditor
                             year = y;
                     }
 
-                    var studioTitles = ReadTrackTitles(albumFolder);
-                    var studioDates = ExtractDatesFromTitles(studioTitles);
-
                     var studioShow = new LibraryShow
                     {
                         Type = AlbumType.OfficialRelease,
                         AlbumName = albumName,
                         ReleaseYear = year,
-                        Date = studioDates.Count > 0 ? studioDates[0] : "",
-                        ContainsDates = studioDates,
-                        TrackCount = audioFiles.Length,
-                        FolderPath = albumFolder,
-                        TrackTitles = studioTitles
+                        TrackCount = flacCount + mp3Count,
+                        FolderPath = albumFolder
                     };
                     ReadCustomFieldsIntoShow(studioShow, albumFolder);
-                    _shows.Add(studioShow);
+                    shows.Add(studioShow);
                 }
             }
 
             // Load from series folders (Dave's Picks, etc.)
-            var seriesFolders = Directory.GetDirectories(_settings.OfficialReleasesPath).Where(f => !Path.GetFileName(f).Equals("Studio Albums", StringComparison.OrdinalIgnoreCase));
+            var seriesFolders = Directory.GetDirectories(officialReleasesPath).Where(f => !Path.GetFileName(f).Equals("Studio Albums", StringComparison.OrdinalIgnoreCase));
 
             foreach (var seriesFolder in seriesFolders)
             {
                 foreach (var releaseFolder in Directory.GetDirectories(seriesFolder))
                 {
                     var folderName = Path.GetFileName(releaseFolder);
-                    var audioFiles = Directory.GetFiles(releaseFolder, "*.flac").Concat(Directory.GetFiles(releaseFolder, "*.mp3")).ToArray();
+                    var flacCount = Directory.GetFiles(releaseFolder, "*.flac").Length;
+                    var mp3Count = Directory.GetFiles(releaseFolder, "*.mp3").Length;
 
-                    if (audioFiles.Length == 0) continue;
-
-                    var seriesTitles = ReadTrackTitles(releaseFolder);
-                    var seriesDates = ExtractDatesFromTitles(seriesTitles);
+                    if (flacCount + mp3Count == 0) continue;
 
                     var seriesShow = new LibraryShow
                     {
                         Type = AlbumType.OfficialRelease,
                         AlbumName = folderName,
                         OfficialRelease = folderName,
-                        Date = seriesDates.Count > 0 ? seriesDates[0] : "",
-                        ContainsDates = seriesDates,
-                        TrackCount = audioFiles.Length,
-                        FolderPath = releaseFolder,
-                        TrackTitles = seriesTitles
+                        TrackCount = flacCount + mp3Count,
+                        FolderPath = releaseFolder
                     };
                     ReadCustomFieldsIntoShow(seriesShow, releaseFolder);
-                    _shows.Add(seriesShow);
+                    shows.Add(seriesShow);
                 }
             }
         }
@@ -771,6 +885,17 @@ namespace DeadEditor
             if (_isDateEditMode && ShowsDataGrid.CurrentCell.Column != null
                 && !ShowsDataGrid.CurrentCell.Column.IsReadOnly)
             {
+                return;
+            }
+
+            // "Shows I Don't Have" mode — open Jerrybase for the date
+            if (_isMissingShowsMode && ShowsDataGrid.SelectedItem is DateRow missingRow)
+            {
+                if (!string.IsNullOrEmpty(missingRow.Date))
+                {
+                    var url = $"https://www.jerrybase.com/default/date/{missingRow.Date}";
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+                }
                 return;
             }
 

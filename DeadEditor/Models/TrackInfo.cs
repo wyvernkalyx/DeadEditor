@@ -1,3 +1,4 @@
+using DeadEditor.Services;
 using System.ComponentModel;
 
 namespace DeadEditor.Models
@@ -201,6 +202,41 @@ namespace DeadEditor.Models
         {
             get => Segue;
             set => Segue = value;
+        }
+
+        // Heady version indicator — shows ⚡ if this song+date is a community-rated heady version
+        public string HeadyIcon
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SongName) || string.IsNullOrEmpty(TrackDate))
+                    return "";
+                var heady = HeadyVersionService.Instance.GetHeadyVersion(SongName, TrackDate);
+                return heady != null ? "\u26A1" : "";
+            }
+        }
+
+        public string HeadyTooltip
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SongName) || string.IsNullOrEmpty(TrackDate))
+                    return "";
+                var heady = HeadyVersionService.Instance.GetHeadyVersion(SongName, TrackDate);
+                if (heady == null) return "";
+                return $"\u26A1 #{heady.Rank} rated {heady.Song} on headyversion.com ({heady.Votes} votes)";
+            }
+        }
+
+        public string? HeadyUrl
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SongName) || string.IsNullOrEmpty(TrackDate))
+                    return null;
+                var heady = HeadyVersionService.Instance.GetHeadyVersion(SongName, TrackDate);
+                return heady?.Url;
+            }
         }
 
         // Override Equals and GetHashCode for value-based equality (needed for IndexOf in playlists)

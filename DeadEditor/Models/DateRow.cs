@@ -1,3 +1,5 @@
+using DeadEditor.Services;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -46,6 +48,23 @@ namespace DeadEditor.Models
 
         // Back-reference to source album for double-click navigation
         public LibraryShow SourceShow { get; set; } = null!;
+
+        // Heady version indicator — shows ⚡ if any heady version exists on this date
+        public string HeadyIcon =>
+            HeadyVersionService.Instance.HasHeadyVersionsOnDate(Date) ? "\u26A1" : "";
+
+        public string HeadyTooltip
+        {
+            get
+            {
+                var versions = HeadyVersionService.Instance.GetHeadyVersionsForDate(Date);
+                if (versions.Count == 0) return "";
+                var lines = new List<string>();
+                foreach (var v in versions)
+                    lines.Add($"#{v.Rank} {v.Song} ({v.Votes} votes)");
+                return string.Join("\n", lines);
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

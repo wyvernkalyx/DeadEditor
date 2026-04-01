@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -64,6 +65,24 @@ namespace DeadEditor
                 VenueText.Text = _show.Venue;
                 LocationText.Text = _show.Location;
                 DateText.Text = _show.Date;
+            }
+
+            // Show Jerrybase link if there's a valid concert date
+            if (!string.IsNullOrEmpty(_show.Date) && Regex.IsMatch(_show.Date, @"^\d{4}-\d{2}-\d{2}$"))
+            {
+                JerrybaseLink.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void JerrybaseLink_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_show.Date))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = $"https://jerrybase.com/events/{_show.Date}",
+                    UseShellExecute = true
+                });
             }
         }
 
@@ -289,12 +308,17 @@ namespace DeadEditor
                 var date = dateGroup.Key;
                 var dateTracks = dateGroup.ToList();
 
+                // Lookup venue info from shows.json
+                var showInfo = ShowLookupService.Instance.GetShowByDate(date);
+                var venue = showInfo?.Venue ?? "";
+                var location = showInfo?.FormattedLocation ?? "";
+
                 // Create date header
                 var header = new DateHeaderItem
                 {
                     Date = date,
-                    Venue = "", // Could extract from folder name if needed
-                    Location = "",
+                    Venue = venue,
+                    Location = location,
                     TrackCount = dateTracks.Count,
                     IsExpanded = isFirstSection  // First section expanded, others collapsed
                 };
@@ -723,6 +747,15 @@ namespace DeadEditor
             await System.Threading.Tasks.Task.Delay(2000);
             TrackCountText.Text = original;
             TrackCountText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+        }
+
+        private void HeadyIcon_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is System.Windows.Controls.TextBlock tb && tb.Tag is string url && !string.IsNullOrEmpty(url))
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                e.Handled = true;
+            }
         }
 
         public void NavigateBack()

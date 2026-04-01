@@ -1,4 +1,7 @@
+using DeadEditor.Services;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DeadEditor.Models
@@ -21,7 +24,27 @@ namespace DeadEditor.Models
         public string OfficialRelease { get; set; } = "";
 
         // Multi-date/multi-venue support for official releases
-        public List<string> ContainsDates { get; set; } = new List<string>();
+        private List<string>? _containsDates;
+        private bool _containsDatesLoaded;
+
+        public List<string> ContainsDates
+        {
+            get
+            {
+                if (!_containsDatesLoaded)
+                {
+                    // Trigger lazy load of track titles, which also populates ContainsDates
+                    _ = TrackTitles;
+                }
+                return _containsDates ?? new List<string>();
+            }
+            set
+            {
+                _containsDates = value;
+                _containsDatesLoaded = true;
+            }
+        }
+
         public List<string> ContainsVenues { get; set; } = new List<string>();
 
         // Studio album properties
@@ -33,8 +56,79 @@ namespace DeadEditor.Models
         public int TrackCount { get; set; }
         public List<string> FolderPaths { get; set; } = new List<string>();
 
-        // Cached track/song titles for quick search (populated during library load)
-        public List<string> TrackTitles { get; set; } = new List<string>();
+        // Track titles — lazy-loaded on first access (reads TagLib tags from audio files).
+        // NOT loaded at startup to avoid the 50+ second penalty of opening every audio file.
+        private List<string>? _trackTitles;
+        private bool _trackTitlesLoaded;
+
+        public List<string> TrackTitles
+        {
+            get
+            {
+                if (!_trackTitlesLoaded)
+                {
+                    _trackTitlesLoaded = true;
+                    _trackTitles = LoadTrackTitlesFromDisk();
+
+                    // Also populate ContainsDates if not already set
+                    if (!_containsDatesLoaded)
+                    {
+                        _containsDatesLoaded = true;
+                        _containsDates = ExtractDatesFromTitles(_trackTitles);
+                        // Update the Date field if it was empty
+                        if (string.IsNullOrEmpty(Date) && _containsDates.Count > 0)
+                            Date = _containsDates[0];
+                    }
+                }
+                return _trackTitles ?? new List<string>();
+            }
+            set
+            {
+                _trackTitles = value;
+                _trackTitlesLoaded = true;
+            }
+        }
+
+        private List<string> LoadTrackTitlesFromDisk()
+        {
+            var titles = new List<string>();
+            var folders = FolderPaths.Count > 0 ? FolderPaths : new List<string>();
+            foreach (var folder in folders)
+            {
+                if (!Directory.Exists(folder)) continue;
+                try
+                {
+                    var audioFiles = Directory.GetFiles(folder, "*.flac")
+                        .Concat(Directory.GetFiles(folder, "*.mp3"));
+                    foreach (var file in audioFiles)
+                    {
+                        try
+                        {
+                            using var tagFile = TagLib.File.Create(file);
+                            var title = tagFile.Tag.Title;
+                            if (!string.IsNullOrEmpty(title))
+                                titles.Add(title);
+                        }
+                        catch { }
+                    }
+                }
+                catch { }
+            }
+            return titles;
+        }
+
+        private static List<string> ExtractDatesFromTitles(List<string> titles)
+        {
+            var dates = new HashSet<string>();
+            var regex = new System.Text.RegularExpressions.Regex(@"\((\d{4}-\d{2}-\d{2})");
+            foreach (var title in titles)
+            {
+                var match = regex.Match(title);
+                if (match.Success)
+                    dates.Add(match.Groups[1].Value);
+            }
+            return dates.OrderBy(d => d).ToList();
+        }
 
         // Backward-compatible property for code not yet updated
         public string FolderPath
@@ -46,6 +140,48 @@ namespace DeadEditor.Models
                     FolderPaths.Add(value);
                 else
                     FolderPaths[0] = value;
+            }
+        }
+
+        // Heady version indicator — shows ⚡ if any track date has a heady version
+        public string HeadyIcon
+        {
+            get
+            {
+                var heady = HeadyVersionService.Instance;
+                if (!string.IsNullOrEmpty(Date) && heady.HasHeadyVersionsOnDate(Date))
+                    return "\u26A1";
+                foreach (var d in ContainsDates)
+                {
+                    if (heady.HasHeadyVersionsOnDate(d))
+                        return "\u26A1";
+                }
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Tooltip text for the heady icon listing the heady songs on this show's dates.
+        /// </summary>
+        public string HeadyTooltip
+        {
+            get
+            {
+                var heady = HeadyVersionService.Instance;
+                var dates = new List<string>();
+                if (!string.IsNullOrEmpty(Date)) dates.Add(Date);
+                foreach (var d in ContainsDates)
+                    if (!dates.Contains(d)) dates.Add(d);
+
+                var lines = new List<string>();
+                foreach (var d in dates)
+                {
+                    foreach (var v in heady.GetHeadyVersionsForDate(d))
+                    {
+                        lines.Add($"#{v.Rank} {v.Song} ({v.Votes} votes)");
+                    }
+                }
+                return lines.Count > 0 ? string.Join("\n", lines) : "";
             }
         }
 
