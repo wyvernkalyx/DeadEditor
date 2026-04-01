@@ -712,6 +712,21 @@ namespace DeadEditor
                     show.ReleaseYear = (int)tagFile.Tag.Year;
                 }
 
+                // For official releases, extract the date from the first file's title tag
+                // (already opened above). This avoids scanning ALL files with TagLib which
+                // takes 30+ seconds for 900+ tracks. HeadyIcon uses _containsDatesLoaded
+                // guard to avoid triggering the full lazy-load during rendering.
+                if (show.Type == AlbumType.OfficialRelease && string.IsNullOrEmpty(show.Date))
+                {
+                    var firstTitle = tagFile.Tag.Title;
+                    if (!string.IsNullOrEmpty(firstTitle))
+                    {
+                        var dateMatch = Regex.Match(firstTitle, @"\((\d{4}-\d{2}-\d{2})");
+                        if (dateMatch.Success)
+                            show.Date = dateMatch.Groups[1].Value;
+                    }
+                }
+
             }
             catch
             {

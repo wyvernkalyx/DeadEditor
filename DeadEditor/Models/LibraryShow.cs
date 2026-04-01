@@ -143,7 +143,10 @@ namespace DeadEditor.Models
             }
         }
 
-        // Heady version indicator — shows ⚡ if any track date has a heady version
+        // Heady version indicator — shows ⚡ if any track date has a heady version.
+        // IMPORTANT: Only checks dates that are already loaded to avoid triggering
+        // the expensive lazy-load of track titles from disk (50+ seconds for all albums).
+        // ContainsDates is only accessed if _containsDatesLoaded is already true.
         public string HeadyIcon
         {
             get
@@ -151,10 +154,13 @@ namespace DeadEditor.Models
                 var heady = HeadyVersionService.Instance;
                 if (!string.IsNullOrEmpty(Date) && heady.HasHeadyVersionsOnDate(Date))
                     return "\u26A1";
-                foreach (var d in ContainsDates)
+                if (_containsDatesLoaded && _containsDates != null)
                 {
-                    if (heady.HasHeadyVersionsOnDate(d))
-                        return "\u26A1";
+                    foreach (var d in _containsDates)
+                    {
+                        if (heady.HasHeadyVersionsOnDate(d))
+                            return "\u26A1";
+                    }
                 }
                 return "";
             }
@@ -162,6 +168,7 @@ namespace DeadEditor.Models
 
         /// <summary>
         /// Tooltip text for the heady icon listing the heady songs on this show's dates.
+        /// Same lazy-load guard as HeadyIcon.
         /// </summary>
         public string HeadyTooltip
         {
@@ -170,8 +177,11 @@ namespace DeadEditor.Models
                 var heady = HeadyVersionService.Instance;
                 var dates = new List<string>();
                 if (!string.IsNullOrEmpty(Date)) dates.Add(Date);
-                foreach (var d in ContainsDates)
-                    if (!dates.Contains(d)) dates.Add(d);
+                if (_containsDatesLoaded && _containsDates != null)
+                {
+                    foreach (var d in _containsDates)
+                        if (!dates.Contains(d)) dates.Add(d);
+                }
 
                 var lines = new List<string>();
                 foreach (var d in dates)
