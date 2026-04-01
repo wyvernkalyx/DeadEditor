@@ -9,6 +9,15 @@
              Loaded="LibraryGridView_Loaded">
 
     <Grid>
+        <!-- Loading indicator (shown while library is scanning) -->
+        <TextBlock x:Name="LoadingIndicator"
+                   Text="Loading library..."
+                   Foreground="#888888"
+                   FontSize="18"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Visibility="Collapsed"/>
+
         <DataGrid x:Name="ShowsDataGrid"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"

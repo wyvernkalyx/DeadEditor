@@ -25,6 +25,9 @@ public partial class App : System.Windows.Application
 
     protected override void OnStartup(System.Windows.StartupEventArgs e)
     {
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        System.Diagnostics.Debug.WriteLine($"[STARTUP] App.OnStartup begin: {sw.ElapsedMilliseconds}ms");
+
         base.OnStartup(e);
 
         // Set shutdown mode: app exits when main window closes
@@ -32,17 +35,22 @@ public partial class App : System.Windows.Application
 
         // Initialize singleton on app startup to ensure it's ready
         _ = AudioPlayerService.Instance;
+        System.Diagnostics.Debug.WriteLine($"[STARTUP] AudioPlayerService initialized: {sw.ElapsedMilliseconds}ms");
 
-        // Restore saved playlist from settings
-        RestorePlaylist();
-
-        // Launch ShellWindow (single-window architecture)
+        // Launch ShellWindow immediately (don't block on playlist restore)
         var shellWindow = new ShellWindow();
+        System.Diagnostics.Debug.WriteLine($"[STARTUP] ShellWindow created: {sw.ElapsedMilliseconds}ms");
         shellWindow.Show();
+        System.Diagnostics.Debug.WriteLine($"[STARTUP] ShellWindow.Show() complete: {sw.ElapsedMilliseconds}ms");
         MainWindow = shellWindow;
+
+        // Restore saved playlist on background thread (reads TagLib for each track)
+        RestorePlaylistAsync();
 
         // Hook Windows session ending (log off/shutdown)
         SessionEnding += App_SessionEnding;
+
+        System.Diagnostics.Debug.WriteLine($"[STARTUP] App.OnStartup complete: {sw.ElapsedMilliseconds}ms");
     }
 
     private void App_SessionEnding(object sender, System.Windows.SessionEndingCancelEventArgs e)
@@ -52,57 +60,65 @@ public partial class App : System.Windows.Application
         PlaybackService.Stop();
     }
 
-    private void RestorePlaylist()
+    private async void RestorePlaylistAsync()
     {
         var settings = Models.LibrarySettings.Load();
         if (settings.SavedPlaylistPaths == null || !settings.SavedPlaylistPaths.Any())
             return;
 
-        foreach (var path in settings.SavedPlaylistPaths)
+        var paths = settings.SavedPlaylistPaths.ToList();
+
+        // Read TagLib metadata on background thread (can be slow with many tracks)
+        var tracks = await System.Threading.Tasks.Task.Run(() =>
         {
-            // Skip missing files silently
-            if (!System.IO.File.Exists(path))
-                continue;
-
-            try
+            var result = new System.Collections.Generic.List<Models.TrackInfo>();
+            foreach (var path in paths)
             {
-                // Read full metadata from file for proper playlist display
-                using (var file = TagLib.File.Create(path))
+                if (!System.IO.File.Exists(path))
+                    continue;
+
+                try
                 {
-                    var rawTitle = file.Tag.Title ?? System.IO.Path.GetFileNameWithoutExtension(path);
-
-                    // Parse title to extract date if embedded (e.g., "Song (1977-05-08)")
-                    var extractedDate = "";
-                    var songName = rawTitle;
-                    var dateMatch = System.Text.RegularExpressions.Regex.Match(rawTitle, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})\)\s*>?$");
-                    if (dateMatch.Success)
+                    using (var file = TagLib.File.Create(path))
                     {
-                        songName = dateMatch.Groups[1].Value.Trim();
-                        extractedDate = dateMatch.Groups[2].Value;
+                        var rawTitle = file.Tag.Title ?? System.IO.Path.GetFileNameWithoutExtension(path);
+
+                        var extractedDate = "";
+                        var songName = rawTitle;
+                        var dateMatch = System.Text.RegularExpressions.Regex.Match(rawTitle, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})\)\s*>?$");
+                        if (dateMatch.Success)
+                        {
+                            songName = dateMatch.Groups[1].Value.Trim();
+                            extractedDate = dateMatch.Groups[2].Value;
+                        }
+
+                        result.Add(new Models.TrackInfo
+                        {
+                            FilePath = path,
+                            FileName = System.IO.Path.GetFileName(path),
+                            TrackNumber = (int)file.Tag.Track,
+                            DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
+                            SongName = songName,
+                            RawTitle = rawTitle,
+                            TrackDate = extractedDate,
+                            Duration = file.Properties.Duration.ToString(@"mm\:ss"),
+                            Segue = rawTitle.TrimEnd().EndsWith(">"),
+                            IsModified = false
+                        });
                     }
-
-                    var track = new Models.TrackInfo
-                    {
-                        FilePath = path,
-                        FileName = System.IO.Path.GetFileName(path),
-                        TrackNumber = (int)file.Tag.Track,
-                        DiscNumber = file.Tag.Disc > 0 ? (int)file.Tag.Disc : 1,
-                        SongName = songName,
-                        RawTitle = rawTitle,
-                        TrackDate = extractedDate,
-                        Duration = file.Properties.Duration.ToString(@"mm\:ss"),
-                        Segue = rawTitle.TrimEnd().EndsWith(">"),
-                        IsModified = false
-                    };
-
-                    PlaybackService.Playlist.Add(track);
+                }
+                catch
+                {
+                    continue;
                 }
             }
-            catch
-            {
-                // Skip files that can't be loaded
-                continue;
-            }
+            return result;
+        });
+
+        // Add to playlist on UI thread
+        foreach (var track in tracks)
+        {
+            PlaybackService.Playlist.Add(track);
         }
 
         System.Diagnostics.Debug.WriteLine($"[App] Restored {PlaybackService.Playlist.Count} tracks to playlist from settings");

@@ -372,15 +372,14 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
          - **Official Release format:** `"... : Release Name"` (space before colon) (line 320-324)
        - Creates `LibraryShow` with `Type = AlbumType.Live` or `AlbumType.BoxSet` (line 340-353)
    - **If `OfficialReleasesPath` is set:**
-     - Calls `LoadOfficialReleases()` (line 159)
-     - Scans series folders (Dave's Picks, Road Trips, etc.) (line 364)
+     - Calls `LoadOfficialReleasesInto()` — scans Studio Albums and series folders
      - For each release folder:
-       - Reads all audio files' `Title` tags to extract dates and venues (line 384-440)
-       - Uses regex to find patterns like `"(Live at Venue, City, State, Date)"` (line 419-432)
-       - Collects unique dates into `ContainsDates` list (line 380, 412)
-       - Collects unique venues into `ContainsVenues` list (line 381, 422)
-       - Parses `Album` tag for official release name (e.g., "Dave's Picks Volume 38") (line 397-404)
-       - Creates `LibraryShow` with `Type = AlbumType.OfficialRelease` (line 449-463)
+       - Counts audio files for `TrackCount` (directory listing only, NO TagLib reads)
+       - Reads ONE file per album via `ReadCustomFieldsIntoShow()` for venue/city/year tags
+       - Creates `LibraryShow` with `Type = AlbumType.OfficialRelease`
+       - **TrackTitles and ContainsDates are lazy-loaded** — NOT read at startup.
+         They load on first access (triggered by search or By Date mode).
+         This avoids the ~50s penalty of opening every audio file with TagLib at startup.
    - If no shows found → Status: "No library paths set or no shows found..." (line 166)
    - Sorts shows: by Type first (Live/Official/Studio), then by Date desc or AlbumName desc (line 171-174)
    - Calls `ApplySearchFilter()` to display (line 177)

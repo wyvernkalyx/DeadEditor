@@ -62,6 +62,7 @@ namespace DeadEditor
         public string ReleaseId { get; set; } = "";
         public string? ArtworkUrl { get; set; }
         public string Artist { get; set; } = "";
+        public int? TotalTrackCount { get; set; }  // Total tracks across all media/discs
         public List<MusicBrainzTrack>? Tracks { get; set; }  // Track listings from MusicBrainz (optional)
     }
 

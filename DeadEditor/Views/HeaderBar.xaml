@@ -165,7 +165,7 @@
                            VerticalAlignment="Center"
                            Margin="20,0,6,0"/>
                 <ComboBox x:Name="ShowTypeFilter"
-                          Width="170"
+                          Width="195"
                           VerticalAlignment="Center"
                           SelectionChanged="ShowTypeFilter_SelectionChanged"
                           Style="{StaticResource DarkComboBoxStyle}">
@@ -173,6 +173,7 @@
                     <ComboBoxItem Content="Official Releases"/>
                     <ComboBoxItem Content="Audience Recordings"/>
                     <ComboBoxItem Content="By Date"/>
+                    <ComboBoxItem Content="Shows I Don't Have"/>
                 </ComboBox>
 
                 <TextBlock x:Name="ConcertCountText"

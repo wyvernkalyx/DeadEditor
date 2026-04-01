@@ -28,7 +28,7 @@ The **MusicBrainzService** integrates with external music metadata APIs (AcoustI
 public async Task<AlbumLookupResult?> LookupAlbumAsync(List<TrackInfo> tracks)
 ```
 
-**Purpose:** Automatically identify album using audio fingerprinting (first 3 tracks).
+**Purpose:** Automatically identify album using audio fingerprinting (last 4 tracks).
 
 **Parameters:**
 - `tracks` (List<TrackInfo>) - Tracks from the album to identify
@@ -37,7 +37,7 @@ public async Task<AlbumLookupResult?> LookupAlbumAsync(List<TrackInfo> tracks)
 
 **Business Logic:**
 
-1. **Take first 3 tracks** for fingerprinting (line 35) - Faster and more reliable than all tracks
+1. **Sort tracks** by DiscNumber then TrackNumber and **take last 4** for fingerprinting — bonus tracks on reissues/expanded editions appear at the end, giving better matches for those editions
 2. **For each track:**
    - Generate fingerprint using fpcalc.exe → `GetFingerprintAsync()`
    - Query AcoustID API with fingerprint → `QueryAcoustIdAsync()`
@@ -110,30 +110,37 @@ public async Task<List<ReleaseOption>?> SearchReleasesByNameAsync(string albumNa
 
 **Signature:**
 ```csharp
-public async Task<List<ReleaseOption>?> LookupAllReleasesAsync(List<TrackInfo> tracks)
+public async Task<List<ReleaseOption>?> LookupAllReleasesAsync(List<TrackInfo> tracks, int? localTrackCount = null)
 ```
 
-**Purpose:** Fingerprint-based lookup returning ALL matching releases (for release selector dialog).
+**Purpose:** Fingerprint-based lookup returning ALL matching releases (for release selector dialog). Results sorted by track-count closeness to local files so the best edition match appears first.
 
 **Parameters:**
 - `tracks` (List<TrackInfo>) - Tracks to fingerprint
+- `localTrackCount` (int?, optional) - Number of local audio files being imported. When provided, results are sorted so releases with the closest track count appear first.
 
-**Return Value:** `List<ReleaseOption>?` - All matching releases or null if none found
+**Return Value:** `List<ReleaseOption>?` - All matching releases sorted by track-count match, or null if none found
 
 **Business Logic:**
 
-1. **Take first 3 tracks** for fingerprinting (line 203)
+1. **Sort tracks** by DiscNumber then TrackNumber and **take last 4** for fingerprinting — bonus tracks on reissues/expanded editions appear at the end
 2. **For each track:**
    - Generate fingerprint → `GetFingerprintAsync()`
    - Query AcoustID → `QueryAcoustIdAsync()`
-   - Collect recording IDs (line 216-240)
-3. **Find common releases** across all recordings → `FindCommonReleasesAsync()` (line 251)
-   - Uses multi-track matching to identify albums (not compilations)
-4. **Return all release options** (line 252)
+   - Collect recording IDs
+3. **Find common releases** across all recordings → `FindCommonReleasesAsync()`
+   - Uses multi-track matching to identify release groups (not compilations)
+   - Then fetches ALL releases in each release group (including reissues, deluxe editions)
+4. **Sort by track-count closeness** to `localTrackCount` (if provided)
+   - Releases with closest track count to local files appear first
+   - Example: 32 local files → 32-track deluxe edition ranks above 8-track original
+5. **Return all release options**
 
 **Difference from LookupAlbumAsync:**
 - Returns `List<ReleaseOption>` (multiple releases) instead of single `AlbumLookupResult`
 - Uses `FindCommonReleasesAsync()` to find releases containing multiple matched recordings
+- Fetches ALL releases in identified release groups (including reissues/deluxe editions)
+- Sorts by track-count match when `localTrackCount` is provided
 - Designed to trigger release selector dialog (if multiple releases found)
 
 **Error Handling:**
@@ -322,29 +329,29 @@ private async Task<List<ReleaseOption>?> FindCommonReleasesAsync(List<string> re
 private async Task<List<ReleaseOption>?> GetReleasesForReleaseGroupAsync(string releaseGroupId, string artist)
 ```
 
-**Purpose:** Get all official releases for a specific release-group (different editions/countries).
+**Purpose:** Get all official releases for a specific release-group (different editions/countries), including total track counts.
 
 **Business Logic:**
 
-1. **Query MusicBrainz** for release-group details (line 488):
+1. **Query MusicBrainz** release endpoint with release-group filter:
    ```
-   /ws/2/release-group/{releaseGroupId}?inc=releases+artists&fmt=json
+   /ws/2/release?release-group={releaseGroupId}&inc=media+labels&fmt=json&limit=100
    ```
-   - Does NOT include `recordings` (invalid parameter for release-group endpoint)
-   - Returns release summaries only (no track data)
-2. **Extract album title** from release-group (line 501)
-3. **For each release** (line 503-579):
-   - **Filter to official releases** (line 549-550)
+   - Uses the release endpoint (not release-group endpoint) to get media info with track counts
+   - `limit=100` ensures all editions are returned (including reissues, anniversary editions, etc.)
+2. **Get cover art** once for the release group → `GetCoverArtUrlAsync()`
+3. **For each release:**
+   - **Filter to official releases** only
    - Extract metadata: title, date, country, release ID
-   - Extract year from date (line 557-561)
-   - Extract label from `label-info` array (line 563-568)
-   - Extract format from `media` array (CD/Vinyl/Digital) (line 570-575)
-   - Get cover art URL → `GetCoverArtUrlAsync()` (line 577-582)
-   - Create `ReleaseOption` object (line 584-594)
-   - **Track data NOT included** (must be fetched separately per release)
+   - Extract year from date
+   - Extract label from `label-info` array
+   - Extract format from first `media` entry (CD/Vinyl/Digital)
+   - **Sum `track-count`** across all media (discs) → `TotalTrackCount`
+   - Create `ReleaseOption` object with track count
+   - **Full track data NOT included** (must be fetched separately per release)
 4. **Return release options** or null
 
-**Note:** Track listings are NOT available from this endpoint. After the user selects a release, call `GetReleaseTracksAsync()` to fetch track data for that specific release.
+**Note:** Full track listings are NOT available from this endpoint. After the user selects a release, call `GetReleaseTracksAsync()` to fetch track data for that specific release. However, the `TotalTrackCount` is available from the `media[].track-count` field and is used for ranking releases by closeness to local file count.
 
 **Error Handling:**
 - Returns `null` if no releases found (line 542)
@@ -507,10 +514,10 @@ private int GetDurationInSeconds(string filePath)
 - **Rationale:** MusicBrainz requires rate limiting to avoid IP bans
 - **No rate limit for AcoustID or Cover Art Archive**
 
-### 2. First 3 Tracks for Fingerprinting
-- **Rule:** Only fingerprint first 3 tracks (line 35, 203)
-- **Rationale:** Faster, more reliable, reduces API calls
-- **Trade-off:** May miss correct match if first 3 tracks not representative
+### 2. Last 4 Tracks for Fingerprinting
+- **Rule:** Sort tracks by disc/track number, then fingerprint the last 4 tracks
+- **Rationale:** Reissues and expanded editions add bonus material at the end. Fingerprinting last tracks matches recordings unique to those editions, rather than matching identical original-album tracks shared across all editions.
+- **Trade-off:** For non-reissue albums (audience recordings, original pressings), the last 4 tracks are just the final songs — these still match correctly via AcoustID since live recordings are acoustically unique.
 
 ### 3. fpcalc.exe Configuration
 - **Storage:** User-configured path stored in `LibrarySettings.FpcalcPath`

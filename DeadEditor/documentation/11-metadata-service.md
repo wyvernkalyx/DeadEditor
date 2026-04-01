@@ -320,18 +320,26 @@ public (string songName, string? date) ParseTitleAndDate(string title)
 
 **Regex Patterns (checked in order):**
 
-**Pattern 1: MusicBrainz format with M/D/YYYY**
+**Pattern 1: MusicBrainz format with M/D/YYYY in parentheses**
 ```csharp
-@"^(.+?)\s*\(Live (?:at|in) .+?,\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*-\s*.+)?$"
+@"^(.+?)\s*\(Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$"
 ```
 
 **Pattern Explanation:**
 - `^(.+?)` - Capture group 1: Song name (non-greedy, before opening paren)
 - `\s*\(Live (?:at|in) ` - "(Live at..." or "(Live in..." (case-insensitive)
-- `.+?,\s*` - Venue/location text ending with comma
+- `.+?[,\s]\s*` - Venue/location text ending with comma or space (handles both "IL, 2/1/1978" and "NY 2/21/1971")
 - `(\d{1,2})/(\d{1,2})/(\d{4})` - Groups 2-4: M/D/YYYY date
 - `\)` - Closing paren
+- `(?:\s*\[[^\]]*\])*` - Optional bracket suffixes (e.g., "[2020 Remaster]", zero or more)
 - `(?:\s*-\s*.+)?$` - Optional artist suffix (e.g., " - Grateful Dead__")
+
+**Pattern 1B: MusicBrainz format with M/D/YYYY in square brackets**
+```csharp
+@"^(.+?)\s*\[Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\](?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$"
+```
+
+Same as Pattern 1 but for square-bracket venue info: `"Song (False Start) [Live at Venue, City, ST 2/21/1971] [2020 Remaster]"`. Song name preserves subtitles like "(False Start)".
 
 **Pattern 2: yyyy-MM-dd date with any suffix**
 ```csharp
@@ -370,6 +378,15 @@ public (string songName, string? date) ParseTitleAndDate(string title)
 2. **MusicBrainz without artist suffix:** `"Terrapin Station (Live in Chicago, 1/31/1978)"`
    - Returns: `("Terrapin Station", "1978-01-31")`
 
+2b. **MusicBrainz with [Remaster] suffix:** `"Cold Rain And Snow (Live at the Capitol Theatre, Port Chester, NY 2/21/1971) [2020 Remaster]"`
+   - Returns: `("Cold Rain And Snow", "1971-02-21")`
+
+2c. **MusicBrainz with [Remaster] + artist:** `"Song (Live at Venue, City, ST, 3/15/1990) [2020 Remaster] - Grateful Dead__"`
+   - Returns: `("Song", "1990-03-15")`
+
+2d. **MusicBrainz square-bracket venue with subtitle:** `"Ripple (False Start) [Live at the Capitol Theatre, Port Chester, NY 2/21/1971] [2020 Remaster]"`
+   - Returns: `("Ripple (False Start)", "1971-02-21")`
+
 3. **Simple yyyy-MM-dd date:** `"Bertha (1971-04-27)"`
    - Returns: `("Bertha", "1971-04-27")`
 
@@ -396,22 +413,24 @@ public (string songName, string? date) ParseTitleAndDate(string title)
 
 **Business Logic:**
 1. Return immediately if title is null/whitespace
-2. Try Pattern 1 (MusicBrainz M/D/YYYY format):
+2. Try Pattern 1 (MusicBrainz M/D/YYYY in parentheses):
    - Extract song name from group 1, trim whitespace
    - **Strip trailing segue markers** from song name (Regex: `@"(\s*[-–]?\s*>)+\s*$"`)
    - Extract month/day/year from groups 2-4
    - Convert to yyyy-MM-dd format
    - Return tuple
-3. If no match, try Pattern 2 (yyyy-MM-dd with any suffix):
+3. If no match, try Pattern 1B (MusicBrainz M/D/YYYY in square brackets):
+   - Same extraction logic as Pattern 1
+4. If no match, try Pattern 2 (yyyy-MM-dd with any suffix):
    - Extract song name from group 1, trim whitespace
    - **Strip trailing segue markers** from song name (Regex: `@"(\s*[-–]?\s*>)+\s*$"`)
    - Extract date from group 2 (already yyyy-MM-dd)
    - Return tuple
-4. If no match, try Pattern 3 (year-only + tour name):
+5. If no match, try Pattern 3 (year-only + tour name):
    - Extract song name from group 1, trim whitespace
    - **Strip trailing segue markers** from song name
    - Return (songName, null) — suffix stripped but no full date to extract
-5. If no match from any pattern:
+6. If no match from any pattern:
    - **Strip trailing segue markers** from title
    - Return (cleaned title, null)
 

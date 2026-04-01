@@ -33,8 +33,10 @@ namespace DeadEditor.Services
                 Console.WriteLine($"=== STARTING ALBUM LOOKUP ===");
                 Console.WriteLine($"Total tracks: {tracks.Count}");
 
-                // Take first 3 tracks for fingerprinting (faster and more reliable)
-                var tracksToFingerprint = tracks.Take(3).ToList();
+                // Take last 4 tracks for fingerprinting — bonus tracks on reissues/expanded
+                // editions appear at the end, giving better matches for those editions
+                var sortedTracks = tracks.OrderBy(t => t.DiscNumber).ThenBy(t => t.TrackNumber).ToList();
+                var tracksToFingerprint = sortedTracks.TakeLast(4).ToList();
 
                 if (tracksToFingerprint.Count == 0)
                 {
@@ -192,17 +194,20 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Looks up all available releases for album selection UI (using fingerprinting)
+        /// Looks up all available releases for album selection UI (using fingerprinting).
+        /// Results are sorted by track-count closeness to localTrackCount so the best match appears first.
         /// </summary>
-        public async Task<List<ReleaseOption>?> LookupAllReleasesAsync(List<TrackInfo> tracks)
+        public async Task<List<ReleaseOption>?> LookupAllReleasesAsync(List<TrackInfo> tracks, int? localTrackCount = null)
         {
             try
             {
                 Console.WriteLine($"=== STARTING ALBUM LOOKUP (WITH SELECTION) ===");
                 Console.WriteLine($"Total tracks: {tracks.Count}");
 
-                // Take first 3 tracks for fingerprinting
-                var tracksToFingerprint = tracks.Take(3).ToList();
+                // Take last 4 tracks for fingerprinting — bonus tracks on reissues/expanded
+                // editions appear at the end, giving better matches for those editions
+                var sortedTracks = tracks.OrderBy(t => t.DiscNumber).ThenBy(t => t.TrackNumber).ToList();
+                var tracksToFingerprint = sortedTracks.TakeLast(4).ToList();
 
                 if (tracksToFingerprint.Count == 0)
                 {
@@ -251,6 +256,17 @@ namespace DeadEditor.Services
 
                 // Get all releases for each recording and find common release-groups
                 var allReleases = await FindCommonReleasesAsync(recordings);
+
+                // Sort by track-count closeness to local files so best match is first
+                if (allReleases != null && localTrackCount.HasValue)
+                {
+                    allReleases = allReleases
+                        .OrderBy(r => r.TotalTrackCount.HasValue
+                            ? Math.Abs(r.TotalTrackCount.Value - localTrackCount.Value)
+                            : int.MaxValue)
+                        .ToList();
+                }
+
                 return allReleases;
             }
             catch (Exception ex)
@@ -460,9 +476,9 @@ namespace DeadEditor.Services
                     await Task.Delay(1000);
                 }
 
-                // Remove duplicates
+                // Remove duplicates — include track count so different editions aren't collapsed
                 allReleaseOptions = allReleaseOptions
-                    .GroupBy(r => new { r.Title, r.Year })
+                    .GroupBy(r => new { r.Title, r.Year, r.TotalTrackCount })
                     .Select(g => g.First())
                     .OrderBy(r => r.Year)
                     .ToList();
@@ -479,13 +495,14 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Gets all releases for a specific release-group ID
+        /// Gets all releases for a specific release-group ID, including track counts from media data
         /// </summary>
         private async Task<List<ReleaseOption>?> GetReleasesForReleaseGroupAsync(string releaseGroupId, string artist)
         {
             try
             {
-                var url = $"https://musicbrainz.org/ws/2/release-group/{releaseGroupId}?inc=releases+artists&fmt=json";
+                // Use the release endpoint with release-group filter to get all releases with media info
+                var url = $"https://musicbrainz.org/ws/2/release?release-group={releaseGroupId}&inc=media+labels&fmt=json&limit=100";
 
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
@@ -498,14 +515,16 @@ namespace DeadEditor.Services
                     return null;
 
                 var releaseOptions = new List<ReleaseOption>();
-                var albumTitle = data["title"]?.ToString() ?? "Unknown Album";
+
+                // Get artwork once for the release group
+                string? artworkUrl = await GetCoverArtUrlAsync(releaseGroupId);
 
                 foreach (var release in releases)
                 {
                     var status = release["status"]?.ToString();
                     if (status != "Official") continue;
 
-                    var title = release["title"]?.ToString() ?? albumTitle;
+                    var title = release["title"]?.ToString() ?? "Unknown Album";
                     var releaseDate = release["date"]?.ToString();
                     var country = release["country"]?.ToString();
                     var releaseId = release["id"]?.ToString() ?? "";
@@ -524,17 +543,16 @@ namespace DeadEditor.Services
                     }
 
                     string? format = null;
+                    int totalTrackCount = 0;
                     var media = release["media"] as JArray;
                     if (media != null && media.Count > 0)
                     {
                         format = media[0]["format"]?.ToString();
-                    }
-
-                    // Get artwork
-                    string? artworkUrl = null;
-                    if (!string.IsNullOrEmpty(releaseGroupId))
-                    {
-                        artworkUrl = await GetCoverArtUrlAsync(releaseGroupId);
+                        // Sum track-count across all media (discs)
+                        foreach (var medium in media)
+                        {
+                            totalTrackCount += medium["track-count"]?.ToObject<int>() ?? 0;
+                        }
                     }
 
                     releaseOptions.Add(new ReleaseOption
@@ -547,6 +565,7 @@ namespace DeadEditor.Services
                         ReleaseId = releaseId,
                         ArtworkUrl = artworkUrl,
                         Artist = artist,
+                        TotalTrackCount = totalTrackCount > 0 ? totalTrackCount : null,
                         Tracks = null  // Tracks will be fetched separately via GetReleaseTracksAsync()
                     });
                 }

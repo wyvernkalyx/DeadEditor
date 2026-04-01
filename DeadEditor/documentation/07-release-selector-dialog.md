@@ -50,10 +50,11 @@ A centered modal dialog (700x500px, resizable) with **dark theme (#1E1E1E backgr
 
 - **Header:** "Multiple releases found. Please select one:" (16pt bold, white)
 - **Album Info:** Summary text describing the album (14pt, gray #CCCCCC)
-- **Releases Grid:** DataGrid with 6 columns:
+- **Releases Grid:** DataGrid with 7 columns:
   - Artist (150px fixed)
   - Album Title (* width, fills remaining space)
   - Year (80px fixed)
+  - Tracks (70px fixed) — total track count across all discs, helps identify correct edition
   - Label (140px fixed)
   - Country (90px fixed)
   - Format (90px fixed)
@@ -105,14 +106,14 @@ A centered modal dialog (700x500px, resizable) with **dark theme (#1E1E1E backgr
    Multiple releases found. Please select one:
    American Beauty by Grateful Dead
 
-   [Grid showing 5 releases:]
-   Artist          | Album Title      | Year | Label            | Country | Format
-   ----------------|------------------|------|------------------|---------|--------
-   Grateful Dead   | American Beauty  | 1970 | Warner Bros.     | US      | CD
-   Grateful Dead   | American Beauty  | 1971 | Warner Bros.     | UK      | Vinyl
-   Grateful Dead   | American Beauty  | 2003 | Rhino            | US      | CD
-   Grateful Dead   | American Beauty  | 2020 | Rhino/Dead.net   | US      | CD (Deluxe)
-   Grateful Dead   | American Beauty  | 2020 | Rhino            | EU      | Vinyl
+   [Grid showing 5 releases, sorted by track-count closeness to local files:]
+   Artist          | Album Title      | Year | Tracks | Label            | Country | Format
+   ----------------|------------------|------|--------|------------------|---------|--------
+   Grateful Dead   | American Beauty  | 2020 |   24   | Rhino/Dead.net   | US      | CD (Deluxe)
+   Grateful Dead   | American Beauty  | 1970 |   10   | Warner Bros.     | US      | CD
+   Grateful Dead   | American Beauty  | 1971 |   10   | Warner Bros.     | UK      | Vinyl
+   Grateful Dead   | American Beauty  | 2003 |   10   | Rhino            | US      | CD
+   Grateful Dead   | American Beauty  | 2020 |   10   | Rhino            | EU      | Vinyl
    ```
 3. First row auto-selected on open (line 18-21):
    ```csharp
@@ -236,6 +237,7 @@ public class ReleaseOption
     public string ReleaseId { get; set; }             // MusicBrainz release ID (GUID)
     public string? ArtworkUrl { get; set; }           // Album artwork URL (not displayed)
     public string Artist { get; set; }                // Artist name
+    public int? TotalTrackCount { get; set; }         // Total tracks across all media/discs
     public List<MusicBrainzTrack>? Tracks { get; set; }  // Track listings from MusicBrainz (optional)
 }
 

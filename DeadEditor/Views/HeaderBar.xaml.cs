@@ -183,6 +183,10 @@ namespace DeadEditor
             // Show/hide Edit Dates button based on mode
             bool isByDate = TypeFilter == "By Date";
             UpdateDateEditButtons(isByDate, false);
+
+            // Hide advanced search in "Shows I Don't Have" mode (not applicable)
+            AdvancedSearchButton.Visibility = TypeFilter == "Shows I Don't Have"
+                ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
@@ -236,10 +240,23 @@ namespace DeadEditor
 
         /// <summary>
         /// Updates the concert count display. Shows "X of Y concerts" when filtered,
-        /// or "X dates" in By Date mode.
+        /// "X dates" in By Date mode, or "X shows you don't have" in missing shows mode.
         /// </summary>
-        public void UpdateConcertCount(int filteredCount, int totalCount, bool isByDateMode = false)
+        public void UpdateConcertCount(int filteredCount, int totalCount, bool isByDateMode = false, bool isMissingShowsMode = false)
         {
+            if (isMissingShowsMode)
+            {
+                if (filteredCount == totalCount)
+                {
+                    ConcertCountText.Text = $"{totalCount:N0} shows you don't have";
+                }
+                else
+                {
+                    ConcertCountText.Text = $"{filteredCount:N0} of {totalCount:N0} missing shows";
+                }
+                return;
+            }
+
             var unit = isByDateMode ? "dates" : "concerts";
             var singularUnit = isByDateMode ? "date" : "concert";
 

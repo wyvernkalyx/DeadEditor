@@ -102,6 +102,11 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
+        /// Returns all date keys from shows.json (yyyy-MM-dd format).
+        /// </summary>
+        public IReadOnlyCollection<string> GetAllDates() => _shows.Keys;
+
+        /// <summary>
         /// Returns true if a show exists for the given date.
         /// </summary>
         public bool HasShow(string dateYyyyMmDd)

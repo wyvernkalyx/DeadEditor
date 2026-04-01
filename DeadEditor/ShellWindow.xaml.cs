@@ -224,7 +224,9 @@ namespace DeadEditor
             if (_libraryView != null)
             {
                 _libraryView.ApplyFilter(e.SearchText, e.TypeFilter);
-                HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount);
+                HeaderBar.UpdateConcertCount(
+                    _libraryView.FilteredCount, _libraryView.ConcertCount,
+                    _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode);
             }
         }
 
@@ -396,7 +398,8 @@ namespace DeadEditor
                 // Subscribe to concert count changes
                 _libraryView.ConcertCountChanged += (s, count) =>
                 {
-                    HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount, _libraryView.IsByDateMode);
+                    HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount,
+                        _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode);
                 };
             }
 

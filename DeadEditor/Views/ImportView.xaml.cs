@@ -779,7 +779,7 @@ namespace DeadEditor
                 StatusTextBlock.Text = "Looking up album on MusicBrainz...";
 
                 var trackList = _tracks.Select(t => t.Track).ToList();
-                var releases = await _musicBrainzService.LookupAllReleasesAsync(trackList);
+                var releases = await _musicBrainzService.LookupAllReleasesAsync(trackList, trackList.Count);
 
                 ProgressBar.Visibility = Visibility.Collapsed;
                 MusicBrainzButton.IsEnabled = true;

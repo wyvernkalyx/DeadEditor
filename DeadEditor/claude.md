@@ -53,6 +53,8 @@ Live music metadata suffers from:
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
 | `LibraryImportService.cs` | [documentation/13-library-import-service.md](documentation/13-library-import-service.md) | ~5,000 words | Two-path library system, folder creation, metadata preservation |
 | `MusicBrainzService.cs` | [documentation/14-musicbrainz-service.md](documentation/14-musicbrainz-service.md) | ~9,500 words | AcoustID fingerprinting, fpcalc.exe, MusicBrainz API, rate limiting |
+| `ShowLookupService.cs` | (inline — no separate doc) | - | Loads Data/shows.json, O(1) venue lookup by yyyy-MM-dd date |
+| `ReleaseLookupService.cs` | (inline — no separate doc) | - | Loads Data/releases.json, autocomplete for album/release names |
 | **Models** | | | |
 | `AlbumInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § AlbumInfo | ~11,000 words | Album metadata, type-based polymorphism, AlbumTitle format |
 | `TrackInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § TrackInfo | ~11,000 words | Track metadata, segue notation, GetFinalMetadataTitle |
@@ -60,6 +62,8 @@ Live music metadata suffers from:
 | `SongDatabase.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § SongDatabase | ~11,000 words | Song database structure, artist-based organization |
 | **Data Files** | | | |
 | `Data/songs.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § songs.json | ~11,000 words | JSON schema, examples, 598 songs across 2 artists |
+| `Data/shows.json` | (inline — no separate doc) | - | setlist.fm venue data keyed by yyyy-MM-dd, used by ShowLookupService |
+| `Data/releases.json` | (inline — no separate doc) | - | Series templates + standalone album names for autocomplete |
 | `%APPDATA%/DeadEditor/settings.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § settings.json | ~11,000 words | Settings JSON schema, all 12 keys with defaults |
 
 ### Documentation-First Development Workflow
@@ -344,6 +348,8 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `NormalizationService.cs` - Song title normalization, fuzzy matching, Levenshtein distance
 - `LibraryImportService.cs` - Concert import from folder structure
 - `MusicBrainzService.cs` - MusicBrainz API integration
+- `ShowLookupService.cs` - Venue lookup by date from Data/shows.json
+- `ReleaseLookupService.cs` - Album name autocomplete from Data/releases.json
 
 #### Shell + Views
 - `ShellWindow.xaml/.cs` - Single-window shell, sidebar, navigation
@@ -365,6 +371,8 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 
 #### Data
 - `Data/songs.json` - Song database (598 songs, artist-organized)
+- `Data/shows.json` - Venue/location lookup by date (from setlist.fm)
+- `Data/releases.json` - Series templates + standalone release names for autocomplete
 
 ---
 

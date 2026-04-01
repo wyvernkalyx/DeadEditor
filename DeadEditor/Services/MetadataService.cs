@@ -458,15 +458,17 @@ namespace DeadEditor.Services
             // Examples:
             //   "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__"
             //   "Terrapin Station (Live in Chicago, 1/31/1978)"
+            //   "Cold Rain And Snow (Live at the Capitol Theatre, Port Chester, NY 2/21/1971) [2020 Remaster]"
+            //   "Ripple (Live at the Capitol Theatre, Port Chester, NY 2/21/1971) [2020 Remaster] - Grateful Dead__"
             //
-            // Regex pattern: "(Live at/in ..., M/D/YYYY) [optional artist suffix]"
+            // Regex pattern: "(Live at/in ...[,/ ]M/D/YYYY) [optional bracket suffix] [optional artist suffix]"
             // Captures:
             //   Group 1: Song name (everything before opening paren)
             //   Group 2: Month (1 or 2 digits)
             //   Group 3: Day (1 or 2 digits)
             //   Group 4: Year (4 digits)
-            // The entire "(Live at...)" parenthetical is stripped from the returned song name
-            var match = Regex.Match(title, @"^(.+?)\s*\(Live (?:at|in) .+?,\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*-\s*.+)?$", RegexOptions.IgnoreCase);
+            // The entire "(Live at...)" parenthetical and any bracket/artist suffix are stripped
+            var match = Regex.Match(title, @"^(.+?)\s*\(Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 var songName = match.Groups[1].Value.Trim();
@@ -479,6 +481,23 @@ namespace DeadEditor.Services
                 var year = int.Parse(match.Groups[4].Value);
 
                 // Convert M/D/YYYY to yyyy-MM-dd format
+                var date = $"{year:D4}-{month:D2}-{day:D2}";
+                return (songName, date);
+            }
+
+            // PATTERN 1B: MusicBrainz format with M/D/YYYY date inside "[Live at/in...]" square brackets
+            // Examples:
+            //   "Ripple (False Start) [Live at the Capitol Theatre, Port Chester, NY 2/21/1971] [2020 Remaster]"
+            match = Regex.Match(title, @"^(.+?)\s*\[Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\](?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                var songName = match.Groups[1].Value.Trim();
+                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
+
+                var month = int.Parse(match.Groups[2].Value);
+                var day = int.Parse(match.Groups[3].Value);
+                var year = int.Parse(match.Groups[4].Value);
+
                 var date = $"{year:D4}-{month:D2}-{day:D2}";
                 return (songName, date);
             }

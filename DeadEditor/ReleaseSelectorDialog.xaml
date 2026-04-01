@@ -43,6 +43,7 @@
                     <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="150" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Album Title" Binding="{Binding Title}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Year" Binding="{Binding Year}" Width="80" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Tracks" Binding="{Binding TotalTrackCount}" Width="70" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="140" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Country" Binding="{Binding Country}" Width="90" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Format" Binding="{Binding Format}" Width="90" IsReadOnly="True"/>
