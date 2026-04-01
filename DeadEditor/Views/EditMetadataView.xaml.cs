@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -625,6 +626,10 @@ namespace DeadEditor
             foreach (var track in _tracks)
             {
                 var title = track.SongName ?? "";
+
+                // Strip any existing segue markers and date suffixes to prevent multiplication
+                title = Regex.Replace(title, @"\s*\(\d{4}-\d{2}-\d{2}\)(\s*\(\d{4}-\d{2}-\d{2}\))*\s*$", "");
+                title = Regex.Replace(title, @"(\s*>)+\s*$", "").TrimEnd();
 
                 if (track.Segue)
                     title += " >";

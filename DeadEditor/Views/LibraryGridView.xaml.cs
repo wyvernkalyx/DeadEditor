@@ -657,6 +657,7 @@ namespace DeadEditor
 
                 string? venue = null;
                 string? cityState = null;
+                string? albumName = null;
 
                 if (tagFile is TagLib.Flac.File flacFile)
                 {
@@ -666,6 +667,7 @@ namespace DeadEditor
                     {
                         venue = xiph.GetFirstField("VENUE");
                         cityState = xiph.GetFirstField("CITYSTATE");
+                        albumName = xiph.GetFirstField("ALBUMNAME");
                     }
                 }
                 else
@@ -679,6 +681,9 @@ namespace DeadEditor
 
                         var cityFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "CITYSTATE", false);
                         if (cityFrame?.Text.Length > 0) cityState = cityFrame.Text[0];
+
+                        var nameFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "ALBUMNAME", false);
+                        if (nameFrame?.Text.Length > 0) albumName = nameFrame.Text[0];
                     }
                 }
 
@@ -691,6 +696,14 @@ namespace DeadEditor
                     var parts = cityState.Split(new[] { ", " }, 2, StringSplitOptions.None);
                     show.City = parts.Length > 0 ? parts[0] : "";
                     show.State = parts.Length > 1 ? parts[1] : "";
+                }
+
+                // Override folder-name-derived album name with tag value if present
+                if (!string.IsNullOrEmpty(albumName))
+                {
+                    show.AlbumName = albumName;
+                    if (!string.IsNullOrEmpty(show.OfficialRelease))
+                        show.OfficialRelease = albumName;
                 }
 
                 // Read year from tag if not already set from folder name

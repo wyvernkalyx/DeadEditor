@@ -321,6 +321,10 @@ namespace DeadEditor.Services
                     // Pattern matches: " (yyyy-MM-dd)" or " (yyyy-MM-dd) (yyyy-MM-dd)" etc.
                     title = Regex.Replace(title, @"\s*\(\d{4}-\d{2}-\d{2}\)(\s*\(\d{4}-\d{2}-\d{2}\))*\s*$", "");
 
+                    // Strip any existing segue markers to prevent multiplication on repeated saves
+                    // Handles: " >", " > >", " > > > >" etc.
+                    title = Regex.Replace(title, @"(\s*>)+\s*$", "").TrimEnd();
+
                     // Add segue marker BEFORE the date
                     if (track.HasSegue)
                     {
