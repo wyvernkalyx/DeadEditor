@@ -24,8 +24,9 @@ namespace DeadEditor.Models
         public string OfficialRelease { get; set; } = "";
 
         // Multi-date/multi-venue support for official releases
-        private List<string>? _containsDates;
-        private bool _containsDatesLoaded;
+        // Internal so MergeOfficialReleasesByAlbumName can access without triggering lazy load
+        internal List<string>? _containsDates;
+        internal bool _containsDatesLoaded;
 
         public List<string> ContainsDates
         {

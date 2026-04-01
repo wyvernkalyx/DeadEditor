@@ -96,6 +96,11 @@ namespace DeadEditor
                 {
                     LoadOfficialReleasesInto(result, officialPath);
                     Debug.WriteLine($"[STARTUP] Official releases scanned: {sw.ElapsedMilliseconds}ms ({result.Count - audienceCount} releases)");
+
+                    // Merge official releases that share the same ALBUMNAME into single entries
+                    // (e.g., box sets split across multiple folders)
+                    MergeOfficialReleasesByAlbumName(result, audienceCount);
+                    Debug.WriteLine($"[STARTUP] After merge: {sw.ElapsedMilliseconds}ms ({result.Count - audienceCount} releases)");
                 }
 
                 // Sort by date descending (newest first)
@@ -860,6 +865,101 @@ namespace DeadEditor
                     ReadCustomFieldsIntoShow(seriesShow, releaseFolder);
                     shows.Add(seriesShow);
                 }
+            }
+        }
+
+        // ===== MULTI-FOLDER MERGE =====
+
+        /// <summary>
+        /// Merges official releases that share the same ALBUMNAME tag into single LibraryShow
+        /// entries with combined FolderPaths and TrackCounts. This handles box sets split across
+        /// multiple folders (e.g., "Get Shown the Light" in two series folders).
+        /// Only operates on items at index >= startIndex (official releases portion of the list).
+        /// </summary>
+        private static void MergeOfficialReleasesByAlbumName(List<LibraryShow> shows, int startIndex)
+        {
+            // Group official releases by trimmed ALBUMNAME (case-insensitive)
+            var officialShows = shows.Skip(startIndex).ToList();
+            var groups = new Dictionary<string, List<LibraryShow>>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var show in officialShows)
+            {
+                var key = (show.AlbumName ?? "").Trim();
+                if (string.IsNullOrEmpty(key)) continue;
+
+                if (!groups.TryGetValue(key, out var list))
+                {
+                    list = new List<LibraryShow>();
+                    groups[key] = list;
+                }
+                list.Add(show);
+            }
+
+            // Merge groups with 2+ entries
+            foreach (var group in groups.Values)
+            {
+                if (group.Count < 2) continue;
+
+                // Pick the first as primary, merge others into it
+                var primary = group[0];
+
+                for (int i = 1; i < group.Count; i++)
+                {
+                    var other = group[i];
+
+                    // Combine folder paths
+                    foreach (var path in other.FolderPaths)
+                    {
+                        if (!primary.FolderPaths.Contains(path))
+                            primary.FolderPaths.Add(path);
+                    }
+
+                    // Sum track counts
+                    primary.TrackCount += other.TrackCount;
+
+                    // Use earliest date
+                    if (!string.IsNullOrEmpty(other.Date) &&
+                        (string.IsNullOrEmpty(primary.Date) || string.Compare(other.Date, primary.Date, StringComparison.Ordinal) < 0))
+                    {
+                        primary.Date = other.Date;
+                    }
+
+                    // Merge ContainsDates if already loaded
+                    if (other._containsDatesLoaded && other._containsDates != null)
+                    {
+                        if (!primary._containsDatesLoaded)
+                        {
+                            primary._containsDates = new List<string>();
+                            primary._containsDatesLoaded = true;
+                        }
+                        foreach (var d in other._containsDates)
+                        {
+                            if (!primary._containsDates!.Contains(d))
+                                primary._containsDates.Add(d);
+                        }
+                    }
+
+                    // Fill in venue/city/state from whichever folder has them
+                    if (string.IsNullOrEmpty(primary.Venue) && !string.IsNullOrEmpty(other.Venue))
+                        primary.Venue = other.Venue;
+                    if (string.IsNullOrEmpty(primary.Location) && !string.IsNullOrEmpty(other.Location))
+                    {
+                        primary.Location = other.Location;
+                        primary.City = other.City;
+                        primary.State = other.State;
+                    }
+
+                    // Keep OfficialRelease name from tag
+                    if (string.IsNullOrEmpty(primary.OfficialRelease) && !string.IsNullOrEmpty(other.OfficialRelease))
+                        primary.OfficialRelease = other.OfficialRelease;
+
+                    // Remove the merged show from the list
+                    shows.Remove(other);
+                }
+
+                // Sort ContainsDates after merge
+                if (primary._containsDatesLoaded && primary._containsDates != null)
+                    primary._containsDates.Sort();
             }
         }
 
