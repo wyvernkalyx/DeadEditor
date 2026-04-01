@@ -110,13 +110,23 @@ namespace DeadEditor
 
             if (_isByDateMode)
             {
+                SetDateColumns();
                 BuildDateRows();
                 _filteredDateRows = new List<DateRow>(_dateRows);
                 ShowsDataGrid.ItemsSource = _filteredDateRows;
                 ConcertCountChanged?.Invoke(this, _dateRows.Count);
             }
+            else if (_isMissingShowsMode)
+            {
+                SetMissingShowColumns();
+                BuildMissingShowRows();
+                _filteredMissingRows = new List<DateRow>(_missingShowRows);
+                ShowsDataGrid.ItemsSource = _filteredMissingRows;
+                ConcertCountChanged?.Invoke(this, _missingShowRows.Count);
+            }
             else
             {
+                SetAlbumColumns();
                 _filteredShows = new List<LibraryShow>(_shows);
                 ShowsDataGrid.ItemsSource = _filteredShows;
                 ConcertCountChanged?.Invoke(this, _shows.Count);

@@ -292,9 +292,15 @@ namespace DeadEditor
 
             // Count heady versions in this album
             var heady = HeadyVersionService.Instance;
-            int headyCount = _tracks.Count(t =>
-                !string.IsNullOrEmpty(t.SongName) && !string.IsNullOrEmpty(t.TrackDate)
-                && heady.GetHeadyVersion(t.SongName, t.TrackDate) != null);
+            Debug.WriteLine($"[HEADY] Album: {AlbumName} | Show.Date='{_show.Date}' | Tracks={_tracks.Count}");
+            int headyCount = 0;
+            foreach (var t in _tracks)
+            {
+                var match = (!string.IsNullOrEmpty(t.SongName) && !string.IsNullOrEmpty(t.TrackDate))
+                    ? heady.GetHeadyVersion(t.SongName, t.TrackDate) : null;
+                Debug.WriteLine($"[HEADY] Track: '{t.SongName}' date: '{t.TrackDate}' -> match: {match != null}");
+                if (match != null) headyCount++;
+            }
 
             if (headyCount > 0)
             {

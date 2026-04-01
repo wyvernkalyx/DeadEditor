@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -73,6 +74,8 @@ namespace DeadEditor.Services
                 }
                 list.Add(v);
             }
+
+            Debug.WriteLine($"[HEADY] Loaded {_versions.Count} heady versions across {_byDate.Count} dates");
 
             // Build song index (normalized lowercase)
             _bySong = new Dictionary<string, List<HeadyInfo>>(StringComparer.OrdinalIgnoreCase);
