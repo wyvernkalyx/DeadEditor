@@ -289,6 +289,20 @@ namespace DeadEditor
             }
 
             TrackCountText.Text = _tracks.Count == 1 ? "1 track" : $"{_tracks.Count} tracks";
+
+            // Count heady versions in this album
+            var heady = HeadyVersionService.Instance;
+            int headyCount = _tracks.Count(t =>
+                !string.IsNullOrEmpty(t.SongName) && !string.IsNullOrEmpty(t.TrackDate)
+                && heady.GetHeadyVersion(t.SongName, t.TrackDate) != null);
+
+            if (headyCount > 0)
+            {
+                HeadyCountText.Text = headyCount == 1
+                    ? "\u26A1 1 heady version"
+                    : $"\u26A1 {headyCount} heady versions";
+                HeadyCountText.Visibility = Visibility.Visible;
+            }
         }
 
         private void BuildCollapsibleConcertView()
