@@ -157,11 +157,17 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
 **Content:**
 - Album art (left side, ~140-180px)
 - Album metadata summary (Artist, Release Year, Track count, Dates)
+- "Loading tracks..." indicator shown while TagLib reads run on background thread
 - Tracks grouped by date, each date section with:
   - Date header + track count + "Add All" button
   - Track list: # | Title | Duration
   - Tracks are clickable (double-click to play, right-click for context menu)
 - Collapsible date sections (triangle toggle)
+
+**Performance:**
+- Track loading (`LoadTracksFromDisk`) runs on a background thread via `Task.Run`
+- Only UI binding (`BindTracksToUI`) runs on the UI thread
+- Album art and metadata labels display immediately while tracks load
 
 **Navigation:**
 - Reached by clicking a row in Library Grid

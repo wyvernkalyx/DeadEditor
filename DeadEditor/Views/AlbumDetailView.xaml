@@ -108,6 +108,15 @@
                         Visibility="Collapsed" VerticalAlignment="Center"/>
             </StackPanel>
 
+            <TextBlock Grid.Row="1"
+                       x:Name="TracksLoadingIndicator"
+                       Text="Loading tracks..."
+                       Foreground="#999999"
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       Margin="0,20,0,0"
+                       Visibility="Collapsed"/>
+
             <DataGrid Grid.Row="1"
                       x:Name="TracksDataGrid"
                       AutoGenerateColumns="False"

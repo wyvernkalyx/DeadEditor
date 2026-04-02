@@ -6,11 +6,13 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.VisualBasic.FileIO;
 
 namespace DeadEditor
 {
@@ -37,11 +39,22 @@ namespace DeadEditor
             _metadataService = new MetadataService();
         }
 
-        private void AlbumDetailView_Loaded(object sender, RoutedEventArgs e)
+        private async void AlbumDetailView_Loaded(object sender, RoutedEventArgs e)
         {
             LoadAlbumData();
             LoadAlbumArt();
-            LoadTracks();
+
+            // Show loading indicator while reading tags from disk
+            TracksLoadingIndicator.Visibility = Visibility.Visible;
+            TracksDataGrid.Visibility = Visibility.Collapsed;
+
+            // Heavy TagLib I/O off the UI thread
+            var tracks = await Task.Run(() => LoadTracksFromDisk());
+
+            // Back on UI thread — bind results
+            TracksLoadingIndicator.Visibility = Visibility.Collapsed;
+            TracksDataGrid.Visibility = Visibility.Visible;
+            BindTracksToUI(tracks);
         }
 
         private void LoadAlbumData()
@@ -172,9 +185,12 @@ namespace DeadEditor
             }
         }
 
-        private void LoadTracks()
+        /// <summary>
+        /// Reads all audio file tags from disk. Runs on a background thread — no UI access.
+        /// </summary>
+        private List<TrackInfo> LoadTracksFromDisk()
         {
-            _tracks.Clear();
+            var tracks = new List<TrackInfo>();
 
             // Use FolderPaths (plural) to support multi-folder albums
             var folders = _show.FolderPaths.Any() ? _show.FolderPaths : new List<string> { _show.FolderPath };
@@ -219,7 +235,7 @@ namespace DeadEditor
                             {
                                 FilePath = file,
                                 FileName = Path.GetFileName(file),
-                                TrackNumber = tagFile.Tag.Track > 0 ? (int)tagFile.Tag.Track : _tracks.Count + 1,
+                                TrackNumber = tagFile.Tag.Track > 0 ? (int)tagFile.Tag.Track : tracks.Count + 1,
                                 SongName = songName,
                                 RawTitle = title,  // Store full FLAC title as-is (includes date suffix)
                                 Duration = tagFile.Properties.Duration.ToString(@"m\:ss"),
@@ -227,7 +243,7 @@ namespace DeadEditor
                                 Segue = hasSegue
                             };
 
-                            _tracks.Add(track);
+                            tracks.Add(track);
                         }
                     }
                     catch
@@ -238,13 +254,45 @@ namespace DeadEditor
             }
 
             // Populate TrackDate for tracks that don't have embedded dates
-            foreach (var track in _tracks)
+            var showDate = _show.Date; // _show fields are read-only here, safe to access
+            foreach (var track in tracks)
             {
-                if (string.IsNullOrEmpty(track.TrackDate) && !string.IsNullOrEmpty(_show.Date))
+                if (string.IsNullOrEmpty(track.TrackDate) && !string.IsNullOrEmpty(showDate))
                 {
-                    track.TrackDate = _show.Date;
+                    track.TrackDate = showDate;
                 }
             }
+
+            // Sort tracks
+            var distinctDates = tracks
+                .Where(t => !string.IsNullOrEmpty(t.TrackDate))
+                .Select(t => t.TrackDate)
+                .Distinct()
+                .Count();
+
+            if (distinctDates > 1)
+            {
+                // Multi-night: Sort by date first, then track number
+                tracks = tracks
+                    .OrderBy(t => t.TrackDate ?? "")
+                    .ThenBy(t => t.TrackNumber)
+                    .ToList();
+            }
+            else
+            {
+                // Single-night: Sort by track number only
+                tracks = tracks.OrderBy(t => t.TrackNumber).ToList();
+            }
+
+            return tracks;
+        }
+
+        /// <summary>
+        /// Binds loaded track data to the UI. Must run on the UI thread.
+        /// </summary>
+        private void BindTracksToUI(List<TrackInfo> tracks)
+        {
+            _tracks = tracks;
 
             // Detect multi-night albums by counting distinct dates
             var distinctDates = _tracks
@@ -255,21 +303,6 @@ namespace DeadEditor
 
             _isMultiNight = distinctDates > 1;
             _isFlatSorted = false;
-
-            // Sort tracks
-            if (_isMultiNight)
-            {
-                // Multi-night: Sort by date first, then track number
-                _tracks = _tracks
-                    .OrderBy(t => t.TrackDate ?? "")
-                    .ThenBy(t => t.TrackNumber)
-                    .ToList();
-            }
-            else
-            {
-                // Single-night: Sort by track number only
-                _tracks = _tracks.OrderBy(t => t.TrackNumber).ToList();
-            }
 
             // Build view based on date count
             if (_isMultiNight)
@@ -290,7 +323,7 @@ namespace DeadEditor
 
             TrackCountText.Text = _tracks.Count == 1 ? "1 track" : $"{_tracks.Count} tracks";
 
-            // Count heady versions in this album
+            // Count heady versions in this album (in-memory lookups, fast)
             var heady = HeadyVersionService.Instance;
             Debug.WriteLine($"[HEADY] Album: {AlbumName} | Show.Date='{_show.Date}' | Tracks={_tracks.Count}");
             int headyCount = 0;
@@ -681,8 +714,99 @@ namespace DeadEditor
                 menu.Items.Add(addSelectedItem);
             }
 
+            // Separator before destructive action
+            menu.Items.Add(new System.Windows.Controls.Separator
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42)),
+                Margin = new Thickness(4, 2, 4, 2)
+            });
+
+            var deleteItem = new System.Windows.Controls.MenuItem { Header = "🗑  Delete Track", Style = menuItemStyle };
+            deleteItem.Click += (s, args) => DeleteTrack(clickedTrack);
+            menu.Items.Add(deleteItem);
+
             menu.IsOpen = true;
             e.Handled = true;
+        }
+
+        // ===== DELETE TRACK =====
+
+        private void DeleteTrack(TrackInfo track)
+        {
+            var result = System.Windows.MessageBox.Show(
+                $"Delete track {track.TrackNumber} '{track.Title}'?\n\nThis will send the file to the Recycle Bin.",
+                "Delete Track",
+                MessageBoxButton.OKCancel,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.OK) return;
+
+            try
+            {
+                FileSystem.DeleteFile(
+                    track.FilePath,
+                    UIOption.OnlyErrorDialogs,
+                    RecycleOption.SendToRecycleBin);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Could not delete file:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Remove from playlist if present
+            App.PlaybackService.Playlist.Remove(track);
+
+            // Remove from internal track list
+            _tracks.Remove(track);
+
+            // Update the view
+            if (_tracks.Count == 0)
+            {
+                // Last track deleted — go back to library
+                _shell.Navigation.GoBack();
+                return;
+            }
+
+            if (_isMultiNight && !_isFlatSorted)
+            {
+                // Remove the TrackViewItem from the observable collection
+                var viewItem = _concertViewItems.OfType<TrackViewItem>().FirstOrDefault(t => t.Track == track);
+                if (viewItem != null)
+                {
+                    var header = viewItem.ParentHeader;
+                    _concertViewItems.Remove(viewItem);
+
+                    // Update header track count
+                    if (header != null)
+                    {
+                        header.TrackCount = _tracks.Count(t => t.TrackDate == header.Date);
+
+                        // If date section is now empty, remove the header too
+                        if (header.TrackCount == 0)
+                            _concertViewItems.Remove(header);
+                    }
+                }
+            }
+            else if (_isFlatSorted)
+            {
+                // Flat sorted view — rebuild from current _tracks
+                var currentSource = TracksDataGrid.ItemsSource as List<TrackInfo>;
+                if (currentSource != null)
+                {
+                    currentSource.Remove(track);
+                    TracksDataGrid.ItemsSource = null;
+                    TracksDataGrid.ItemsSource = currentSource;
+                }
+            }
+            else
+            {
+                // Single-night view — rebind
+                TracksDataGrid.ItemsSource = null;
+                TracksDataGrid.ItemsSource = _tracks;
+            }
+
+            TrackCountText.Text = _tracks.Count == 1 ? "1 track" : $"{_tracks.Count} tracks";
         }
 
         // ===== PLAYLIST HELPERS =====
