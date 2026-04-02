@@ -34,6 +34,8 @@ namespace DeadEditor
         private List<DateRow> _filteredMissingRows = new();
 
         public int ConcertCount => _shows.Count;
+        public int MissingShowCount => _missingShowRows.Count;
+        public int TotalShowsInScope { get; private set; }
         public int FilteredCount => _isMissingShowsMode ? _filteredMissingRows.Count
             : _isByDateMode ? _filteredDateRows.Count : _filteredShows.Count;
         public bool IsByDateMode => _isByDateMode;
@@ -102,6 +104,14 @@ namespace DeadEditor
                     MergeOfficialReleasesByAlbumName(result, audienceCount);
                     Debug.WriteLine($"[STARTUP] After merge: {sw.ElapsedMilliseconds}ms ({result.Count - audienceCount} releases)");
                 }
+
+                // Deduplicate by FolderPath — when LibraryRootPath == OfficialReleasesPath,
+                // the same folder can be scanned by both loading methods. Prefer the entry
+                // whose Type was set from the ALBUMTYPE tag; otherwise keep the first (audience).
+                result = result
+                    .GroupBy(s => s.FolderPath)
+                    .Select(g => g.OrderByDescending(s => s.TypeFromTag ? 1 : 0).First())
+                    .ToList();
 
                 // Sort by date descending (newest first)
                 result = result.OrderByDescending(s => s.Date).ToList();
@@ -332,7 +342,7 @@ namespace DeadEditor
         /// Applies search text and type filter to the library grid.
         /// Called by ShellWindow when HeaderBar filter changes.
         /// </summary>
-        public void ApplyFilter(string searchText, string typeFilter)
+        public void ApplyFilter(string searchText, string typeFilter, string yearFilter = "All Years")
         {
             // Handle "Shows I Don't Have" mode
             if (typeFilter == "Shows I Don't Have")
@@ -348,23 +358,49 @@ namespace DeadEditor
                     _isMissingShowsMode = true;
                     BuildMissingShowRows();
                     SetMissingShowColumns();
+
+                    // Populate the year dropdown with years from missing shows
+                    var missingYears = _missingShowRows
+                        .Select(r => r.Date.Substring(0, 4))
+                        .Distinct()
+                        .OrderBy(y => y)
+                        .ToList();
+                    _shell.HeaderBar.PopulateYearFilter(missingYears);
                 }
 
+                // Compute total shows in scope (all shows.json dates for the selected year)
+                var allDates = ShowLookupService.Instance.GetAllDates();
+                if (yearFilter != "All Years")
+                {
+                    TotalShowsInScope = allDates.Count(d => d.StartsWith(yearFilter));
+                }
+                else
+                {
+                    TotalShowsInScope = allDates.Count;
+                }
+
+                // Start with all missing rows, then apply year and search filters
+                IEnumerable<DateRow> rows = _missingShowRows;
+
+                // Apply year filter
+                if (yearFilter != "All Years")
+                {
+                    rows = rows.Where(r => r.Date.StartsWith(yearFilter));
+                }
+
+                // Apply search filter
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
                     var search = searchText.Trim();
-                    _filteredMissingRows = _missingShowRows.Where(r =>
+                    rows = rows.Where(r =>
                         IsHeadySearch(search) ? !string.IsNullOrEmpty(r.HeadyIcon)
                         : (ContainsIgnoreCase(r.Date, search)
                         || ContainsIgnoreCase(r.Venue, search)
                         || ContainsIgnoreCase(r.CityState, search))
-                    ).ToList();
-                }
-                else
-                {
-                    _filteredMissingRows = new List<DateRow>(_missingShowRows);
+                    );
                 }
 
+                _filteredMissingRows = rows.ToList();
                 ShowsDataGrid.ItemsSource = _filteredMissingRows;
                 ConcertCountChanged?.Invoke(this, _filteredMissingRows.Count);
                 return;
@@ -663,6 +699,7 @@ namespace DeadEditor
                 string? venue = null;
                 string? cityState = null;
                 string? albumName = null;
+                string? albumType = null;
 
                 if (tagFile is TagLib.Flac.File flacFile)
                 {
@@ -673,6 +710,7 @@ namespace DeadEditor
                         venue = xiph.GetFirstField("VENUE");
                         cityState = xiph.GetFirstField("CITYSTATE");
                         albumName = xiph.GetFirstField("ALBUMNAME");
+                        albumType = xiph.GetFirstField("ALBUMTYPE");
                     }
                 }
                 else
@@ -689,6 +727,9 @@ namespace DeadEditor
 
                         var nameFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "ALBUMNAME", false);
                         if (nameFrame?.Text.Length > 0) albumName = nameFrame.Text[0];
+
+                        var typeFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "ALBUMTYPE", false);
+                        if (typeFrame?.Text.Length > 0) albumType = typeFrame.Text[0];
                     }
                 }
 
@@ -709,6 +750,15 @@ namespace DeadEditor
                     show.AlbumName = albumName;
                     if (!string.IsNullOrEmpty(show.OfficialRelease))
                         show.OfficialRelease = albumName;
+                }
+
+                // Override Type from ALBUMTYPE tag if present (source of truth over folder-based inference).
+                // This handles the case where LibraryRootPath == OfficialReleasesPath and a show
+                // gets scanned by the wrong loading method.
+                if (!string.IsNullOrEmpty(albumType) && Enum.TryParse<AlbumType>(albumType, out var parsedType))
+                {
+                    show.Type = parsedType;
+                    show.TypeFromTag = true;
                 }
 
                 // Read year from tag if not already set from folder name
@@ -842,7 +892,16 @@ namespace DeadEditor
             }
 
             // Load from series folders (Dave's Picks, etc.)
-            var seriesFolders = Directory.GetDirectories(officialReleasesPath).Where(f => !Path.GetFileName(f).Equals("Studio Albums", StringComparison.OrdinalIgnoreCase));
+            // Skip "Studio Albums" (handled above) and year folders (e.g. "1971", "2024")
+            // which belong to audience recordings. When LibraryRootPath and OfficialReleasesPath
+            // point to the same directory, year folders would otherwise be misidentified as series.
+            var seriesFolders = Directory.GetDirectories(officialReleasesPath)
+                .Where(f =>
+                {
+                    var name = Path.GetFileName(f);
+                    return !name.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase)
+                        && !Regex.IsMatch(name, @"^\d{4}$");
+                });
 
             foreach (var seriesFolder in seriesFolders)
             {

@@ -15,6 +15,10 @@ namespace DeadEditor.Models
         // Album type (defaults to Audience Recording)
         public AlbumType Type { get; set; } = AlbumType.AudienceRecording;
 
+        // True when Type was set from the ALBUMTYPE tag in the audio file (source of truth),
+        // false when inferred from which folder-scanning method loaded this show.
+        public bool TypeFromTag { get; set; }
+
         // Live recording properties
         public string Date { get; set; } = "";
         public string Venue { get; set; } = "";

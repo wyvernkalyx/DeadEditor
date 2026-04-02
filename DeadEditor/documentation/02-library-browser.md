@@ -373,13 +373,18 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
        - Creates `LibraryShow` with `Type = AlbumType.Live` or `AlbumType.BoxSet` (line 340-353)
    - **If `OfficialReleasesPath` is set:**
      - Calls `LoadOfficialReleasesInto()` — scans Studio Albums and series folders
+     - Series folder scan **skips year-named folders** (e.g. "1971", "2024") to avoid
+       misidentifying audience recordings when `LibraryRootPath == OfficialReleasesPath`
      - For each release folder:
        - Counts audio files for `TrackCount` (directory listing only, NO TagLib reads)
-       - Reads ONE file per album via `ReadCustomFieldsIntoShow()` for venue/city/year tags
+       - Reads ONE file per album via `ReadCustomFieldsIntoShow()` for venue/city/year/albumtype tags
        - Creates `LibraryShow` with `Type = AlbumType.OfficialRelease`
        - **TrackTitles and ContainsDates are lazy-loaded** — NOT read at startup.
          They load on first access (triggered by search or By Date mode).
          This avoids the ~50s penalty of opening every audio file with TagLib at startup.
+   - **Deduplication:** After both loading methods complete, shows are deduplicated by `FolderPath`.
+     When the same folder appears in both scans (overlapping paths), the entry whose `Type` was
+     set from the `ALBUMTYPE` FLAC/ID3v2 tag is preferred; otherwise the first entry (audience) wins.
    - If no shows found → Status: "No library paths set or no shows found..." (line 166)
    - Sorts shows: by Type first (Live/Official/Studio), then by Date desc or AlbumName desc (line 171-174)
    - Calls `ApplySearchFilter()` to display (line 177)
