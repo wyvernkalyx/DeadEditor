@@ -33,6 +33,9 @@ namespace DeadEditor
         private List<DateRow> _missingShowRows = new();
         private List<DateRow> _filteredMissingRows = new();
 
+        // Guard: LoadShowsAsync runs only on first Loaded event, not on back-navigation re-adds
+        private bool _isInitialLoadComplete;
+
         public int ConcertCount => _shows.Count;
         public int MissingShowCount => _missingShowRows.Count;
         public int TotalShowsInScope { get; private set; }
@@ -54,6 +57,8 @@ namespace DeadEditor
 
         private async void LibraryGridView_Loaded(object sender, RoutedEventArgs e)
         {
+            if (_isInitialLoadComplete) return;
+            _isInitialLoadComplete = true;
             await LoadShowsAsync();
         }
 

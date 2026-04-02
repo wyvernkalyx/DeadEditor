@@ -303,7 +303,7 @@ Back navigation pops the stack. Clicking the Library sidebar icon resets to Libr
 
 ### State Preservation
 
-- **Library Grid:** Scroll position and selection preserved when drilling into Album Detail and coming back
+- **Library Grid:** Scroll position, selection, and filter state preserved when drilling into Album Detail and coming back. The `Loaded` event is guarded so `LoadShowsAsync` only runs on first load, not on back-navigation re-adds. Explicit reloads (`ReloadLibrary`) bypass this guard.
 - **Album Detail:** Loaded from LibraryShow data; no state to preserve beyond what's in the data model
 - **Edit Metadata:** Unsaved changes prompt a confirmation dialog on back navigation
 - **Import:** State preserved while switching to Library and back (folder selection, track data stay loaded)
