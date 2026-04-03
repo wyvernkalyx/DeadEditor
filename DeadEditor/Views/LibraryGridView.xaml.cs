@@ -361,53 +361,15 @@ namespace DeadEditor
                         _isByDateMode = false;
                     }
                     _isMissingShowsMode = true;
-                    BuildMissingShowRows();
-                    SetMissingShowColumns();
 
-                    // Populate the year dropdown with years from missing shows
-                    var missingYears = _missingShowRows
-                        .Select(r => r.Date.Substring(0, 4))
-                        .Distinct()
-                        .OrderBy(y => y)
-                        .ToList();
-                    _shell.HeaderBar.PopulateYearFilter(missingYears);
+                    // Build missing show rows on a background thread to avoid
+                    // freezing the UI while comparing library against shows.json
+                    _ = BuildMissingShowRowsAsync(searchText, yearFilter);
+                    return;
                 }
 
-                // Compute total shows in scope (all shows.json dates for the selected year)
-                var allDates = ShowLookupService.Instance.GetAllDates();
-                if (yearFilter != "All Years")
-                {
-                    TotalShowsInScope = allDates.Count(d => d.StartsWith(yearFilter));
-                }
-                else
-                {
-                    TotalShowsInScope = allDates.Count;
-                }
-
-                // Start with all missing rows, then apply year and search filters
-                IEnumerable<DateRow> rows = _missingShowRows;
-
-                // Apply year filter
-                if (yearFilter != "All Years")
-                {
-                    rows = rows.Where(r => r.Date.StartsWith(yearFilter));
-                }
-
-                // Apply search filter
-                if (!string.IsNullOrWhiteSpace(searchText))
-                {
-                    var search = searchText.Trim();
-                    rows = rows.Where(r =>
-                        IsHeadySearch(search) ? !string.IsNullOrEmpty(r.HeadyIcon)
-                        : (ContainsIgnoreCase(r.Date, search)
-                        || ContainsIgnoreCase(r.Venue, search)
-                        || ContainsIgnoreCase(r.CityState, search))
-                    );
-                }
-
-                _filteredMissingRows = rows.ToList();
-                ShowsDataGrid.ItemsSource = _filteredMissingRows;
-                ConcertCountChanged?.Invoke(this, _filteredMissingRows.Count);
+                // Already in missing shows mode — just re-filter the existing list
+                ApplyMissingShowFilters(searchText, yearFilter);
                 return;
             }
 
@@ -582,8 +544,14 @@ namespace DeadEditor
             {
                 if (!string.IsNullOrEmpty(show.Date))
                     ownedDates.Add(show.Date);
-                foreach (var d in show.ContainsDates)
-                    ownedDates.Add(d);
+                // Use ContainsDates only if already loaded — avoid triggering
+                // the expensive lazy-load of track titles from disk (50+ seconds).
+                // Mirrors the guard pattern used by LibraryShow.HeadyIcon.
+                if (show._containsDatesLoaded && show._containsDates != null)
+                {
+                    foreach (var d in show._containsDates)
+                        ownedDates.Add(d);
+                }
             }
 
             // Get all dates from shows.json and find the ones not owned
@@ -603,6 +571,80 @@ namespace DeadEditor
                     SourceShow = null!
                 });
             }
+        }
+
+        /// <summary>
+        /// Builds missing show rows on a background thread, then populates the grid on the UI thread.
+        /// Shows a loading indicator while the computation runs.
+        /// </summary>
+        private async Task BuildMissingShowRowsAsync(string searchText, string yearFilter)
+        {
+            LoadingIndicator.Text = "Loading shows…";
+            LoadingIndicator.Visibility = Visibility.Visible;
+            ShowsDataGrid.ItemsSource = null;
+
+            await Task.Run(() =>
+            {
+                BuildMissingShowRows();
+            });
+
+            // Back on UI thread — set up columns and populate grid
+            SetMissingShowColumns();
+
+            // Populate the year dropdown with years from missing shows
+            var missingYears = _missingShowRows
+                .Select(r => r.Date.Substring(0, 4))
+                .Distinct()
+                .OrderBy(y => y)
+                .ToList();
+            _shell.HeaderBar.PopulateYearFilter(missingYears);
+
+            LoadingIndicator.Visibility = Visibility.Collapsed;
+
+            ApplyMissingShowFilters(searchText, yearFilter);
+        }
+
+        /// <summary>
+        /// Applies year and search filters to the already-built missing show rows.
+        /// Runs synchronously on the UI thread (just in-memory filtering).
+        /// </summary>
+        private void ApplyMissingShowFilters(string searchText, string yearFilter)
+        {
+            // Compute total shows in scope (all shows.json dates for the selected year)
+            var allDates = ShowLookupService.Instance.GetAllDates();
+            if (yearFilter != "All Years")
+            {
+                TotalShowsInScope = allDates.Count(d => d.StartsWith(yearFilter));
+            }
+            else
+            {
+                TotalShowsInScope = allDates.Count;
+            }
+
+            // Start with all missing rows, then apply year and search filters
+            IEnumerable<DateRow> rows = _missingShowRows;
+
+            // Apply year filter
+            if (yearFilter != "All Years")
+            {
+                rows = rows.Where(r => r.Date.StartsWith(yearFilter));
+            }
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                var search = searchText.Trim();
+                rows = rows.Where(r =>
+                    IsHeadySearch(search) ? !string.IsNullOrEmpty(r.HeadyIcon)
+                    : (ContainsIgnoreCase(r.Date, search)
+                    || ContainsIgnoreCase(r.Venue, search)
+                    || ContainsIgnoreCase(r.CityState, search))
+                );
+            }
+
+            _filteredMissingRows = rows.ToList();
+            ShowsDataGrid.ItemsSource = _filteredMissingRows;
+            ConcertCountChanged?.Invoke(this, _filteredMissingRows.Count);
         }
 
         /// <summary>
