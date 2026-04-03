@@ -506,6 +506,53 @@ namespace DeadEditor.Services
                 return (songName, date);
             }
 
+            // PATTERN 1C: Square bracket venue with M/D/YY or M/D/YYYY date (no "Live at/in" prefix)
+            // Handles official releases and box sets where MusicBrainz tags use bracket venue/date format
+            // Examples:
+            //   "Promised Land [Kiel Opera House, St. Louis, MO 12/9/71]"
+            //   "Bird Song [Fox Theatre, St. Louis, MO 12/9/1971]"
+            //   "Bertha [12/31/71, Winterland Arena, San Francisco, CA]"
+            match = Regex.Match(title, @"^(.+?)\s*\[.*?(\d{1,2})/(\d{1,2})/(\d{2,4}).*?\](?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$");
+            if (match.Success)
+            {
+                var songName = match.Groups[1].Value.Trim();
+                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
+
+                var month = int.Parse(match.Groups[2].Value);
+                var day = int.Parse(match.Groups[3].Value);
+                var year = int.Parse(match.Groups[4].Value);
+                if (year < 100) year += (year >= 70) ? 1900 : 2000;
+
+                if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
+                {
+                    var date = $"{year:D4}-{month:D2}-{day:D2}";
+                    return (songName, date);
+                }
+            }
+
+            // PATTERN 1D: Parenthetical with slash date and venue (no "Live at/in" prefix)
+            // Handles titles where a slash-formatted date appears at the start of the parenthetical
+            // Examples:
+            //   "Bird Song (12/9/71 Fox Theatre, St. Louis, MO)"
+            //   "Sugar Magnolia (10/18/72 Fox Theatre)"
+            match = Regex.Match(title, @"^(.+?)\s*\((\d{1,2})/(\d{1,2})/(\d{2,4})\s+[^)]+\)(?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$");
+            if (match.Success)
+            {
+                var songName = match.Groups[1].Value.Trim();
+                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
+
+                var month = int.Parse(match.Groups[2].Value);
+                var day = int.Parse(match.Groups[3].Value);
+                var year = int.Parse(match.Groups[4].Value);
+                if (year < 100) year += (year >= 70) ? 1900 : 2000;
+
+                if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
+                {
+                    var date = $"{year:D4}-{month:D2}-{day:D2}";
+                    return (songName, date);
+                }
+            }
+
             // PATTERN 2: yyyy-MM-dd date in parentheses (with any optional suffix)
             // Matches the LAST parenthetical that starts with yyyy-MM-dd.
             // The non-greedy .+? skips parentheticals that don't start with a date,

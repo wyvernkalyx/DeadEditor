@@ -354,6 +354,20 @@ namespace DeadEditor.Services
             int matched = 0;
             foreach (var track in tracks)
             {
+                // Safety net: If ParseTitleAndDate missed the date during ReadFolder,
+                // try to extract it from the raw title before normalization strips it.
+                // Handles bracket dates [Venue M/D/YY] and parenthetical dates (M/D/YY Venue)
+                // that may not have been recognized during initial file reading.
+                if (string.IsNullOrEmpty(track.TrackDate))
+                {
+                    var rawTitle = !string.IsNullOrEmpty(track.RawTitle) ? track.RawTitle : track.SongName;
+                    var extractedDate = ExtractDateFromRawTitle(rawTitle);
+                    if (extractedDate != null)
+                    {
+                        track.TrackDate = extractedDate;
+                    }
+                }
+
                 // Use SongName for matching — it's already been cleaned by ParseTitleAndDate
                 // during ReadFolder (date/tour suffixes stripped, segue markers removed).
                 // Fall back to Title (RawTitle) only if SongName is empty.
@@ -525,6 +539,55 @@ namespace DeadEditor.Services
                 // Any parsing error, return original
                 return title;
             }
+        }
+
+        /// <summary>
+        /// Extracts a date from a raw title string as a fallback when ParseTitleAndDate didn't find one.
+        /// Handles bracket dates [Venue M/D/YY], parenthetical dates (M/D/YY Venue),
+        /// (Live at/in Venue M/D/YYYY), and yyyy-MM-dd formats.
+        /// </summary>
+        private string? ExtractDateFromRawTitle(string title)
+        {
+            if (string.IsNullOrEmpty(title)) return null;
+
+            // Pattern A: Date inside square brackets [... M/D/YY ...] or [... M/D/YYYY ...]
+            var match = System.Text.RegularExpressions.Regex.Match(title, @"\[.*?(\d{1,2})/(\d{1,2})/(\d{2,4}).*?\]");
+            if (match.Success)
+            {
+                return ParseSlashDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
+            }
+
+            // Pattern B: Slash date inside parentheses (M/D/YY ...) or (... M/D/YYYY)
+            match = System.Text.RegularExpressions.Regex.Match(title, @"\(.*?(\d{1,2})/(\d{1,2})/(\d{2,4}).*?\)");
+            if (match.Success)
+            {
+                return ParseSlashDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
+            }
+
+            // Pattern C: yyyy-MM-dd in parentheses (already handled by ParseTitleAndDate, but just in case)
+            match = System.Text.RegularExpressions.Regex.Match(title, @"\((\d{4}-\d{2}-\d{2})");
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Parses M/D/YY or M/D/YYYY slash-formatted date parts into yyyy-MM-dd string.
+        /// Returns null if date is invalid.
+        /// </summary>
+        private string? ParseSlashDate(string monthStr, string dayStr, string yearStr)
+        {
+            if (!int.TryParse(monthStr, out var month) || !int.TryParse(dayStr, out var day) || !int.TryParse(yearStr, out var year))
+                return null;
+
+            if (year < 100) year += (year >= 70) ? 1900 : 2000;
+            if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100)
+                return null;
+
+            return $"{year:D4}-{month:D2}-{day:D2}";
         }
 
         private void SaveDatabase()
