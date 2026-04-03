@@ -1,8 +1,10 @@
 using DeadEditor.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace DeadEditor.Services
 {
@@ -52,10 +54,9 @@ namespace DeadEditor.Services
                 if (!string.IsNullOrEmpty(albumInfo.OfficialRelease))
                 {
                     // Series release (Dave's Picks, Dick's Picks, etc.)
-                    var seriesName = ExtractSeriesName(albumInfo.OfficialRelease);
-                    var seriesFolder = Path.Combine(officialReleasesPath, seriesName);
+                    var seriesName = SanitizeFolderName(ExtractSeriesName(albumInfo.OfficialRelease));
                     var folderName = SanitizeFolderName(albumInfo.OfficialRelease);
-                    targetFolder = Path.Combine(seriesFolder, folderName);
+                    targetFolder = Path.Combine(officialReleasesPath, seriesName, folderName);
                 }
                 else
                 {
@@ -175,8 +176,11 @@ namespace DeadEditor.Services
                 newFileName = SanitizeFileName(newFileName);
                 var targetPath = Path.Combine(targetFolder, newFileName);
 
-                // Copy the file
-                File.Copy(track.FilePath, targetPath, overwrite: true);
+                Debug.WriteLine($"[IMPORT] Copying: {track.FilePath} → {targetPath}");
+
+                // Copy the file with retry logic for transient IOExceptions
+                // (e.g., antivirus scanning, delayed file handle release from TagLib)
+                CopyFileWithRetry(track.FilePath, targetPath);
 
                 // Read original metadata to preserve fields we don't explicitly set
                 string? originalGenre = null;
@@ -187,6 +191,7 @@ namespace DeadEditor.Services
 
                 try
                 {
+                    Debug.WriteLine($"[IMPORT] Reading original metadata: {track.FilePath}");
                     using (var originalFile = TagLib.File.Create(track.FilePath))
                     {
                         originalGenre = originalFile.Tag.FirstGenre;
@@ -196,9 +201,10 @@ namespace DeadEditor.Services
                         originalComposer = originalFile.Tag.FirstComposer;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     // If we can't read original metadata, continue without it
+                    Debug.WriteLine($"[IMPORT] Warning: Could not read original metadata from {track.FilePath}: {ex.Message}");
                 }
 
                 // Update the track's file path temporarily for metadata writing
@@ -206,6 +212,7 @@ namespace DeadEditor.Services
                 track.FilePath = targetPath;
 
                 // Write metadata to the copied file
+                Debug.WriteLine($"[IMPORT] Writing metadata to: {targetPath}");
                 try
                 {
                     using (var file = TagLib.File.Create(targetPath))
@@ -217,7 +224,16 @@ namespace DeadEditor.Services
                         var effectiveTrackDate = dateForTitle ?? track.TrackDate;
                         file.Tag.Title = BuildFinalTitle(songName, track.HasSegue, effectiveTrackDate, albumInfo.Date);
 
-                        file.Tag.Album = albumInfo.AlbumTitle;
+                        // For Official Releases, ALBUM tag = release name only.
+                        // For Audience Recordings, ALBUM tag = "Date - Venue - City, ST".
+                        if (albumInfo.Type == AlbumType.OfficialRelease && !string.IsNullOrEmpty(albumInfo.AlbumName))
+                        {
+                            file.Tag.Album = albumInfo.AlbumName;
+                        }
+                        else
+                        {
+                            file.Tag.Album = albumInfo.AlbumTitle;
+                        }
                         file.Tag.Performers = new[] { albumInfo.Artist };
                         file.Tag.AlbumArtists = new[] { albumInfo.Artist };
                         file.Tag.Track = (uint)track.TrackNumber;
@@ -273,13 +289,81 @@ namespace DeadEditor.Services
                             file.Tag.Pictures = new TagLib.IPicture[0];
                         }
 
+                        // Write custom metadata fields (ALBUMDATE, VENUE, etc.)
+                        // These are used by LibraryGridView to populate show data without re-parsing folder names
+                        if (file is TagLib.Flac.File flacFile)
+                        {
+                            var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                            if (xiph != null)
+                            {
+                                xiph.SetField("ALBUMDATE", albumInfo.AlbumDate ?? "");
+                                xiph.SetField("VENUE", albumInfo.Venue ?? "");
+                                xiph.SetField("CITYSTATE", albumInfo.CityState ?? "");
+                                xiph.SetField("ALBUMNAME", albumInfo.AlbumName ?? "");
+                                xiph.SetField("ALBUMTYPE", albumInfo.Type.ToString());
+                            }
+                        }
+                        else
+                        {
+                            var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2, true);
+                            if (id3v2 != null)
+                            {
+                                SetId3v2TextField(id3v2, "ALBUMDATE", albumInfo.AlbumDate ?? "");
+                                SetId3v2TextField(id3v2, "VENUE", albumInfo.Venue ?? "");
+                                SetId3v2TextField(id3v2, "CITYSTATE", albumInfo.CityState ?? "");
+                                SetId3v2TextField(id3v2, "ALBUMNAME", albumInfo.AlbumName ?? "");
+                                SetId3v2TextField(id3v2, "ALBUMTYPE", albumInfo.Type.ToString());
+                            }
+                        }
+
                         file.Save();
+                        Debug.WriteLine($"[IMPORT] Successfully wrote: {targetPath}");
                     }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[IMPORT ERROR] Failed writing metadata to {targetPath}: {ex.GetType().Name}: {ex.Message}");
+                    throw; // Re-throw to propagate to caller
                 }
                 finally
                 {
                     // Restore original path
                     track.FilePath = originalPath;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes a user-defined TXXX text frame to an ID3v2 tag (for MP3 custom fields).
+        /// </summary>
+        private static void SetId3v2TextField(TagLib.Id3v2.Tag tag, string description, string value)
+        {
+            var existing = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, false);
+            if (existing != null)
+                tag.RemoveFrame(existing);
+
+            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, true);
+            frame.Text = new[] { value ?? "" };
+        }
+
+        /// <summary>
+        /// Copies a file with retry logic for transient IOExceptions.
+        /// Retries up to 3 times with 500ms delay between attempts.
+        /// Common causes: antivirus scanning, delayed file handle release, Windows indexer.
+        /// </summary>
+        private static void CopyFileWithRetry(string source, string destination, int maxRetries = 3)
+        {
+            for (int attempt = 0; attempt < maxRetries; attempt++)
+            {
+                try
+                {
+                    File.Copy(source, destination, overwrite: true);
+                    return;
+                }
+                catch (IOException ex) when (attempt < maxRetries - 1)
+                {
+                    Debug.WriteLine($"[IMPORT] Retry {attempt + 1}/{maxRetries} for copy: {ex.Message}");
+                    Thread.Sleep(500);
                 }
             }
         }
@@ -342,8 +426,14 @@ namespace DeadEditor.Services
             if (string.IsNullOrWhiteSpace(name))
                 return "Unknown";
 
-            // Replace invalid path characters with underscore
-            var invalid = Path.GetInvalidPathChars();
+            // Replace colon with " -" first for readability
+            // e.g., "Listen to the River: St. Louis" → "Listen to the River - St. Louis"
+            name = name.Replace(": ", " - ").Replace(":", "-");
+
+            // Replace remaining invalid filename characters with underscore
+            // GetInvalidFileNameChars includes \ / * ? " < > | (and control chars)
+            // GetInvalidPathChars does NOT include : * ? " < > | so it's insufficient
+            var invalid = Path.GetInvalidFileNameChars();
             foreach (var c in invalid)
             {
                 name = name.Replace(c, '_');
@@ -352,7 +442,7 @@ namespace DeadEditor.Services
             // Clean up multiple spaces and trim
             name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ").Trim();
 
-            // Remove leading/trailing periods and spaces
+            // Remove leading/trailing periods and spaces (Windows doesn't allow them)
             name = name.Trim('.', ' ');
 
             return string.IsNullOrWhiteSpace(name) ? "Unknown" : name;
@@ -405,7 +495,7 @@ namespace DeadEditor.Services
                     return false;
                 }
 
-                var seriesName = ExtractSeriesName(albumInfo.OfficialRelease);
+                var seriesName = SanitizeFolderName(ExtractSeriesName(albumInfo.OfficialRelease));
                 var seriesFolder = Path.Combine(officialReleasesPath, seriesName);
 
                 if (!Directory.Exists(seriesFolder))
@@ -413,7 +503,7 @@ namespace DeadEditor.Services
                     return false;
                 }
 
-                var folderPattern = $"{albumInfo.OfficialRelease}*";
+                var folderPattern = $"{SanitizeFolderName(albumInfo.OfficialRelease)}*";
                 var matchingFolders = Directory.GetDirectories(seriesFolder, folderPattern);
                 return matchingFolders.Length > 0;
             }
