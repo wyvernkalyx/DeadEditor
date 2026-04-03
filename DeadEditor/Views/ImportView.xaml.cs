@@ -311,6 +311,25 @@ namespace DeadEditor
             }
         }
 
+        private void AlbumDateTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var date = AlbumDateTextBox.Text?.Trim();
+            if (string.IsNullOrEmpty(date) || date.Length != 10) return;
+            if (!System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$")) return;
+
+            var showInfo = ShowLookupService.Instance.GetShowByDate(date);
+            if (showInfo == null) return;
+
+            if (string.IsNullOrWhiteSpace(VenueTextBox.Text))
+            {
+                VenueTextBox.Text = showInfo.Venue;
+            }
+            if (string.IsNullOrWhiteSpace(CityStateTextBox.Text))
+            {
+                CityStateTextBox.Text = showInfo.FormattedLocation;
+            }
+        }
+
         // ===== ALBUM NAME AUTOCOMPLETE =====
 
         private bool _isSelectingSuggestion = false;
@@ -429,7 +448,10 @@ namespace DeadEditor
             }
 
             string folderName = _albumInfo.AlbumTitle;
-            FolderPreviewTextBlock.Text = folderName;
+
+            // Sanitize for Windows folder name display (replace : * ? " < > | etc.)
+            string sanitized = SanitizeFolderName(folderName);
+            FolderPreviewTextBlock.Text = sanitized;
 
             if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath))
             {
@@ -437,12 +459,35 @@ namespace DeadEditor
                     ? (_librarySettings.OfficialReleasesPath ?? _librarySettings.LibraryRootPath)
                     : _librarySettings.LibraryRootPath;
 
-                WritePathTextBlock.Text = Path.Combine(basePath, folderName);
+                WritePathTextBlock.Text = Path.Combine(basePath, sanitized);
             }
             else
             {
                 WritePathTextBlock.Text = "(Library path not set)";
             }
+        }
+
+        /// <summary>
+        /// Sanitizes a string for use as a Windows folder name.
+        /// Matches the logic in LibraryImportService.SanitizeFolderName.
+        /// </summary>
+        private static string SanitizeFolderName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return "Unknown";
+
+            name = name.Replace(": ", " - ").Replace(":", "-");
+
+            var invalid = Path.GetInvalidFileNameChars();
+            foreach (var c in invalid)
+            {
+                name = name.Replace(c, '_');
+            }
+
+            name = System.Text.RegularExpressions.Regex.Replace(name, @"\s+", " ").Trim();
+            name = name.Trim('.', ' ');
+
+            return string.IsNullOrWhiteSpace(name) ? "Unknown" : name;
         }
 
         // ===== TRACK GRID =====
@@ -1022,13 +1067,29 @@ namespace DeadEditor
                 // Reset UI for the next import
                 ClearView();
             }
+            catch (IOException ex)
+            {
+                ProgressBar.Visibility = Visibility.Collapsed;
+                ImportButton.IsEnabled = true;
+                WriteButton.IsEnabled = true;
+                System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] IOException: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] Source: {ex.Source}");
+                System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] Stack: {ex.StackTrace}");
+                await ShowNotificationAsync("Import Failed",
+                    $"Import failed: {ex.Message}\n\n" +
+                    "This usually means a file is locked by another process. " +
+                    "Try closing any other apps that might have the files open (media players, file explorers, etc.).");
+                StatusTextBlock.Text = $"Import failed: {ex.Message}";
+            }
             catch (Exception ex)
             {
                 ProgressBar.Visibility = Visibility.Collapsed;
                 ImportButton.IsEnabled = true;
                 WriteButton.IsEnabled = true;
+                System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] {ex.GetType().Name}: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] Stack: {ex.StackTrace}");
                 await ShowNotificationAsync("Import Failed",
-                    $"Error importing to library:\n\n{ex.Message}\n\nStack trace:\n{ex.StackTrace}");
+                    $"Error importing to library:\n\n{ex.Message}");
                 StatusTextBlock.Text = $"Import failed: {ex.Message}";
             }
         }
