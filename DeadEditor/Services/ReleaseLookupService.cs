@@ -154,6 +154,228 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
+        /// Removes a standalone release name and persists to releases.json.
+        /// Returns true if the release was found and removed.
+        /// </summary>
+        public bool RemoveStandaloneRelease(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return false;
+
+            _allNames.Remove(name);
+            _knownNames.Remove(name);
+
+            if (_rawJson != null)
+            {
+                var standalone = _rawJson["standalone"] as JArray;
+                if (standalone != null)
+                {
+                    var item = standalone.FirstOrDefault(t => string.Equals(t.Value<string>(), name, StringComparison.OrdinalIgnoreCase));
+                    if (item != null)
+                    {
+                        standalone.Remove(item);
+                        SaveToFile();
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Renames a standalone release. Returns true if successful.
+        /// </summary>
+        public bool RenameStandaloneRelease(string oldName, string newName)
+        {
+            if (string.IsNullOrWhiteSpace(oldName) || string.IsNullOrWhiteSpace(newName)) return false;
+            if (string.Equals(oldName, newName, StringComparison.OrdinalIgnoreCase)) return true;
+
+            if (_rawJson != null)
+            {
+                var standalone = _rawJson["standalone"] as JArray;
+                if (standalone != null)
+                {
+                    for (int i = 0; i < standalone.Count; i++)
+                    {
+                        if (string.Equals(standalone[i].Value<string>(), oldName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            standalone[i] = newName;
+
+                            // Update in-memory collections
+                            var idx = _allNames.IndexOf(oldName);
+                            if (idx >= 0) _allNames[idx] = newName;
+                            _knownNames.Remove(oldName);
+                            _knownNames.Add(newName);
+
+                            SaveToFile();
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Adds the next volume to a series. Returns the generated name.
+        /// </summary>
+        public string? AddVolumeToSeries(string seriesName)
+        {
+            if (_rawJson == null) return null;
+
+            var series = _rawJson["series"] as JArray;
+            if (series == null) return null;
+
+            foreach (var s in series)
+            {
+                if (!string.Equals(s.Value<string>("name"), seriesName, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var template = s.Value<string>("template") ?? "";
+                var volumes = s["volumes"] as JArray;
+                if (volumes == null) continue;
+
+                // Road Trips uses vol/num objects — skip for now (complex structure)
+                if (template.Contains("{M}"))
+                    return null;
+
+                // Simple integer series: find max and add next
+                int maxVol = 0;
+                foreach (var v in volumes)
+                {
+                    if (v.Type == JTokenType.Integer)
+                    {
+                        var val = v.Value<int>();
+                        if (val > maxVol) maxVol = val;
+                    }
+                }
+
+                int nextVol = maxVol + 1;
+                volumes.Add(nextVol);
+
+                var name = template.Replace("{N}", nextVol.ToString());
+                _allNames.Add(name);
+                _knownNames.Add(name);
+
+                SaveToFile();
+                return name;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Removes the last volume from a series. Returns true if successful.
+        /// </summary>
+        public bool RemoveLastVolumeFromSeries(string seriesName)
+        {
+            if (_rawJson == null) return false;
+
+            var series = _rawJson["series"] as JArray;
+            if (series == null) return false;
+
+            foreach (var s in series)
+            {
+                if (!string.Equals(s.Value<string>("name"), seriesName, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var template = s.Value<string>("template") ?? "";
+                var volumes = s["volumes"] as JArray;
+                if (volumes == null || volumes.Count == 0) return false;
+
+                // Get the last volume entry
+                var lastEntry = volumes.Last;
+                string name;
+                if (lastEntry?.Type == JTokenType.Object)
+                {
+                    var vol = lastEntry.Value<int>("vol");
+                    var num = lastEntry.Value<int>("num");
+                    name = template.Replace("{N}", vol.ToString()).Replace("{M}", num.ToString());
+                }
+                else
+                {
+                    name = template.Replace("{N}", lastEntry?.ToString() ?? "");
+                }
+
+                volumes.Last?.Remove();
+                _allNames.Remove(name);
+                _knownNames.Remove(name);
+
+                SaveToFile();
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the series data for display: list of (seriesName, template, expandedNames).
+        /// </summary>
+        public List<SeriesInfo> GetSeriesInfo()
+        {
+            var result = new List<SeriesInfo>();
+            if (_rawJson == null) return result;
+
+            var series = _rawJson["series"] as JArray;
+            if (series == null) return result;
+
+            foreach (var s in series)
+            {
+                var info = new SeriesInfo
+                {
+                    Name = s.Value<string>("name") ?? "",
+                    Template = s.Value<string>("template") ?? "",
+                    VolumeNames = new List<string>()
+                };
+
+                var volumes = s["volumes"] as JArray;
+                if (volumes != null)
+                {
+                    foreach (var v in volumes)
+                    {
+                        if (v.Type == JTokenType.Object)
+                        {
+                            var vol = v.Value<int>("vol");
+                            var num = v.Value<int>("num");
+                            info.VolumeNames.Add(info.Template.Replace("{N}", vol.ToString()).Replace("{M}", num.ToString()));
+                        }
+                        else
+                        {
+                            info.VolumeNames.Add(info.Template.Replace("{N}", v.ToString()));
+                        }
+                    }
+                }
+
+                info.IsComplexSeries = info.Template.Contains("{M}");
+                result.Add(info);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the standalone release names.
+        /// </summary>
+        public List<string> GetStandaloneReleases()
+        {
+            var result = new List<string>();
+            if (_rawJson == null) return result;
+
+            var standalone = _rawJson["standalone"] as JArray;
+            if (standalone != null)
+            {
+                foreach (var item in standalone)
+                {
+                    var name = item.Value<string>();
+                    if (!string.IsNullOrEmpty(name))
+                        result.Add(name);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the total count of all known releases (series + standalone).
+        /// </summary>
+        public int TotalCount => _allNames.Count;
+
+        /// <summary>
         /// Persists the current state back to releases.json.
         /// </summary>
         public void SaveToFile()
@@ -172,5 +394,16 @@ namespace DeadEditor.Services
                 Console.WriteLine($"[ReleaseLookupService] Error saving releases.json: {ex.Message}");
             }
         }
+    }
+
+    /// <summary>
+    /// Data class for series information used by the Releases editor view.
+    /// </summary>
+    public class SeriesInfo
+    {
+        public string Name { get; set; } = "";
+        public string Template { get; set; } = "";
+        public List<string> VolumeNames { get; set; } = new();
+        public bool IsComplexSeries { get; set; }
     }
 }

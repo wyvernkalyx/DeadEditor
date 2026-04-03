@@ -45,6 +45,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>  <!-- Library icon -->
             <RowDefinition Height="Auto"/>  <!-- Import icon -->
+            <RowDefinition Height="Auto"/>  <!-- Songs icon -->
+            <RowDefinition Height="Auto"/>  <!-- Releases icon -->
             <RowDefinition Height="*"/>     <!-- Spacer -->
             <RowDefinition Height="Auto"/>  <!-- Settings icon -->
         </Grid.RowDefinitions>
@@ -67,8 +69,26 @@
             <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
         </Button>
 
-        <!-- Settings Icon -->
+        <!-- Songs Icon (music note) -->
+        <Button Grid.Row="2"
+                x:Name="SongsButton"
+                Click="SongsButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Songs">
+            <TextBlock Text="&#xE8D6;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+        </Button>
+
+        <!-- Releases Icon (disc/album) -->
         <Button Grid.Row="3"
+                x:Name="ReleasesButton"
+                Click="ReleasesButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Releases">
+            <TextBlock Text="&#xE958;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+        </Button>
+
+        <!-- Settings Icon -->
+        <Button Grid.Row="5"
                 x:Name="SettingsButton"
                 Click="SettingsButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"

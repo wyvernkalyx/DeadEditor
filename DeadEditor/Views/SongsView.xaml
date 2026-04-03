@@ -1,0 +1,128 @@
+<UserControl x:Class="DeadEditor.SongsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="#1E1E1E">
+
+    <UserControl.Resources>
+        <!-- Dark theme button style -->
+        <Style x:Key="DarkButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#3E3E42"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Green accent button -->
+        <Style x:Key="AccentButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#0E7A0D"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#13A10E"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#13A10E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- Search + Add row -->
+            <RowDefinition Height="*"/>      <!-- Song list -->
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar: Search + Add Song -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Search Box -->
+            <Grid Grid.Column="0" Margin="0,0,12,0">
+                <TextBox x:Name="SearchBox"
+                         FontSize="14"
+                         Padding="8,7,28,7"
+                         Background="#3E3E42"
+                         Foreground="#E0E0E0"
+                         BorderBrush="#555555"
+                         BorderThickness="1"
+                         MaxWidth="400"
+                         HorizontalAlignment="Left"
+                         MinWidth="300"
+                         TextChanged="SearchBox_TextChanged">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="CaretBrush" Value="#E0E0E0"/>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <TextBlock x:Name="SearchPlaceholder"
+                           Text="Search songs..."
+                           Foreground="#777777"
+                           FontSize="14"
+                           IsHitTestVisible="False"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="10,0,0,0"/>
+            </Grid>
+
+            <!-- Add Song button -->
+            <Button Grid.Column="1"
+                    Content="+ Add Song"
+                    Click="AddSongButton_Click"
+                    Style="{StaticResource AccentButtonStyle}"/>
+        </Grid>
+
+        <!-- Song List with alphabetical grouping -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="SongListPanel"/>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
