@@ -1,5 +1,6 @@
 using DeadEditor.Models;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,6 +11,7 @@ namespace DeadEditor
         private AlbumDetailView? _currentAlbumView;
         private EditMetadataView? _currentEditView;
         private bool _isUpdatingSearch = false;
+        private bool _isPopulatingYears = false;
 
         /// <summary>Fired when the user clicks "← Library" from the Import header.</summary>
         public event EventHandler? ImportCancelRequested;
@@ -47,6 +49,17 @@ namespace DeadEditor
                 if (ShowTypeFilter?.SelectedItem is ComboBoxItem item)
                     return item.Content?.ToString() ?? "All";
                 return "All";
+            }
+        }
+
+        /// <summary>Gets the current year filter selection.</summary>
+        public string SelectedYear
+        {
+            get
+            {
+                if (YearFilter?.SelectedItem is ComboBoxItem item)
+                    return item.Content?.ToString() ?? "All Years";
+                return "All Years";
             }
         }
 
@@ -120,6 +133,20 @@ namespace DeadEditor
             ImportHeader.Visibility = Visibility.Visible;
         }
 
+        public void ShowSongsHeader(SongsView songsView)
+        {
+            HideAllHeaders();
+            PlaceholderHeader.Visibility = Visibility.Visible;
+            PlaceholderText.Text = $"Songs    {songsView.SongCount} songs";
+        }
+
+        public void ShowReleasesHeader(ReleasesView releasesView)
+        {
+            HideAllHeaders();
+            PlaceholderHeader.Visibility = Visibility.Visible;
+            PlaceholderText.Text = $"Releases    {releasesView.ReleaseCount} known releases";
+        }
+
         public void ShowSettingsHeader()
         {
             HideAllHeaders();
@@ -178,6 +205,17 @@ namespace DeadEditor
         {
             // Guard: this fires during InitializeComponent before other controls exist
             if (SearchBox == null) return;
+
+            bool isMissingShows = TypeFilter == "Shows I Don't Have";
+
+            // Show/hide Year filter dropdown
+            YearLabel.Visibility = isMissingShows ? Visibility.Visible : Visibility.Collapsed;
+            YearFilter.Visibility = isMissingShows ? Visibility.Visible : Visibility.Collapsed;
+
+            // Reset year to "All Years" when switching back to this mode
+            if (isMissingShows && YearFilter.SelectedIndex != 0)
+                YearFilter.SelectedIndex = 0;
+
             RaiseFilterChanged();
 
             // Show/hide Edit Dates button based on mode
@@ -185,8 +223,14 @@ namespace DeadEditor
             UpdateDateEditButtons(isByDate, false);
 
             // Hide advanced search in "Shows I Don't Have" mode (not applicable)
-            AdvancedSearchButton.Visibility = TypeFilter == "Shows I Don't Have"
+            AdvancedSearchButton.Visibility = isMissingShows
                 ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void YearFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SearchBox == null || _isPopulatingYears) return;
+            RaiseFilterChanged();
         }
 
         private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
@@ -233,27 +277,60 @@ namespace DeadEditor
             ShowTypeFilter.IsEnabled = !isEditMode;
         }
 
+        /// <summary>
+        /// Populates the Year dropdown with distinct years from missing show dates.
+        /// Called by LibraryGridView after building the missing shows list.
+        /// </summary>
+        public void PopulateYearFilter(List<string> missingYears)
+        {
+            _isPopulatingYears = true;
+            try
+            {
+                var previousSelection = SelectedYear;
+                YearFilter.Items.Clear();
+                YearFilter.Items.Add(new ComboBoxItem { Content = "All Years" });
+                foreach (var year in missingYears)
+                {
+                    YearFilter.Items.Add(new ComboBoxItem { Content = year });
+                }
+
+                // Restore previous selection if it still exists, otherwise default to All Years
+                bool restored = false;
+                if (previousSelection != "All Years")
+                {
+                    for (int i = 1; i < YearFilter.Items.Count; i++)
+                    {
+                        if (YearFilter.Items[i] is ComboBoxItem item && item.Content?.ToString() == previousSelection)
+                        {
+                            YearFilter.SelectedIndex = i;
+                            restored = true;
+                            break;
+                        }
+                    }
+                }
+                if (!restored)
+                    YearFilter.SelectedIndex = 0;
+            }
+            finally
+            {
+                _isPopulatingYears = false;
+            }
+        }
+
         private void RaiseFilterChanged()
         {
-            LibraryFilterChanged?.Invoke(this, new LibraryFilterEventArgs(SearchText, TypeFilter));
+            LibraryFilterChanged?.Invoke(this, new LibraryFilterEventArgs(SearchText, TypeFilter, SelectedYear));
         }
 
         /// <summary>
         /// Updates the concert count display. Shows "X of Y concerts" when filtered,
         /// "X dates" in By Date mode, or "X shows you don't have" in missing shows mode.
         /// </summary>
-        public void UpdateConcertCount(int filteredCount, int totalCount, bool isByDateMode = false, bool isMissingShowsMode = false)
+        public void UpdateConcertCount(int filteredCount, int totalCount, bool isByDateMode = false, bool isMissingShowsMode = false, int totalShowsInScope = 0)
         {
             if (isMissingShowsMode)
             {
-                if (filteredCount == totalCount)
-                {
-                    ConcertCountText.Text = $"{totalCount:N0} shows you don't have";
-                }
-                else
-                {
-                    ConcertCountText.Text = $"{filteredCount:N0} of {totalCount:N0} missing shows";
-                }
+                ConcertCountText.Text = $"Missing {filteredCount:N0} of {totalShowsInScope:N0} shows";
                 return;
             }
 
@@ -276,11 +353,13 @@ namespace DeadEditor
     {
         public string SearchText { get; }
         public string TypeFilter { get; }
+        public string YearFilter { get; }
 
-        public LibraryFilterEventArgs(string searchText, string typeFilter)
+        public LibraryFilterEventArgs(string searchText, string typeFilter, string yearFilter = "All Years")
         {
             SearchText = searchText;
             TypeFilter = typeFilter;
+            YearFilter = yearFilter;
         }
     }
 }

@@ -24,6 +24,8 @@ namespace DeadEditor
         // View instances (kept alive to preserve state)
         private LibraryGridView? _libraryView;
         private System.Windows.Controls.UserControl? _importView;
+        private SongsView? _songsView;
+        private ReleasesView? _releasesView;
         private System.Windows.Controls.UserControl? _settingsView;
 
         // Public property for child views to access navigation
@@ -213,6 +215,14 @@ namespace DeadEditor
             {
                 HeaderBar.ShowImportHeader();
             }
+            else if (view is SongsView songsView)
+            {
+                HeaderBar.ShowSongsHeader(songsView);
+            }
+            else if (view is ReleasesView releasesView)
+            {
+                HeaderBar.ShowReleasesHeader(releasesView);
+            }
             else if (view is SettingsView)
             {
                 HeaderBar.ShowSettingsHeader();
@@ -223,10 +233,11 @@ namespace DeadEditor
         {
             if (_libraryView != null)
             {
-                _libraryView.ApplyFilter(e.SearchText, e.TypeFilter);
+                _libraryView.ApplyFilter(e.SearchText, e.TypeFilter, e.YearFilter);
                 HeaderBar.UpdateConcertCount(
                     _libraryView.FilteredCount, _libraryView.ConcertCount,
-                    _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode);
+                    _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode,
+                    _libraryView.TotalShowsInScope);
             }
         }
 
@@ -383,6 +394,12 @@ namespace DeadEditor
                 case "Import":
                     NavigateToImport();
                     break;
+                case "Songs":
+                    NavigateToSongs();
+                    break;
+                case "Releases":
+                    NavigateToReleases();
+                    break;
                 case "Settings":
                     NavigateToSettings();
                     break;
@@ -399,7 +416,8 @@ namespace DeadEditor
                 _libraryView.ConcertCountChanged += (s, count) =>
                 {
                     HeaderBar.UpdateConcertCount(_libraryView.FilteredCount, _libraryView.ConcertCount,
-                        _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode);
+                        _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode,
+                        _libraryView.TotalShowsInScope);
                 };
             }
 
@@ -424,6 +442,28 @@ namespace DeadEditor
             }
 
             _navigationService.NavigateToRoot(_importView);
+        }
+
+        private void NavigateToSongs()
+        {
+            if (_songsView == null)
+            {
+                _songsView = new SongsView();
+            }
+
+            _songsView.LoadSongs();
+            _navigationService.NavigateToRoot(_songsView);
+        }
+
+        private void NavigateToReleases()
+        {
+            if (_releasesView == null)
+            {
+                _releasesView = new ReleasesView();
+            }
+
+            _releasesView.LoadReleases();
+            _navigationService.NavigateToRoot(_releasesView);
         }
 
         private void NavigateToSettings()

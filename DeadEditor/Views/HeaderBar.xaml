@@ -176,6 +176,23 @@
                     <ComboBoxItem Content="Shows I Don't Have"/>
                 </ComboBox>
 
+                <!-- Year Filter (Shows I Don't Have mode only) -->
+                <TextBlock x:Name="YearLabel"
+                           Text="Year:"
+                           Foreground="#999999"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           Margin="16,0,6,0"
+                           Visibility="Collapsed"/>
+                <ComboBox x:Name="YearFilter"
+                          Width="105"
+                          VerticalAlignment="Center"
+                          SelectionChanged="YearFilter_SelectionChanged"
+                          Style="{StaticResource DarkComboBoxStyle}"
+                          Visibility="Collapsed">
+                    <ComboBoxItem Content="All Years" IsSelected="True"/>
+                </ComboBox>
+
                 <TextBlock x:Name="ConcertCountText"
                            Text="0 concerts"
                            Foreground="#888888"
