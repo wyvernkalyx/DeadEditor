@@ -1,12 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet run --project DeadEditor.csproj)",
-      "Bash(taskkill //F //IM DeadEditor.exe //T)",
-      "Bash(taskkill //F //IM dotnet.exe //T)",
-      "Bash(dotnet build DeadEditor.csproj)",
-      "Bash(dotnet clean)",
-      "Bash(git add -A)"
+      "Bash(git add Views/AlbumDetailView.xaml Views/AlbumDetailView.xaml.cs Views/LibraryGridView.xaml Views/HeaderBar.xaml)",
+      "Bash(git add Views/PlaylistPanel.xaml Views/PlaylistPanel.xaml.cs Views/PlayerBar.xaml)",
+      "Bash(git add Views/AlbumDetailView.xaml Views/LibraryGridView.xaml)",
+      "Bash(git add Views/AlbumDetailView.xaml.cs Views/AlbumDetailView.xaml Views/LibraryGridView.xaml Views/SidebarPanel.xaml Views/HeaderBar.xaml)",
+      "Bash(dotnet clean DeadEditor.csproj)",
+      "Bash(dir bin\\Debug\\net8.0-windows\\DeadEditor.dll)",
+      "Bash(dotnet build:*)"
     ],
     "deny": [],
     "ask": []
