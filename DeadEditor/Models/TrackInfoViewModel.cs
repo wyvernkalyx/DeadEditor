@@ -36,6 +36,11 @@ namespace DeadEditor
             {
                 UpdateDisplayTitle();
             }
+            else if (e.PropertyName == nameof(TrackInfo.TrackDate))
+            {
+                UpdateDisplayTitle();
+                UpdateInheritedDate();
+            }
         }
 
         public string DisplayTitle
@@ -163,7 +168,10 @@ namespace DeadEditor
             }
             else
             {
-                InheritedDate = _albumInfo?.AlbumDate ?? "";
+                // Show track-specific date if available, otherwise fall back to album date
+                InheritedDate = !string.IsNullOrEmpty(Track.TrackDate)
+                    ? Track.TrackDate
+                    : (_albumInfo?.AlbumDate ?? "");
             }
         }
 
