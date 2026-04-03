@@ -1,7 +1,11 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace DeadEditor
@@ -127,6 +131,240 @@ namespace DeadEditor
             var dialog = new ManageSongsDialog(_normalizationService);
             dialog.Owner = Window.GetWindow(this);
             dialog.ShowDialog();
+        }
+
+        // ===== LIBRARY MAINTENANCE =====
+
+        private async void ReenrichButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = System.Windows.MessageBox.Show(
+                "This will update FLAC/MP3 venue, city, and state tags in your library using shows.json as the authoritative source.\n\nProceed?",
+                "Re-enrich Library?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            ReenrichButton.IsEnabled = false;
+            EnrichProgressText.Text = "Scanning library...";
+
+            try
+            {
+                // Collect all album folders from both library paths
+                var folders = new List<string>();
+
+                if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) &&
+                    Directory.Exists(_librarySettings.LibraryRootPath))
+                {
+                    foreach (var yearFolder in Directory.GetDirectories(_librarySettings.LibraryRootPath))
+                    {
+                        if (!System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(yearFolder), @"^\d{4}$"))
+                            continue;
+                        folders.AddRange(Directory.GetDirectories(yearFolder));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) &&
+                    Directory.Exists(_librarySettings.OfficialReleasesPath))
+                {
+                    // Studio Albums
+                    var studioPath = Path.Combine(_librarySettings.OfficialReleasesPath, "Studio Albums");
+                    if (Directory.Exists(studioPath))
+                        folders.AddRange(Directory.GetDirectories(studioPath));
+
+                    // Series folders (Dave's Picks, etc.)
+                    foreach (var seriesFolder in Directory.GetDirectories(_librarySettings.OfficialReleasesPath))
+                    {
+                        var name = Path.GetFileName(seriesFolder);
+                        if (name.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase) ||
+                            System.Text.RegularExpressions.Regex.IsMatch(name, @"^\d{4}$"))
+                            continue;
+                        folders.AddRange(Directory.GetDirectories(seriesFolder));
+                    }
+                }
+
+                // Deduplicate (when both paths point to same directory)
+                folders = folders.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+
+                int totalFolders = folders.Count;
+                int updatedTracks = 0;
+                int updatedAlbums = 0;
+
+                // Run the heavy I/O on a background thread
+                var enrichResult = await Task.Run(() =>
+                {
+                    int tracks = 0;
+                    int albums = 0;
+
+                    for (int i = 0; i < folders.Count; i++)
+                    {
+                        var folder = folders[i];
+                        int folderIndex = i;
+
+                        // Update progress on UI thread
+                        Dispatcher.Invoke(() =>
+                        {
+                            EnrichProgressText.Text = $"Enriching... {folderIndex + 1} of {totalFolders} albums";
+                        });
+
+                        bool albumUpdated = false;
+
+                        // Get all audio files in this folder
+                        var audioFiles = new List<string>();
+                        try
+                        {
+                            audioFiles.AddRange(Directory.GetFiles(folder, "*.flac"));
+                            audioFiles.AddRange(Directory.GetFiles(folder, "*.mp3"));
+                        }
+                        catch { continue; }
+
+                        if (audioFiles.Count == 0) continue;
+
+                        // Read the date from the first file's ALBUMDATE tag to look up the show
+                        string? albumDate = null;
+                        try
+                        {
+                            using var probe = TagLib.File.Create(audioFiles[0]);
+                            albumDate = ReadCustomField(probe, "ALBUMDATE");
+                        }
+                        catch { }
+
+                        // Fall back to parsing date from folder name
+                        if (string.IsNullOrEmpty(albumDate))
+                        {
+                            var folderName = Path.GetFileName(folder);
+                            var dateMatch = System.Text.RegularExpressions.Regex.Match(folderName, @"^(\d{4}-\d{2}-\d{2})");
+                            if (dateMatch.Success)
+                                albumDate = dateMatch.Groups[1].Value;
+                        }
+
+                        if (string.IsNullOrEmpty(albumDate)) continue;
+
+                        var showInfo = ShowLookupService.Instance.GetShowByDate(albumDate);
+                        if (showInfo == null) continue;
+
+                        // Determine authoritative values
+                        string authVenue = showInfo.Venue;
+                        string authCityState = showInfo.FormattedLocation;
+
+                        if (string.IsNullOrEmpty(authVenue) && string.IsNullOrEmpty(authCityState))
+                            continue;
+
+                        // Update each audio file
+                        foreach (var audioPath in audioFiles)
+                        {
+                            try
+                            {
+                                using var file = TagLib.File.Create(audioPath);
+
+                                string? currentVenue = ReadCustomField(file, "VENUE");
+                                string? currentCityState = ReadCustomField(file, "CITYSTATE");
+
+                                bool venueChanged = !string.IsNullOrEmpty(authVenue) &&
+                                    !string.Equals(currentVenue, authVenue, StringComparison.Ordinal);
+                                bool cityStateChanged = !string.IsNullOrEmpty(authCityState) &&
+                                    !string.Equals(currentCityState, authCityState, StringComparison.Ordinal);
+
+                                if (!venueChanged && !cityStateChanged) continue;
+
+                                // Write updated tags
+                                if (file is TagLib.Flac.File flacFile)
+                                {
+                                    var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                                    if (xiph != null)
+                                    {
+                                        if (venueChanged)
+                                            xiph.SetField("VENUE", authVenue);
+                                        if (cityStateChanged)
+                                            xiph.SetField("CITYSTATE", authCityState);
+                                    }
+                                }
+                                else
+                                {
+                                    var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2, true);
+                                    if (id3v2 != null)
+                                    {
+                                        if (venueChanged)
+                                            SetId3v2TextField(id3v2, "VENUE", authVenue);
+                                        if (cityStateChanged)
+                                            SetId3v2TextField(id3v2, "CITYSTATE", authCityState);
+                                    }
+                                }
+
+                                file.Save();
+                                tracks++;
+                                albumUpdated = true;
+
+                                if (venueChanged)
+                                    Debug.WriteLine($"[ENRICH] {albumDate}: Venue '{currentVenue}' -> '{authVenue}' in {Path.GetFileName(audioPath)}");
+                                if (cityStateChanged)
+                                    Debug.WriteLine($"[ENRICH] {albumDate}: CityState '{currentCityState}' -> '{authCityState}' in {Path.GetFileName(audioPath)}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"[ENRICH] Error updating {audioPath}: {ex.Message}");
+                            }
+                        }
+
+                        if (albumUpdated)
+                            albums++;
+                    }
+
+                    return (tracks, albums);
+                });
+
+                updatedTracks = enrichResult.tracks;
+                updatedAlbums = enrichResult.albums;
+
+                EnrichProgressText.Text = $"Updated {updatedTracks} tracks across {updatedAlbums} albums.";
+                StatusText.Text = "Re-enrichment complete. See Debug output for details.";
+
+                // Reload library to reflect corrected venue data
+                var shell = Window.GetWindow(this) as ShellWindow;
+                var libraryView = shell?.CurrentView is LibraryGridView lgv ? lgv : null;
+                libraryView?.ReloadLibrary();
+            }
+            catch (Exception ex)
+            {
+                EnrichProgressText.Text = "Error during enrichment.";
+                StatusText.Text = $"Error: {ex.Message}";
+                Debug.WriteLine($"[ENRICH] Fatal error: {ex}");
+            }
+            finally
+            {
+                ReenrichButton.IsEnabled = true;
+            }
+        }
+
+        private static string? ReadCustomField(TagLib.File file, string fieldName)
+        {
+            if (file is TagLib.Flac.File flacFile)
+            {
+                var xiph = (TagLib.Ogg.XiphComment)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                return xiph?.GetFirstField(fieldName);
+            }
+            else
+            {
+                var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2);
+                if (id3v2 != null)
+                {
+                    var frame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, fieldName, false);
+                    if (frame?.Text.Length > 0) return frame.Text[0];
+                }
+                return null;
+            }
+        }
+
+        private static void SetId3v2TextField(TagLib.Id3v2.Tag tag, string description, string value)
+        {
+            var existing = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, false);
+            if (existing != null)
+                tag.RemoveFrame(existing);
+
+            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, true);
+            frame.Text = new[] { value ?? "" };
         }
 
         // ===== DATA MANAGEMENT =====

@@ -132,6 +132,20 @@
             <!-- Separator -->
             <Border BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Margin="0,0,0,25"/>
 
+            <!-- ===== LIBRARY MAINTENANCE ===== -->
+            <TextBlock Text="Library Maintenance" FontSize="20" FontWeight="Bold" Foreground="#E0E0E0" Margin="0,0,0,8"/>
+            <TextBlock Text="Updates venue, city, and state tags in your library files using shows.json as the authoritative source. Fixes typos and fills in missing data."
+                       FontSize="14" Foreground="#888888" TextWrapping="Wrap" Margin="0,0,0,14"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Button x:Name="ReenrichButton" Content="Re-enrich Library from shows.json" Click="ReenrichButton_Click"
+                        Height="38" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="EnrichProgressText" Text="" FontSize="14" Foreground="#AACCFF" VerticalAlignment="Center" Margin="14,0,0,0"/>
+            </StackPanel>
+
+            <!-- Separator -->
+            <Border BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Margin="0,25,0,25"/>
+
             <!-- ===== DATA MANAGEMENT ===== -->
             <TextBlock Text="Data Management" FontSize="20" FontWeight="Bold" Foreground="#E0E0E0" Margin="0,0,0,8"/>
             <TextBlock Text="Reset all library data. Files will be moved to the Recycle Bin. Settings and paths are preserved."
