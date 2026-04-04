@@ -81,52 +81,43 @@ namespace DeadEditor.Services
             }
             else // AudienceRecording
             {
-                // Audience recording: Group tracks by date (for multi-show imports)
-                var tracksByDate = tracks.GroupBy(t =>
-                    string.IsNullOrEmpty(t.PerformanceDate) ? (albumInfo.Date ?? "") : t.PerformanceDate);
+                // Folder = Unit of Import: ALL tracks go into ONE folder regardless of
+                // individual track dates. The album's primary date determines the folder name.
+                // Individual track dates are preserved in tags but don't affect folder structure.
+                var date = albumInfo.Date;
 
-                foreach (var dateGroup in tracksByDate)
+                if (string.IsNullOrWhiteSpace(date))
                 {
-                    var date = dateGroup.Key;
-                    var dateTracks = dateGroup.ToList();
-
-                    // Skip empty dates (shouldn't happen for audience recordings, but be safe)
-                    if (string.IsNullOrWhiteSpace(date))
-                    {
-                        throw new InvalidOperationException("Audience recordings must have a performance date");
-                    }
-
-                    // Create folder structure: LibraryRoot\Year\Date - Venue, City, State\
-                    if (!DateTime.TryParse(date, out var parsedDate))
-                    {
-                        throw new InvalidOperationException($"Invalid date format: {date}. Expected yyyy-MM-dd format.");
-                    }
-
-                    var year = parsedDate.Year.ToString();
-
-                    // Build folder name with proper handling of empty fields
-                    var venue = string.IsNullOrWhiteSpace(albumInfo.Venue) ? "Unknown Venue" : albumInfo.Venue;
-                    var city = string.IsNullOrWhiteSpace(albumInfo.City) ? "Unknown City" : albumInfo.City;
-                    var state = string.IsNullOrWhiteSpace(albumInfo.State) ? "" : albumInfo.State;
-
-                    var folderName = string.IsNullOrWhiteSpace(state)
-                        ? $"{date} - {venue} - {city}"
-                        : $"{date} - {venue} - {city}, {state}";
-
-                    // Sanitize folder name (remove invalid characters)
-                    folderName = SanitizeFolderName(folderName);
-
-                    var targetFolder = Path.Combine(libraryRoot, year, folderName);
-
-                    // Create the target folder
-                    if (!Directory.Exists(targetFolder))
-                    {
-                        Directory.CreateDirectory(targetFolder);
-                    }
-
-                    // Import tracks for this date
-                    ImportTracksToFolder(targetFolder, albumInfo, dateTracks, ref processedTracks, totalTracks, progress, date);
+                    throw new InvalidOperationException("Audience recordings must have a performance date");
                 }
+
+                if (!DateTime.TryParse(date, out var parsedDate))
+                {
+                    throw new InvalidOperationException($"Invalid date format: {date}. Expected yyyy-MM-dd format.");
+                }
+
+                var year = parsedDate.Year.ToString();
+
+                // Build folder name from album's primary metadata
+                var venue = string.IsNullOrWhiteSpace(albumInfo.Venue) ? "Unknown Venue" : albumInfo.Venue;
+                var city = string.IsNullOrWhiteSpace(albumInfo.City) ? "Unknown City" : albumInfo.City;
+                var state = string.IsNullOrWhiteSpace(albumInfo.State) ? "" : albumInfo.State;
+
+                var folderName = string.IsNullOrWhiteSpace(state)
+                    ? $"{date} - {venue} - {city}"
+                    : $"{date} - {venue} - {city}, {state}";
+
+                folderName = SanitizeFolderName(folderName);
+
+                var targetFolder = Path.Combine(libraryRoot, year, folderName);
+
+                if (!Directory.Exists(targetFolder))
+                {
+                    Directory.CreateDirectory(targetFolder);
+                }
+
+                // Import ALL tracks to this single folder
+                ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
             }
         }
 

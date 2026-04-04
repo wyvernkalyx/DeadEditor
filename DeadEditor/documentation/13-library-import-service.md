@@ -72,13 +72,13 @@ public void ImportToLibrary(string libraryRoot, AlbumInfo albumInfo, List<TrackI
 3. **Studio Album handling** (line 66-85):
    - Folder: `{libraryRoot}/Studio Albums/{AlbumName} ({Year})`
    - Import all tracks
-4. **Live Recording handling** (line 87-122):
-   - Group tracks by performance date
-   - For each date group:
-     - Extract year from date
-     - Build folder name: `{Date} - {Venue} - {City}, {State}`
-     - Create: `{libraryRoot}/{Year}/{FolderName}`
+4. **Audience Recording handling** (line 84-123):
+   - **Folder = Unit of Import:** ALL tracks go into ONE folder regardless of individual track dates
+   - Uses album's primary date for folder name (not individual track dates)
+   - Build folder name: `{Date} - {Venue} - {City}, {State}`
+   - Create: `{libraryRoot}/{Year}/{FolderName}`
    - Default to "Unknown Venue/City" if missing
+   - Individual track dates are preserved in tags but don't affect folder structure
 
 **Error Handling:** Throws `ArgumentException` if paths not set, creates directories if missing.
 
@@ -374,10 +374,17 @@ File.Copy(track.FilePath, targetPath, overwrite: true);  // Line 172
 
 ---
 
+## Future: Manifest Generation
+
+Manifest sidecar JSON files will be generated on import and save to capture
+verified metadata state. See [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md)
+for the full spec. Not yet implemented.
+
+---
+
 ## File Path
 
 **Source:** [Services/LibraryImportService.cs](Services/LibraryImportService.cs)
-**Lines of Code:** 483
 
 ---
 
@@ -386,8 +393,9 @@ File.Copy(track.FilePath, targetPath, overwrite: true);  // Line 172
 - [11-metadata-service.md](documentation/11-metadata-service.md) - Used for track metadata
 - [01-main-window.md](documentation/01-main-window.md) - Calls ImportToLibrary
 - [02-library-browser.md](documentation/02-library-browser.md) - Displays imported library
+- [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md) - Folder import spec and manifest design
 
 ---
 
-**Last Updated:** 2026-03-01
-**Status:** Complete service documentation
+**Last Updated:** 2026-04-04
+**Status:** Complete service documentation (updated for folder-preservation import fix)
