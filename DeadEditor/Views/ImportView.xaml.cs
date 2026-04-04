@@ -328,6 +328,9 @@ namespace DeadEditor
             {
                 CityStateTextBox.Text = showInfo.FormattedLocation;
             }
+
+            // Check concert reference database for setlist data (future: auto-fill track names)
+            // var concert = ConcertLookupService.Instance.GetConcertByDate(date);
         }
 
         // ===== ALBUM NAME AUTOCOMPLETE =====

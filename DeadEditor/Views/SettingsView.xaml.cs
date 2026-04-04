@@ -31,6 +31,9 @@ namespace DeadEditor
             OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
             FpcalcPathTextBox.Text = _librarySettings.FpcalcPath;
             PrimaryArtistTextBox.Text = _librarySettings.PrimaryArtistName;
+
+            // Show concert database path (read-only info)
+            ConcertDbPathTextBox.Text = ConcertLookupService.Instance.ConcertsPath;
         }
 
         // ===== PATH SELECTION =====
