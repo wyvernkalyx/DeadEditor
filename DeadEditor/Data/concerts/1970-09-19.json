@@ -1,0 +1,311 @@
+{
+  "date": "1970-09-19",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "73dc82b9",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-east-new-york-ny-73dc82b9.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1: Acoustic",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Rub",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Jordan",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Swing Low, Sweet Chariot",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2: Electric",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-09-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Don't Ease Me In",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "Candyman",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Friend of the Devil",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Deep Elem Blues",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "The Rub",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "Rosa Lee McFall",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "Cumberland Blues",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "New Speedway Boogie",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 10,
+      "songName": "To Lay Me Down",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 11,
+      "songName": "Cold Jordan",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 12,
+      "songName": "Swing Low, Sweet Chariot",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 13,
+      "songName": "Morning Dew",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 14,
+      "songName": "Me and My Uncle",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 15,
+      "songName": "Good Morning, School Girl",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 16,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 17,
+      "songName": "Easy Wind",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 19,
+      "songName": "Dark Star",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 20,
+      "songName": "St. Stephen",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 21,
+      "songName": "Not Fade Away",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    },
+    {
+      "position": 22,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-09-19",
+      "segue": false,
+      "set": "Set 2: Electric"
+    }
+  ]
+}

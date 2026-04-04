@@ -1,0 +1,264 @@
+{
+  "date": "1983-03-27",
+  "venue": "Irvine Meadows Amphitheatre",
+  "city": "Irvine",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bd60758",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/irvine-meadows-amphitheatre-irvine-ca-5bd60758.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1983-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Shakedown Street",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "They Love Each Other",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "My Brother Esau",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Deal",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "China Cat Sunflower",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 9,
+      "songName": "I Know You Rider",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 10,
+      "songName": "Samson and Delilah",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "He's Gone",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Throwing Stones",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Not Fade Away",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Good Lovin'",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "U.S. Blues",
+      "date": "1983-03-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

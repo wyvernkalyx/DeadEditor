@@ -1,0 +1,111 @@
+{
+  "date": "1968-09-22",
+  "venue": "Del Mar Fairgrounds",
+  "city": "Del Mar",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43c7df6f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/del-mar-fairgrounds-del-mar-ca-43c7df6f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-09-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-09-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-09-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1968-09-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1968-09-22",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-09-22",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1968-09-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "That's It for the Other One",
+      "date": "1968-09-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-09-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "New Potato Caboose",
+      "date": "1968-09-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Alligator",
+      "date": "1968-09-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1968-09-22",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Feedback",
+      "date": "1968-09-22",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "In the Midnight Hour",
+      "date": "1968-09-22",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

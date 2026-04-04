@@ -1,0 +1,98 @@
+{
+  "date": "1968-03-03",
+  "venue": "Haight Street at Cole",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13dca925",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/haight-street-at-cole-san-francisco-ca-13dca925.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1968-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Smokestack Lightning",
+          "date": "1968-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1968-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1968-03-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1968-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Smokestack Lightning",
+      "date": "1968-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "It Hurts Me Too",
+      "date": "1968-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "That's It for the Other One",
+      "date": "1968-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Dancing in the Street",
+      "date": "1968-03-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

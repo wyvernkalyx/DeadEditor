@@ -1,0 +1,264 @@
+{
+  "date": "1995-05-29",
+  "venue": "Portland Meadows",
+  "city": "Portland",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "23d600f7",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1995/portland-meadows-portland-or-23d600f7.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Good Times",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Just Like Tom Thumb's Blues",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samba in the Rain",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Days Between",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Liberty",
+          "date": "1995-05-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Times",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack-A-Roe",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Walkin' Blues",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Dire Wolf",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Just Like Tom Thumb's Blues",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "The Music Never Stopped",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Shakedown Street",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Looks Like Rain",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Samba in the Rain",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Terrapin Station",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Last Time",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Days Between",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Liberty",
+      "date": "1995-05-29",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

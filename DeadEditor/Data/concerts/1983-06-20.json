@@ -1,0 +1,290 @@
+{
+  "date": "1983-06-20",
+  "venue": "Merriweather Post Pavilion",
+  "city": "Columbia",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "43d60743",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/merriweather-post-pavilion-columbia-md-43d60743.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hell in a Bucket",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1983-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1983-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Minglewood Blues",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "They Love Each Other",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "The Little Red Rooster",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Peggy-O",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Hell in a Bucket",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "My Brother Esau",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "West L.A. Fadeaway",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Music Never Stopped",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "China Cat Sunflower",
+      "date": "1983-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "I Know You Rider",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Samson and Delilah",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Truckin'",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "The Other One",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Wharf Rat",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Sugar Magnolia",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1983-06-20",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

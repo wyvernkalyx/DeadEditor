@@ -1,0 +1,194 @@
+{
+  "date": "1968-03-30",
+  "venue": "Carousel Ballroom",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bdca91c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/carousel-ballroom-san-francisco-ca-1bdca91c.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1968-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-03-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Born Cross-Eyed",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Spanish Jam",
+          "date": "1968-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1968-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1968-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1968-03-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1968-03-30",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "That's It for the Other One",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "China Cat Sunflower",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "The Eleven",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-03-30",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "Born Cross-Eyed",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set II"
+    },
+    {
+      "position": 8,
+      "songName": "Feedback",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set II"
+    },
+    {
+      "position": 9,
+      "songName": "Spanish Jam",
+      "date": "1968-03-30",
+      "segue": true,
+      "set": "Set II"
+    },
+    {
+      "position": 10,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1968-03-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 11,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-03-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Beat It on Down the Line",
+      "date": "1968-03-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Dancing in the Street",
+      "date": "1968-03-30",
+      "segue": false,
+      "set": "Set II"
+    }
+  ]
+}

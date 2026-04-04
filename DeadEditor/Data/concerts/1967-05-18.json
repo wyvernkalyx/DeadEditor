@@ -1,0 +1,46 @@
+{
+  "date": "1967-05-18",
+  "venue": "Awalt High School",
+  "city": "Mountain View",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "4bc7e726",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/awalt-high-school-mountain-view-ca-4bc7e726.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Louie Louie",
+          "date": "1967-05-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1967-05-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Louie Louie",
+      "date": "1967-05-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Good Morning, School Girl",
+      "date": "1967-05-18",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

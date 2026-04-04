@@ -1,0 +1,238 @@
+{
+  "date": "1983-05-14",
+  "venue": "William Randolph Hearst Greek Theatre",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "4bd6074e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/william-randolph-hearst-greek-theatre-berkeley-ca-4bd6074e.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1983-05-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Tennessee Jed",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "My Brother Esau",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Bertha",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Shakedown Street",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 9,
+      "songName": "Playing in the Band",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 10,
+      "songName": "China Doll",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Drums",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "The Wheel",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Morning Dew",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Sugar Magnolia",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "One More Saturday Night",
+      "date": "1983-05-14",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "date": "1966-11-29",
+  "venue": "The Matrix",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "6bd0c2fa",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/the-matrix-san-francisco-ca-6bd0c2fa.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Cream Puff War",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Same Thing",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stealin', Stealin'",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boy Pete",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See That My Grave Is Kept Clean",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Early Morning Rain",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Down So Long",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "There Is Something on Your Mind",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Overseas Stomp (The Lindy)",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Just Want to Make Love to You",
+          "date": "1966-11-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cream Puff War",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Me and My Uncle",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "The Same Thing",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Stealin', Stealin'",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Big Boy Pete",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "See That My Grave Is Kept Clean",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Early Morning Rain",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Viola Lee Blues",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Down So Long",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "There Is Something on Your Mind",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Overseas Stomp (The Lindy)",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Good Morning, School Girl",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "I Just Want to Make Love to You",
+      "date": "1966-11-29",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

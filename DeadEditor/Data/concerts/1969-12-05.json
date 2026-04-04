@@ -1,0 +1,267 @@
+{
+  "date": "1969-12-05",
+  "venue": "Fillmore West",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43dca707",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/fillmore-west-san-francisco-ca-43dca707.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cryptical Envelopment",
+          "date": "1969-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1969-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1969-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-12-05",
+          "segue": true,
+          "info": "Jam) (> Cryptical Envelopment reprise >"
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1969-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "High Time",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Main Ten",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1969-12-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Me and My Uncle",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Casey Jones",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Black Peter",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Mama Tried",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "It Hurts Me Too",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Cumberland Blues",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Cryptical Envelopment",
+      "date": "1969-12-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Drums",
+      "date": "1969-12-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "The Other One",
+      "date": "1969-12-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "The Eleven",
+      "date": "1969-12-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Cosmic Charlie",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Dancing in the Street",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Dire Wolf",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "China Cat Sunflower",
+      "date": "1969-12-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "I Know You Rider",
+      "date": "1969-12-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 16,
+      "songName": "High Time",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 17,
+      "songName": "Uncle John's Band",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 18,
+      "songName": "The Main Ten",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 19,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1969-12-05",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "date": "1994-10-13",
+  "venue": "Madison Square Garden",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "23d60013",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/madison-square-garden-new-york-ny-23d60013.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wang Dang Doodle",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1994-10-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When I Paint My Masterpiece",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Foolish Heart",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1994-10-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Touch of Grey",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Wang Dang Doodle",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mama Tried",
+      "date": "1994-10-13",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "When I Paint My Masterpiece",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Loose Lucy",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Let It Grow",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Foolish Heart",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Other One",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Johnny B. Goode",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1994-10-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

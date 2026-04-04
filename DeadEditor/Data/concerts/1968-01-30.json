@@ -1,0 +1,59 @@
+{
+  "date": "1968-01-30",
+  "venue": "EMU Ballroom",
+  "city": "Eugene",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "3dca523",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/emu-ballroom-eugene-or-3dca523.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-01-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-01-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gloria",
+          "date": "1968-01-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "That's It for the Other One",
+      "date": "1968-01-30",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "New Potato Caboose",
+      "date": "1968-01-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Gloria",
+      "date": "1968-01-30",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

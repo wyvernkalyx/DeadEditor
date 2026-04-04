@@ -1,0 +1,33 @@
+{
+  "date": "1966-08-07",
+  "venue": "Fillmore Auditorium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63c43ad7",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/fillmore-auditorium-san-francisco-ca-63c43ad7.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-08-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "In the Midnight Hour",
+      "date": "1966-08-07",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

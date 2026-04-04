@@ -1,0 +1,150 @@
+{
+  "date": "1969-07-03",
+  "venue": "Reed's Ranch",
+  "city": "Colorado Springs",
+  "state": "CO",
+  "country": "US",
+  "setlistFmId": "6bda6a66",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/reeds-ranch-colorado-springs-co-6bda6a66.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Green, Green Grass of Home",
+          "date": "1969-07-03",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Ole Slew-Foot",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": "original title: Just a Hand to Hold"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-07-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Green, Green Grass of Home",
+      "date": "1969-07-03",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Ole Slew-Foot",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Sitting on Top of the World",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Morning Dew",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "High Time",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Me and My Uncle",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Casey Jones",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Hard to Handle",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "He Was a Friend of Mine",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-07-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

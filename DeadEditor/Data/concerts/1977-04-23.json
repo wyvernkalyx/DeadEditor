@@ -1,0 +1,290 @@
+{
+  "date": "1977-04-23",
+  "venue": "Springfield Civic Center",
+  "city": "Springfield",
+  "state": "MA",
+  "country": "US",
+  "setlistFmId": "13d60519",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/springfield-civic-center-springfield-ma-13d60519.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Sugaree",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Estimated Prophet",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Help on the Way",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1977-04-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Sugaree",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Cassidy",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Minglewood Blues",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Ramble On Rose",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Me and My Uncle",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Row Jimmy",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "It's All Over Now",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Scarlet Begonias",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Fire on the Mountain",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Estimated Prophet",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Bertha",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "The Music Never Stopped",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Help on the Way",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Slipknot!",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Franklin's Tower",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Around and Around",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "One More Saturday Night",
+      "date": "1977-04-23",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

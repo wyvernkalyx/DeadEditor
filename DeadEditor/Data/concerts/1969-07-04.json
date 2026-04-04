@@ -1,0 +1,228 @@
+{
+  "date": "1969-07-04",
+  "venue": "Kinetic Playground",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "6bc7de46",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/kinetic-playground-chicago-il-6bc7de46.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ole Slew-Foot",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cryptical Envelopment",
+          "date": "1969-07-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1969-07-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1969-07-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "High Time",
+          "date": "1969-07-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1969-07-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-07-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-07-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hard to Handle",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Ole Slew-Foot",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cryptical Envelopment",
+      "date": "1969-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Drums",
+      "date": "1969-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "The Other One",
+      "date": "1969-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "High Time",
+      "date": "1969-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Casey Jones",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "I'm a King Bee",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Sitting on Top of the World",
+      "date": "1969-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Me and My Uncle",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Doin' That Rag",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Dire Wolf",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "St. Stephen",
+      "date": "1969-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 16,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-07-04",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

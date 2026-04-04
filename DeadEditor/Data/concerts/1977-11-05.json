@@ -1,0 +1,277 @@
+{
+  "date": "1977-11-05",
+  "venue": "Rochester Community War Memorial",
+  "city": "Rochester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "13d605e9",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/rochester-community-war-memorial-rochester-ny-13d605e9.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Eyes of the World",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": "preceded by Phil Lesh solo"
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1977-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Minglewood Blues",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Looks Like Rain",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Dire Wolf",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mama Tried",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Big River",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Candyman",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Jack Straw",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Deal",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Eyes of the World",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Samson and Delilah",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "It Must Have Been the Roses",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Estimated Prophet",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "He's Gone",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Black Peter",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "One More Saturday Night",
+      "date": "1977-11-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

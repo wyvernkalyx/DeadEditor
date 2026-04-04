@@ -1,0 +1,277 @@
+{
+  "date": "1977-10-16",
+  "venue": "LSU Assembly Center",
+  "city": "Baton Rouge",
+  "state": "LA",
+  "country": "US",
+  "setlistFmId": "1bd605f0",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/lsu-assembly-center-baton-rouge-la-1bd605f0.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunrise",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1977-10-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Cassidy",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Loser",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Minglewood Blues",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Friend of the Devil",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Sunrise",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Dire Wolf",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Music Never Stopped",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Other One",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Good Lovin'",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Terrapin Station",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Black Peter",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "U.S. Blues",
+      "date": "1977-10-16",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

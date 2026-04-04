@@ -1,0 +1,137 @@
+{
+  "date": "1969-08-02",
+  "venue": "Family Dog on the Great Highway",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bc7de38",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/family-dog-on-the-great-highway-san-francisco-ca-7bc7de38.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "The Ballad of Casey Jones",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ole Slew-Foot",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-08-02",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Ballad of Casey Jones",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Hard to Handle",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "High Time",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Ole Slew-Foot",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "I'm a King Bee",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "That's It for the Other One",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-08-02",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

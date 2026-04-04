@@ -1,0 +1,376 @@
+{
+  "date": "1971-04-27",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "7bdcfe80",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/fillmore-east-new-york-ny-7bdcfe80.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Searchin'",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Riot in Cell Block #9",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Vibrations",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": "The Grateful Dead were offstage and did not perform on this song"
+        },
+        {
+          "name": "I Get Around",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": "the Grateful Dead were offstage and did not perform on this song"
+        },
+        {
+          "name": "Help Me, Rhonda",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Okie From Muskogee",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sing Me Back Home",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1971-04-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Truckin'",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Bertha",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Next Time You See Me",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Cumberland Blues",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "Loser",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Hard to Handle",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "China Cat Sunflower",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "I Know You Rider",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "Casey Jones",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 12,
+      "songName": "Sugar Magnolia",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Deal",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Me and My Uncle",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Bird Song",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Playing in the Band",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Dire Wolf",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Searchin'",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Riot in Cell Block #9",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "Good Vibrations",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "I Get Around",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 22,
+      "songName": "Help Me, Rhonda",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 23,
+      "songName": "Okie From Muskogee",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 24,
+      "songName": "Johnny B. Goode",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 25,
+      "songName": "Sing Me Back Home",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 26,
+      "songName": "Uncle John's Band",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 27,
+      "songName": "Turn On Your Love Light",
+      "date": "1971-04-27",
+      "segue": false,
+      "set": "Set II"
+    }
+  ]
+}

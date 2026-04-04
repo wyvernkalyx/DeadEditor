@@ -1,0 +1,137 @@
+{
+  "date": "1969-05-10",
+  "venue": "Rose Palace",
+  "city": "Pasadena",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63da6a77",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/rose-palace-pasadena-ca-63da6a77.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1969-05-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-05-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1969-05-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Yellow Dog Story",
+          "date": "1969-05-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-05-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-05-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-05-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-05-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-05-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hard to Handle",
+      "date": "1969-05-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Me and My Uncle",
+      "date": "1969-05-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Morning Dew",
+      "date": "1969-05-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Yellow Dog Story",
+      "date": "1969-05-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Doin' That Rag",
+      "date": "1969-05-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Dark Star",
+      "date": "1969-05-10",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "St. Stephen",
+      "date": "1969-05-10",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "The Eleven",
+      "date": "1969-05-10",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-05-10",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "date": "1983-08-26",
+  "venue": "Portland Memorial Coliseum",
+  "city": "Portland",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "5bd60738",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/portland-memorial-coliseum-portland-or-5bd60738.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wang Dang Doodle",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1983-08-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Promised Land",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Peggy-O",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Big River",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "West L.A. Fadeaway",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Minglewood Blues",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Loser",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Let It Grow",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Truckin'",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Wang Dang Doodle",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Stella Blue",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "U.S. Blues",
+      "date": "1983-08-26",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

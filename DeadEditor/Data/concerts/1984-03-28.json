@@ -1,0 +1,316 @@
+{
+  "date": "1984-03-28",
+  "venue": "Marin Veterans' Memorial Auditorium",
+  "city": "San Rafael",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bd60718",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1984/marin-veterans-memorial-auditorium-san-rafael-ca-5bd60718.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See See Rider Blues",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Oh Babe It Ain't No Lie",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hell in a Bucket",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Need Love",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Spoonful",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1984-03-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Iko Iko",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "See See Rider Blues",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "El Paso",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "West L.A. Fadeaway",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Beat It on Down the Line",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Candyman",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Let It Grow",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Oh Babe It Ain't No Lie",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Hell in a Bucket",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "China Cat Sunflower",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "I Know You Rider",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Don't Need Love",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "The Wheel",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Truckin'",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Spoonful",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Around and Around",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Johnny B. Goode",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Touch of Grey",
+      "date": "1984-03-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

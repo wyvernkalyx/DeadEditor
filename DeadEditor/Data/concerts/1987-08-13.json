@@ -1,0 +1,290 @@
+{
+  "date": "1987-08-13",
+  "venue": "Red Rocks Amphitheatre",
+  "city": "Morrison",
+  "state": "CO",
+  "country": "US",
+  "setlistFmId": "7bd60630",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/red-rocks-amphitheatre-morrison-co-7bd60630.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Big Boss Man",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gimme Some Lovin'",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": "preceded by 'Not Fade Away' reprise"
+        },
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1987-08-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Big Boss Man",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack Straw",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Row Jimmy",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "It's All Over Now",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Cassidy",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Far From Me",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Box of Rain",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Uncle John's Band",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Estimated Prophet",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "He's Gone",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Wheel",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Gimme Some Lovin'",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Stella Blue",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Throwing Stones",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Touch of Grey",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 20,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1987-08-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

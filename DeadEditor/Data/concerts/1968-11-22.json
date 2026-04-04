@@ -1,0 +1,137 @@
+{
+  "date": "1968-11-22",
+  "venue": "Veterans Memorial Auditorium",
+  "city": "Columbus",
+  "state": "OH",
+  "country": "US",
+  "setlistFmId": "4bc7df32",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/veterans-memorial-auditorium-columbus-oh-4bc7df32.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1968-11-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-11-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-11-22",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1968-11-22",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1968-11-22",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-11-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-11-22",
+          "segue": true,
+          "info": "followed by \"The Other One\" jam, >"
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-11-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1968-11-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1968-11-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-11-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1968-11-22",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "St. Stephen",
+      "date": "1968-11-22",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "The Eleven",
+      "date": "1968-11-22",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-11-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "That's It for the Other One",
+      "date": "1968-11-22",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "New Potato Caboose",
+      "date": "1968-11-22",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "And We Bid You Goodnight",
+      "date": "1968-11-22",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

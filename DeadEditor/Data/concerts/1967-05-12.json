@@ -1,0 +1,60 @@
+{
+  "date": "1967-05-12",
+  "venue": "Marigold Ballroom",
+  "city": "Fresno",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53c7e721",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/marigold-ballroom-fresno-ca-53c7e721.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "The Golden Road (to Unlimited Devotion)",
+          "date": "1967-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1967-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1967-05-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Golden Road (to Unlimited Devotion)",
+      "date": "1967-05-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1967-05-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Viola Lee Blues",
+      "date": "1967-05-12",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

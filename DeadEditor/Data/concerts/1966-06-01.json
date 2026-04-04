@@ -1,0 +1,73 @@
+{
+  "date": "1966-06-01",
+  "venue": "Pauley Ballroom",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bc7eaa4",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/pauley-ballroom-berkeley-ca-7bc7eaa4.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-06-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-06-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-06-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-06-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-06-01",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Viola Lee Blues",
+      "date": "1966-06-01",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "I Know You Rider",
+      "date": "1966-06-01",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "In the Midnight Hour",
+      "date": "1966-06-01",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

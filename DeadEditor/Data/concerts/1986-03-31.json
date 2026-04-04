@@ -1,0 +1,233 @@
+{
+  "date": "1986-03-31",
+  "venue": "Providence Civic Center",
+  "city": "Providence",
+  "state": "RI",
+  "country": "US",
+  "setlistFmId": "43d60783",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1986/providence-civic-center-providence-ri-43d60783.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "(I'm a) Road Runner",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Willie and the Hand Jive",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1986-03-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "(I'm a) Road Runner",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "West L.A. Fadeaway",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "My Brother Esau",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Brown-Eyed Women",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Desolation Row",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Might as Well",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Feel Like a Stranger",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Ship of Fools",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Willie and the Hand Jive",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Comes a Time",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Truckin'",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Johnny B. Goode",
+      "date": "1986-03-31",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

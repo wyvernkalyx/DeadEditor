@@ -1,0 +1,46 @@
+{
+  "date": "1968-11-15",
+  "venue": "Gill Coliseum",
+  "city": "Corvallis",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "7388165d",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/gill-coliseum-corvallis-or-7388165d.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-11-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1968-11-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-11-15",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Morning Dew",
+      "date": "1968-11-15",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

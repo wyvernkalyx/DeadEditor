@@ -1,0 +1,290 @@
+{
+  "date": "1987-06-14",
+  "venue": "Ventura County Fairgrounds",
+  "city": "Ventura",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bd6064c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/ventura-county-fairgrounds-ventura-ca-7bd6064c.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tons of Steel",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Quinn the Eskimo (The Mighty Quinn)",
+          "date": "1987-06-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Tons of Steel",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Mexicali Blues",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Althea",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Feel Like a Stranger",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Might as Well",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Playing in the Band",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Terrapin Station",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Truckin'",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Wharf Rat",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Throwing Stones",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Quinn the Eskimo (The Mighty Quinn)",
+      "date": "1987-06-14",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

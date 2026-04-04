@@ -1,0 +1,264 @@
+{
+  "date": "1987-03-22",
+  "venue": "Hampton Coliseum",
+  "city": "Hampton",
+  "state": "VA",
+  "country": "US",
+  "setlistFmId": "73d60665",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/hampton-coliseum-hampton-va-73d60665.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When Push Comes to Shove",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunshine Daydream",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1987-03-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "It's All Over Now",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "West L.A. Fadeaway",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "El Paso",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "When Push Comes to Shove",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Cassidy",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Sugar Magnolia",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Wheel",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Black Peter",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Sunshine Daydream",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1987-03-22",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

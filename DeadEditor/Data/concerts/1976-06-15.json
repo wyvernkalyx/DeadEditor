@@ -1,0 +1,303 @@
+{
+  "date": "1976-06-15",
+  "venue": "Beacon Theatre",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "13d60541",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1976/beacon-theatre-new-york-ny-13d60541.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "St. Stephen",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunshine Daydream",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1976-06-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Cassidy",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Candyman",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "The Music Never Stopped",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "It Must Have Been the Roses",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Tennessee Jed",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Let It Grow",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Might as Well",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "St. Stephen",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Not Fade Away",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Stella Blue",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Samson and Delilah",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Friend of the Devil",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Dancing in the Street",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "The Wheel",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Scarlet Begonias",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Sunshine Daydream",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Johnny B. Goode",
+      "date": "1976-06-15",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

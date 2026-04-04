@@ -1,0 +1,46 @@
+{
+  "date": "1966-10-31",
+  "venue": "California Hall",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3c7e52f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/california-hall-san-francisco-ca-3c7e52f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alice D. Millionaire",
+          "date": "1966-10-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1966-10-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Alice D. Millionaire",
+      "date": "1966-10-31",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

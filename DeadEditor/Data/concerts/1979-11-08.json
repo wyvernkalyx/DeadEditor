@@ -1,0 +1,277 @@
+{
+  "date": "1979-11-08",
+  "venue": "Capital Centre",
+  "city": "Landover",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "23d6045b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1979/capital-centre-landover-md-23d6045b.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1979-11-08",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1979-11-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Minglewood Blues",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Stagger Lee",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "China Cat Sunflower",
+      "date": "1979-11-08",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "I Know You Rider",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "It's All Over Now",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Don't Ease Me In",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Looks Like Rain",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Deal",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Scarlet Begonias",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Fire on the Mountain",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Lost Sailor",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Saint of Circumstance",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Morning Dew",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Johnny B. Goode",
+      "date": "1979-11-08",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "date": "1966-11-19",
+  "venue": "Fillmore Auditorium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63d0c2fb",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/fillmore-auditorium-san-francisco-ca-63d0c2fb.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hi-Heel Sneakers",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Pain in My Heart",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Same Thing",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": "original title: Just a Hand to Hold"
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Smokestack Lightning",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-11-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Hi-Heel Sneakers",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Pain in My Heart",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cream Puff War",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "The Same Thing",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "He Was a Friend of Mine",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Dancing in the Street",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Smokestack Lightning",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "I'm a King Bee",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "In the Midnight Hour",
+      "date": "1966-11-19",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

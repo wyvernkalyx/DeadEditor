@@ -1,0 +1,264 @@
+{
+  "date": "1978-05-06",
+  "venue": "Patrick Gymnasium",
+  "city": "Burlington",
+  "state": "VT",
+  "country": "US",
+  "setlistFmId": "3d605c7",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1978/patrick-gymnasium-burlington-vt-3d605c7.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Sugaree",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunrise",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1978-05-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Sugaree",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Peggy-O",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Looks Like Rain",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "It Must Have Been the Roses",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Big River",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Deal",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Samson and Delilah",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Sunrise",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Terrapin Station",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Playing in the Band",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "One More Saturday Night",
+      "date": "1978-05-06",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "date": "1993-06-21",
+  "venue": "Deer Creek Music Center",
+  "city": "Noblesville",
+  "state": "IN",
+  "country": "US",
+  "setlistFmId": "33d60079",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/deer-creek-music-center-noblesville-in-33d60079.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Spoonful",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eternity",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "So Many Roads",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1993-06-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "I Fought the Law",
+          "date": "1993-06-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Spoonful",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Jack-A-Roe",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loose Lucy",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Eternity",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "So Many Roads",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Promised Land",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1993-06-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Ship of Fools",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Corrina",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "The Last Time",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Black Peter",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Around and Around",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "I Fought the Law",
+      "date": "1993-06-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

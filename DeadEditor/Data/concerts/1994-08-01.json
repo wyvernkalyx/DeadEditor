@@ -1,0 +1,251 @@
+{
+  "date": "1994-08-01",
+  "venue": "The Palace of Auburn Hills",
+  "city": "Auburn Hills",
+  "state": "MI",
+  "country": "US",
+  "setlistFmId": "33d6002d",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/the-palace-of-auburn-hills-auburn-hills-mi-33d6002d.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Picasso Moon",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Same Thing",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Childhood's End",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Victim or the Crime",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samba in the Rain",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "(I Can't Get No) Satisfaction",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Liberty",
+          "date": "1994-08-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Picasso Moon",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Peggy-O",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "The Same Thing",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Stagger Lee",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Childhood's End",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Music Never Stopped",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Victim or the Crime",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "Scarlet Begonias",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Fire on the Mountain",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Samba in the Rain",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Estimated Prophet",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "All Along the Watchtower",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Stella Blue",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "(I Can't Get No) Satisfaction",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Liberty",
+      "date": "1994-08-01",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

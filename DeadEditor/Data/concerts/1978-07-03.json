@@ -1,0 +1,264 @@
+{
+  "date": "1978-07-03",
+  "venue": "St. Paul Civic Center",
+  "city": "St. Paul",
+  "state": "MN",
+  "country": "US",
+  "setlistFmId": "3d605b3",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1978/st-paul-civic-center-st-paul-mn-3d605b3.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Cassidy",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Werewolves of London",
+          "date": "1978-07-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Minglewood Blues",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Loser",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Looks Like Rain",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Mama Tried",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Peggy-O",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Cassidy",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Deal",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "The Music Never Stopped",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Scarlet Begonias",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Fire on the Mountain",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Dancing in the Street",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Not Fade Away",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Stella Blue",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Werewolves of London",
+      "date": "1978-07-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

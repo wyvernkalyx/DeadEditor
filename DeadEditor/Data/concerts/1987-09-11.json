@@ -1,0 +1,303 @@
+{
+  "date": "1987-09-11",
+  "venue": "Capital Centre",
+  "city": "Landover",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "6bd6062e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/capital-centre-landover-md-6bd6062e.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When Push Comes to Shove",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tons of Steel",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Happy Birthday to You",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": "Mickey"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dear Mr. Fantasy",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunshine Daydream",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1987-09-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Promised Land",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Candyman",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Minglewood Blues",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "When Push Comes to Shove",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Tons of Steel",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Desolation Row",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Happy Birthday to You",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Sugar Magnolia",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Sugaree",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Eyes of the World",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Dear Mr. Fantasy",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "All Along the Watchtower",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Wharf Rat",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Sunshine Daydream",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Touch of Grey",
+      "date": "1987-09-11",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

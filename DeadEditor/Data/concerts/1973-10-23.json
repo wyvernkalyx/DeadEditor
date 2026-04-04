@@ -1,0 +1,368 @@
+{
+  "date": "1973-10-23",
+  "venue": "Metropolitan Sports Center",
+  "city": "Bloomington",
+  "state": "MN",
+  "country": "US",
+  "setlistFmId": "73d60a95",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1973/metropolitan-sports-center-bloomington-mn-73d60a95.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Weather Report Suite",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1973-10-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mexicali Blues",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "They Love Each Other",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and Bobby McGee",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Deal",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Black-Throated Wind",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Brown-Eyed Women",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Beat It on Down the Line",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Brokedown Palace",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Jack Straw",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "China Cat Sunflower",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "I Know You Rider",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Around and Around",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Big River",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Row Jimmy",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Me and My Uncle",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Ramble On Rose",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "El Paso",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Loose Lucy",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Truckin'",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "The Other One",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Weather Report Suite",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Sugar Magnolia",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Casey Jones",
+      "date": "1973-10-23",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

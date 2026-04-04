@@ -1,0 +1,59 @@
+{
+  "date": "1968-11-30",
+  "venue": "Hyde Park Teen Center",
+  "city": "Cincinnati",
+  "state": "OH",
+  "country": "US",
+  "setlistFmId": "3bf65834",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/hyde-park-teen-center-cincinnati-oh-3bf65834.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Dark Star",
+          "date": "1968-11-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1968-11-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-11-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dark Star",
+      "date": "1968-11-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "St. Stephen",
+      "date": "1968-11-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-11-30",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

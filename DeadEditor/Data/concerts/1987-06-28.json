@@ -1,0 +1,277 @@
+{
+  "date": "1987-06-28",
+  "venue": "Alpine Valley Music Theatre",
+  "city": "East Troy",
+  "state": "WI",
+  "country": "US",
+  "setlistFmId": "6bd60646",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/alpine-valley-music-theatre-east-troy-wi-6bd60646.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Sugaree",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1987-06-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Quinn the Eskimo (The Mighty Quinn)",
+          "date": "1987-06-28",
+          "segue": false,
+          "info": "Preceded by NFA chant"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Althea",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Little Red Rooster",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Bird Song",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Jack Straw",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Saint of Circumstance",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "I Need a Miracle",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Morning Dew",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Throwing Stones",
+      "date": "1987-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Quinn the Eskimo (The Mighty Quinn)",
+      "date": "1987-06-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

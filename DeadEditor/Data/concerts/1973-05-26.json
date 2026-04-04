@@ -1,0 +1,438 @@
+{
+  "date": "1973-05-26",
+  "venue": "Kezar Stadium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63d60aaf",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1973/kezar-stadium-san-francisco-ca-63d60aaf.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Here Comes Sunshine",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Ain't Woman Enough (to Take My Man)",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1973-05-26",
+          "segue": true,
+          "info": "> Feelin' Groovy Jam >"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1973-05-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Deal",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Jack Straw",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "The Race Is On",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Sugaree",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Mexicali Blues",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Row Jimmy",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Looks Like Rain",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "They Love Each Other",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Here Comes Sunshine",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "El Paso",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Loser",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Beat It on Down the Line",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "You Ain't Woman Enough (to Take My Man)",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Box of Rain",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "China Cat Sunflower",
+      "date": "1973-05-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "I Know You Rider",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Big River",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Bertha",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Around and Around",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 24,
+      "songName": "Me and My Uncle",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 25,
+      "songName": "He's Gone",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 26,
+      "songName": "Truckin'",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 27,
+      "songName": "The Other One",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 28,
+      "songName": "Eyes of the World",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 29,
+      "songName": "China Doll",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 30,
+      "songName": "Sugar Magnolia",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 31,
+      "songName": "Casey Jones",
+      "date": "1973-05-26",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

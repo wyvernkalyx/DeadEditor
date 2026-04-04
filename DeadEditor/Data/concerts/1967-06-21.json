@@ -1,0 +1,46 @@
+{
+  "date": "1967-06-21",
+  "venue": "Golden Gate Park Polo Field",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43c7e703",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/golden-gate-park-polo-field-san-francisco-ca-43c7e703.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1967-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1967-06-21",
+          "segue": false,
+          "info": "with unknown harmonica player"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1967-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Alligator",
+      "date": "1967-06-21",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

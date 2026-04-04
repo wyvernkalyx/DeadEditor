@@ -1,0 +1,394 @@
+{
+  "date": "1972-05-04",
+  "venue": "L'Olympia Bruno Coquatrix",
+  "city": "Paris",
+  "state": "11",
+  "country": "FR",
+  "setlistFmId": "63d60a07",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1972/lolympia-bruno-coquatrix-paris-france-63d60a07.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mr. Charlie",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Chinatown Shuffle",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Win Again",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Stranger (Two Souls in Communion)",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Good Lovin'",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1972-05-04",
+          "segue": true,
+          "info": "> 'Dark Star' reprise"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sing Me Back Home",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1972-05-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Greatest Story Ever Told",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Deal",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mr. Charlie",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Brown-Eyed Women",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Chinatown Shuffle",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Playing in the Band",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "You Win Again",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "It Hurts Me Too",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "He's Gone",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "El Paso",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Big Railroad Blues",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "The Stranger (Two Souls in Communion)",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Casey Jones",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Good Lovin'",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Next Time You See Me",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Ramble On Rose",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Jack Straw",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Dark Star",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Drums",
+      "date": "1972-05-04",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Sugar Magnolia",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Sing Me Back Home",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Mexicali Blues",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Big Boss Man",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Uncle John's Band",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 27,
+      "songName": "Not Fade Away",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 28,
+      "songName": "One More Saturday Night",
+      "date": "1972-05-04",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "date": "1970-07-11",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "43dc835b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-east-new-york-ny-43dc835b.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "So Sad (to Watch Good Love Go Bad)",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "A Voice From on High",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Jordan",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Swing Low, Sweet Chariot",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Not Fade Away",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-07-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1970-07-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Friend of the Devil",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "New Speedway Boogie",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "So Sad (to Watch Good Love Go Bad)",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Rosa Lee McFall",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "A Voice From on High",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Cold Jordan",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Swing Low, Sweet Chariot",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Not Fade Away",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Casey Jones",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Mama Tried",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Good Lovin'",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Sitting on Top of the World",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Minglewood Blues",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "High Time",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Cumberland Blues",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "China Cat Sunflower",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "I Know You Rider",
+      "date": "1970-07-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Me and My Uncle",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Morning Dew",
+      "date": "1970-07-11",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

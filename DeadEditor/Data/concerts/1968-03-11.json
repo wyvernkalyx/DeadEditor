@@ -1,0 +1,98 @@
+{
+  "date": "1968-03-11",
+  "venue": "Sacramento Memorial Auditorium",
+  "city": "Sacramento",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bdca59c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/sacramento-memorial-auditorium-sacramento-ca-1bdca59c.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-03-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-03-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Born Cross-Eyed",
+          "date": "1968-03-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1968-03-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-03-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1968-03-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "That's It for the Other One",
+      "date": "1968-03-11",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "New Potato Caboose",
+      "date": "1968-03-11",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Born Cross-Eyed",
+      "date": "1968-03-11",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1968-03-11",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Feedback",
+      "date": "1968-03-11",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "And We Bid You Goodnight",
+      "date": "1968-03-11",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "date": "1993-03-10",
+  "venue": "Rosemont Horizon",
+  "city": "Rosemont",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "3d601a7",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/rosemont-horizon-rosemont-il-3d601a7.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Same Thing",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Eyes of the World",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy River Road",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Moon",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1993-03-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Stagger Lee",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "The Same Thing",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Peggy-O",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Queen Jane Approximately",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Ramble On Rose",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Let It Grow",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Eyes of the World",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Way to Go Home",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Lazy River Road",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Corrina",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Wheel",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "All Along the Watchtower",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Standing on the Moon",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1993-03-10",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

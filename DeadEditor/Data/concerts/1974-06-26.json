@@ -1,0 +1,342 @@
+{
+  "date": "1974-06-26",
+  "venue": "Providence Civic Center",
+  "city": "Providence",
+  "state": "RI",
+  "country": "US",
+  "setlistFmId": "1bd6056c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1974/providence-civic-center-providence-ri-1bd6056c.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Big River",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Weather Report Suite",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1974-06-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1974-06-26",
+          "segue": true,
+          "info": "> Feelin' Groovy Jam >"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beer Barrel Polka",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1974-06-26",
+          "segue": true,
+          "info": "> The Other One Jam >"
+        },
+        {
+          "name": "Spanish Jam",
+          "date": "1974-06-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1974-06-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Eyes of the World",
+          "date": "1974-06-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Big River",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Brown-Eyed Women",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Beat It on Down the Line",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Scarlet Begonias",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Row Jimmy",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Mexicali Blues",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Race Is On",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "El Paso",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Weather Report Suite",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "It Must Have Been the Roses",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "U.S. Blues",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Me and My Uncle",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Jam",
+      "date": "1974-06-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "China Cat Sunflower",
+      "date": "1974-06-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "I Know You Rider",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Beer Barrel Polka",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Truckin'",
+      "date": "1974-06-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Spanish Jam",
+      "date": "1974-06-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Wharf Rat",
+      "date": "1974-06-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Sugar Magnolia",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Eyes of the World",
+      "date": "1974-06-26",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

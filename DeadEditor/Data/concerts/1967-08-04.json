@@ -1,0 +1,98 @@
+{
+  "date": "1967-08-04",
+  "venue": "O'Keefe Centre",
+  "city": "Toronto",
+  "state": "ON",
+  "country": "CA",
+  "setlistFmId": "13dca935",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/okeefe-centre-toronto-on-canada-13dca935.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Overseas Stomp (The Lindy)",
+          "date": "1967-08-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1967-08-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1967-08-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1967-08-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1967-08-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1967-08-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Overseas Stomp (The Lindy)",
+      "date": "1967-08-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "New Potato Caboose",
+      "date": "1967-08-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Viola Lee Blues",
+      "date": "1967-08-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Feedback",
+      "date": "1967-08-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Turn On Your Love Light",
+      "date": "1967-08-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Alligator",
+      "date": "1967-08-04",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "date": "1991-03-27",
+  "venue": "Nassau Veterans Memorial Coliseum",
+  "city": "Uniondale",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "3d60127",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1991/nassau-veterans-memorial-coliseum-uniondale-ny-3d60127.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Maggie's Farm",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rubin and Cherise",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1991-03-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1991-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Row Jimmy",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mama Tried",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Maggie's Farm",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Loose Lucy",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Picasso Moon",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Rubin and Cherise",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Uncle John's Band",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "All Along the Watchtower",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Stella Blue",
+      "date": "1991-03-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Box of Rain",
+      "date": "1991-03-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

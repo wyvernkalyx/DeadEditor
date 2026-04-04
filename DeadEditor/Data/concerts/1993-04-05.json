@@ -1,0 +1,264 @@
+{
+  "date": "1993-04-05",
+  "venue": "Nassau Veterans Memorial Coliseum",
+  "city": "Uniondale",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "13d60195",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/nassau-veterans-memorial-coliseum-uniondale-ny-13d60195.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy River Road",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Just Like Tom Thumb's Blues",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "I Fought the Law",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gloria",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1993-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Touch of Grey",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Lazy River Road",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Just Like Tom Thumb's Blues",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "The Music Never Stopped",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "I Fought the Law",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Way to Go Home",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Corrina",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "He's Gone",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "I Need a Miracle",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Gloria",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "U.S. Blues",
+      "date": "1993-04-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

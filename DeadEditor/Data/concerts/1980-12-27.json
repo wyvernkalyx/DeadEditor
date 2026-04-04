@@ -1,0 +1,303 @@
+{
+  "date": "1980-12-27",
+  "venue": "Oakland Civic Auditorium",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "23d604f3",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/oakland-civic-auditorium-oakland-ca-23d604f3.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set One",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Passenger",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set Two",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1980-12-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 4,
+      "songName": "Loser",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 5,
+      "songName": "Looks Like Rain",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 7,
+      "songName": "Passenger",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 8,
+      "songName": "It Must Have Been the Roses",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 9,
+      "songName": "The Music Never Stopped",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 10,
+      "songName": "China Cat Sunflower",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 11,
+      "songName": "I Know You Rider",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 13,
+      "songName": "Eyes of the World",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 16,
+      "songName": "The Wheel",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 17,
+      "songName": "Truckin'",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 18,
+      "songName": "Wharf Rat",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 19,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 20,
+      "songName": "One More Saturday Night",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 21,
+      "songName": "Johnny B. Goode",
+      "date": "1980-12-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

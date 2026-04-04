@@ -1,0 +1,72 @@
+{
+  "date": "1981-05-07",
+  "venue": "The Tomorrow Show",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "2bd604de",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1981/the-tomorrow-show-new-york-ny-2bd604de.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "On the Road Again",
+          "date": "1981-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1981-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1981-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1981-05-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "On the Road Again",
+      "date": "1981-05-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Dire Wolf",
+      "date": "1981-05-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Deep Elem Blues",
+      "date": "1981-05-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1981-05-07",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "date": "1966-05-19",
+  "venue": "Avalon Ballroom",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bc7eaa8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/avalon-ballroom-san-francisco-ca-7bc7eaa8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Corner",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mindbender (Confusion's Prince)",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know It's a Sin",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sick and Tired",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tastebud",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-05-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Beat It on Down the Line",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Standing on the Corner",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mindbender (Confusion's Prince)",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "It Hurts Me Too",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Viola Lee Blues",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "I Know You Rider",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "I Know It's a Sin",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Sick and Tired",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Cream Puff War",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Sitting on Top of the World",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Minglewood Blues",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Tastebud",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Good Lovin'",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-05-19",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

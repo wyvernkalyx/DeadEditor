@@ -1,0 +1,303 @@
+{
+  "date": "1981-12-12",
+  "venue": "Fiesta Hall",
+  "city": "San Mateo",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "23d604a7",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1981/fiesta-hall-san-mateo-ca-23d604a7.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1 (acoustic)",
+      "songs": [
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": "first time since 1974"
+        },
+        {
+          "name": "(For the) Children of the Eighties",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lucifer's Eyes",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Warriors of the Sun",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bye Bye Love",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Barbara Allen",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Marriott USA",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Where Have All Our Heroes Gone",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All My Love (Oh Boy)",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lady Di and I",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Boxer",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2 (electric)",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1981-12-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Me and Bobby McGee",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 2,
+      "songName": "(For the) Children of the Eighties",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 3,
+      "songName": "Lucifer's Eyes",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 4,
+      "songName": "Warriors of the Sun",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 5,
+      "songName": "Bye Bye Love",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 6,
+      "songName": "Barbara Allen",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 7,
+      "songName": "Marriott USA",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 8,
+      "songName": "Where Have All Our Heroes Gone",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 9,
+      "songName": "All My Love (Oh Boy)",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 10,
+      "songName": "Lady Di and I",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 11,
+      "songName": "The Boxer",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 12,
+      "songName": "Minglewood Blues",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 13,
+      "songName": "The Little Red Rooster",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 14,
+      "songName": "Deep Elem Blues",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 15,
+      "songName": "Me and My Uncle",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 16,
+      "songName": "Mexicali Blues",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 17,
+      "songName": "Dire Wolf",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 18,
+      "songName": "Cold Rain and Snow",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 19,
+      "songName": "Around and Around",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 20,
+      "songName": "One More Saturday Night",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 21,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1981-12-12",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "date": "1994-03-27",
+  "venue": "Nassau Veterans Memorial Coliseum",
+  "city": "Uniondale",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "23d6004b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/nassau-veterans-memorial-coliseum-uniondale-ny-23d6004b.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Answers",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": "followed by a lengthy delay due to technical issues"
+        },
+        {
+          "name": "Iko Iko",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1994-03-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack-A-Roe",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "It's All Over Now",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Stagger Lee",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Queen Jane Approximately",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Candyman",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Easy Answers",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Samson and Delilah",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Iko Iko",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Other One",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Morning Dew",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Johnny B. Goode",
+      "date": "1994-03-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

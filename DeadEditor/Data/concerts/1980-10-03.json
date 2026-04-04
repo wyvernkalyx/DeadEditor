@@ -1,0 +1,425 @@
+{
+  "date": "1980-10-03",
+  "venue": "The Warfield",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "23d60417",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/the-warfield-san-francisco-ca-23d60417.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I: Acoustic",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I've Been All Around This World",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Heaven Help the Fool",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set III",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1980-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "I've Been All Around This World",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Dark Hollow",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Jack-A-Roe",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "Heaven Help the Fool",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "China Doll",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "On the Road Again",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "Bird Song",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 10,
+      "songName": "Ripple",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 11,
+      "songName": "Jack Straw",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Sugaree",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Me and My Uncle",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Big River",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Row Jimmy",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Minglewood Blues",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Tennessee Jed",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "The Music Never Stopped",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Scarlet Begonias",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 20,
+      "songName": "Fire on the Mountain",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 21,
+      "songName": "Samson and Delilah",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 22,
+      "songName": "Ship of Fools",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 23,
+      "songName": "Playing in the Band",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 24,
+      "songName": "Drums",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 25,
+      "songName": "Space",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 26,
+      "songName": "The Wheel",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 27,
+      "songName": "Playing in the Band",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 28,
+      "songName": "Black Peter",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 29,
+      "songName": "Good Lovin'",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 30,
+      "songName": "Brokedown Palace",
+      "date": "1980-10-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

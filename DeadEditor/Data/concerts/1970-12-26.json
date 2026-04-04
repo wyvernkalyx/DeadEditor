@@ -1,0 +1,285 @@
+{
+  "date": "1970-12-26",
+  "venue": "Legion Stadium",
+  "city": "El Monte",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3dcfd5f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/legion-stadium-el-monte-ca-3dcfd5f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Frozen Logger",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Till the Morning Comes",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-12-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "The Frozen Logger",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Easy Wind",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Till the Morning Comes",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Truckin'",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Friend of the Devil",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Candyman",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Big Railroad Blues",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Minglewood Blues",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Black Peter",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Beat It on Down the Line",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Morning Dew",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Casey Jones",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Dire Wolf",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "China Cat Sunflower",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "I Know You Rider",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Good Lovin'",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Uncle John's Band",
+      "date": "1970-12-26",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

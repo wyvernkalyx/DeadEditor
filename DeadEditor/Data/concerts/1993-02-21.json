@@ -1,0 +1,277 @@
+{
+  "date": "1993-02-21",
+  "venue": "Oakland-Alameda County Coliseum Arena",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3d601a3",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/oakland-alameda-county-coliseum-arena-oakland-ca-3d601a3.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy River Road",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eternity",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Liberty",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1993-02-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Lazy River Road",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Eternity",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Ramble On Rose",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Queen Jane Approximately",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Row Jimmy",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Promised Land",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Liberty",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Corrina",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Crazy Fingers",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Samson and Delilah",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Wheel",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "I Need a Miracle",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Morning Dew",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "U.S. Blues",
+      "date": "1993-02-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

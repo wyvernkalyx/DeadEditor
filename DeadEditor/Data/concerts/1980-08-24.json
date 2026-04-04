@@ -1,0 +1,303 @@
+{
+  "date": "1980-08-24",
+  "venue": "Grand Center",
+  "city": "Grand Rapids",
+  "state": "MI",
+  "country": "US",
+  "setlistFmId": "23d60427",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/grand-center-grand-rapids-mi-23d60427.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Passenger",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1980-08-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "They Love Each Other",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Cassidy",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Brown-Eyed Women",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Passenger",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Peggy-O",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Althea",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Let It Grow",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Deal",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Samson and Delilah",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Ship of Fools",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "China Cat Sunflower",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "I Know You Rider",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Black Peter",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 20,
+      "songName": "Sugar Magnolia",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 21,
+      "songName": "Don't Ease Me In",
+      "date": "1980-08-24",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

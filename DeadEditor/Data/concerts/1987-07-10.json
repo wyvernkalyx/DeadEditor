@@ -1,0 +1,272 @@
+{
+  "date": "1987-07-10",
+  "venue": "John F. Kennedy Stadium",
+  "city": "Philadelphia",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "63d6063f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/john-f-kennedy-stadium-philadelphia-pa-63d6063f.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When Push Comes to Shove",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1987-07-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1987-07-10",
+          "segue": false,
+          "info": "performed after the Dylan & The Dead set to end the show"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Iko Iko",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Jack Straw",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Sugaree",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Minglewood Blues",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Althea",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "My Brother Esau",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "When Push Comes to Shove",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Cassidy",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "China Cat Sunflower",
+      "date": "1987-07-10",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "I Know You Rider",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Looks Like Rain",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Terrapin Station",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "I Need a Miracle",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 16,
+      "songName": "Black Peter",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 17,
+      "songName": "Around and Around",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 18,
+      "songName": "One More Saturday Night",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 19,
+      "songName": "Touch of Grey",
+      "date": "1987-07-10",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

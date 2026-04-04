@@ -1,0 +1,311 @@
+{
+  "date": "1976-09-25",
+  "venue": "Capital Centre",
+  "city": "Landover",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "bdcb5a6",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1976/capital-centre-landover-md-bdcb5a6.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Lazy Lightning",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1976-09-25",
+          "segue": true,
+          "info": "> St Stephen reprise"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1976-09-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Ramble On Rose",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Brown-Eyed Women",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Mama Tried",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Peggy-O",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "It's All Over Now",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Loser",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Let It Grow",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Sugaree",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Lazy Lightning",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Supplication",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Dancing in the Street",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Cosmic Charlie",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Scarlet Begonias",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "St. Stephen",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Drums",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Jam",
+      "date": "1976-09-25",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Sugar Magnolia",
+      "date": "1976-09-25",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

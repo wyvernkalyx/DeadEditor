@@ -1,0 +1,264 @@
+{
+  "date": "2015-06-27",
+  "venue": "Levi's Stadium",
+  "city": "Santa Clara",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bc95e1c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/2015/levis-stadium-santa-clara-ca-7bc95e1c.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "Bob Weir lead vocals"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "Phil, Bob, Trey, and Bruce sang together"
+        },
+        {
+          "name": "Alligator",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "First time since 1971; Phil Lesh lead vocals"
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "Bob Weir lead vocals"
+        },
+        {
+          "name": "Born Cross-Eyed",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "First time since 1968; Bob Weir lead vocals"
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "First time since 1967; Trey Anastasio lead vocals"
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "Phil, Bob, Trey, and Bruce shared vocals"
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Cryptical Envelopment",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "First time since 1985; Phil Lesh lead vocals) (>"
+        },
+        {
+          "name": "Dark Star",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "Phil, Trey, and Bob traded vocals) (>"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "Bob Weir lead vocals) (> 'William Tell Bridge' >"
+        },
+        {
+          "name": "The Eleven",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "First time since 1975; Bob and Trey lead vocals) (>"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "Bob Weir lead vocals) (>"
+        },
+        {
+          "name": "Drums",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "with Mickey Hart on kalimba) (>"
+        },
+        {
+          "name": "What's Become of the Baby?",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "Phil Lesh lead vocals) (Live debut) (>"
+        },
+        {
+          "name": "Space",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "2015-06-27",
+          "segue": true,
+          "info": "Bob Weir lead vocals) (>"
+        },
+        {
+          "name": "Morning Dew",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "Bob Weir lead vocals"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "2015-06-27",
+          "segue": false,
+          "info": "Bruce Hornsby lead vocals"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Truckin'",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Uncle John's Band",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Alligator",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Cumberland Blues",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Born Cross-Eyed",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Cream Puff War",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Viola Lee Blues",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Cryptical Envelopment",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Dark Star",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "St. Stephen",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "The Eleven",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Turn On Your Love Light",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "What's Become of the Baby?",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "2015-06-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Morning Dew",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Casey Jones",
+      "date": "2015-06-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+{
+  "date": "1985-11-01",
+  "venue": "Richmond Coliseum",
+  "city": "Richmond",
+  "state": "VA",
+  "country": "US",
+  "setlistFmId": "5bd607a0",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1985/richmond-coliseum-richmond-va-5bd607a0.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Dancing in the Street",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Big River",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Spoonful",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Gimme Some Lovin'",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "She Belongs to Me",
+          "date": "1985-11-01",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Gloria",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Keep Your Day Job",
+          "date": "1985-11-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dancing in the Street",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "The Little Red Rooster",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Stagger Lee",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Big River",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Brown-Eyed Women",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Jack Straw",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Don't Ease Me In",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Samson and Delilah",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "High Time",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "He's Gone",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Spoonful",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Comes a Time",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Lost Sailor",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Saint of Circumstance",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Gimme Some Lovin'",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "She Belongs to Me",
+      "date": "1985-11-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Gloria",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Keep Your Day Job",
+      "date": "1985-11-01",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

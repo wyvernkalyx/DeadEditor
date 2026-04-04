@@ -1,0 +1,246 @@
+{
+  "date": "1970-06-05",
+  "venue": "Fillmore West",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53dc8369",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-west-san-francisco-ca-53dc8369.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's a Man's Man's Man's World",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-06-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Friend of the Devil",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Black Peter",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "New Speedway Boogie",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 9,
+      "songName": "Easy Wind",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 10,
+      "songName": "Mama Tried",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 11,
+      "songName": "It's a Man's Man's Man's World",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "That's It for the Other One",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Attics of My Life",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Hard to Handle",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "St. Stephen",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Casey Jones",
+      "date": "1970-06-05",
+      "segue": false,
+      "set": "Set II"
+    }
+  ]
+}

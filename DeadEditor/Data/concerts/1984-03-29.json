@@ -1,0 +1,251 @@
+{
+  "date": "1984-03-29",
+  "venue": "Marin Veterans' Memorial Auditorium",
+  "city": "San Rafael",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43d6071f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1984/marin-veterans-memorial-auditorium-san-rafael-ca-43d6071f.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Walking the Dog",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Spanish Jam",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Keep Your Day Job",
+          "date": "1984-03-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Walking the Dog",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Bertha",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Promised Land",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "It Must Have Been the Roses",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "The Little Red Rooster",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Bird Song",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "My Brother Esau",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Might as Well",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Shakedown Street",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Estimated Prophet",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Eyes of the World",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Spanish Jam",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Other One",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Wharf Rat",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Sugar Magnolia",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Keep Your Day Job",
+      "date": "1984-03-29",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

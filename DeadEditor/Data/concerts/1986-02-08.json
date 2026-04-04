@@ -1,0 +1,264 @@
+{
+  "date": "1986-02-08",
+  "venue": "Henry J. Kaiser Convention Center",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53d60791",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1986/henry-j-kaiser-convention-center-oakland-ca-53d60791.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gimme Some Lovin'",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Keep Your Day Job",
+          "date": "1986-02-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Iko Iko",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "The Little Red Rooster",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Peggy-O",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Stagger Lee",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "It's All Over Now",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Bertha",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "One More Saturday Night",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Franklin's Tower",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "China Doll",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Gimme Some Lovin'",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Black Peter",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Keep Your Day Job",
+      "date": "1986-02-08",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

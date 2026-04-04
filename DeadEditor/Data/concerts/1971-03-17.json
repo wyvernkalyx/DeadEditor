@@ -1,0 +1,46 @@
+{
+  "date": "1971-03-17",
+  "venue": "The Fabulous Fox Theatre",
+  "city": "St. Louis",
+  "state": "MO",
+  "country": "US",
+  "setlistFmId": "63c7a2eb",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/the-fabulous-fox-theatre-st-louis-mo-63c7a2eb.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-03-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1971-03-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-03-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Turn On Your Love Light",
+      "date": "1971-03-17",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

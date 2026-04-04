@@ -1,0 +1,202 @@
+{
+  "date": "1970-03-07",
+  "venue": "Santa Monica Civic Auditorium",
+  "city": "Santa Monica",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13dc8111",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/santa-monica-civic-auditorium-santa-monica-ca-13dc8111.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1970-03-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hard to Handle",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Black Peter",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "China Cat Sunflower",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "I Know You Rider",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "High Time",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Dire Wolf",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Not Fade Away",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Good Lovin'",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Drums",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "The Other One",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Not Fade Away",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "And We Bid You Goodnight",
+      "date": "1970-03-07",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

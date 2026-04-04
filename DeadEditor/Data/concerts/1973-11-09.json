@@ -1,0 +1,350 @@
+{
+  "date": "1973-11-09",
+  "venue": "Winterland Arena",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63d60a8f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1973/winterland-arena-san-francisco-ca-63d60a8f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1973-11-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Here Comes Sunshine",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1973-11-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Bertha",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Weather Report Suite",
+          "date": "1973-11-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1973-11-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "China Doll",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1973-11-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1973-11-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1973-11-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Brown-Eyed Women",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and Bobby McGee",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "They Love Each Other",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Don't Ease Me In",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Mexicali Blues",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Row Jimmy",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Race Is On",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "China Cat Sunflower",
+      "date": "1973-11-09",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "I Know You Rider",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Playing in the Band",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Here Comes Sunshine",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Me and My Uncle",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "To Lay Me Down",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Big River",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Greatest Story Ever Told",
+      "date": "1973-11-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Bertha",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Weather Report Suite",
+      "date": "1973-11-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Eyes of the World",
+      "date": "1973-11-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "China Doll",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Around and Around",
+      "date": "1973-11-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1973-11-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Johnny B. Goode",
+      "date": "1973-11-09",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

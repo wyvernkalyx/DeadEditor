@@ -1,0 +1,264 @@
+{
+  "date": "1984-11-03",
+  "venue": "Berkeley Community Theatre",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bd607e4",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1984/berkeley-community-theatre-berkeley-ca-5bd607e4.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Down in the Bottom",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gloria",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Why Don't We Do It in the Road?",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dear Mr. Fantasy",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1984-11-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Promised Land",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Friend of the Devil",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Down in the Bottom",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "It Must Have Been the Roses",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Music Never Stopped",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Deal",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Feel Like a Stranger",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Cumberland Blues",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Gloria",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Why Don't We Do It in the Road?",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Uncle John's Band",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Dear Mr. Fantasy",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Throwing Stones",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Turn On Your Love Light",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Brokedown Palace",
+      "date": "1984-11-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

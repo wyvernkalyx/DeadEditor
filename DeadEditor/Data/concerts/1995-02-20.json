@@ -1,0 +1,277 @@
+{
+  "date": "1995-02-20",
+  "venue": "Delta Center",
+  "city": "Salt Lake City",
+  "state": "UT",
+  "country": "US",
+  "setlistFmId": "33d60001",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1995/delta-center-salt-lake-city-ut-33d60001.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy River Road",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Rain",
+          "date": "1995-02-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "The Little Red Rooster",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Ramble On Rose",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "El Paso",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Lazy River Road",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Cassidy",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Box of Rain",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Eyes of the World",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Last Time",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Stella Blue",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Throwing Stones",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Rain",
+      "date": "1995-02-20",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

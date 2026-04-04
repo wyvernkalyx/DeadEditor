@@ -1,0 +1,176 @@
+{
+  "date": "1970-11-05",
+  "venue": "Capitol Theatre",
+  "city": "Port Chester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "63dc8287",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/capitol-theatre-port-chester-ny-63dc8287.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hard to Handle",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Sitting on Top of the World",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Truckin'",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "The Other One",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Dark Star",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "St. Stephen",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Not Fade Away",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Not Fade Away",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "China Cat Sunflower",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "I Know You Rider",
+      "date": "1970-11-05",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

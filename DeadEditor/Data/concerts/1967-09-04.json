@@ -1,0 +1,46 @@
+{
+  "date": "1967-09-04",
+  "venue": "The Rio Nido Dance Hall",
+  "city": "Rio Nido",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "4bc7e7ae",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/the-rio-nido-dance-hall-rio-nido-ca-4bc7e7ae.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1967-09-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feedback",
+          "date": "1967-09-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1967-09-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Feedback",
+      "date": "1967-09-04",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

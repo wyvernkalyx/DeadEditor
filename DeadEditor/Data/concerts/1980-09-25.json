@@ -1,0 +1,425 @@
+{
+  "date": "1980-09-25",
+  "venue": "The Warfield",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "33d6041d",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/the-warfield-san-francisco-ca-33d6041d.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I: Acoustic",
+      "songs": [
+        {
+          "name": "Bird Song",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I've Been All Around This World",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": "First time since 1970"
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": "First time since 1970"
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Oh Babe It Ain't No Lie",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": "First time since 1971"
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set III",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1980-09-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bird Song",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "I've Been All Around This World",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Hollow",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Rosa Lee McFall",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "It Must Have Been the Roses",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "Jack-A-Roe",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "Oh Babe It Ain't No Lie",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "Ripple",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 10,
+      "songName": "Alabama Getaway",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 11,
+      "songName": "Greatest Story Ever Told",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Friend of the Devil",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Mama Tried",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Mexicali Blues",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Loser",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "The Little Red Rooster",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Althea",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Jack Straw",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Deal",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "China Cat Sunflower",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 21,
+      "songName": "I Know You Rider",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 22,
+      "songName": "Samson and Delilah",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 23,
+      "songName": "Ship of Fools",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 24,
+      "songName": "Playing in the Band",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 25,
+      "songName": "Drums",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 26,
+      "songName": "Space",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 27,
+      "songName": "Wharf Rat",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 28,
+      "songName": "Around and Around",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 29,
+      "songName": "Good Lovin'",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 30,
+      "songName": "U.S. Blues",
+      "date": "1980-09-25",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

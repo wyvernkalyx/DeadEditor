@@ -1,0 +1,246 @@
+{
+  "date": "1969-12-26",
+  "venue": "McFarlin Auditorium",
+  "city": "University Park",
+  "state": "TX",
+  "country": "US",
+  "setlistFmId": "4bdca7ee",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/mcfarlin-auditorium-university-park-tx-4bdca7ee.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I Acoustic",
+      "songs": [
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Little Sadie",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Long Black Limousine",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I've Been All Around This World",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gathering Flowers for the Master's Bouquet",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II Electric",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-12-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1969-12-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "High Time",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-12-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Monkey and the Engineer",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "Little Sadie",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "Long Black Limousine",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "I've Been All Around This World",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Gathering Flowers for the Master's Bouquet",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "Black Peter",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "Uncle John's Band",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "Casey Jones",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 9,
+      "songName": "Hard to Handle",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 10,
+      "songName": "Cold Rain and Snow",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 11,
+      "songName": "China Cat Sunflower",
+      "date": "1969-12-26",
+      "segue": true,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 12,
+      "songName": "I Know You Rider",
+      "date": "1969-12-26",
+      "segue": true,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 13,
+      "songName": "High Time",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 14,
+      "songName": "Me and My Uncle",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 15,
+      "songName": "Dark Star",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 16,
+      "songName": "New Speedway Boogie",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 17,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-12-26",
+      "segue": false,
+      "set": "Set II Electric"
+    }
+  ]
+}

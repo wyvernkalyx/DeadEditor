@@ -1,0 +1,438 @@
+{
+  "date": "1980-09-30",
+  "venue": "The Warfield",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "33d60411",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/the-warfield-san-francisco-ca-33d60411.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I: Acoustic",
+      "songs": [
+        {
+          "name": "On the Road Again",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Heaven Help the Fool",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Oh Babe It Ain't No Lie",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set III",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1980-09-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "On the Road Again",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "Jack-A-Roe",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Bird Song",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Dark Hollow",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "Rosa Lee McFall",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "Heaven Help the Fool",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "China Doll",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "Oh Babe It Ain't No Lie",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 10,
+      "songName": "Ripple",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 11,
+      "songName": "Alabama Getaway",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Promised Land",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Peggy-O",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Beat It on Down the Line",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Friend of the Devil",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Lazy Lightning",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Supplication",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Loser",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "The Little Red Rooster",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "Big Railroad Blues",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 22,
+      "songName": "Franklin's Tower",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 23,
+      "songName": "Samson and Delilah",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 24,
+      "songName": "He's Gone",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 25,
+      "songName": "Estimated Prophet",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 26,
+      "songName": "Drums",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 27,
+      "songName": "Space",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 28,
+      "songName": "The Other One",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 29,
+      "songName": "Black Peter",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 30,
+      "songName": "Good Lovin'",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 31,
+      "songName": "Brokedown Palace",
+      "date": "1980-09-30",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

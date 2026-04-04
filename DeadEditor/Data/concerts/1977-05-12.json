@@ -1,0 +1,290 @@
+{
+  "date": "1977-05-12",
+  "venue": "Auditorium Theatre",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "3d6050b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/auditorium-theatre-chicago-il-3d6050b.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunrise",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1977-05-12",
+          "segue": true,
+          "info": "> 'Playing in the Band' reprise"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1977-05-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Me and My Uncle",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Tennessee Jed",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Peggy-O",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Jack Straw",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "They Love Each Other",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Minglewood Blues",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Dancing in the Street",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Samson and Delilah",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Brown-Eyed Women",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Estimated Prophet",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Sunrise",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Terrapin Station",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Playing in the Band",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Drums",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Comes a Time",
+      "date": "1977-05-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Johnny B. Goode",
+      "date": "1977-05-12",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

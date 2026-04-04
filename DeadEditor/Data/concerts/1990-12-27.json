@@ -1,0 +1,277 @@
+{
+  "date": "1990-12-27",
+  "venue": "Oakland-Alameda County Coliseum Arena",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13d60135",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1990/oakland-alameda-county-coliseum-arena-oakland-ca-13d60135.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1990-12-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "It Must Have Been the Roses",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Queen Jane Approximately",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loose Lucy",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Cassidy",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Don't Ease Me In",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Scarlet Begonias",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Fire on the Mountain",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Estimated Prophet",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Comes a Time",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "I Need a Miracle",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Wheel",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Throwing Stones",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Turn On Your Love Light",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1990-12-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

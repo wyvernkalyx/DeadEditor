@@ -1,0 +1,59 @@
+{
+  "date": "1978-11-11",
+  "venue": "Saturday Night Live",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "1bd605a8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1978/saturday-night-live-new-york-ny-1bd605a8.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1978-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1978-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1978-11-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Casey Jones",
+      "date": "1978-11-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "I Need a Miracle",
+      "date": "1978-11-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Good Lovin'",
+      "date": "1978-11-11",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

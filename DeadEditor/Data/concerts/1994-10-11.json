@@ -1,0 +1,251 @@
+{
+  "date": "1994-10-11",
+  "venue": "USAir Arena",
+  "city": "Landover",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "3bd6001c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/usair-arena-landover-md-3bd6001c.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Picasso Moon",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": "Weir on acoustic guitar"
+        },
+        {
+          "name": "If the Shoe Fits",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy River Road",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Answers",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Eyes of the World",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samba in the Rain",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": "Garcia remained on stage"
+        },
+        {
+          "name": "Space",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Lucy in the Sky With Diamonds",
+          "date": "1994-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Picasso Moon",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack-A-Roe",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "It's All Over Now",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "High Time",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "If the Shoe Fits",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Lazy River Road",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Easy Answers",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Eyes of the World",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Samba in the Rain",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "He's Gone",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "China Doll",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Sugar Magnolia",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Lucy in the Sky With Diamonds",
+      "date": "1994-10-11",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

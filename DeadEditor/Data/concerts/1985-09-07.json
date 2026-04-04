@@ -1,0 +1,303 @@
+{
+  "date": "1985-09-07",
+  "venue": "Red Rocks Amphitheatre",
+  "city": "Morrison",
+  "state": "CO",
+  "country": "US",
+  "setlistFmId": "4bd607aa",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1985/red-rocks-amphitheatre-morrison-co-4bd607aa.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": "preceded by 'The Frozen Logger' snippet"
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dear Mr. Fantasy",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Hey Jude",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": "reprise only) (live debut of reprise by GD) (> 'Dear Mr. Fantasy' reprise"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1985-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1985-09-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Brown-Eyed Women",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "My Brother Esau",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "One More Saturday Night",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Shakedown Street",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Crazy Fingers",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Samson and Delilah",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Uncle John's Band",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Playing in the Band",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Dear Mr. Fantasy",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Hey Jude",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Truckin'",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Comes a Time",
+      "date": "1985-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Turn On Your Love Light",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Johnny B. Goode",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 21,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1985-09-07",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "date": "1983-06-22",
+  "venue": "City Island",
+  "city": "Harrisburg",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "53d60741",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/city-island-harrisburg-pa-53d60741.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See See Rider Blues",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1983-06-22",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Spanish Jam",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1983-06-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "See See Rider Blues",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "My Brother Esau",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Deal",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Hell in a Bucket",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "China Cat Sunflower",
+      "date": "1983-06-22",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "I Know You Rider",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Playing in the Band",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Drums",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Space",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Spanish Jam",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "I Need a Miracle",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Stella Blue",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Brokedown Palace",
+      "date": "1983-06-22",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

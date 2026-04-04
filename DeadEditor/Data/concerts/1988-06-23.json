@@ -1,0 +1,303 @@
+{
+  "date": "1988-06-23",
+  "venue": "Alpine Valley Music Theatre",
+  "city": "East Troy",
+  "state": "WI",
+  "country": "US",
+  "setlistFmId": "6bd6060e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1988/alpine-valley-music-theatre-east-troy-wi-6bd6060e.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When I Paint My Masterpiece",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Promised Land",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Hey Pocky A-Way",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Believe It or Not",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "He's Gone",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Gimme Some Lovin'",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Blackbird",
+          "date": "1988-06-23",
+          "segue": true,
+          "info": "Live debut by GD ->"
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1988-06-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Iko Iko",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "It Must Have Been the Roses",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Stagger Lee",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "When I Paint My Masterpiece",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Bird Song",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Promised Land",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Hey Pocky A-Way",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Believe It or Not",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "I Need a Miracle",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Gimme Some Lovin'",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "All Along the Watchtower",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Morning Dew",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Blackbird",
+      "date": "1988-06-23",
+      "segue": true,
+      "set": "Encore"
+    },
+    {
+      "position": 21,
+      "songName": "Brokedown Palace",
+      "date": "1988-06-23",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

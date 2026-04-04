@@ -1,0 +1,59 @@
+{
+  "date": "1970-04-24",
+  "venue": "Mammoth Gardens",
+  "city": "Denver",
+  "state": "CO",
+  "country": "US",
+  "setlistFmId": "3dc81ef",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/mammoth-gardens-denver-co-3dc81ef.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Wake Up, Little Susie",
+          "date": "1970-04-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-04-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-04-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Wake Up, Little Susie",
+      "date": "1970-04-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Not Fade Away",
+      "date": "1970-04-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-04-24",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "date": "1991-08-18",
+  "venue": "Shoreline Amphitheatre",
+  "city": "Mountain View",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bd601f8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1991/shoreline-amphitheatre-mountain-view-ca-1bd601f8.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See See Rider Blues",
+          "date": "1991-08-18",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "It Takes a Lot to Laugh, It Takes a Train to Cry",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When I Paint My Masterpiece",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Deal",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1991-08-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack-A-Roe",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "See See Rider Blues",
+      "date": "1991-08-18",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "It Takes a Lot to Laugh, It Takes a Train to Cry",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Beat It on Down the Line",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "West L.A. Fadeaway",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "When I Paint My Masterpiece",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Stagger Lee",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Johnny B. Goode",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Deal",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Samson and Delilah",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Feel Like a Stranger",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "China Doll",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Throwing Stones",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Brokedown Palace",
+      "date": "1991-08-18",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

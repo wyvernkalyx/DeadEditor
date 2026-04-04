@@ -47,6 +47,7 @@
             <RowDefinition Height="Auto"/>  <!-- Import icon -->
             <RowDefinition Height="Auto"/>  <!-- Songs icon -->
             <RowDefinition Height="Auto"/>  <!-- Releases icon -->
+            <RowDefinition Height="Auto"/>  <!-- Concerts icon -->
             <RowDefinition Height="*"/>     <!-- Spacer -->
             <RowDefinition Height="Auto"/>  <!-- Settings icon -->
         </Grid.RowDefinitions>
@@ -87,8 +88,17 @@
             <TextBlock Text="&#xE958;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
         </Button>
 
+        <!-- Concerts Icon (calendar/setlist) -->
+        <Button Grid.Row="4"
+                x:Name="ConcertsButton"
+                Click="ConcertsButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Concerts">
+            <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+        </Button>
+
         <!-- Settings Icon -->
-        <Button Grid.Row="5"
+        <Button Grid.Row="6"
                 x:Name="SettingsButton"
                 Click="SettingsButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"

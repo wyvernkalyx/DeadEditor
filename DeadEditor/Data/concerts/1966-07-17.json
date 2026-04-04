@@ -1,0 +1,111 @@
+{
+  "date": "1966-07-17",
+  "venue": "Fillmore Auditorium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "6bc7ea86",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/fillmore-auditorium-san-francisco-ca-6bc7ea86.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Big Boss Man",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stealin', Stealin'",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1966-07-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Big Boss Man",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Cream Puff War",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "I'm a King Bee",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Stealin', Stealin'",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Dancing in the Street",
+      "date": "1966-07-17",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

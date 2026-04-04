@@ -1,0 +1,355 @@
+{
+  "date": "1976-06-04",
+  "venue": "Paramount Theatre",
+  "city": "Portland",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "3d6054f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1976/paramount-theatre-portland-or-3d6054f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mission in the Rain",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Help on the Way",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Playing in the Band",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": "First time since 1971"
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "U.S. Blues",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1976-06-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Sugaree",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Cassidy",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Candyman",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Big River",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Brown-Eyed Women",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Lazy Lightning",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Supplication",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Mission in the Rain",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Looks Like Rain",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Help on the Way",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Slipknot!",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Franklin's Tower",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Playing in the Band",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Might as Well",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Samson and Delilah",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Cosmic Charlie",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Let It Grow",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Drums",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Stella Blue",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Dancing in the Street",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "U.S. Blues",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Johnny B. Goode",
+      "date": "1976-06-04",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

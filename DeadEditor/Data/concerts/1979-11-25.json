@@ -1,0 +1,316 @@
+{
+  "date": "1979-11-25",
+  "venue": "Pauley Pavilion",
+  "city": "Los Angeles",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "2bd6045e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1979/pauley-pavilion-los-angeles-ca-2bd6045e.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy to Love You",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1979-11-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Tennessee Jed",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Big River",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Minglewood Blues",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Easy to Love You",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Althea",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Lost Sailor",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Saint of Circumstance",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Deal",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Shakedown Street",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Bertha",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Looks Like Rain",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "He's Gone",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Drums",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Space",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Truckin'",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Stella Blue",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Good Lovin'",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Johnny B. Goode",
+      "date": "1979-11-25",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

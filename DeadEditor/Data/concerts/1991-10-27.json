@@ -1,0 +1,316 @@
+{
+  "date": "1991-10-27",
+  "venue": "Oakland-Alameda County Coliseum Arena",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13d601ed",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1991/oakland-alameda-county-coliseum-arena-oakland-ca-13d601ed.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": "Without 'Sunshine Daydream' coda, song completed November 3, 1991 at Bill Graham Memorial) (>"
+        },
+        {
+          "name": "Sugaree",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When I Paint My Masterpiece",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Touch of Grey",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Iko Iko",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": "also with Gary Duncan"
+        },
+        {
+          "name": "Hey! Bo Diddley",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": "also with Gary Duncan - First time since 1986"
+        },
+        {
+          "name": "Mona",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": "also with Gary Duncan - First time since 1972.) (>"
+        },
+        {
+          "name": "Drums",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Wheel",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1991-10-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1991-10-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Sugar Magnolia",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Walkin' Blues",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Althea",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "When I Paint My Masterpiece",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Candyman",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Cassidy",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Touch of Grey",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "China Cat Sunflower",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "I Know You Rider",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Samson and Delilah",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Ship of Fools",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Iko Iko",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Hey! Bo Diddley",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Mona",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "The Wheel",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "I Need a Miracle",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Wharf Rat",
+      "date": "1991-10-27",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Good Lovin'",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1991-10-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

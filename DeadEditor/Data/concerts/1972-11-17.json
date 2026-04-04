@@ -1,0 +1,368 @@
+{
+  "date": "1972-11-17",
+  "venue": "Century II Performing Arts & Convention Center",
+  "city": "Wichita",
+  "state": "KS",
+  "country": "US",
+  "setlistFmId": "7bd60ac8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1972/century-ii-performing-arts-and-convention-center-wichita-ks-7bd60ac8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Cumberland Blues",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1972-11-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Bird Song",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Jack Straw",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Box of Rain",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Don't Ease Me In",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Beat It on Down the Line",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Brown-Eyed Women",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Big River",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "China Cat Sunflower",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "I Know You Rider",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Around and Around",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Casey Jones",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 17,
+      "songName": "Cumberland Blues",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "El Paso",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Uncle John's Band",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "He's Gone",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Truckin'",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "The Other One",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Brokedown Palace",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Sugar Magnolia",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Uncle John's Band",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Johnny B. Goode",
+      "date": "1972-11-17",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

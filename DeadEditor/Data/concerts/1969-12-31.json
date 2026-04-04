@@ -1,0 +1,381 @@
+{
+  "date": "1969-12-31",
+  "venue": "Boston Tea Party",
+  "city": "Boston",
+  "state": "MA",
+  "country": "US",
+  "setlistFmId": "bdc654e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/boston-tea-party-boston-ma-bdc654e.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set One",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mason's Children",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set Two",
+      "songs": [
+        {
+          "name": "Alligator",
+          "date": "1969-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1969-12-31",
+          "segue": true,
+          "info": "> We Bid You Goodnight jam > Alligator reprise >"
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1969-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1969-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1969-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boy Pete",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Seasons of My Heart",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ole Slew-Foot",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Dancing in the Street",
+          "date": "1969-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "China Cat Sunflower",
+      "date": "1969-12-31",
+      "segue": true,
+      "set": "Set One"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 4,
+      "songName": "Next Time You See Me",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 5,
+      "songName": "Cold Rain and Snow",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 6,
+      "songName": "Black Peter",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 7,
+      "songName": "Hard to Handle",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 9,
+      "songName": "Mason's Children",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 10,
+      "songName": "Dire Wolf",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 11,
+      "songName": "Uncle John's Band",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 12,
+      "songName": "Alligator",
+      "date": "1969-12-31",
+      "segue": true,
+      "set": "Set Two"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 14,
+      "songName": "Jam",
+      "date": "1969-12-31",
+      "segue": true,
+      "set": "Set Two"
+    },
+    {
+      "position": 15,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1969-12-31",
+      "segue": true,
+      "set": "Set Two"
+    },
+    {
+      "position": 16,
+      "songName": "Feedback",
+      "date": "1969-12-31",
+      "segue": true,
+      "set": "Set Two"
+    },
+    {
+      "position": 17,
+      "songName": "Good Lovin'",
+      "date": "1969-12-31",
+      "segue": true,
+      "set": "Set Two"
+    },
+    {
+      "position": 18,
+      "songName": "The Eleven",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 19,
+      "songName": "High Time",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 20,
+      "songName": "Cumberland Blues",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 21,
+      "songName": "Big Boy Pete",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 22,
+      "songName": "Not Fade Away",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 23,
+      "songName": "Seasons of My Heart",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 24,
+      "songName": "The Race Is On",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 25,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 26,
+      "songName": "Ole Slew-Foot",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 27,
+      "songName": "Dancing in the Street",
+      "date": "1969-12-31",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

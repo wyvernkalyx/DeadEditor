@@ -1,0 +1,316 @@
+{
+  "date": "1977-11-06",
+  "venue": "Broome County Veterans Memorial Arena",
+  "city": "Binghamton",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "1bd605e8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/broome-county-veterans-memorial-arena-binghamton-ny-1bd605e8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Passenger",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunrise",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1977-11-06",
+          "segue": true,
+          "info": "> 'St. Stephen' reprise"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1977-11-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack Straw",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Tennessee Jed",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Friend of the Devil",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Minglewood Blues",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Passenger",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Dire Wolf",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "The Music Never Stopped",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Samson and Delilah",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Sunrise",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Scarlet Begonias",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Fire on the Mountain",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Good Lovin'",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "St. Stephen",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Drums",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Wharf Rat",
+      "date": "1977-11-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Truckin'",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Johnny B. Goode",
+      "date": "1977-11-06",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

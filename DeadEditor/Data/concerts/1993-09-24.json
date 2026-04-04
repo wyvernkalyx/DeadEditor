@@ -1,0 +1,264 @@
+{
+  "date": "1993-09-24",
+  "venue": "Boston Garden",
+  "city": "Boston",
+  "state": "MA",
+  "country": "US",
+  "setlistFmId": "23d60063",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/boston-garden-boston-ma-23d60063.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1993-09-24",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Days Between",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Liberty",
+          "date": "1993-09-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack-A-Roe",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "The Little Red Rooster",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Stagger Lee",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Queen Jane Approximately",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loose Lucy",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Picasso Moon",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Scarlet Begonias",
+      "date": "1993-09-24",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Fire on the Mountain",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Way to Go Home",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "He's Gone",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Last Time",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Days Between",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Around and Around",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Liberty",
+      "date": "1993-09-24",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

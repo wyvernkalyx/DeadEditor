@@ -1,0 +1,303 @@
+{
+  "date": "1990-03-30",
+  "venue": "Nassau Veterans Memorial Coliseum",
+  "city": "Uniondale",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "1bd6016c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1990/nassau-veterans-memorial-coliseum-uniondale-ny-1bd6016c.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Help on the Way",
+          "date": "1990-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1990-03-30",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Just Like Tom Thumb's Blues",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gimme Some Lovin'",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Moon",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Attics of My Life",
+          "date": "1990-03-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Help on the Way",
+      "date": "1990-03-30",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Slipknot!",
+      "date": "1990-03-30",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Franklin's Tower",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "The Little Red Rooster",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Dire Wolf",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "It's All Over Now",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Just Like Tom Thumb's Blues",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Picasso Moon",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Don't Ease Me In",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Iko Iko",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "China Doll",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Uncle John's Band",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Terrapin Station",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "I Need a Miracle",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Gimme Some Lovin'",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Standing on the Moon",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Not Fade Away",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Attics of My Life",
+      "date": "1990-03-30",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

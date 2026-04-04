@@ -1,0 +1,277 @@
+{
+  "date": "1993-03-28",
+  "venue": "Knickerbocker Arena",
+  "city": "Albany",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "3d60193",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/knickerbocker-arena-albany-ny-3d60193.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "So Many Roads",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When I Paint My Masterpiece",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eternity",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wave to the Wind",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1993-03-28",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1993-03-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Walkin' Blues",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "So Many Roads",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "When I Paint My Masterpiece",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "High Time",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Eternity",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Deal",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Scarlet Begonias",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Fire on the Mountain",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Samson and Delilah",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Wave to the Wind",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Truckin'",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Way to Go Home",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Attics of My Life",
+      "date": "1993-03-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Turn On Your Love Light",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1993-03-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

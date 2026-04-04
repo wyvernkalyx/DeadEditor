@@ -1,0 +1,124 @@
+{
+  "date": "1971-03-21",
+  "venue": "Performing Arts Center",
+  "city": "Milwaukee",
+  "state": "WI",
+  "country": "US",
+  "setlistFmId": "2bdcfcca",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/performing-arts-center-milwaukee-wi-2bdcfcca.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1971-03-21",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1971-03-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Me and My Uncle",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Hard to Handle",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Not Fade Away",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1971-03-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "And We Bid You Goodnight",
+      "date": "1971-03-21",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

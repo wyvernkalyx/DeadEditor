@@ -1,0 +1,264 @@
+{
+  "date": "1983-12-28",
+  "venue": "San Francisco  Civic Auditorium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43d6071b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/san-francisco-civic-auditorium-san-francisco-ca-43d6071b.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1983-12-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Dire Wolf",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Minglewood Blues",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Bird Song",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "China Cat Sunflower",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 9,
+      "songName": "I Know You Rider",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 10,
+      "songName": "Playing in the Band",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Drums",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Space",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "The Wheel",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "The Other One",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Stella Blue",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Around and Around",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Johnny B. Goode",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1983-12-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

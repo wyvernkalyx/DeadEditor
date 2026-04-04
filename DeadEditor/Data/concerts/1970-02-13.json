@@ -1,0 +1,230 @@
+{
+  "date": "1970-02-13",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "3bdcb458",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-east-new-york-ny-3bdcb458.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Smokestack Lightning",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Little Sadie",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wake Up, Little Susie",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Katie Mae",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3",
+      "songs": [
+        {
+          "name": "Dark Star",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1970-02-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "China Cat Sunflower",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Dire Wolf",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Smokestack Lightning",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Monkey and the Engineer",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 7,
+      "songName": "Little Sadie",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "Wake Up, Little Susie",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Black Peter",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Uncle John's Band",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Katie Mae",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Dark Star",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 13,
+      "songName": "That's It for the Other One",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 14,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 15,
+      "songName": "And We Bid You Goodnight",
+      "date": "1970-02-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

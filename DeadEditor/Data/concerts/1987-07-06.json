@@ -1,0 +1,290 @@
+{
+  "date": "1987-07-06",
+  "venue": "Civic Arena",
+  "city": "Pittsburgh",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "6bd6063a",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/civic-arena-pittsburgh-pa-6bd6063a.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Iko Iko",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Day-O (The Banana Boat Song)",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": "live debut by the GD"
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": "live debut by the GD"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1987-07-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Franklin's Tower",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Row Jimmy",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mama Tried",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Big River",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Far From Me",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Stagger Lee",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Desolation Row",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Don't Ease Me In",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Shakedown Street",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Samson and Delilah",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Iko Iko",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Day-O (The Banana Boat Song)",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Good Lovin'",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Johnny B. Goode",
+      "date": "1987-07-06",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "date": "1970-05-14",
+  "venue": "Meramec Community College",
+  "city": "Kirkwood",
+  "state": "MO",
+  "country": "US",
+  "setlistFmId": "2bdc80a6",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/meramec-community-college-kirkwood-mo-2bdc80a6.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Nobody's Fault but Mine",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Cold Jordan",
+          "date": "1970-05-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Don't Ease Me In",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Deep Elem Blues",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Candyman",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Casey Jones",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 7,
+      "songName": "China Cat Sunflower",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 8,
+      "songName": "I Know You Rider",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 9,
+      "songName": "Mama Tried",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 10,
+      "songName": "High Time",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 11,
+      "songName": "Good Lovin'",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Good Morning, School Girl",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Attics of My Life",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Cumberland Blues",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "New Speedway Boogie",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Nobody's Fault but Mine",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "New Speedway Boogie",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "St. Stephen",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "Cold Jordan",
+      "date": "1970-05-14",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

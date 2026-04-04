@@ -1,0 +1,407 @@
+{
+  "date": "1971-04-29",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "bdcf96a",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/fillmore-east-new-york-ny-bdcf96a.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Second That Emotion",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1971-04-29",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1971-04-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Truckin'",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Bertha",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "It Hurts Me Too",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Cumberland Blues",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Bird Song",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Playing in the Band",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Loser",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Dark Hollow",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Hard to Handle",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Ripple",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Casey Jones",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Morning Dew",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Minglewood Blues",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Sugar Magnolia",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Black Peter",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Beat It on Down the Line",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "I Second That Emotion",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Alligator",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Cold Rain and Snow",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "China Cat Sunflower",
+      "date": "1971-04-29",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "I Know You Rider",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Greatest Story Ever Told",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Johnny B. Goode",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 27,
+      "songName": "Uncle John's Band",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 28,
+      "songName": "In the Midnight Hour",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 29,
+      "songName": "And We Bid You Goodnight",
+      "date": "1971-04-29",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

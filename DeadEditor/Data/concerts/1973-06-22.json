@@ -1,0 +1,433 @@
+{
+  "date": "1973-06-22",
+  "venue": "Pacific Coliseum",
+  "city": "Vancouver",
+  "state": "BC",
+  "country": "CA",
+  "setlistFmId": "7bd60aac",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1973/pacific-coliseum-vancouver-bc-canada-7bd60aac.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Here Comes Sunshine",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Nobody's Fault but Mine",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1973-06-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Beat It on Down the Line",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Deal",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Box of Rain",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Bird Song",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "The Race Is On",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Sugaree",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Looks Like Rain",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Row Jimmy",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Jack Straw",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "China Cat Sunflower",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "I Know You Rider",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Big River",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Tennessee Jed",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Playing in the Band",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 17,
+      "songName": "Here Comes Sunshine",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Promised Land",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Brown-Eyed Women",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "El Paso",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Black Peter",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Greatest Story Ever Told",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Big Railroad Blues",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "He's Gone",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Truckin'",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Nobody's Fault but Mine",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 27,
+      "songName": "The Other One",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 28,
+      "songName": "Wharf Rat",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 29,
+      "songName": "Sugar Magnolia",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 30,
+      "songName": "Casey Jones",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 31,
+      "songName": "Johnny B. Goode",
+      "date": "1973-06-22",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

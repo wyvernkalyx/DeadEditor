@@ -1,0 +1,59 @@
+{
+  "date": "1967-08-19",
+  "venue": "American Legion Hall",
+  "city": "South Lake Tahoe",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "4bc7e7b2",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/american-legion-hall-south-lake-tahoe-ca-4bc7e7b2.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1967-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Golden Road (to Unlimited Devotion)",
+          "date": "1967-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1967-08-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Sitting on Top of the World",
+      "date": "1967-08-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "The Golden Road (to Unlimited Devotion)",
+      "date": "1967-08-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Turn On Your Love Light",
+      "date": "1967-08-19",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

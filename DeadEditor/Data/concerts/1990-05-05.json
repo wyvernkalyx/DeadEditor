@@ -1,0 +1,316 @@
+{
+  "date": "1990-05-05",
+  "venue": "California State University, Dominguez Hills",
+  "city": "Carson",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bd60160",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1990/california-state-university-dominguez-hills-carson-ca-1bd60160.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Good Times",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Help on the Way",
+          "date": "1990-05-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1990-05-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1990-05-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dear Mr. Fantasy",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1990-05-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Times",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "The Race Is On",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Help on the Way",
+      "date": "1990-05-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Slipknot!",
+      "date": "1990-05-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Franklin's Tower",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Queen Jane Approximately",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Loser",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1990-05-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Mexicali Blues",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Loose Lucy",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "One More Saturday Night",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Crazy Fingers",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Playing in the Band",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Uncle John's Band",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "I Need a Miracle",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Dear Mr. Fantasy",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Around and Around",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Touch of Grey",
+      "date": "1990-05-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

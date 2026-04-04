@@ -1,0 +1,238 @@
+{
+  "date": "1995-04-04",
+  "venue": "Birmingham-Jefferson Civic Center Coliseum",
+  "city": "Birmingham",
+  "state": "AL",
+  "country": "US",
+  "setlistFmId": "3d6bdff",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1995/birmingham-jefferson-civic-center-coliseum-birmingham-al-3d6bdff.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Victim or the Crime",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Iko Iko",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Answers",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Quinn the Eskimo (The Mighty Quinn)",
+          "date": "1995-04-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Don't Ease Me In",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Victim or the Crime",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "Iko Iko",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Corrina",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Terrapin Station",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Drums",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Space",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Easy Answers",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Stella Blue",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Around and Around",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Quinn the Eskimo (The Mighty Quinn)",
+      "date": "1995-04-04",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

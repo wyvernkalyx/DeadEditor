@@ -1,0 +1,72 @@
+{
+  "date": "1968-09-20",
+  "venue": "Berkeley Community Theatre",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53da7b41",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/berkeley-community-theatre-berkeley-ca-53da7b41.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-09-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1968-09-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Eleven",
+          "date": "1968-09-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1968-09-20",
+          "segue": false,
+          "info": "With Vince Delgado and Shankar Ghosh"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-09-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "St. Stephen",
+      "date": "1968-09-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "The Eleven",
+      "date": "1968-09-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Drums",
+      "date": "1968-09-20",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

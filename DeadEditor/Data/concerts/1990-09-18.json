@@ -1,0 +1,251 @@
+{
+  "date": "1990-09-18",
+  "venue": "Madison Square Garden",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "bd60142",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1990/madison-square-garden-new-york-ny-bd60142.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Eyes of the World",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Foolish Heart",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1990-09-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Picasso Moon",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Row Jimmy",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Desolation Row",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "To Lay Me Down",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Promised Land",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Eyes of the World",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Estimated Prophet",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Foolish Heart",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Other One",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Wheel",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Sugar Magnolia",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1990-09-18",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

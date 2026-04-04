@@ -1,0 +1,277 @@
+{
+  "date": "1995-06-27",
+  "venue": "The Palace of Auburn Hills",
+  "city": "Auburn Hills",
+  "state": "MI",
+  "country": "US",
+  "setlistFmId": "3bd600e8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1995/the-palace-of-auburn-hills-auburn-hills-mi-3bd600e8.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy River Road",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eternity",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Victim or the Crime",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Foolish Heart",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Too Much",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Moon",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Liberty",
+          "date": "1995-06-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Greatest Story Ever Told",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Bertha",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Queen Jane Approximately",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Lazy River Road",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Eternity",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Don't Ease Me In",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Victim or the Crime",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Foolish Heart",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "It's All Too Much",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Corrina",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Jam",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Last Time",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Standing on the Moon",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Liberty",
+      "date": "1995-06-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

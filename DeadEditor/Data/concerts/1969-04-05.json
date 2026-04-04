@@ -1,0 +1,233 @@
+{
+  "date": "1969-04-05",
+  "venue": "Avalon Ballroom",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53dcab2d",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/avalon-ballroom-san-francisco-ca-53dcab2d.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mountains of the Moon",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1969-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1969-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know It's a Sin",
+          "date": "1969-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1969-04-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1969-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Mountains of the Moon",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "St. Stephen",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-04-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Hard to Handle",
+      "date": "1969-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 7,
+      "songName": "Cosmic Charlie",
+      "date": "1969-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "China Cat Sunflower",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Doin' That Rag",
+      "date": "1969-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "That's It for the Other One",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "The Eleven",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "I Know It's a Sin",
+      "date": "1969-04-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Alligator",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Feedback",
+      "date": "1969-04-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "And We Bid You Goodnight",
+      "date": "1969-04-05",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

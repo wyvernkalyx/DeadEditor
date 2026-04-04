@@ -1,0 +1,360 @@
+{
+  "date": "1966-12-01",
+  "venue": "The Matrix",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73d0c2f9",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/the-matrix-san-francisco-ca-73d0c2f9.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Betty and Dupree",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See That My Grave Is Kept Clean",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alice D. Millionaire",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "You Won't Find Me",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Look on Yonder Wall",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's My Own Fault",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Down So Long",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3",
+      "songs": [
+        {
+          "name": "Deep Elem Blues",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "There Is Something on Your Mind",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boy Pete",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Overseas Stomp (The Lindy)",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Me and My Uncle",
+          "date": "1966-12-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Minglewood Blues",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Betty and Dupree",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Next Time You See Me",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "I Know You Rider",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Big Boss Man",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "See That My Grave Is Kept Clean",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Alice D. Millionaire",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Cream Puff War",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "You Won't Find Me",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Beat It on Down the Line",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "It Hurts Me Too",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "On the Road Again",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Look on Yonder Wall",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "It's My Own Fault",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Down So Long",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Viola Lee Blues",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Deep Elem Blues",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 20,
+      "songName": "There Is Something on Your Mind",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 21,
+      "songName": "Big Boy Pete",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 22,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 23,
+      "songName": "Overseas Stomp (The Lindy)",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 24,
+      "songName": "Dancing in the Street",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 25,
+      "songName": "Me and My Uncle",
+      "date": "1966-12-01",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

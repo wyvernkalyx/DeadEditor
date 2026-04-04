@@ -1,0 +1,251 @@
+{
+  "date": "1989-12-09",
+  "venue": "Great Western Forum",
+  "city": "Inglewood",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13d60179",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1989/great-western-forum-inglewood-ca-13d60179.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Foolish Heart",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1989-12-09",
+          "segue": true,
+          "info": "> 'Playing in the Band' reprise"
+        },
+        {
+          "name": "Drums",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dear Mr. Fantasy",
+          "date": "1989-12-09",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Hey Jude",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": "coda only"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1989-12-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Touch of Grey",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Row Jimmy",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Cumberland Blues",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Bird Song",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "One More Saturday Night",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Foolish Heart",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Playing in the Band",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Crazy Fingers",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Uncle John's Band",
+      "date": "1989-12-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Dear Mr. Fantasy",
+      "date": "1989-12-09",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Hey Jude",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Turn On Your Love Light",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1989-12-09",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

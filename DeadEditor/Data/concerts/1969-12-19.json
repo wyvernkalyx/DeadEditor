@@ -1,0 +1,207 @@
+{
+  "date": "1969-12-19",
+  "venue": "Fillmore West",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bdca7e8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/fillmore-west-san-francisco-ca-5bdca7e8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I Acoustic",
+      "songs": [
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Little Sadie",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Long Black Limousine",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I've Been All Around This World",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II Electric",
+      "songs": [
+        {
+          "name": "Mason's Children",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-12-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-12-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1969-12-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-12-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Monkey and the Engineer",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "Little Sadie",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "Long Black Limousine",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "I've Been All Around This World",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set I Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Mason's Children",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 6,
+      "songName": "China Cat Sunflower",
+      "date": "1969-12-19",
+      "segue": true,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 7,
+      "songName": "I Know You Rider",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 8,
+      "songName": "Black Peter",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 9,
+      "songName": "Hard to Handle",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 10,
+      "songName": "Cumberland Blues",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 11,
+      "songName": "Good Lovin'",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 12,
+      "songName": "That's It for the Other One",
+      "date": "1969-12-19",
+      "segue": true,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 13,
+      "songName": "Uncle John's Band",
+      "date": "1969-12-19",
+      "segue": true,
+      "set": "Set II Electric"
+    },
+    {
+      "position": 14,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-12-19",
+      "segue": false,
+      "set": "Set II Electric"
+    }
+  ]
+}

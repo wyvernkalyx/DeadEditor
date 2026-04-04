@@ -1,0 +1,264 @@
+{
+  "date": "1980-12-13",
+  "venue": "Long Beach Arena",
+  "city": "Long Beach",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "2bd604fe",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/long-beach-arena-long-beach-ca-2bd604fe.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See See Rider Blues",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": "with Flora Purim and Airto Moreira"
+        },
+        {
+          "name": "Space",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1980-12-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "See See Rider Blues",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "To Lay Me Down",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Minglewood Blues",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Ramble On Rose",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Lost Sailor",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Saint of Circumstance",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Deal",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Fire on the Mountain",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Playing in the Band",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Not Fade Away",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Black Peter",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "One More Saturday Night",
+      "date": "1980-12-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

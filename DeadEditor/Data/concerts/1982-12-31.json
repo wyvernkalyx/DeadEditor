@@ -1,0 +1,347 @@
+{
+  "date": "1982-12-31",
+  "venue": "Oakland Civic Auditorium",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43d6075b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1982/oakland-civic-auditorium-oakland-ca-43d6075b.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See See Rider Blues",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Keep Your Day Job",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunshine Daydream",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3",
+      "songs": [
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tell Daddy",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": "aka \"Tell Mama\""
+        },
+        {
+          "name": "Baby What You Want Me to Do",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": "First time since 1971"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1982-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "See See Rider Blues",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Cumberland Blues",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Far From Me",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Cassidy",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Ramble On Rose",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Keep Your Day Job",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Sugar Magnolia",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Sugaree",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Ship of Fools",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Not Fade Away",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Deal",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sunshine Daydream",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Turn On Your Love Light",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 20,
+      "songName": "Tell Daddy",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 21,
+      "songName": "Baby What You Want Me to Do",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 22,
+      "songName": "Hard to Handle",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 23,
+      "songName": "In the Midnight Hour",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 24,
+      "songName": "Brokedown Palace",
+      "date": "1982-12-31",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

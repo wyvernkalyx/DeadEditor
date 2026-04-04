@@ -1,0 +1,85 @@
+{
+  "date": "1970-07-04",
+  "venue": "McMahon Stadium",
+  "city": "Calgary",
+  "state": "AB",
+  "country": "CA",
+  "setlistFmId": "6bc7da62",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/mcmahon-stadium-calgary-ab-canada-6bc7da62.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1970-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-07-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "New Speedway Boogie",
+      "date": "1970-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Don't Ease Me In",
+      "date": "1970-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Friend of the Devil",
+      "date": "1970-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Hard to Handle",
+      "date": "1970-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-07-04",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

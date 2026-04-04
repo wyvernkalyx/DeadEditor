@@ -1,0 +1,251 @@
+{
+  "date": "1986-04-01",
+  "venue": "Providence Civic Center",
+  "city": "Providence",
+  "state": "RI",
+  "country": "US",
+  "setlistFmId": "4bd60782",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1986/providence-civic-center-providence-ri-4bd60782.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Gimme Some Lovin'",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Black Peter",
+          "date": "1986-04-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1986-04-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Gimme Some Lovin'",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "The Little Red Rooster",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Stagger Lee",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Tennessee Jed",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Looks Like Rain",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Big Railroad Blues",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "The Music Never Stopped",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Shakedown Street",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Estimated Prophet",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Eyes of the World",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "I Need a Miracle",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Black Peter",
+      "date": "1986-04-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Sugar Magnolia",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Box of Rain",
+      "date": "1986-04-01",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+{
+  "date": "1969-04-26",
+  "venue": "Kinetic Playground",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "5bdcab10",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/kinetic-playground-chicago-il-5bdcab10.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mountains of the Moon",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cryptical Envelopment",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": "> 'The Other One' reprise (>"
+        },
+        {
+          "name": "I Know It's a Sin",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Drums",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": "> 'Viola Lee Blues' reprise >"
+        },
+        {
+          "name": "Feedback",
+          "date": "1969-04-26",
+          "segue": true,
+          "info": "with a studio recording of 'What's Become of the Baby' played throughout) (>"
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1969-04-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Mountains of the Moon",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "China Cat Sunflower",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Doin' That Rag",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "It Hurts Me Too",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Hard to Handle",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Cryptical Envelopment",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Drums",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "The Other One",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "The Eleven",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "I Know It's a Sin",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Morning Dew",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Sitting on Top of the World",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Minglewood Blues",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 17,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 18,
+      "songName": "St. Stephen",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 19,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 20,
+      "songName": "Drums",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Viola Lee Blues",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Feedback",
+      "date": "1969-04-26",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "And We Bid You Goodnight",
+      "date": "1969-04-26",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

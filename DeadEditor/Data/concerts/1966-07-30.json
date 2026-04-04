@@ -1,0 +1,215 @@
+{
+  "date": "1966-07-30",
+  "venue": "PNE Garden Auditorium",
+  "city": "Vancouver",
+  "state": "BC",
+  "country": "CA",
+  "setlistFmId": "6bd096d2",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/pne-garden-auditorium-vancouver-bc-canada-6bd096d2.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Standing on the Corner",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stealin', Stealin'",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cardboard Cowboy",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One Kind Favor",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hey Little One",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1966-07-30",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Standing on the Corner",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Next Time You See Me",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Sitting on Top of the World",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Big Boss Man",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Stealin', Stealin'",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Cardboard Cowboy",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Cream Puff War",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Viola Lee Blues",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "One Kind Favor",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Hey Little One",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "Minglewood Blues",
+      "date": "1966-07-30",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

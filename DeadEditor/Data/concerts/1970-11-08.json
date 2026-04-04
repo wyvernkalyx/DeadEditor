@@ -1,0 +1,363 @@
+{
+  "date": "1970-11-08",
+  "venue": "Capitol Theatre",
+  "city": "Port Chester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "3dcfd7f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/capitol-theatre-port-chester-ny-3dcfd7f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Operator",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wake Up, Little Susie",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mystery Train",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Babe",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Orleans",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Searchin'",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Main Ten",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1970-11-08",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-11-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Hollow",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Rosa Lee McFall",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "El Paso",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Operator",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Ripple",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Friend of the Devil",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Wake Up, Little Susie",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Uncle John's Band",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Morning Dew",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Me and My Uncle",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Mystery Train",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "My Babe",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Around and Around",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "New Orleans",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Searchin'",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Casey Jones",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Truckin'",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Dark Star",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "The Main Ten",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Dancing in the Street",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Not Fade Away",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1970-11-08",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Good Lovin'",
+      "date": "1970-11-08",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "date": "1967-06-18",
+  "venue": "Monterey County Fairgrounds",
+  "city": "Monterey",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "6bd0c2fe",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/monterey-county-fairgrounds-monterey-ca-6bd0c2fe.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1967-06-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1967-06-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1967-06-18",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1967-06-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1967-06-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1967-06-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Alligator",
+      "date": "1967-06-18",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1967-06-18",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

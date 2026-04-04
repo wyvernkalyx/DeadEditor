@@ -1,0 +1,216 @@
+{
+  "date": "1970-01-03",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "bdcb5ca",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-east-new-york-ny-bdcb5ca.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mason's Children",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1970-01-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Casey Jones",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Big Boss Man",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "China Cat Sunflower",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "I Know You Rider",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "That's It for the Other One",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Cosmic Charlie",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Uncle John's Band",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Mason's Children",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Black Peter",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Dire Wolf",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Good Lovin'",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Dancing in the Street",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "St. Stephen",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "In the Midnight Hour",
+      "date": "1970-01-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

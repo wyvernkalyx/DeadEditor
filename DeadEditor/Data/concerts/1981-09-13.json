@@ -1,0 +1,368 @@
+{
+  "date": "1981-09-13",
+  "venue": "William Randolph Hearst Greek Theatre",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "33d604b9",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1981/william-randolph-hearst-greek-theatre-berkeley-ca-33d604b9.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Passenger",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Never Trust a Woman",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "(I Can't Get No) Satisfaction",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1981-09-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Bertha",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Big River",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "To Lay Me Down",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Little Red Rooster",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Loser",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Passenger",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Ramble On Rose",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Let It Grow",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Might as Well",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Cold Rain and Snow",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Samson and Delilah",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "It Must Have Been the Roses",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Lost Sailor",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Saint of Circumstance",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Terrapin Station",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Never Trust a Woman",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Drums",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Space",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "The Wheel",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "I Need a Miracle",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Sugar Magnolia",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "(I Can't Get No) Satisfaction",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 26,
+      "songName": "Brokedown Palace",
+      "date": "1981-09-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

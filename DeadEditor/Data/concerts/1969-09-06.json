@@ -1,0 +1,150 @@
+{
+  "date": "1969-09-06",
+  "venue": "Family Dog on the Great Highway",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43dca74b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/family-dog-on-the-great-highway-san-francisco-ca-43dca74b.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": "original title: Just a Hand to Hold"
+        },
+        {
+          "name": "Big Boy Pete",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1969-09-06",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1969-09-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Morning, School Girl",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Doin' That Rag",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "He Was a Friend of Mine",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Big Boy Pete",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Good Lovin'",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "It's All Over Now",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Not Fade Away",
+      "date": "1969-09-06",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Easy Wind",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Casey Jones",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "In the Midnight Hour",
+      "date": "1969-09-06",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

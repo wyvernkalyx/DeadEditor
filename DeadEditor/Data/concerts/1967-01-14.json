@@ -1,0 +1,60 @@
+{
+  "date": "1967-01-14",
+  "venue": "Golden Gate Park",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3dca937",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/golden-gate-park-san-francisco-ca-3dca937.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1967-01-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1967-01-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1967-01-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1967-01-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Viola Lee Blues",
+      "date": "1967-01-14",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Good Morning, School Girl",
+      "date": "1967-01-14",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

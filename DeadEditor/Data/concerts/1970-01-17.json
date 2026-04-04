@@ -1,0 +1,215 @@
+{
+  "date": "1970-01-17",
+  "venue": "Gill Coliseum",
+  "city": "Corvallis",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "13dcb5c1",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/gill-coliseum-corvallis-or-13dcb5c1.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mason's Children",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Eleven",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-01-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "China Cat Sunflower",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "I Know You Rider",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Hard to Handle",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cumberland Blues",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Me and My Uncle",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Black Peter",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Good Lovin'",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Drums",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Mason's Children",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "High Time",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Dark Star",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "St. Stephen",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "The Eleven",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-01-17",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

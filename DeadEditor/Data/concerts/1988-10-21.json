@@ -1,0 +1,303 @@
+{
+  "date": "1988-10-21",
+  "venue": "Reunion Arena",
+  "city": "Dallas",
+  "state": "TX",
+  "country": "US",
+  "setlistFmId": "63d606c3",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1988/reunion-arena-dallas-tx-63d606c3.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Good Times",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Believe It or Not",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stuck Inside of Mobile With the Memphis Blues Again",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Happy Birthday to You",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wang Dang Doodle",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Victim or the Crime",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Foolish Heart",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Will Take You Home",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1988-10-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Times",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Feel Like a Stranger",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Franklin's Tower",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Walkin' Blues",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Believe It or Not",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Stuck Inside of Mobile With the Memphis Blues Again",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Jack Straw",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Happy Birthday to You",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Wang Dang Doodle",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Victim or the Crime",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Foolish Heart",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "I Will Take You Home",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "All Along the Watchtower",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Stella Blue",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Sugar Magnolia",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Brokedown Palace",
+      "date": "1988-10-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

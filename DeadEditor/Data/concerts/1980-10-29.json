@@ -1,0 +1,412 @@
+{
+  "date": "1980-10-29",
+  "venue": "Radio City Music Hall",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "23d60407",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/radio-city-music-hall-new-york-ny-23d60407.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I: Acoustic",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Heaven Help the Fool",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Oh Babe It Ain't No Lie",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set III",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1980-10-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "On the Road Again",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "It Must Have Been the Roses",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "The Race Is On",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Bird Song",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "Heaven Help the Fool",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "Oh Babe It Ain't No Lie",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "Ripple",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set I: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 10,
+      "songName": "Franklin's Tower",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 11,
+      "songName": "Me and My Uncle",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "Big River",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Candyman",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "The Little Red Rooster",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Tennessee Jed",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Looks Like Rain",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Althea",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "The Music Never Stopped",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "China Cat Sunflower",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 20,
+      "songName": "I Know You Rider",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 21,
+      "songName": "Estimated Prophet",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 22,
+      "songName": "Terrapin Station",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 23,
+      "songName": "Drums",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 24,
+      "songName": "Space",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 25,
+      "songName": "The Wheel",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 26,
+      "songName": "Saint of Circumstance",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 27,
+      "songName": "Black Peter",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 28,
+      "songName": "Sugar Magnolia",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Set III"
+    },
+    {
+      "position": 29,
+      "songName": "U.S. Blues",
+      "date": "1980-10-29",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

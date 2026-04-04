@@ -1,0 +1,124 @@
+{
+  "date": "1969-02-05",
+  "venue": "Memorial Hall",
+  "city": "Kansas City",
+  "state": "KS",
+  "country": "US",
+  "setlistFmId": "5bc7dfcc",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/memorial-hall-kansas-city-ks-5bc7dfcc.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-02-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-02-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-02-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-02-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-02-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1969-02-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1969-02-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1969-02-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-02-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "That's It for the Other One",
+      "date": "1969-02-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1969-02-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "St. Stephen",
+      "date": "1969-02-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "The Eleven",
+      "date": "1969-02-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1969-02-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Feedback",
+      "date": "1969-02-05",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "And We Bid You Goodnight",
+      "date": "1969-02-05",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "date": "1969-06-27",
+  "venue": "Veterans' Memorial Auditorium",
+  "city": "Santa Rosa",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bda6a68",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/veterans-memorial-auditorium-santa-rosa-ca-7bda6a68.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Ole Slew-Foot",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "High Time",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1969-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1969-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-06-27",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Green, Green Grass of Home",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1969-06-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Ole Slew-Foot",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1969-06-27",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "High Time",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Jam",
+      "date": "1969-06-27",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Casey Jones",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Dire Wolf",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Sitting on Top of the World",
+      "date": "1969-06-27",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Big Boss Man",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Dark Star",
+      "date": "1969-06-27",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "St. Stephen",
+      "date": "1969-06-27",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "The Eleven",
+      "date": "1969-06-27",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Green, Green Grass of Home",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1969-06-27",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

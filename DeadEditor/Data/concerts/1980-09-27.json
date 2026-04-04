@@ -1,0 +1,451 @@
+{
+  "date": "1980-09-27",
+  "venue": "The Warfield",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "23d60413",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/the-warfield-san-francisco-ca-23d60413.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1 (acoustic)",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Oh Babe It Ain't No Lie",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2 (electric)",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3 (electric)",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See See Rider Blues",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1980-09-27",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 2,
+      "songName": "The Race Is On",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 3,
+      "songName": "Jack-A-Roe",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 4,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 5,
+      "songName": "It Must Have Been the Roses",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 6,
+      "songName": "Dark Hollow",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 7,
+      "songName": "Bird Song",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 8,
+      "songName": "To Lay Me Down",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 9,
+      "songName": "On the Road Again",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 10,
+      "songName": "Oh Babe It Ain't No Lie",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 11,
+      "songName": "Ripple",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 12,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 13,
+      "songName": "Franklin's Tower",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 14,
+      "songName": "Mama Tried",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 15,
+      "songName": "Mexicali Blues",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 16,
+      "songName": "Row Jimmy",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 17,
+      "songName": "The Little Red Rooster",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 18,
+      "songName": "Althea",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 19,
+      "songName": "Let It Grow",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 20,
+      "songName": "Deal",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 21,
+      "songName": "Cold Rain and Snow",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 22,
+      "songName": "See See Rider Blues",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 23,
+      "songName": "Ramble On Rose",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 24,
+      "songName": "He's Gone",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 25,
+      "songName": "The Other One",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 26,
+      "songName": "Drums",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 27,
+      "songName": "Space",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 28,
+      "songName": "Stella Blue",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 29,
+      "songName": "I Need a Miracle",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 30,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 31,
+      "songName": "Johnny B. Goode",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 32,
+      "songName": "One More Saturday Night",
+      "date": "1980-09-27",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

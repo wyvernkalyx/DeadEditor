@@ -1,0 +1,316 @@
+{
+  "date": "1985-11-05",
+  "venue": "Centrum in Worcester",
+  "city": "Worcester",
+  "state": "MA",
+  "country": "US",
+  "setlistFmId": "53d607a5",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1985/centrum-in-worcester-worcester-ma-53d607a5.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Kansas City",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Need Love",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Just Like Tom Thumb's Blues",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1985-11-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "They Love Each Other",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Kansas City",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "It's All Over Now",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Bird Song",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Don't Ease Me In",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Shakedown Street",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Supplication",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Don't Need Love",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Just Like Tom Thumb's Blues",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Black Peter",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Around and Around",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Good Lovin'",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Brokedown Palace",
+      "date": "1985-11-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

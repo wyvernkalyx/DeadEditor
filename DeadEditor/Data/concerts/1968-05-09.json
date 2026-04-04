@@ -1,0 +1,33 @@
+{
+  "date": "1968-05-09",
+  "venue": "Electric Circus",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "73c7e249",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/electric-circus-new-york-ny-73c7e249.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1968-05-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "He Was a Friend of Mine",
+      "date": "1968-05-09",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

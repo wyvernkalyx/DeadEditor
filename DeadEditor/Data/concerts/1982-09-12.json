@@ -1,0 +1,264 @@
+{
+  "date": "1982-09-12",
+  "venue": "Lakeland Civic Center",
+  "city": "Lakeland",
+  "state": "FL",
+  "country": "US",
+  "setlistFmId": "5bd60774",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1982/lakeland-civic-center-lakeland-fl-5bd60774.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1982-09-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Friend of the Devil",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "West L.A. Fadeaway",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "The Little Red Rooster",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Brown-Eyed Women",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "It's All Over Now",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Might as Well",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Playing in the Band",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "The Wheel",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Not Fade Away",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Morning Dew",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Don't Ease Me In",
+      "date": "1982-09-12",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -39,6 +39,12 @@ namespace DeadEditor
             NavigationRequested?.Invoke(this, "Releases");
         }
 
+        private void ConcertsButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetActiveButton(ConcertsButton);
+            NavigationRequested?.Invoke(this, "Concerts");
+        }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton(SettingsButton);
@@ -59,6 +65,8 @@ namespace DeadEditor
                 SetActiveButton(SongsButton);
             else if (view is ReleasesView)
                 SetActiveButton(ReleasesButton);
+            else if (view is ConcertDatabaseView or ConcertDetailView or EditSetlistView)
+                SetActiveButton(ConcertsButton);
             else if (view is SettingsView)
                 SetActiveButton(SettingsButton);
         }
@@ -70,6 +78,7 @@ namespace DeadEditor
             ImportButton.Tag = null;
             SongsButton.Tag = null;
             ReleasesButton.Tag = null;
+            ConcertsButton.Tag = null;
             SettingsButton.Tag = null;
 
             // Set active state

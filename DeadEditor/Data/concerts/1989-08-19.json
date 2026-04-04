@@ -1,0 +1,264 @@
+{
+  "date": "1989-08-19",
+  "venue": "William Randolph Hearst Greek Theatre",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73d60695",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1989/william-randolph-hearst-greek-theatre-berkeley-ca-73d60695.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Good Times",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "We Can Run",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stuck Inside of Mobile With the Memphis Blues Again",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": "> 'Playing in the Band' jam >"
+        },
+        {
+          "name": "Drums",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1989-08-19",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Foolish Heart",
+          "date": "1989-08-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Times",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack Straw",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "We Can Run",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "It's All Over Now",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loser",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Stuck Inside of Mobile With the Memphis Blues Again",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Box of Rain",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "China Cat Sunflower",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "I Know You Rider",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Other One",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1989-08-19",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Foolish Heart",
+      "date": "1989-08-19",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

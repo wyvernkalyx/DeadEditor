@@ -1,0 +1,272 @@
+{
+  "date": "1971-02-19",
+  "venue": "Capitol Theatre",
+  "city": "Port Chester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "13dcfd41",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/capitol-theatre-port-chester-ny-13dcfd41.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Smokestack Lightning",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": "Premiere: First time ever"
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": "Premiere: First time ever"
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1971-02-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Truckin'",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Loser",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Cumberland Blues",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "It Hurts Me Too",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Bertha",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Playing in the Band",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Dark Hollow",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Smokestack Lightning",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "China Cat Sunflower",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "I Know You Rider",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Greatest Story Ever Told",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Johnny B. Goode",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Bird Song",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Easy Wind",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Deal",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "That's It for the Other One",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Wharf Rat",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Good Lovin'",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Casey Jones",
+      "date": "1971-02-19",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

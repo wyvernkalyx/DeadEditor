@@ -1,0 +1,412 @@
+{
+  "date": "1980-10-31",
+  "venue": "Radio City Music Hall",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "33d60405",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/radio-city-music-hall-new-york-ny-33d60405.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1 (acoustic)",
+      "songs": [
+        {
+          "name": "Heaven Help the Fool",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sage and Spirit",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": "First time since 1975"
+        },
+        {
+          "name": "Little Sadie",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2 (electric)",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3 (electric)",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1980-10-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Heaven Help the Fool",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 2,
+      "songName": "Sage and Spirit",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 3,
+      "songName": "Little Sadie",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 4,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 5,
+      "songName": "It Must Have Been the Roses",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 6,
+      "songName": "Cassidy",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 7,
+      "songName": "Bird Song",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 8,
+      "songName": "Ripple",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 9,
+      "songName": "Jack Straw",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 10,
+      "songName": "Cold Rain and Snow",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 11,
+      "songName": "Me and My Uncle",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 12,
+      "songName": "Mexicali Blues",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 13,
+      "songName": "Ramble On Rose",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 14,
+      "songName": "The Little Red Rooster",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 15,
+      "songName": "Brown-Eyed Women",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 16,
+      "songName": "Looks Like Rain",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 17,
+      "songName": "Deal",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 2 (electric)"
+    },
+    {
+      "position": 18,
+      "songName": "Don't Ease Me In",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 19,
+      "songName": "Lost Sailor",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 20,
+      "songName": "Saint of Circumstance",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 21,
+      "songName": "Franklin's Tower",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 22,
+      "songName": "Drums",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 23,
+      "songName": "Space",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 24,
+      "songName": "Fire on the Mountain",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 25,
+      "songName": "Not Fade Away",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 26,
+      "songName": "Stella Blue",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 27,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 28,
+      "songName": "Good Lovin'",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Set 3 (electric)"
+    },
+    {
+      "position": 29,
+      "songName": "Uncle John's Band",
+      "date": "1980-10-31",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

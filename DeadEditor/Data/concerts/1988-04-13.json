@@ -1,0 +1,251 @@
+{
+  "date": "1988-04-13",
+  "venue": "Rosemont Horizon",
+  "city": "Rosemont",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "63d606ef",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1988/rosemont-horizon-rosemont-il-63d606ef.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When Push Comes to Shove",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1988-04-13",
+          "segue": true,
+          "info": "> 'Playing in the Band' reprise"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunshine Daydream",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1988-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Feel Like a Stranger",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Franklin's Tower",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "The Little Red Rooster",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "When Push Comes to Shove",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Queen Jane Approximately",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Don't Ease Me In",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Sugar Magnolia",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Bertha",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Playing in the Band",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Uncle John's Band",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1988-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Morning Dew",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Sunshine Daydream",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Touch of Grey",
+      "date": "1988-04-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

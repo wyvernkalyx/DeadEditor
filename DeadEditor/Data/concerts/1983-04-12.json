@@ -1,0 +1,303 @@
+{
+  "date": "1983-04-12",
+  "venue": "Broome County Veterans Memorial Arena",
+  "city": "Binghamton",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "4bd60752",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/broome-county-veterans-memorial-arena-binghamton-ny-4bd60752.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Cassidy",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Help on the Way",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Not Fade Away",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1983-04-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Bird Song",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Minglewood Blues",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Peggy-O",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Cassidy",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Loser",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "It's All Over Now",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Let It Grow",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Help on the Way",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Slipknot!",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Franklin's Tower",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Lost Sailor",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Saint of Circumstance",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Terrapin Station",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Drums",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "The Other One",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Wharf Rat",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 20,
+      "songName": "Not Fade Away",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 21,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1983-04-12",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

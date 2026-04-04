@@ -1,0 +1,212 @@
+{
+  "date": "1975-06-17",
+  "venue": "Winterland Arena",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3d6054b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1975/winterland-arena-san-francisco-ca-3d6054b.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Crazy Fingers",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Help on the Way",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": "Live debut"
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Blues for Allah",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stronger Than Dirt or Milkin’ the Turkey",
+          "date": "1975-06-17",
+          "segue": true,
+          "info": "> 'Blues for Allah' reprise"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1975-06-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Crazy Fingers",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Beat It on Down the Line",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Deal",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Big River",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Peggy-O",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Me and My Uncle",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Help on the Way",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Slipknot!",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Franklin's Tower",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Blues for Allah",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Drums",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Stronger Than Dirt or Milkin’ the Turkey",
+      "date": "1975-06-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Sugar Magnolia",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "U.S. Blues",
+      "date": "1975-06-17",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

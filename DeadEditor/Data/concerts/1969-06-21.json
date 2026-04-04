@@ -1,0 +1,177 @@
+{
+  "date": "1969-06-21",
+  "venue": "Fillmore East",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "5b96d7c4",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/fillmore-east-new-york-ny-5b96d7c4.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "The Old, Old House",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Yellow Dog Story",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-06-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-06-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-06-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-06-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Old, Old House",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Sitting on Top of the World",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "I'm a King Bee",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Dire Wolf",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Mama Tried",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "High Time",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Yellow Dog Story",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Dark Star",
+      "date": "1969-06-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "St. Stephen",
+      "date": "1969-06-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "The Eleven",
+      "date": "1969-06-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-06-21",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

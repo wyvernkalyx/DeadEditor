@@ -1,0 +1,285 @@
+{
+  "date": "1994-07-01",
+  "venue": "Shoreline Amphitheatre",
+  "city": "Mountain View",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3bd6003c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/shoreline-amphitheatre-mountain-view-ca-3bd6003c.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wang Dang Doodle",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Foolish Heart",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Want to Tell You",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": "Live debut by GD"
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samba in the Rain",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1994-07-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Wang Dang Doodle",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Dire Wolf",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Queen Jane Approximately",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Stagger Lee",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Black-Throated Wind",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Bertha",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Picasso Moon",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Don't Ease Me In",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Foolish Heart",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "I Want to Tell You",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Ship of Fools",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Samba in the Rain",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Playing in the Band",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "The Last Time",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Attics of My Life",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Sugar Magnolia",
+      "date": "1994-07-01",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

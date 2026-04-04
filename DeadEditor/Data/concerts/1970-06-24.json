@@ -1,0 +1,226 @@
+{
+  "date": "1970-06-24",
+  "venue": "Capitol Theatre",
+  "city": "Port Chester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "5bdc8360",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/capitol-theatre-port-chester-ny-5bdc8360.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Big Railroad Blues",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Rub",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Not Fade Away",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1970-06-24",
+          "segue": true,
+          "info": "> 'Dark Star' reprise"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1970-06-24",
+          "segue": true,
+          "info": "> 'Dark Star' reprise 2"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-06-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Big Railroad Blues",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Deep Elem Blues",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "The Monkey and the Engineer",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "The Rub",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Not Fade Away",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 7,
+      "songName": "Easy Wind",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 9,
+      "songName": "Dark Star",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 10,
+      "songName": "Attics of My Life",
+      "date": "1970-06-24",
+      "segue": true,
+      "set": "Set II"
+    },
+    {
+      "position": 11,
+      "songName": "Sugar Magnolia",
+      "date": "1970-06-24",
+      "segue": true,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "St. Stephen",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "China Cat Sunflower",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "I Know You Rider",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Uncle John's Band",
+      "date": "1970-06-24",
+      "segue": false,
+      "set": "Encore"
+    }
+  ],
+  "multiShow": true
+}

@@ -1,0 +1,72 @@
+{
+  "date": "1968-03-26",
+  "venue": "Melodyland Theater",
+  "city": "Anaheim",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3dca91f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/melodyland-theater-anaheim-ca-3dca91f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-03-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1968-03-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1968-03-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-03-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-03-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1968-03-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Sitting on Top of the World",
+      "date": "1968-03-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Dark Star",
+      "date": "1968-03-26",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

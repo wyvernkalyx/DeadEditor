@@ -1,0 +1,264 @@
+{
+  "date": "1982-04-05",
+  "venue": "Spectrum",
+  "city": "Philadelphia",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "23d60497",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1982/spectrum-philadelphia-pa-23d60497.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1982-04-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "El Paso",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Deep Elem Blues",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cassidy",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "The Little Red Rooster",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Althea",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Bertha",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Ship of Fools",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "The Wheel",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Playing in the Band",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Good Lovin'",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Don't Ease Me In",
+      "date": "1982-04-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

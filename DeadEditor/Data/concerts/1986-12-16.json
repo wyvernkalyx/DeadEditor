@@ -1,0 +1,277 @@
+{
+  "date": "1986-12-16",
+  "venue": "Oakland-Alameda County Coliseum Arena",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73d60669",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1986/oakland-alameda-county-coliseum-arena-oakland-ca-73d60669.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Big River",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When Push Comes to Shove",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Willie and the Hand Jive",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": "also with Brian Stoltz and Willie Green) (>"
+        },
+        {
+          "name": "Iko Iko",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": "also with Brian Stoltz and Willie Green) (>"
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1986-12-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1986-12-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Row Jimmy",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Big River",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Stagger Lee",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Minglewood Blues",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "When Push Comes to Shove",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Sugaree",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Jack Straw",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Box of Rain",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Crazy Fingers",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Estimated Prophet",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Eyes of the World",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Willie and the Hand Jive",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Iko Iko",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Stella Blue",
+      "date": "1986-12-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "In the Midnight Hour",
+      "date": "1986-12-16",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

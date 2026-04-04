@@ -1,0 +1,355 @@
+{
+  "date": "1982-10-17",
+  "venue": "Downs at Santa Fe",
+  "city": "Santa Fe",
+  "state": "NM",
+  "country": "US",
+  "setlistFmId": "53d60761",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1982/downs-at-santa-fe-santa-fe-nm-53d60761.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Deal",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Never Trust a Woman",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "He's Gone",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Wheel",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1982-10-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1982-10-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Franklin's Tower",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Candyman",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Mexicali Blues",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Althea",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Ramble On Rose",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Let It Grow",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Deal",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Shakedown Street",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Samson and Delilah",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Never Trust a Woman",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Estimated Prophet",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "He's Gone",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Drums",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Space",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Throwing Stones",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "The Wheel",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "The Other One",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Wharf Rat",
+      "date": "1982-10-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Good Lovin'",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Don't Ease Me In",
+      "date": "1982-10-17",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

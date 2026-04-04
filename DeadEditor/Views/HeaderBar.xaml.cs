@@ -10,6 +10,8 @@ namespace DeadEditor
     {
         private AlbumDetailView? _currentAlbumView;
         private EditMetadataView? _currentEditView;
+        private ConcertDetailView? _currentConcertDetailView;
+        private EditSetlistView? _currentEditSetlistView;
         private bool _isUpdatingSearch = false;
         private bool _isPopulatingYears = false;
 
@@ -32,6 +34,12 @@ namespace DeadEditor
         public event EventHandler? EditDatesRequested;
         public event EventHandler? SaveDatesRequested;
         public event EventHandler? CancelDatesRequested;
+
+        /// <summary>Fired when "Edit Setlist" is clicked from the Concert Detail header.</summary>
+        public event EventHandler? EditSetlistRequested;
+
+        /// <summary>Fired when "Delete" is clicked from the Concert Detail header.</summary>
+        public event EventHandler? DeleteConcertRequested;
 
         public HeaderBar()
         {
@@ -82,12 +90,18 @@ namespace DeadEditor
             }
         }
 
+        /// <summary>Fired when the concerts search text changes.</summary>
+        public event EventHandler<string>? ConcertsSearchChanged;
+
         private void HideAllHeaders()
         {
             LibraryHeader.Visibility = Visibility.Collapsed;
             AlbumDetailHeader.Visibility = Visibility.Collapsed;
             ImportHeader.Visibility = Visibility.Collapsed;
             EditMetadataHeader.Visibility = Visibility.Collapsed;
+            ConcertsHeader.Visibility = Visibility.Collapsed;
+            ConcertDetailHeader.Visibility = Visibility.Collapsed;
+            EditSetlistHeader.Visibility = Visibility.Collapsed;
             PlaceholderHeader.Visibility = Visibility.Collapsed;
         }
 
@@ -145,6 +159,62 @@ namespace DeadEditor
             HideAllHeaders();
             PlaceholderHeader.Visibility = Visibility.Visible;
             PlaceholderText.Text = $"Releases    {releasesView.ReleaseCount} known releases";
+        }
+
+        public void ShowConcertsHeader(ConcertDatabaseView concertsView)
+        {
+            HideAllHeaders();
+            ConcertsHeader.Visibility = Visibility.Visible;
+            UpdateConcertsCount(concertsView.FilteredCount, concertsView.TotalCount);
+        }
+
+        public void ShowConcertDetailHeader(ConcertDetailView detailView)
+        {
+            _currentConcertDetailView = detailView;
+
+            HideAllHeaders();
+            ConcertDetailHeader.Visibility = Visibility.Visible;
+            ConcertDetailDateText.Text = detailView.ConcertDate;
+        }
+
+        public void ShowEditSetlistHeader(EditSetlistView editView)
+        {
+            _currentEditSetlistView = editView;
+
+            HideAllHeaders();
+            EditSetlistHeader.Visibility = Visibility.Visible;
+            EditSetlistBackButton.Content = $"\u2190 {editView.VenueName}";
+        }
+
+        public void UpdateConcertsCount(int filtered, int total)
+        {
+            if (filtered == total)
+                ConcertsCountText.Text = $"{total:N0} shows";
+            else
+                ConcertsCountText.Text = $"{filtered:N0} of {total:N0} shows";
+        }
+
+        /// <summary>Gets the current concerts search text.</summary>
+        public string ConcertsSearchText => ConcertsSearchBox?.Text ?? "";
+
+        public void ClearConcertsSearch()
+        {
+            if (ConcertsSearchBox != null && !string.IsNullOrEmpty(ConcertsSearchBox.Text))
+                ConcertsSearchBox.Text = "";
+        }
+
+        private void ConcertsSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var hasText = !string.IsNullOrEmpty(ConcertsSearchBox.Text);
+            ConcertsSearchPlaceholder.Visibility = hasText ? Visibility.Collapsed : Visibility.Visible;
+            ConcertsClearSearchButton.Visibility = hasText ? Visibility.Visible : Visibility.Collapsed;
+            ConcertsSearchChanged?.Invoke(this, ConcertsSearchBox.Text ?? "");
+        }
+
+        private void ConcertsClearSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            ConcertsSearchBox.Text = "";
+            ConcertsSearchBox.Focus();
         }
 
         public void ShowSettingsHeader()
@@ -247,6 +317,43 @@ namespace DeadEditor
         private void DeleteAlbumButton_Click(object sender, RoutedEventArgs e)
         {
             DeleteAlbumRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        // ===== CONCERT DETAIL =====
+
+        private void ConcertDetailBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentConcertDetailView?.NavigateBack();
+        }
+
+        private void EditSetlistButton_Click(object sender, RoutedEventArgs e)
+        {
+            EditSetlistRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DeleteConcertButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteConcertRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        // ===== EDIT SETLIST =====
+
+        private void EditSetlistBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentEditSetlistView?.NavigateBack();
+        }
+
+        private async void SaveSetlistButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentEditSetlistView != null)
+            {
+                await _currentEditSetlistView.SaveChangesAsync();
+            }
+        }
+
+        private void CancelSetlistButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentEditSetlistView?.CancelEdit();
         }
 
         private void EditDatesButton_Click(object sender, RoutedEventArgs e)

@@ -1,0 +1,46 @@
+{
+  "date": "1968-05-17",
+  "venue": "Shrine Exposition Hall",
+  "city": "Los Angeles",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63c7e24f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/shrine-exposition-hall-los-angeles-ca-63c7e24f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1968-05-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-05-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1968-05-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-05-17",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

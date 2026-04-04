@@ -1,0 +1,251 @@
+{
+  "date": "1989-08-05",
+  "venue": "Cal Expo Amphitheatre",
+  "city": "Sacramento",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73d60691",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1989/cal-expo-amphitheatre-sacramento-ca-73d60691.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "We Can Run",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stuck Inside of Mobile With the Memphis Blues Again",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Hey Pocky A-Way",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Moon",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1989-08-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "One More Saturday Night",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "We Can Run",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Stagger Lee",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Stuck Inside of Mobile With the Memphis Blues Again",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Row Jimmy",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Let It Grow",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Hey Pocky A-Way",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Playing in the Band",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "I Know You Rider",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Terrapin Station",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Standing on the Moon",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Throwing Stones",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Not Fade Away",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "U.S. Blues",
+      "date": "1989-08-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

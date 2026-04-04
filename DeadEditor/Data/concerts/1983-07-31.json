@@ -1,0 +1,277 @@
+{
+  "date": "1983-07-31",
+  "venue": "Ventura County Fairgrounds",
+  "city": "Ventura",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43d6073b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/ventura-county-fairgrounds-ventura-ca-43d6073b.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1983-07-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "West L.A. Fadeaway",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "The Little Red Rooster",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Tennessee Jed",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Looks Like Rain",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Deal",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Hell in a Bucket",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Scarlet Begonias",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Fire on the Mountain",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "The Other One",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Wharf Rat",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Throwing Stones",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Touch of Grey",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 19,
+      "songName": "One More Saturday Night",
+      "date": "1983-07-31",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

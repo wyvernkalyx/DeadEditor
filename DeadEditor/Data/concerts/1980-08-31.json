@@ -1,0 +1,355 @@
+{
+  "date": "1980-08-31",
+  "venue": "Capital Centre",
+  "city": "Landover",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "2bd6041a",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/capital-centre-landover-md-2bd6041a.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "One",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Two",
+      "songs": [
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1980-08-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 2,
+      "songName": "Promised Land",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 3,
+      "songName": "They Love Each Other",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 4,
+      "songName": "Mama Tried",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 6,
+      "songName": "Althea",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 7,
+      "songName": "The Little Red Rooster",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 8,
+      "songName": "Tennessee Jed",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 9,
+      "songName": "Far From Me",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 10,
+      "songName": "Lazy Lightning",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 11,
+      "songName": "Supplication",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 12,
+      "songName": "Deal",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "One"
+    },
+    {
+      "position": 13,
+      "songName": "Greatest Story Ever Told",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 14,
+      "songName": "Uncle John's Band",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 15,
+      "songName": "Lost Sailor",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 16,
+      "songName": "Saint of Circumstance",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 17,
+      "songName": "Comes a Time",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 18,
+      "songName": "Truckin'",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 19,
+      "songName": "Drums",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 20,
+      "songName": "Space",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 21,
+      "songName": "The Other One",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 22,
+      "songName": "Stella Blue",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 23,
+      "songName": "I Need a Miracle",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 24,
+      "songName": "Good Lovin'",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Two"
+    },
+    {
+      "position": 25,
+      "songName": "Brokedown Palace",
+      "date": "1980-08-31",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

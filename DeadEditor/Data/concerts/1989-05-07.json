@@ -1,0 +1,277 @@
+{
+  "date": "1989-05-07",
+  "venue": "Frost Amphitheater",
+  "city": "Stanford",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "6bd606a2",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1989/frost-amphitheater-stanford-ca-6bd606a2.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Built to Last",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Foolish Heart",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Victim or the Crime",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1989-05-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Iko Iko",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "The Little Red Rooster",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Bertha",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Built to Last",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Picasso Moon",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Bird Song",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Foolish Heart",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Victim or the Crime",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Crazy Fingers",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Black Peter",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Turn On Your Love Light",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1989-05-07",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

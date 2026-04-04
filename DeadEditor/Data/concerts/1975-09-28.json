@@ -1,0 +1,202 @@
+{
+  "date": "1975-09-28",
+  "venue": "Golden Gate Park",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13d60549",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1975/golden-gate-park-san-francisco-ca-13d60549.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Help on the Way",
+          "date": "1975-09-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": "with extended 11/8 jam at the end"
+        },
+        {
+          "name": "Drums",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stronger Than Dirt or Milkin’ the Turkey",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1975-09-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Help on the Way",
+      "date": "1975-09-28",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Slipknot!",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "The Music Never Stopped",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "They Love Each Other",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Beat It on Down the Line",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Franklin's Tower",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Big River",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "It Must Have Been the Roses",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Truckin'",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Drums",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Stronger Than Dirt or Milkin’ the Turkey",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Not Fade Away",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "One More Saturday Night",
+      "date": "1975-09-28",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

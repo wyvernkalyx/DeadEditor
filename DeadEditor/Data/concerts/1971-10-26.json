@@ -1,0 +1,298 @@
+{
+  "date": "1971-10-26",
+  "venue": "The Palestra, University Of Rochester",
+  "city": "Rochester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "33dcfc89",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/the-palestra-university-of-rochester-rochester-ny-33dcfc89.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "El Paso",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-10-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Playing in the Band",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Sugaree",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Tennessee Jed",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Jack Straw",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "Big Railroad Blues",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "Cumberland Blues",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "Cold Rain and Snow",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "Mexicali Blues",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 12,
+      "songName": "Loser",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 13,
+      "songName": "El Paso",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Comes a Time",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "One More Saturday Night",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Ramble On Rose",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Truckin'",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Drums",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "The Other One",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "Johnny B. Goode",
+      "date": "1971-10-26",
+      "segue": false,
+      "set": "Set II"
+    }
+  ]
+}

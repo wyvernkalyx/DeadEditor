@@ -1,0 +1,233 @@
+{
+  "date": "1970-05-03",
+  "venue": "Wesleyan University",
+  "city": "Middletown",
+  "state": "CT",
+  "country": "US",
+  "setlistFmId": "13dc81d1",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/wesleyan-university-middletown-ct-13dc81d1.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Acoustic",
+      "songs": [
+        {
+          "name": "Deep Elem Blues",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Electric",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Main Ten",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Deep Elem Blues",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Black Peter",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Hard to Handle",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 6,
+      "songName": "China Cat Sunflower",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 7,
+      "songName": "I Know You Rider",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 8,
+      "songName": "Me and My Uncle",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 9,
+      "songName": "New Speedway Boogie",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 10,
+      "songName": "Good Lovin'",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 11,
+      "songName": "Dire Wolf",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 12,
+      "songName": "Don't Ease Me In",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 13,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 14,
+      "songName": "The Main Ten",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 15,
+      "songName": "Uncle John's Band",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    },
+    {
+      "position": 16,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-05-03",
+      "segue": false,
+      "set": "Electric"
+    }
+  ]
+}

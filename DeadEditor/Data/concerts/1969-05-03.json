@@ -1,0 +1,73 @@
+{
+  "date": "1969-05-03",
+  "venue": "Sierra College",
+  "city": "Rocklin",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bc7df98",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/sierra-college-rocklin-ca-5bc7df98.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1969-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1969-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1969-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1969-05-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-05-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1969-05-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1969-05-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

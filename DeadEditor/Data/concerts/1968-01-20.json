@@ -1,0 +1,163 @@
+{
+  "date": "1968-01-20",
+  "venue": "Eureka Municipal Auditorium",
+  "city": "Eureka",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "bdca92e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/eureka-municipal-auditorium-eureka-ca-bdca92e.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-01-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-01-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Clementine",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Born Cross-Eyed",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Spanish Jam",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1968-01-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-01-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1968-01-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-01-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "That's It for the Other One",
+      "date": "1968-01-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Clementine",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "New Potato Caboose",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Born Cross-Eyed",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Feedback",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Space",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Spanish Jam",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1968-01-20",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Dark Star",
+      "date": "1968-01-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Viola Lee Blues",
+      "date": "1968-01-20",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

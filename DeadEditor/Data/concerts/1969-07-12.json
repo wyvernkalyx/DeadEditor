@@ -1,0 +1,181 @@
+{
+  "date": "1969-07-12",
+  "venue": "New York State Pavilion",
+  "city": "Queens",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "53dca751",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/new-york-state-pavilion-queens-ny-53dca751.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Green, Green Grass of Home",
+          "date": "1969-07-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ole Slew-Foot",
+          "date": "1969-07-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mountains of the Moon",
+          "date": "1969-07-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-07-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-07-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-07-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "High Time",
+          "date": "1969-07-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Dark Star",
+          "date": "1969-07-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1969-07-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-07-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-07-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-07-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Green, Green Grass of Home",
+      "date": "1969-07-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Ole Slew-Foot",
+      "date": "1969-07-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mountains of the Moon",
+      "date": "1969-07-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Doin' That Rag",
+      "date": "1969-07-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "China Cat Sunflower",
+      "date": "1969-07-12",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Mama Tried",
+      "date": "1969-07-12",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "High Time",
+      "date": "1969-07-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Dark Star",
+      "date": "1969-07-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "The Other One",
+      "date": "1969-07-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "St. Stephen",
+      "date": "1969-07-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "The Eleven",
+      "date": "1969-07-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-07-12",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

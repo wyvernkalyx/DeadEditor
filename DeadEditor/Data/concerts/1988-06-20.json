@@ -1,0 +1,290 @@
+{
+  "date": "1988-06-20",
+  "venue": "Alpine Valley Music Theatre",
+  "city": "East Troy",
+  "state": "WI",
+  "country": "US",
+  "setlistFmId": "63d606fb",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1988/alpine-valley-music-theatre-east-troy-wi-63d606fb.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stuck Inside of Mobile With the Memphis Blues Again",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Victim or the Crime",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Blow Away",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": "live debut"
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": "first verse only) (>"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1988-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1988-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Box of Rain",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "West L.A. Fadeaway",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Stuck Inside of Mobile With the Memphis Blues Again",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Cassidy",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Don't Ease Me In",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Victim or the Crime",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Cumberland Blues",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Blow Away",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Terrapin Station",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Wharf Rat",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1988-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Good Lovin'",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "U.S. Blues",
+      "date": "1988-06-20",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

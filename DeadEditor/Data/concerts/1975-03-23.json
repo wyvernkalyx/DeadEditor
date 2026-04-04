@@ -1,0 +1,77 @@
+{
+  "date": "1975-03-23",
+  "venue": "Kezar Stadium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bd60554",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1975/kezar-stadium-san-francisco-ca-1bd60554.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Blues for Allah",
+          "date": "1975-03-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stronger Than Dirt or Milkin’ the Turkey",
+          "date": "1975-03-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1975-03-23",
+          "segue": true,
+          "info": "> 'Stronger Than Dirt' reprise > 'Blues for Allah' reprise"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1975-03-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Blues for Allah",
+      "date": "1975-03-23",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Stronger Than Dirt or Milkin’ the Turkey",
+      "date": "1975-03-23",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Drums",
+      "date": "1975-03-23",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Johnny B. Goode",
+      "date": "1975-03-23",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

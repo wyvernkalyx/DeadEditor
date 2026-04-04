@@ -1,0 +1,33 @@
+{
+  "date": "1966-01-22",
+  "venue": "Longshoremen's Hall",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43ddd7d3",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/longshoremens-hall-san-francisco-ca-43ddd7d3.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-01-22",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "In the Midnight Hour",
+      "date": "1966-01-22",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

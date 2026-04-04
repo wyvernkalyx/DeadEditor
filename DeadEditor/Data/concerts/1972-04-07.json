@@ -1,0 +1,342 @@
+{
+  "date": "1972-04-07",
+  "venue": "Wembley Empire Pool",
+  "city": "London",
+  "state": "ENG",
+  "country": "GB",
+  "setlistFmId": "63d60a0b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1972/wembley-empire-pool-london-england-63d60a0b.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Chinatown Shuffle",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mr. Charlie",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "El Paso",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": "> 'The Other One' reprise >"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1972-04-07",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1972-04-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Greatest Story Ever Told",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Chinatown Shuffle",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "China Cat Sunflower",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "I Know You Rider",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Big Boss Man",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Black-Throated Wind",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Loser",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Mr. Charlie",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Beat It on Down the Line",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Tennessee Jed",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Casey Jones",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Truckin'",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "The Other One",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "El Paso",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Wharf Rat",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Ramble On Rose",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Sugar Magnolia",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Not Fade Away",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1972-04-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "One More Saturday Night",
+      "date": "1972-04-07",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

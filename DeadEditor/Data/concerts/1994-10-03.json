@@ -1,0 +1,277 @@
+{
+  "date": "1994-10-03",
+  "venue": "Boston Garden",
+  "city": "Boston",
+  "state": "MA",
+  "country": "US",
+  "setlistFmId": "2bd6001a",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/boston-garden-boston-ma-2bd6001a.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Childhood's End",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Shakedown Street",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1994-10-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Touch of Grey",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Beat It on Down the Line",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loose Lucy",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "The Little Red Rooster",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Childhood's End",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Dire Wolf",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Black-Throated Wind",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Bird Song",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Box of Rain",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Shakedown Street",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Cassidy",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Wheel",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "All Along the Watchtower",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Attics of My Life",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Brokedown Palace",
+      "date": "1994-10-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

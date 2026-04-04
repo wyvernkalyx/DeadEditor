@@ -1,0 +1,85 @@
+{
+  "date": "1969-08-16",
+  "venue": "Max Yasgur's Farm",
+  "city": "Bethel",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "bd6b52a",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/max-yasgurs-farm-bethel-ny-bd6b52a.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "St. Stephen",
+          "date": "1969-08-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-08-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-08-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1969-08-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-08-16",
+          "segue": false,
+          "info": "40 minutes long version"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "St. Stephen",
+      "date": "1969-08-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1969-08-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1969-08-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "High Time",
+      "date": "1969-08-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-08-16",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

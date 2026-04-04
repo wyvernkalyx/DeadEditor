@@ -1,0 +1,77 @@
+{
+  "date": "1966-01-28",
+  "venue": "The Matrix",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bc7eac0",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/the-matrix-san-francisco-ca-7bc7eac0.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-01-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-01-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-01-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-01-28",
+          "segue": false,
+          "info": "plug pulled"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-01-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Viola Lee Blues",
+      "date": "1966-01-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 3,
+      "songName": "I Know You Rider",
+      "date": "1966-01-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 4,
+      "songName": "In the Midnight Hour",
+      "date": "1966-01-28",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

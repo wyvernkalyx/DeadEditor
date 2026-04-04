@@ -26,6 +26,7 @@ namespace DeadEditor
         private System.Windows.Controls.UserControl? _importView;
         private SongsView? _songsView;
         private ReleasesView? _releasesView;
+        private ConcertDatabaseView? _concertsView;
         private System.Windows.Controls.UserControl? _settingsView;
 
         // Public property for child views to access navigation
@@ -50,6 +51,9 @@ namespace DeadEditor
             HeaderBar.EditDatesRequested += HeaderBar_EditDatesRequested;
             HeaderBar.SaveDatesRequested += HeaderBar_SaveDatesRequested;
             HeaderBar.CancelDatesRequested += HeaderBar_CancelDatesRequested;
+            HeaderBar.ConcertsSearchChanged += HeaderBar_ConcertsSearchChanged;
+            HeaderBar.EditSetlistRequested += HeaderBar_EditSetlistRequested;
+            HeaderBar.DeleteConcertRequested += HeaderBar_DeleteConcertRequested;
 
             // Set data context for binding
             DataContext = this;
@@ -102,12 +106,14 @@ namespace DeadEditor
 
         private void ShellWindow_Closing(object? sender, CancelEventArgs e)
         {
-            // Save window position
-            _settings.LibraryWindowLeft = Left;
-            _settings.LibraryWindowTop = Top;
-            _settings.LibraryWindowWidth = Width;
-            _settings.LibraryWindowHeight = Height;
-            _settings.Save();
+            // Load fresh settings to avoid overwriting changes made by other views
+            // (e.g., library paths changed in SettingsView since startup)
+            var freshSettings = LibrarySettings.Load();
+            freshSettings.LibraryWindowLeft = Left;
+            freshSettings.LibraryWindowTop = Top;
+            freshSettings.LibraryWindowWidth = Width;
+            freshSettings.LibraryWindowHeight = Height;
+            freshSettings.Save();
         }
 
         // ===== KEYBOARD SHORTCUTS =====
@@ -222,6 +228,18 @@ namespace DeadEditor
             else if (view is ReleasesView releasesView)
             {
                 HeaderBar.ShowReleasesHeader(releasesView);
+            }
+            else if (view is ConcertDetailView concertDetailView)
+            {
+                HeaderBar.ShowConcertDetailHeader(concertDetailView);
+            }
+            else if (view is EditSetlistView editSetlistView)
+            {
+                HeaderBar.ShowEditSetlistHeader(editSetlistView);
+            }
+            else if (view is ConcertDatabaseView concertsView)
+            {
+                HeaderBar.ShowConcertsHeader(concertsView);
             }
             else if (view is SettingsView)
             {
@@ -400,6 +418,9 @@ namespace DeadEditor
                 case "Releases":
                     NavigateToReleases();
                     break;
+                case "Concerts":
+                    NavigateToConcerts();
+                    break;
                 case "Settings":
                     NavigateToSettings();
                     break;
@@ -464,6 +485,91 @@ namespace DeadEditor
 
             _releasesView.LoadReleases();
             _navigationService.NavigateToRoot(_releasesView);
+        }
+
+        private void NavigateToConcerts()
+        {
+            if (_concertsView == null)
+            {
+                _concertsView = new ConcertDatabaseView();
+            }
+
+            _concertsView.LoadConcerts();
+            _navigationService.NavigateToRoot(_concertsView);
+        }
+
+        private void HeaderBar_ConcertsSearchChanged(object? sender, string searchText)
+        {
+            if (_concertsView != null)
+            {
+                _concertsView.ApplyFilter(searchText);
+                HeaderBar.UpdateConcertsCount(_concertsView.FilteredCount, _concertsView.TotalCount);
+            }
+        }
+
+        /// <summary>
+        /// Navigate to the Concert Detail view for a specific concert.
+        /// Called by ConcertDatabaseView on double-click.
+        /// </summary>
+        public void NavigateToConcertDetail(ConcertReference concert)
+        {
+            var detailView = new ConcertDetailView(this, concert);
+            _navigationService.NavigateTo(detailView, concert);
+        }
+
+        private void HeaderBar_EditSetlistRequested(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentContext is ConcertReference concert)
+            {
+                var editView = new EditSetlistView(this, concert);
+
+                editView.SaveCompleted += (s, args) =>
+                {
+                    // After save, navigate back happens inside EditSetlistView
+                    // The ConcertDetailView will be on the back stack and will show the updated data
+                };
+
+                _navigationService.NavigateTo(editView, concert);
+            }
+        }
+
+        private void HeaderBar_DeleteConcertRequested(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentContext is not ConcertReference concert)
+                return;
+
+            var result = System.Windows.MessageBox.Show(
+                $"Delete the setlist for {concert.Date}?\n\n" +
+                $"This will remove the concert JSON file from the database.",
+                "Delete Concert",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                var filePath = Path.Combine(ConcertLookupService.AppDataConcertsPath, $"{concert.Date}.json");
+                if (File.Exists(filePath))
+                {
+                    Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                        filePath,
+                        Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                        Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                }
+
+                // Navigate back to concerts grid
+                NavigateToConcerts();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(
+                    $"Error deleting concert:\n\n{ex.Message}",
+                    "Delete Failed",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void NavigateToSettings()

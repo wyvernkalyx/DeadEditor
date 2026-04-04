@@ -1,0 +1,303 @@
+{
+  "date": "1992-03-08",
+  "venue": "Capital Centre",
+  "city": "Landover",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "13d601dd",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1992/capital-centre-landover-md-13d601dd.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Good Times",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Touch of Grey",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Foolish Heart",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wave to the Wind",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "So Many Roads",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Quinn the Eskimo (The Mighty Quinn)",
+          "date": "1992-03-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Times",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Touch of Grey",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Black-Throated Wind",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loose Lucy",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Desolation Row",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Big Railroad Blues",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Music Never Stopped",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Samson and Delilah",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Way to Go Home",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Foolish Heart",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Looks Like Rain",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Wave to the Wind",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "All Along the Watchtower",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "So Many Roads",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Throwing Stones",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Not Fade Away",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Quinn the Eskimo (The Mighty Quinn)",
+      "date": "1992-03-08",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

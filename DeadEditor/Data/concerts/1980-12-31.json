@@ -1,0 +1,464 @@
+{
+  "date": "1980-12-31",
+  "venue": "Oakland Civic Auditorium",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3bd604f0",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/oakland-civic-auditorium-oakland-ca-3bd604f0.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1 (acoustic)",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I've Been All Around This World",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-12-31",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sunshine Daydream",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "(I Can't Get No) Satisfaction",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1980-12-31",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 2,
+      "songName": "On the Road Again",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 3,
+      "songName": "To Lay Me Down",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 4,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 5,
+      "songName": "Jack-A-Roe",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 6,
+      "songName": "Cassidy",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 7,
+      "songName": "I've Been All Around This World",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 8,
+      "songName": "The Race Is On",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 9,
+      "songName": "Bird Song",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 10,
+      "songName": "Ripple",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 1 (acoustic)"
+    },
+    {
+      "position": 11,
+      "songName": "Alabama Getaway",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Greatest Story Ever Told",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "They Love Each Other",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Little Red Rooster",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "China Cat Sunflower",
+      "date": "1980-12-31",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "I Know You Rider",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Looks Like Rain",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Althea",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Lost Sailor",
+      "date": "1980-12-31",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Saint of Circumstance",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Deal",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Sugar Magnolia",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 23,
+      "songName": "Scarlet Begonias",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 24,
+      "songName": "Fire on the Mountain",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 25,
+      "songName": "Estimated Prophet",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 26,
+      "songName": "Drums",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 27,
+      "songName": "Space",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 28,
+      "songName": "The Other One",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 29,
+      "songName": "Wharf Rat",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 30,
+      "songName": "Around and Around",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 31,
+      "songName": "Sunshine Daydream",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 32,
+      "songName": "(I Can't Get No) Satisfaction",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 33,
+      "songName": "Brokedown Palace",
+      "date": "1980-12-31",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

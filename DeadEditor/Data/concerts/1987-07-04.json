@@ -1,0 +1,215 @@
+{
+  "date": "1987-07-04",
+  "venue": "Sullivan Stadium",
+  "city": "Foxborough",
+  "state": "MA",
+  "country": "US",
+  "setlistFmId": "63d6063b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/sullivan-stadium-foxborough-ma-63d6063b.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hell in a Bucket",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tons of Steel",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "The Other One",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1987-07-04",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1987-07-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Touch of Grey",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Hell in a Bucket",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "West L.A. Fadeaway",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Tons of Steel",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "The Little Red Rooster",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Box of Rain",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Althea",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Uncle John's Band",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Playing in the Band",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Drums",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Space",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "The Other One",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Wharf Rat",
+      "date": "1987-07-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "Throwing Stones",
+      "date": "1987-07-04",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

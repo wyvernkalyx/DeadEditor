@@ -1,0 +1,407 @@
+{
+  "date": "1973-02-09",
+  "venue": "Maples Pavilion, Stanford University",
+  "city": "Stanford",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73d60ac5",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1973/maples-pavilion-stanford-university-stanford-ca-73d60ac5.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beer Barrel Polka",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Here Comes Sunshine",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "China Doll",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Big River",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Box of Rain",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wave That Flag",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1973-02-09",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Row Jimmy",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Black-Throated Wind",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Deal",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Sugaree",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Loose Lucy",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Beer Barrel Polka",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Mexicali Blues",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Brown-Eyed Women",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "El Paso",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Here Comes Sunshine",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Playing in the Band",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "China Cat Sunflower",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "I Know You Rider",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Jack Straw",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "They Love Each Other",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Truckin'",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Eyes of the World",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "China Doll",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Big River",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Ramble On Rose",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Box of Rain",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Wave That Flag",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Sugar Magnolia",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 27,
+      "songName": "Uncle John's Band",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 28,
+      "songName": "Around and Around",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 29,
+      "songName": "Casey Jones",
+      "date": "1973-02-09",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

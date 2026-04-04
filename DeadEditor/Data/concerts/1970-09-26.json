@@ -1,0 +1,129 @@
+{
+  "date": "1970-09-26",
+  "venue": "Terrace Ballroom",
+  "city": "Salt Lake City",
+  "state": "UT",
+  "country": "US",
+  "setlistFmId": "2bdc70ca",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/terrace-ballroom-salt-lake-city-ut-2bdc70ca.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "I Know You Rider",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Big Boss Man",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1970-09-26",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "I Know You Rider",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Ripple",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Candyman",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Friend of the Devil",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Big Boss Man",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 6,
+      "songName": "Uncle John's Band",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 7,
+      "songName": "Casey Jones",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 8,
+      "songName": "Morning Dew",
+      "date": "1970-09-26",
+      "segue": false,
+      "set": ""
+    }
+  ]
+}

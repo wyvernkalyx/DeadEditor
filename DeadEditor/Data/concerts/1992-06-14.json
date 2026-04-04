@@ -1,0 +1,264 @@
+{
+  "date": "1992-06-14",
+  "venue": "Giants Stadium",
+  "city": "East Rutherford",
+  "state": "NJ",
+  "country": "US",
+  "setlistFmId": "3d601bb",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1992/giants-stadium-east-rutherford-nj-3d601bb.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Spoonful",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Baba O'Riley",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tomorrow Never Knows",
+          "date": "1992-06-14",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Shakedown Street",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Walkin' Blues",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Candyman",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Desolation Row",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Jack-A-Roe",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Picasso Moon",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Don't Ease Me In",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Samson and Delilah",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Ship of Fools",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Way to Go Home",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Corrina",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Spoonful",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Other One",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Morning Dew",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Baba O'Riley",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 18,
+      "songName": "Tomorrow Never Knows",
+      "date": "1992-06-14",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "date": "1966-03-19",
+  "venue": "Carthay Studios",
+  "city": "Los Angeles",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73c7eabd",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/carthay-studios-los-angeles-ca-73c7eabd.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "See That My Grave Is Kept Clean",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You See a Broken Heart",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know It's a Sin",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Heads Up",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-03-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "See That My Grave Is Kept Clean",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "I Know You Rider",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "You See a Broken Heart",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "I Know It's a Sin",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Beat It on Down the Line",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Heads Up",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Next Time You See Me",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Jam",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Space",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "In the Midnight Hour",
+      "date": "1966-03-19",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

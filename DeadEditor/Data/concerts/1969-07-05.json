@@ -1,0 +1,168 @@
+{
+  "date": "1969-07-05",
+  "venue": "Kinetic Playground",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "73da6a5d",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/kinetic-playground-chicago-il-73da6a5d.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1969-07-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1969-07-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1969-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "High Time",
+          "date": "1969-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1969-07-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1969-07-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1969-07-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-07-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1969-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Dark Star",
+      "date": "1969-07-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "St. Stephen",
+      "date": "1969-07-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "The Eleven",
+      "date": "1969-07-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1969-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "China Cat Sunflower",
+      "date": "1969-07-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 7,
+      "songName": "High Time",
+      "date": "1969-07-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "Mama Tried",
+      "date": "1969-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Hard to Handle",
+      "date": "1969-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Casey Jones",
+      "date": "1969-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-07-05",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

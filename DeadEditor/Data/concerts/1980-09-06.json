@@ -1,0 +1,394 @@
+{
+  "date": "1980-09-06",
+  "venue": "Lewiston Fairgrounds",
+  "city": "Lewiston",
+  "state": "ME",
+  "country": "US",
+  "setlistFmId": "2bd6041e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/lewiston-fairgrounds-lewiston-me-2bd6041e.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set One",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set Two",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1980-09-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 3,
+      "songName": "Sugaree",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 7,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 8,
+      "songName": "Friend of the Devil",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 9,
+      "songName": "Far From Me",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 10,
+      "songName": "The Little Red Rooster",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 11,
+      "songName": "China Cat Sunflower",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 12,
+      "songName": "I Know You Rider",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 13,
+      "songName": "Promised Land",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 14,
+      "songName": "Shakedown Street",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 15,
+      "songName": "Lost Sailor",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 16,
+      "songName": "Saint of Circumstance",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 17,
+      "songName": "Althea",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 18,
+      "songName": "Playing in the Band",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 19,
+      "songName": "Uncle John's Band",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 20,
+      "songName": "Drums",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 21,
+      "songName": "Space",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 22,
+      "songName": "Not Fade Away",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 23,
+      "songName": "The Wheel",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 24,
+      "songName": "Uncle John's Band",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 25,
+      "songName": "Playing in the Band",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 26,
+      "songName": "Sugar Magnolia",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 27,
+      "songName": "One More Saturday Night",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 28,
+      "songName": "Brokedown Palace",
+      "date": "1980-09-06",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

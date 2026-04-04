@@ -1,0 +1,303 @@
+{
+  "date": "1966-07-16",
+  "venue": "Fillmore Auditorium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bdca500",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/fillmore-auditorium-san-francisco-ca-1bdca500.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "I Know You Rider",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Corner",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1966-07-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "In the Pines",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cardboard Cowboy",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Nobody's Fault but Mine",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1966-07-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Pain in My Heart",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1966-07-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-07-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1966-07-16",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-07-16",
+          "segue": false,
+          "info": "also with Joan Baez and Mimi Farina"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "I Know You Rider",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Big Boss Man",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Standing on the Corner",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1966-07-16",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "In the Pines",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Cardboard Cowboy",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Nobody's Fault but Mine",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Next Time You See Me",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "He Was a Friend of Mine",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Cream Puff War",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Viola Lee Blues",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Don't Ease Me In",
+      "date": "1966-07-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Pain in My Heart",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Minglewood Blues",
+      "date": "1966-07-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Sitting on Top of the World",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-07-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Good Morning, School Girl",
+      "date": "1966-07-16",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Dancing in the Street",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "In the Midnight Hour",
+      "date": "1966-07-16",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

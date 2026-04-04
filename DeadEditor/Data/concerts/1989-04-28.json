@@ -1,0 +1,290 @@
+{
+  "date": "1989-04-28",
+  "venue": "Irvine Meadows Amphitheatre",
+  "city": "Irvine",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "6bd606ae",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1989/irvine-meadows-amphitheatre-irvine-ca-6bd606ae.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Just a Little Light",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": "live debut"
+        },
+        {
+          "name": "Bird Song",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Crazy Fingers",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1989-04-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1989-04-28",
+          "segue": true,
+          "info": "> 'Playing in the Band' reprise >"
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Wheel",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Standing on the Moon",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Touch of Grey",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Quinn the Eskimo (The Mighty Quinn)",
+          "date": "1989-04-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "The Little Red Rooster",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Peggy-O",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Queen Jane Approximately",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Just a Little Light",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Ramble On Rose",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Picasso Moon",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Bird Song",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Crazy Fingers",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Playing in the Band",
+      "date": "1989-04-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Uncle John's Band",
+      "date": "1989-04-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Terrapin Station",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Wheel",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "I Need a Miracle",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Standing on the Moon",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Touch of Grey",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Quinn the Eskimo (The Mighty Quinn)",
+      "date": "1989-04-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

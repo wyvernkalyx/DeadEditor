@@ -1,0 +1,290 @@
+{
+  "date": "1983-04-13",
+  "venue": "Patrick Gymnasium",
+  "city": "Burlington",
+  "state": "VT",
+  "country": "US",
+  "setlistFmId": "53d60751",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/patrick-gymnasium-burlington-vt-53d60751.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Maybe You Know How I Feel",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1983-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "They Love Each Other",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Beat It on Down the Line",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "West L.A. Fadeaway",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Mama Tried",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Cumberland Blues",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Ramble On Rose",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Far From Me",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "My Brother Esau",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Might as Well",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Scarlet Begonias",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Fire on the Mountain",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Estimated Prophet",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Eyes of the World",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Maybe You Know How I Feel",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Morning Dew",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Throwing Stones",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Good Lovin'",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 20,
+      "songName": "Touch of Grey",
+      "date": "1983-04-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

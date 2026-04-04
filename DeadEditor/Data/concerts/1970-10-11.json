@@ -1,0 +1,176 @@
+{
+  "date": "1970-10-11",
+  "venue": "Shea Center for Performing Arts",
+  "city": "Wayne",
+  "state": "NJ",
+  "country": "US",
+  "setlistFmId": "73dc82a5",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/shea-center-for-performing-arts-wayne-nj-73dc82a5.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Till the Morning Comes",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1970-10-11",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Casey Jones",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "It Hurts Me Too",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Till the Morning Comes",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Dancing in the Street",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Candyman",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Sitting on Top of the World",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Morning Dew",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Dark Star",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "St. Stephen",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Not Fade Away",
+      "date": "1970-10-11",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1970-10-11",
+      "segue": true,
+      "set": "Set"
+    }
+  ]
+}

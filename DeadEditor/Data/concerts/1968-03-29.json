@@ -1,0 +1,137 @@
+{
+  "date": "1968-03-29",
+  "venue": "Carousel Ballroom",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13dca91d",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/carousel-ballroom-san-francisco-ca-13dca91d.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1968-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1968-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1968-03-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-03-29",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-03-29",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-03-29",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Born Cross-Eyed",
+          "date": "1968-03-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-03-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1968-03-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Sitting on Top of the World",
+      "date": "1968-03-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Dark Star",
+      "date": "1968-03-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Morning Dew",
+      "date": "1968-03-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-03-29",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "That's It for the Other One",
+      "date": "1968-03-29",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "New Potato Caboose",
+      "date": "1968-03-29",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Born Cross-Eyed",
+      "date": "1968-03-29",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

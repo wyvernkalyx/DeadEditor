@@ -1,0 +1,316 @@
+{
+  "date": "1976-06-03",
+  "venue": "Paramount Theatre",
+  "city": "Portland",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "1bd60548",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1976/paramount-theatre-portland-or-1bd60548.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Might as Well",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "live debut by GD"
+        },
+        {
+          "name": "Cassidy",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "live debut by GD"
+        },
+        {
+          "name": "Supplication",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "live debut by GD"
+        },
+        {
+          "name": "Candyman",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "first since 31 Dec. 1971"
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "live debut by GD"
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "with mini drum solo"
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Help on the Way",
+          "date": "1976-06-03",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1976-06-03",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "The Wheel",
+          "date": "1976-06-03",
+          "segue": false,
+          "info": "live debut by GD"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Might as Well",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Cassidy",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Row Jimmy",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Looks Like Rain",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "They Love Each Other",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Lazy Lightning",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Supplication",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Candyman",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Music Never Stopped",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Scarlet Begonias",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Dancing in the Street",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Samson and Delilah",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Crazy Fingers",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Wharf Rat",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Let It Grow",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "It Must Have Been the Roses",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Around and Around",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Help on the Way",
+      "date": "1976-06-03",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Slipknot!",
+      "date": "1976-06-03",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Franklin's Tower",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "One More Saturday Night",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "The Wheel",
+      "date": "1976-06-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

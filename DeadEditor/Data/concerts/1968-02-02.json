@@ -1,0 +1,98 @@
+{
+  "date": "1968-02-02",
+  "venue": "Crystal Ballroom",
+  "city": "Portland",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "33d03c05",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/crystal-ballroom-portland-or-33d03c05.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1968-02-02",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-02-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-02-02",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Clementine",
+          "date": "1968-02-02",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-02-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-02-02",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1968-02-02",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Feedback",
+      "date": "1968-02-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "That's It for the Other One",
+      "date": "1968-02-02",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Clementine",
+      "date": "1968-02-02",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-02-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Dark Star",
+      "date": "1968-02-02",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "date": "1970-04-10",
+  "venue": "Fillmore West",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "bc7d956",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-west-san-francisco-ca-bc7d956.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Ballad of Casey Jones",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wake Up, Little Susie",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's a Man's Man's Man's World",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Alligator",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1970-04-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "New Speedway Boogie",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "China Cat Sunflower",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "I Know You Rider",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Hard to Handle",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "The Ballad of Casey Jones",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Friend of the Devil",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Deep Elem Blues",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Candyman",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Wake Up, Little Susie",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Black Peter",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Uncle John's Band",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "It's a Man's Man's Man's World",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "Dancing in the Street",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 16,
+      "songName": "High Time",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 17,
+      "songName": "Alligator",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 18,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 19,
+      "songName": "And We Bid You Goodnight",
+      "date": "1970-04-10",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "date": "1971-10-24",
+  "venue": "Eastown Theatre",
+  "city": "Detroit",
+  "state": "MI",
+  "country": "US",
+  "setlistFmId": "4bda3312",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/eastown-theatre-detroit-mi-4bda3312.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-10-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Sugar Magnolia",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Deal",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "El Paso",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Jack Straw",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "China Cat Sunflower",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "I Know You Rider",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Playing in the Band",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "Black Peter",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "Candyman",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "One More Saturday Night",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 12,
+      "songName": "Casey Jones",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 13,
+      "songName": "Truckin'",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Ramble On Rose",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Mexicali Blues",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Dark Star",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Cumberland Blues",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "St. Stephen",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "Johnny B. Goode",
+      "date": "1971-10-24",
+      "segue": false,
+      "set": "Set II"
+    }
+  ]
+}

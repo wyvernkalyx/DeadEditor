@@ -1,0 +1,303 @@
+{
+  "date": "1983-04-16",
+  "venue": "Brendan Byrne Arena",
+  "city": "East Rutherford",
+  "state": "NJ",
+  "country": "US",
+  "setlistFmId": "43d60757",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/brendan-byrne-arena-east-rutherford-nj-43d60757.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Minglewood Blues",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Maybe You Know How I Feel",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "West L.A. Fadeaway",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Touch of Grey",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Queen",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": "First time since 1969"
+        },
+        {
+          "name": "Iko Iko",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Johnny B. Goode",
+          "date": "1983-04-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Minglewood Blues",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Tennessee Jed",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Bird Song",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Maybe You Know How I Feel",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "West L.A. Fadeaway",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "My Brother Esau",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "Looks Like Rain",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "Touch of Grey",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "China Cat Sunflower",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 12,
+      "songName": "I Know You Rider",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 13,
+      "songName": "Uncle John's Band",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Truckin'",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Black Queen",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Iko Iko",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "The Other One",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Black Peter",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "One More Saturday Night",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "Johnny B. Goode",
+      "date": "1983-04-16",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

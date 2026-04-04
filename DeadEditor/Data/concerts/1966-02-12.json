@@ -1,0 +1,46 @@
+{
+  "date": "1966-02-12",
+  "venue": "Youth Opportunities Center",
+  "city": "Compton",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63c7eabb",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/youth-opportunities-center-compton-ca-63c7eabb.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "New Orleans",
+          "date": "1966-02-12",
+          "segue": false,
+          "info": "partial"
+        },
+        {
+          "name": "Twist and Shout",
+          "date": "1966-02-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "New Orleans",
+      "date": "1966-02-12",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Twist and Shout",
+      "date": "1966-02-12",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

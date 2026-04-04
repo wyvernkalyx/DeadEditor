@@ -1,0 +1,303 @@
+{
+  "date": "1987-09-07",
+  "venue": "Providence Civic Center",
+  "city": "Providence",
+  "state": "RI",
+  "country": "US",
+  "setlistFmId": "73d60629",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1987/providence-civic-center-providence-ri-73d60629.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "When Push Comes to Shove",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Must Have Been the Roses",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "-> Playing in the Band jam ->"
+        },
+        {
+          "name": "Drums",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Spoonful",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Black Peter",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "La bamba",
+          "date": "1987-09-07",
+          "segue": true,
+          "info": "-> Good Lovin' reprise) (First time live since 1970"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1987-09-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Franklin's Tower",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Walkin' Blues",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "When Push Comes to Shove",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "My Brother Esau",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "It Must Have Been the Roses",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Far From Me",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Let It Grow",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Iko Iko",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Saint of Circumstance",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Truckin'",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Spoonful",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Black Peter",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Good Lovin'",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "La bamba",
+      "date": "1987-09-07",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1987-09-07",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

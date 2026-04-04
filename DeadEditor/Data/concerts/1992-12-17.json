@@ -1,0 +1,277 @@
+{
+  "date": "1992-12-17",
+  "venue": "Oakland-Alameda County Coliseum Arena",
+  "city": "Oakland",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3d601af",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1992/oakland-alameda-county-coliseum-arena-oakland-ca-3d601af.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "So Many Roads",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1992-12-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1992-12-17",
+          "segue": true,
+          "info": "> 'Playing in the Band' reprise >"
+        },
+        {
+          "name": "Drums",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Last Time",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Here Comes Sunshine",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Baba O'Riley",
+          "date": "1992-12-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Tomorrow Never Knows",
+          "date": "1992-12-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Touch of Grey",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Walkin' Blues",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Queen Jane Approximately",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "So Many Roads",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Music Never Stopped",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Scarlet Begonias",
+      "date": "1992-12-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "Fire on the Mountain",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Way to Go Home",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Corrina",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Uncle John's Band",
+      "date": "1992-12-17",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "The Last Time",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Here Comes Sunshine",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Throwing Stones",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Baba O'Riley",
+      "date": "1992-12-17",
+      "segue": true,
+      "set": "Encore"
+    },
+    {
+      "position": 19,
+      "songName": "Tomorrow Never Knows",
+      "date": "1992-12-17",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

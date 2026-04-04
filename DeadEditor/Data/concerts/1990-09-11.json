@@ -1,0 +1,316 @@
+{
+  "date": "1990-09-11",
+  "venue": "Spectrum",
+  "city": "Philadelphia",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "3d6014f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1990/spectrum-philadelphia-pa-3d6014f.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hell in a Bucket",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "He's Gone",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Spoonful",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Jam",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Wheel",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Black Peter",
+          "date": "1990-09-11",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Knockin' on Heaven's Door",
+          "date": "1990-09-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Bertha",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Greatest Story Ever Told",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Candyman",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Queen Jane Approximately",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Brown-Eyed Women",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "It's All Over Now",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Tennessee Jed",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Hell in a Bucket",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "China Cat Sunflower",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "I Know You Rider",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Looks Like Rain",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Spoonful",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Jam",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "The Wheel",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "I Need a Miracle",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Black Peter",
+      "date": "1990-09-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Around and Around",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Knockin' on Heaven's Door",
+      "date": "1990-09-11",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

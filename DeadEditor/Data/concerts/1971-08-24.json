@@ -1,0 +1,215 @@
+{
+  "date": "1971-08-24",
+  "venue": "Auditorium Theatre",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "2bdca4ca",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/auditorium-theatre-chicago-il-2bdca4ca.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Empty Pages",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1971-08-24",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1971-08-24",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Uncle John's Band",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Playing in the Band",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "It Hurts Me Too",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cumberland Blues",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Empty Pages",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Beat It on Down the Line",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Brown-Eyed Women",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "St. Stephen",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Not Fade Away",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1971-08-24",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Big Boss Man",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Brokedown Palace",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "Good Lovin'",
+      "date": "1971-08-24",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

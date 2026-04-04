@@ -1,0 +1,33 @@
+{
+  "date": "1968-12-01",
+  "venue": "Grande Ballroom",
+  "city": "Detroit",
+  "state": "MI",
+  "country": "US",
+  "setlistFmId": "6bdd82fa",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/grande-ballroom-detroit-mi-6bdd82fa.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "And We Bid You Goodnight",
+          "date": "1968-12-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "And We Bid You Goodnight",
+      "date": "1968-12-01",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

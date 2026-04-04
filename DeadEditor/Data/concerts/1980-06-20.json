@@ -1,0 +1,329 @@
+{
+  "date": "1980-06-20",
+  "venue": "West Anchorage High School Auditorium",
+  "city": "Anchorage",
+  "state": "AK",
+  "country": "US",
+  "setlistFmId": "33d60429",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/west-anchorage-high-school-auditorium-anchorage-ak-33d60429.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Althea",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy to Love You",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Deal",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Other One",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1980-06-20",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1980-06-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Franklin's Tower",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mama Tried",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Friend of the Devil",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Let It Grow",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Althea",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Easy to Love You",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Lost Sailor",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Saint of Circumstance",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Deal",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Alabama Getaway",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Greatest Story Ever Told",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Ship of Fools",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Estimated Prophet",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Drums",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Space",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Black Peter",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Around and Around",
+      "date": "1980-06-20",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Johnny B. Goode",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Don't Ease Me In",
+      "date": "1980-06-20",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

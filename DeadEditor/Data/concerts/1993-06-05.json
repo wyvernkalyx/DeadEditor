@@ -1,0 +1,277 @@
+{
+  "date": "1993-06-05",
+  "venue": "Giants Stadium",
+  "city": "East Rutherford",
+  "state": "NJ",
+  "country": "US",
+  "setlistFmId": "3d60183",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1993/giants-stadium-east-rutherford-nj-3d60183.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Hell in a Bucket",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Sugaree",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wang Dang Doodle",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eternity",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Easy Answers",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "live debut) (-> 'The Music Never Stopped' reprise"
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "The Other One",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1993-06-05",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1993-06-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hell in a Bucket",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Wang Dang Doodle",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Peggy-O",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Eternity",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Candyman",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "The Music Never Stopped",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Easy Answers",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Scarlet Begonias",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Fire on the Mountain",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Way to Go Home",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Crazy Fingers",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Estimated Prophet",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Other One",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Stella Blue",
+      "date": "1993-06-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "One More Saturday Night",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Box of Rain",
+      "date": "1993-06-05",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

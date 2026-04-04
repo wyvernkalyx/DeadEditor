@@ -1,0 +1,116 @@
+{
+  "date": "1969-02-21",
+  "venue": "The Dream Bowl",
+  "city": "Napa",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53dcab39",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/the-dream-bowl-napa-ca-53dcab39.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1969-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-02-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-02-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-02-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-02-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-02-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1969-02-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Morning, School Girl",
+      "date": "1969-02-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Doin' That Rag",
+      "date": "1969-02-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Dark Star",
+      "date": "1969-02-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "St. Stephen",
+      "date": "1969-02-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "The Eleven",
+      "date": "1969-02-21",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-02-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Morning Dew",
+      "date": "1969-02-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

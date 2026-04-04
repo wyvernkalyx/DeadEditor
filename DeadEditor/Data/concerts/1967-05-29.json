@@ -1,0 +1,72 @@
+{
+  "date": "1967-05-29",
+  "venue": "Napa Valley Expo",
+  "city": "Napa",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43c7e71b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/napa-valley-expo-napa-ca-43c7e71b.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Viola Lee Blues",
+          "date": "1967-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1967-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1967-05-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1967-05-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Viola Lee Blues",
+      "date": "1967-05-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1967-05-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Cold Rain and Snow",
+      "date": "1967-05-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Good Morning, School Girl",
+      "date": "1967-05-29",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "date": "1970-01-10",
+  "venue": "Community Concourse",
+  "city": "San Diego",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "1bdcb5c8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/community-concourse-san-diego-ca-1bdcb5c8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mason's Children",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-01-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "China Cat Sunflower",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Dire Wolf",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Hard to Handle",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Casey Jones",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Mason's Children",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Black Peter",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Good Lovin'",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Drums",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-01-10",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

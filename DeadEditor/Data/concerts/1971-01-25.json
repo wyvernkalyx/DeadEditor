@@ -1,0 +1,137 @@
+{
+  "date": "1971-01-25",
+  "venue": "Seattle Center Arena",
+  "city": "Seattle",
+  "state": "WA",
+  "country": "US",
+  "setlistFmId": "63c7a2ff",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/seattle-center-arena-seattle-wa-63c7a2ff.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1971-01-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Truckin'",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Hard to Handle",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "China Cat Sunflower",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "I Know You Rider",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Sugar Magnolia",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Good Lovin'",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Not Fade Away",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Turn On Your Love Light",
+      "date": "1971-01-25",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

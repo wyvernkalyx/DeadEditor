@@ -1,0 +1,311 @@
+{
+  "date": "1970-11-11",
+  "venue": "46th St. Rock Palace",
+  "city": "Brooklyn",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "13dcfd75",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/46th-st-rock-palace-brooklyn-ny-13dcfd75.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Good Lovin'",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "La bamba",
+          "date": "1970-11-11",
+          "segue": true,
+          "info": "> 'Good Lovin' reprise"
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "John's Other",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": "with Jack Casady, Jorma Kaukonen and Papa John Creach"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": "with Jack Casady, Jorma Kaukonen and Papa John Creach"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": "with Jack Casady, Jorma Kaukonen and Papa John Creach"
+        },
+        {
+          "name": "Hey! Bo Diddley",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": "with Jack Casady, Jorma Kaukonen and Papa John Creach"
+        },
+        {
+          "name": "Jam",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": "with Jack Casady, Jorma Kaukonen and Papa John Creach"
+        },
+        {
+          "name": "Jam",
+          "date": "1970-11-11",
+          "segue": false,
+          "info": "with Jack Casady, Jorma Kaukonen and Papa John Creach"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Casey Jones",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Me and My Uncle",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "China Cat Sunflower",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "I Know You Rider",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Big Railroad Blues",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Mama Tried",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "It Hurts Me Too",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "That's It for the Other One",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Sugar Magnolia",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Hard to Handle",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Good Lovin'",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "La bamba",
+      "date": "1970-11-11",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Cumberland Blues",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "John's Other",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Hey! Bo Diddley",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Jam",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Jam",
+      "date": "1970-11-11",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

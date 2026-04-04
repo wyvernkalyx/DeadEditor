@@ -1,0 +1,277 @@
+{
+  "date": "1977-10-06",
+  "venue": "ASU Activity Center",
+  "city": "Tempe",
+  "state": "AZ",
+  "country": "US",
+  "setlistFmId": "3d605ff",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/asu-activity-center-tempe-az-3d605ff.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1977-10-06",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1977-10-06",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1977-10-06",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1977-10-06",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1977-10-06",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Black Peter",
+          "date": "1977-10-06",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise >"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1977-10-06",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Tennessee Jed",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Jack Straw",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Dire Wolf",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Looks Like Rain",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loser",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Minglewood Blues",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "They Love Each Other",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "The Music Never Stopped",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Bertha",
+      "date": "1977-10-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Good Lovin'",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Friend of the Devil",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Estimated Prophet",
+      "date": "1977-10-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Eyes of the World",
+      "date": "1977-10-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1977-10-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Not Fade Away",
+      "date": "1977-10-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Black Peter",
+      "date": "1977-10-06",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Uncle John's Band",
+      "date": "1977-10-06",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

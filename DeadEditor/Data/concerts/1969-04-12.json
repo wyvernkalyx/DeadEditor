@@ -1,0 +1,155 @@
+{
+  "date": "1969-04-12",
+  "venue": "Student Union Ballroom, University of Utah",
+  "city": "Salt Lake City",
+  "state": "UT",
+  "country": "US",
+  "setlistFmId": "4bda6b96",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/student-union-ballroom-university-of-utah-salt-lake-city-ut-4bda6b96.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1969-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1969-04-12",
+          "segue": false,
+          "info": "with the Yellow Dog Story"
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-04-12",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1969-04-12",
+          "segue": false,
+          "info": "original title: Just a Hand to Hold"
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-04-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Dark Star",
+          "date": "1969-04-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-04-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-04-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-04-12",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1969-04-12",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1969-04-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Good Morning, School Girl",
+      "date": "1969-04-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Doin' That Rag",
+      "date": "1969-04-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "He Was a Friend of Mine",
+      "date": "1969-04-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "That's It for the Other One",
+      "date": "1969-04-12",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Dark Star",
+      "date": "1969-04-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 7,
+      "songName": "St. Stephen",
+      "date": "1969-04-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 8,
+      "songName": "The Eleven",
+      "date": "1969-04-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-04-12",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Feedback",
+      "date": "1969-04-12",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

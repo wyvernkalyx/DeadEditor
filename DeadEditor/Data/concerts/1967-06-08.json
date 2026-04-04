@@ -1,0 +1,34 @@
+{
+  "date": "1967-06-08",
+  "venue": "Bandshell on the Mall",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "53c7e715",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/bandshell-on-the-mall-new-york-ny-53c7e715.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Dancing in the Street",
+          "date": "1967-06-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dancing in the Street",
+      "date": "1967-06-08",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

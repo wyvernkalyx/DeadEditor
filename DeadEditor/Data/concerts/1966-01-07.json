@@ -1,0 +1,189 @@
+{
+  "date": "1966-01-07",
+  "venue": "The Matrix",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63c7eac3",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/the-matrix-san-francisco-ca-63c7eac3.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "I Know It's a Sin",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sick and Tired",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mindbender (Confusion's Prince)",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "She Belongs to Me",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'll Go Crazy",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Can't Come Down",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Parchman Farm",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Only Time Is Now",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Early Morning Rain",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1966-01-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "I Know It's a Sin",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Sick and Tired",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Mindbender (Confusion's Prince)",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "On the Road Again",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "She Belongs to Me",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "I'll Go Crazy",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Can't Come Down",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Parchman Farm",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "In the Midnight Hour",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "The Only Time Is Now",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Early Morning Rain",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1966-01-07",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

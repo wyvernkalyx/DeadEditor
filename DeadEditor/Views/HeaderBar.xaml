@@ -550,6 +550,253 @@
             </StackPanel>
         </Grid>
 
+        <!-- Concerts Header: "Concerts  {count} shows  [Search...]" -->
+        <Grid x:Name="ConcertsHeader" Height="50" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <TextBlock Text="Concerts"
+                           Foreground="#E0E0E0"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock x:Name="ConcertsCountText"
+                           Text="0 shows"
+                           Foreground="#888888"
+                           FontSize="16"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"/>
+
+                <!-- Search Box -->
+                <Grid Margin="16,0,0,0">
+                    <TextBox x:Name="ConcertsSearchBox"
+                             Width="280"
+                             FontSize="14"
+                             Padding="8,6,28,6"
+                             VerticalAlignment="Center"
+                             Background="#3E3E42"
+                             Foreground="#E0E0E0"
+                             BorderBrush="#555555"
+                             BorderThickness="1"
+                             TextChanged="ConcertsSearchBox_TextChanged">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="CaretBrush" Value="#E0E0E0"/>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock x:Name="ConcertsSearchPlaceholder"
+                               Text="Search date, venue, city, or song..."
+                               Foreground="#777777"
+                               FontSize="14"
+                               IsHitTestVisible="False"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0"/>
+                    <Button x:Name="ConcertsClearSearchButton"
+                            Content="&#x2715;"
+                            Click="ConcertsClearSearchButton_Click"
+                            Visibility="Collapsed"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,4,0"
+                            Width="24" Height="24"
+                            FontSize="12"
+                            Cursor="Hand"
+                            ToolTip="Clear search">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="#999999"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="3">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#555555"/>
+                                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <!-- Concert Detail Header: "[← Concerts]  {date}  [Edit Setlist]  [Delete]" -->
+        <Grid x:Name="ConcertDetailHeader" Height="50" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Button x:Name="ConcertDetailBackButton"
+                        Click="ConcertDetailBackButton_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        Content="← Concerts"
+                        Margin="0,0,20,0"/>
+
+                <TextBlock x:Name="ConcertDetailDateText"
+                           Text=""
+                           Foreground="#E0E0E0"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                <Button x:Name="EditSetlistButton"
+                        Content="Edit Setlist"
+                        Click="EditSetlistButton_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        FontSize="16"
+                        Margin="0,0,8,0"/>
+
+                <Button x:Name="DeleteConcertButton"
+                        Content="Delete"
+                        Click="DeleteConcertButton_Click"
+                        FontSize="16"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        MinHeight="36">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#442222"/>
+                            <Setter Property="Foreground" Value="#CC6666"/>
+                            <Setter Property="BorderBrush" Value="#663333"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#662222"/>
+                                                <Setter Property="Foreground" Value="#FF8888"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Edit Setlist Header: "[← Venue]  Editing Setlist  [Save Changes]  [Cancel]" -->
+        <Grid x:Name="EditSetlistHeader" Height="50" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Button x:Name="EditSetlistBackButton"
+                        Click="EditSetlistBackButton_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        Margin="0,0,20,0"/>
+
+                <TextBlock Text="Editing Setlist"
+                           Foreground="#E0E0E0"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                <Button x:Name="SaveSetlistButton"
+                        Content="Save Changes"
+                        Click="SaveSetlistButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        MinHeight="36"
+                        Margin="0,0,10,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#0E7A0D"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Setter Property="BorderBrush" Value="#13A10E"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#13A10E"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="CancelSetlistButton"
+                        Content="Cancel"
+                        Click="CancelSetlistButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="16"
+                        MinHeight="36">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#3E3E42"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="BorderBrush" Value="#555555"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#555555"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+
         <!-- Placeholder Header -->
         <Grid x:Name="PlaceholderHeader" Height="50" Visibility="Visible">
             <TextBlock x:Name="PlaceholderText"

@@ -1,0 +1,59 @@
+{
+  "date": "1968-08-04",
+  "venue": "Orange County Fairgrounds",
+  "city": "Costa Mesa",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "33c7dcb9",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/orange-county-fairgrounds-costa-mesa-ca-33c7dcb9.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Alligator",
+          "date": "1968-08-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1968-08-04",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-08-04",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alligator",
+      "date": "1968-08-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1968-08-04",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Feedback",
+      "date": "1968-08-04",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

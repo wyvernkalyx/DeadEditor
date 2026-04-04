@@ -1,0 +1,85 @@
+{
+  "date": "1965-05-05",
+  "venue": "Magoo's Pizza Parlor",
+  "city": "Menlo Park",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "43dbbf43",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1965/magoos-pizza-parlor-menlo-park-ca-43dbbf43.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1965-05-05",
+          "segue": false,
+          "info": "Earliest known performance"
+        },
+        {
+          "name": "Stealin', Stealin'",
+          "date": "1965-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1965-05-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Off the Hook",
+          "date": "1965-05-05",
+          "segue": false,
+          "info": "First known performance"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1965-05-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1965-05-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Stealin', Stealin'",
+      "date": "1965-05-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "The Little Red Rooster",
+      "date": "1965-05-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Off the Hook",
+      "date": "1965-05-05",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Good Lovin'",
+      "date": "1965-05-05",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

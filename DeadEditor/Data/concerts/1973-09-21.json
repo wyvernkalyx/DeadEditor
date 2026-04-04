@@ -1,0 +1,303 @@
+{
+  "date": "1973-09-21",
+  "venue": "Spectrum",
+  "city": "Philadelphia",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "6bd60a92",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1973/spectrum-philadelphia-pa-6bd60a92.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Big Railroad Blues",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Here Comes Sunshine",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "He's Gone",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let Me Sing Your Blues Away",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": "with Martin Fierro and Joe Ellis, horns"
+        },
+        {
+          "name": "Weather Report Suite",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": "with Martin Fierro and Joe Ellis, horns"
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": "with Martin Fierro and Joe Ellis, horns"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1973-09-21",
+          "segue": false,
+          "info": "with Martin Fierro and Joe Ellis, horns"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Big Railroad Blues",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Me and My Uncle",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Brown-Eyed Women",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Beat It on Down the Line",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Sugaree",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Big River",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Here Comes Sunshine",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "El Paso",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Loose Lucy",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Jack Straw",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Black Peter",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Playing in the Band",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Truckin'",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "The Other One",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Wharf Rat",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Row Jimmy",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Let Me Sing Your Blues Away",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Weather Report Suite",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "One More Saturday Night",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Casey Jones",
+      "date": "1973-09-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

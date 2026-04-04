@@ -1,0 +1,111 @@
+{
+  "date": "1969-01-17",
+  "venue": "Robertson Gymnasium",
+  "city": "University of California Santa Barbara Campus",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "4bc7dfe2",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/robertson-gymnasium-university-of-california-santa-barbara-campus-ca-4bc7dfe2.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1969-01-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-01-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-01-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1969-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-01-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1969-01-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Dark Star",
+      "date": "1969-01-17",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "St. Stephen",
+      "date": "1969-01-17",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "The Eleven",
+      "date": "1969-01-17",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1969-01-17",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "That's It for the Other One",
+      "date": "1969-01-17",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Cosmic Charlie",
+      "date": "1969-01-17",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

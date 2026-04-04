@@ -1,0 +1,124 @@
+{
+  "date": "1969-09-29",
+  "venue": "Cafe au Go-Go",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "6bc7de02",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/cafe-au-go-go-new-york-ny-6bc7de02.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Seven",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1969-09-29",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1969-09-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "He Was a Friend of Mine",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Doin' That Rag",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "The Seven",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Good Lovin'",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Drums",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Good Lovin'",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "St. Stephen",
+      "date": "1969-09-29",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "The Eleven",
+      "date": "1969-09-29",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

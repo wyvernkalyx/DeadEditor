@@ -1,0 +1,33 @@
+{
+  "date": "1966-05-07",
+  "venue": "Harmon Gym",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "73c7eab5",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/harmon-gym-berkeley-ca-73c7eab5.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-05-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "In the Midnight Hour",
+      "date": "1966-05-07",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

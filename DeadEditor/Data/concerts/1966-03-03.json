@@ -1,0 +1,242 @@
+{
+  "date": "1966-03-03",
+  "venue": "A.I.A.A. Hall",
+  "city": "Los Angeles",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bc7eab8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/aiaa-hall-los-angeles-ca-7bc7eab8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Cream Puff War",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Teddy Bear Picnic",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tastebud",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Silver Threads and Golden Needles",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "On the Road Again",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hey Little One",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Caution (Do Not Stop on Tracks)",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stealin', Stealin'",
+          "date": "1966-03-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cream Puff War",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Teddy Bear Picnic",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Sitting on Top of the World",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Minglewood Blues",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Tastebud",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Silver Threads and Golden Needles",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Good Lovin'",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "On the Road Again",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Next Time You See Me",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "I Know You Rider",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Hey Little One",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "I'm a King Bee",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 16,
+      "songName": "Caution (Do Not Stop on Tracks)",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 17,
+      "songName": "Stealin', Stealin'",
+      "date": "1966-03-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}

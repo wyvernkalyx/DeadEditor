@@ -1,0 +1,277 @@
+{
+  "date": "1995-06-25",
+  "venue": "Robert F. Kennedy Memorial Stadium",
+  "city": "Washington",
+  "state": "DC",
+  "country": "US",
+  "setlistFmId": "33d600e9",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1995/robert-f-kennedy-memorial-stadium-washington-dc-33d600e9.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wang Dang Doodle",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": "Bobby on acoustic guitar"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": "Bobby on acoustic guitar"
+        },
+        {
+          "name": "Loose Lucy",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Picasso Moon",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rain",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Roll and Tumble Blues",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samba in the Rain",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1995-06-25",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Shakedown Street",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Wang Dang Doodle",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Jack-A-Roe",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mama Tried",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mexicali Blues",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Loose Lucy",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Picasso Moon",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Box of Rain",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Rain",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Samson and Delilah",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Roll and Tumble Blues",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Samba in the Rain",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Wharf Rat",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Brokedown Palace",
+      "date": "1995-06-25",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

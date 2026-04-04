@@ -1,0 +1,277 @@
+{
+  "date": "1986-04-13",
+  "venue": "Irvine Meadows Amphitheatre",
+  "city": "Irvine",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "4bd60786",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1986/irvine-meadows-amphitheatre-irvine-ca-4bd60786.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": "Jam) (>"
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lady With a Fan",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Don't Need Love",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Black Peter",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1986-04-13",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Box of Rain",
+          "date": "1986-04-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Iko Iko",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Minglewood Blues",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Peggy-O",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Desolation Row",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Supplication",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Let It Grow",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "China Cat Sunflower",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "I Know You Rider",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Looks Like Rain",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Lady With a Fan",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Don't Need Love",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "I Need a Miracle",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Black Peter",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Throwing Stones",
+      "date": "1986-04-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Turn On Your Love Light",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Box of Rain",
+      "date": "1986-04-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

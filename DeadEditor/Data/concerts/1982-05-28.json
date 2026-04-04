@@ -1,0 +1,194 @@
+{
+  "date": "1982-05-28",
+  "venue": "Moscone Center",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "3bd60480",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1982/moscone-center-san-francisco-ca-3bd60480.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Walkin' Blues",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "All Over Again",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": "live debut by GD"
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1982-05-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Althea",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "The Little Red Rooster",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Tennessee Jed",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Truckin'",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Drums",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Not Fade Away",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Walkin' Blues",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 11,
+      "songName": "All Over Again",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 12,
+      "songName": "Turn On Your Love Light",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 13,
+      "songName": "Johnny B. Goode",
+      "date": "1982-05-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

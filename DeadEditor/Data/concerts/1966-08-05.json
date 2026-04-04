@@ -1,0 +1,33 @@
+{
+  "date": "1966-08-05",
+  "venue": "Pender Auditorium",
+  "city": "Vancouver",
+  "state": "BC",
+  "country": "CA",
+  "setlistFmId": "63eff227",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/pender-auditorium-vancouver-bc-canada-63eff227.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-08-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "In the Midnight Hour",
+      "date": "1966-08-05",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

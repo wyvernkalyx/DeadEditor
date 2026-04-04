@@ -1,0 +1,46 @@
+{
+  "date": "1967-07-23",
+  "venue": "Straight Theater",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bc7e7e0",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/straight-theater-san-francisco-ca-5bc7e7e0.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1967-07-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jam",
+          "date": "1967-07-23",
+          "segue": false,
+          "info": "followed by \"Turn On Your Love Light\" reprise"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Turn On Your Love Light",
+      "date": "1967-07-23",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Jam",
+      "date": "1967-07-23",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

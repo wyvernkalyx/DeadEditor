@@ -1,0 +1,438 @@
+{
+  "date": "1980-10-11",
+  "venue": "The Warfield",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "33d60409",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/the-warfield-san-francisco-ca-33d60409.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1: Acoustic",
+      "songs": [
+        {
+          "name": "Dire Wolf",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deep Elem Blues",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Doll",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Heaven Help the Fool",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Oh Babe It Ain't No Lie",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Passenger",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 3",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1980-10-11",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dire Wolf",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "Dark Hollow",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "Rosa Lee McFall",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Cassidy",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Deep Elem Blues",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "The Monkey and the Engineer",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "China Doll",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "Heaven Help the Fool",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "Oh Babe It Ain't No Lie",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 10,
+      "songName": "Ripple",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 11,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "They Love Each Other",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Mama Tried",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Mexicali Blues",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Loser",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Passenger",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Ramble On Rose",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Looks Like Rain",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Althea",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Lost Sailor",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Saint of Circumstance",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "China Cat Sunflower",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 23,
+      "songName": "I Know You Rider",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 24,
+      "songName": "Let It Grow",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 25,
+      "songName": "Drums",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 26,
+      "songName": "Space",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 27,
+      "songName": "Not Fade Away",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 28,
+      "songName": "Wharf Rat",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 29,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 30,
+      "songName": "One More Saturday Night",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Set 3"
+    },
+    {
+      "position": 31,
+      "songName": "Brokedown Palace",
+      "date": "1980-10-11",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

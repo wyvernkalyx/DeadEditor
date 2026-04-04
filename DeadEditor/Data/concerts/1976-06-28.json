@@ -1,0 +1,259 @@
+{
+  "date": "1976-06-28",
+  "venue": "Auditorium Theatre",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "3d6053f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1976/auditorium-theatre-chicago-il-3d6053f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "They Love Each Other",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Supplication",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Eyes of the World",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Happiness is Drumming",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Wheel",
+          "date": "1976-06-28",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1976-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "They Love Each Other",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Cassidy",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Looks Like Rain",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Scarlet Begonias",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Lazy Lightning",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Supplication",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "High Time",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "The Music Never Stopped",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Eyes of the World",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Happiness is Drumming",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Wharf Rat",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Dancing in the Street",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Wheel",
+      "date": "1976-06-28",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Around and Around",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1976-06-28",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "date": "1967-07-18",
+  "venue": "Portland Masonic Temple",
+  "city": "Portland",
+  "state": "OR",
+  "country": "US",
+  "setlistFmId": "5bc7e7e8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1967/portland-masonic-temple-portland-or-5bc7e7e8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "The Golden Road (to Unlimited Devotion)",
+          "date": "1967-07-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1967-07-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1967-07-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1967-07-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1967-07-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1967-07-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Golden Road (to Unlimited Devotion)",
+      "date": "1967-07-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Turn On Your Love Light",
+      "date": "1967-07-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Morning Dew",
+      "date": "1967-07-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Good Morning, School Girl",
+      "date": "1967-07-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Cold Rain and Snow",
+      "date": "1967-07-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Minglewood Blues",
+      "date": "1967-07-18",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

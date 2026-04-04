@@ -1,0 +1,116 @@
+{
+  "date": "1970-10-16",
+  "venue": "Irvine Auditorium",
+  "city": "Philadelphia",
+  "state": "PA",
+  "country": "US",
+  "setlistFmId": "6bc7a23e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/irvine-auditorium-philadelphia-pa-6bc7a23e.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Ballad of Casey Jones",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-10-16",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "The Ballad of Casey Jones",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "St. Stephen",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Not Fade Away",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Good Lovin'",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Uncle John's Band",
+      "date": "1970-10-16",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

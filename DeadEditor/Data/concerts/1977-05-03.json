@@ -1,0 +1,316 @@
+{
+  "date": "1977-05-03",
+  "venue": "The Palladium",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "bd60512",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1977/the-palladium-new-york-ny-bd60512.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bertha",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ship of Fools",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Might as Well",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1977-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Bertha",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Peggy-O",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Jack Straw",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Row Jimmy",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "Lazy Lightning",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Supplication",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "Deal",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "Good Lovin'",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "Ship of Fools",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 12,
+      "songName": "The Music Never Stopped",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 13,
+      "songName": "Might as Well",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 14,
+      "songName": "Estimated Prophet",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Sugaree",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Samson and Delilah",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Friend of the Devil",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Eyes of the World",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Wharf Rat",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "Not Fade Away",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "Around and Around",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 22,
+      "songName": "Uncle John's Band",
+      "date": "1977-05-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

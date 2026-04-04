@@ -1,0 +1,264 @@
+{
+  "date": "1983-09-08",
+  "venue": "Red Rocks Amphitheatre",
+  "city": "Morrison",
+  "state": "CO",
+  "country": "US",
+  "setlistFmId": "43d60737",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/red-rocks-amphitheatre-morrison-co-43d60737.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hell in a Bucket",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1983-09-08",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Shakedown Street",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Mama Tried",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Big River",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Hell in a Bucket",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Brown-Eyed Women",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Scarlet Begonias",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 10,
+      "songName": "Fire on the Mountain",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Estimated Prophet",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Terrapin Station",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Throwing Stones",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Black Peter",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Around and Around",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Good Lovin'",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1983-09-08",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

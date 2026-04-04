@@ -1,0 +1,277 @@
+{
+  "date": "1983-04-10",
+  "venue": "WVU Coliseum",
+  "city": "Morgantown",
+  "state": "WV",
+  "country": "US",
+  "setlistFmId": "43d60753",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/wvu-coliseum-morgantown-wv-43d60753.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Samson and Delilah",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "The Wheel",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": "> \"Playing in the Band\" reprise >"
+        },
+        {
+          "name": "China Doll",
+          "date": "1983-04-10",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1983-04-10",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Samson and Delilah",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Friend of the Devil",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Me and My Uncle",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Mexicali Blues",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Althea",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "The Little Red Rooster",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Tennessee Jed",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "My Brother Esau",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Might as Well",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Touch of Grey",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "The Wheel",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "China Doll",
+      "date": "1983-04-10",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "U.S. Blues",
+      "date": "1983-04-10",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

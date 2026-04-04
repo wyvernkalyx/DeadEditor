@@ -1,0 +1,269 @@
+{
+  "date": "2015-07-05",
+  "venue": "Soldier Field",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "4bf6af3e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/2015/soldier-field-chicago-il-4bf6af3e.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "China Cat Sunflower",
+          "date": "2015-07-05",
+          "segue": true,
+          "info": "Trey Anastasio and Bruce Hornsby on lead vocals) (>"
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Trey Anastasio, Phil Lesh,  Bob Weir, Bruce Hornsby on lead vocals"
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Bob Weir on lead vocals"
+        },
+        {
+          "name": "Built to Last",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "First time since 1990. Bruce Hornsby on lead vocals"
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Bob Weir on lead vocals"
+        },
+        {
+          "name": "Mountains of the Moon",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "First time since 1969. Phil Lesh on lead vocals"
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Bob Weir on lead vocals, with updated lyrics on today's socio-political climate"
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Bob Weir on lead vocals"
+        },
+        {
+          "name": "Cassidy",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Bob Weir on lead vocals"
+        },
+        {
+          "name": "Althea",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Trey Anastasio on lead vocals"
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "2015-07-05",
+          "segue": true,
+          "info": "Phil Lesh, Bob Weir share lead vocals) (>"
+        },
+        {
+          "name": "Drums",
+          "date": "2015-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "2015-07-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Unbroken Chain",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Phil Lesh on lead vocals) (First time since 1995"
+        },
+        {
+          "name": "Days Between",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Bob Weir on lead vocals"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Trey Anastasio, Phil Lesh, Bob Weir, Bruce Hornsby together on lead vocals"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Trey Anastasio, Bruce Hornsby, Bob Weir share lead vocals"
+        }
+      ]
+    },
+    {
+      "name": "Encore 2",
+      "songs": [
+        {
+          "name": "Attics of My Life",
+          "date": "2015-07-05",
+          "segue": false,
+          "info": "Trey Anastasio, Phil Lesh, Bob Weir, Bruce Hornsby on lead vocals, with Bobby on acoustic guitar"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "China Cat Sunflower",
+      "date": "2015-07-05",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Estimated Prophet",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Built to Last",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Samson and Delilah",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Mountains of the Moon",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Throwing Stones",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Truckin'",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 9,
+      "songName": "Cassidy",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Althea",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Terrapin Station",
+      "date": "2015-07-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "2015-07-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Space",
+      "date": "2015-07-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Unbroken Chain",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Days Between",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Not Fade Away",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Touch of Grey",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 18,
+      "songName": "Attics of My Life",
+      "date": "2015-07-05",
+      "segue": false,
+      "set": "Encore 2"
+    }
+  ]
+}

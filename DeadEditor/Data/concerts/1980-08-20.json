@@ -1,0 +1,303 @@
+{
+  "date": "1980-08-20",
+  "venue": "Uptown Theater",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "2bd60422",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/uptown-theater-chicago-il-2bd60422.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Jack Straw",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Far From Me",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Terrapin Station",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1980-08-20",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Jack Straw",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Loser",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Beat It on Down the Line",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Ramble On Rose",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "El Paso",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Big Railroad Blues",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Far From Me",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Let It Grow",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Deal",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Greatest Story Ever Told",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Althea",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Lost Sailor",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Saint of Circumstance",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Terrapin Station",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Space",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Not Fade Away",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Morning Dew",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 20,
+      "songName": "Good Lovin'",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 21,
+      "songName": "U.S. Blues",
+      "date": "1980-08-20",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

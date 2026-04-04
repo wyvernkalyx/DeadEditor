@@ -1,0 +1,303 @@
+{
+  "date": "1982-08-03",
+  "venue": "Starlight Theater",
+  "city": "Kansas City",
+  "state": "MO",
+  "country": "US",
+  "setlistFmId": "43d6077f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1982/starlight-theater-kansas-city-mo-43d6077f.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": "Peggy-O"
+        },
+        {
+          "name": "El Paso",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cassidy",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Might as Well",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Shakedown Street",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Samson and Delilah",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "To Lay Me Down",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1982-08-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Franklin's Tower",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Minglewood Blues",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Peggy-O",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "El Paso",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Cumberland Blues",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Althea",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Cassidy",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Big Railroad Blues",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Might as Well",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Shakedown Street",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Samson and Delilah",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "To Lay Me Down",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Let It Grow",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Drums",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "He's Gone",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "The Other One",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Stella Blue",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 20,
+      "songName": "Sugar Magnolia",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 21,
+      "songName": "Casey Jones",
+      "date": "1982-08-03",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "date": "1983-06-28",
+  "venue": "Poplar Creek Music Theater",
+  "city": "Hoffman Estates",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "53d60745",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1983/poplar-creek-music-theater-hoffman-estates-il-53d60745.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Little Red Rooster",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Help on the Way",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Slipknot!",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Franklin's Tower",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Man Smart, Woman Smarter",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Throwing Stones",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Iko Iko",
+          "date": "1983-06-28",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Feel Like a Stranger",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Dire Wolf",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "It's All Over Now",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Brown-Eyed Women",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "The Little Red Rooster",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Looks Like Rain",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Deal",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Help on the Way",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 10,
+      "songName": "Slipknot!",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 11,
+      "songName": "Franklin's Tower",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 12,
+      "songName": "Man Smart, Woman Smarter",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "He's Gone",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Throwing Stones",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Not Fade Away",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Stella Blue",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "Sugar Magnolia",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Iko Iko",
+      "date": "1983-06-28",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "date": "1989-07-15",
+  "venue": "Deer Creek Music Center",
+  "city": "Noblesville",
+  "state": "IN",
+  "country": "US",
+  "setlistFmId": "6bd6069e",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1989/deer-creek-music-center-noblesville-in-6bd6069e.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Peggy-O",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "We Can Run",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Bird Song",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Foolish Heart",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Victim or the Crime",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Crazy Fingers",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Smokestack Lightning",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Space",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": "with \"Close Encounters of the Third Kind\" theme) (>"
+        },
+        {
+          "name": "China Doll",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "All Along the Watchtower",
+          "date": "1989-07-15",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Stella Blue",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Brokedown Palace",
+          "date": "1989-07-15",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Greatest Story Ever Told",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Candyman",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Walkin' Blues",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Peggy-O",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Queen Jane Approximately",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "We Can Run",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Bird Song",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Foolish Heart",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Victim or the Crime",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Crazy Fingers",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Truckin'",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Smokestack Lightning",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "China Doll",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "All Along the Watchtower",
+      "date": "1989-07-15",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Stella Blue",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Sugar Magnolia",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Brokedown Palace",
+      "date": "1989-07-15",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

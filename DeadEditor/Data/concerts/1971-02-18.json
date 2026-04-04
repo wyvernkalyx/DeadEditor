@@ -1,0 +1,298 @@
+{
+  "date": "1971-02-18",
+  "venue": "Capitol Theatre",
+  "city": "Port Chester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "7bc7a2fc",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/capitol-theatre-port-chester-ny-7bc7a2fc.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Truckin'",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Greatest Story Ever Told",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1971-02-18",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1971-02-18",
+          "segue": true,
+          "info": "Live debut) (> Dark Star reprise"
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": "Live debut"
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1971-02-18",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1971-02-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Truckin'",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "It Hurts Me Too",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Loser",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Greatest Story Ever Told",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Johnny B. Goode",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Mama Tried",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Hard to Handle",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Dark Star",
+      "date": "1971-02-18",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Wharf Rat",
+      "date": "1971-02-18",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Me and My Uncle",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Casey Jones",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Playing in the Band",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Candyman",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Big Boss Man",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Sugar Magnolia",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "St. Stephen",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Not Fade Away",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1971-02-18",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Uncle John's Band",
+      "date": "1971-02-18",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

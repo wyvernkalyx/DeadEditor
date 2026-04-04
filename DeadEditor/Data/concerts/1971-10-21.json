@@ -1,0 +1,342 @@
+{
+  "date": "1971-10-21",
+  "venue": "Auditorium Theatre",
+  "city": "Chicago",
+  "state": "IL",
+  "country": "US",
+  "setlistFmId": "3dcf927",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/auditorium-theatre-chicago-il-3dcf927.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Frozen Logger",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "St. Stephen",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1971-10-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Truckin'",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "Loser",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Beat It on Down the Line",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Tennessee Jed",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Playing in the Band",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Big Railroad Blues",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "Jack Straw",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Cumberland Blues",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "Comes a Time",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "Mexicali Blues",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "The Frozen Logger",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 12,
+      "songName": "Cold Rain and Snow",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 13,
+      "songName": "One More Saturday Night",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 14,
+      "songName": "Casey Jones",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 15,
+      "songName": "Me and My Uncle",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 16,
+      "songName": "Dark Star",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Sitting on Top of the World",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Dark Star",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "Brown-Eyed Women",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "Ramble On Rose",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 22,
+      "songName": "Sugar Magnolia",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 23,
+      "songName": "St. Stephen",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 24,
+      "songName": "Johnny B. Goode",
+      "date": "1971-10-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

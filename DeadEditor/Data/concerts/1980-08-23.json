@@ -1,0 +1,290 @@
+{
+  "date": "1980-08-23",
+  "venue": "Alpine Valley Music Theatre",
+  "city": "East Troy",
+  "state": "WI",
+  "country": "US",
+  "setlistFmId": "3bd60420",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/alpine-valley-music-theatre-east-troy-wi-3bd60420.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set One",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big River",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lazy Lightning",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Supplication",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Music Never Stopped",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set Two",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Space",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wharf Rat",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Around and Around",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "One More Saturday Night",
+          "date": "1980-08-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 2,
+      "songName": "Promised Land",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 3,
+      "songName": "Candyman",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 4,
+      "songName": "Me and My Uncle",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 5,
+      "songName": "Big River",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 6,
+      "songName": "Tennessee Jed",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 7,
+      "songName": "Lazy Lightning",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 8,
+      "songName": "Supplication",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 9,
+      "songName": "Althea",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 10,
+      "songName": "The Music Never Stopped",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set One"
+    },
+    {
+      "position": 11,
+      "songName": "Don't Ease Me In",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 12,
+      "songName": "Lost Sailor",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 13,
+      "songName": "Saint of Circumstance",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 14,
+      "songName": "He's Gone",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 15,
+      "songName": "Drums",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 16,
+      "songName": "Space",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 17,
+      "songName": "Wharf Rat",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 18,
+      "songName": "Around and Around",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 19,
+      "songName": "Good Lovin'",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Set Two"
+    },
+    {
+      "position": 20,
+      "songName": "One More Saturday Night",
+      "date": "1980-08-23",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

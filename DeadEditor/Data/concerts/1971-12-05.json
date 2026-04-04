@@ -1,0 +1,402 @@
+{
+  "date": "1971-12-05",
+  "venue": "Felt Forum",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "3bdcf820",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/felt-forum-new-york-ny-3bdcf820.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Bertha",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brown-Eyed Women",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Washed My Hands in Muddy Water",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mr. Charlie",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "One More Saturday Night",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It Hurts Me Too",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1971-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1971-12-05",
+          "segue": true,
+          "info": "> 'Dark Star' reprise"
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and Bobby McGee",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Win Again",
+          "date": "1971-12-05",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1971-12-05",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1971-12-05",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Bertha",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Beat It on Down the Line",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Big Boss Man",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Brown-Eyed Women",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "I Washed My Hands in Muddy Water",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Jack Straw",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Mr. Charlie",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Tennessee Jed",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "El Paso",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Deal",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Next Time You See Me",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "Comes a Time",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Casey Jones",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "One More Saturday Night",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Truckin'",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Ramble On Rose",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "It Hurts Me Too",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Sugaree",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "Sugar Magnolia",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Dark Star",
+      "date": "1971-12-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Me and My Uncle",
+      "date": "1971-12-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "Sitting on Top of the World",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Me and Bobby McGee",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Big Railroad Blues",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Mexicali Blues",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 27,
+      "songName": "You Win Again",
+      "date": "1971-12-05",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 28,
+      "songName": "Not Fade Away",
+      "date": "1971-12-05",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 29,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1971-12-05",
+      "segue": true,
+      "set": "Set 2"
+    }
+  ]
+}

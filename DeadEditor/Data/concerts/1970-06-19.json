@@ -1,0 +1,137 @@
+{
+  "date": "1970-06-19",
+  "venue": "Mid-South Coliseum",
+  "city": "Memphis",
+  "state": "TN",
+  "country": "US",
+  "setlistFmId": "53c7db81",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/mid-south-coliseum-memphis-tn-53c7db81.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Casey Jones",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Attics of My Life",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-06-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Casey Jones",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "China Cat Sunflower",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "I Know You Rider",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Hard to Handle",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Attics of My Life",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Candyman",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Uncle John's Band",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Good Lovin'",
+      "date": "1970-06-19",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

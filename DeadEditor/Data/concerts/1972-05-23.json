@@ -1,0 +1,407 @@
+{
+  "date": "1972-05-23",
+  "venue": "Lyceum Ballroom",
+  "city": "London",
+  "state": "ENG",
+  "country": "GB",
+  "setlistFmId": "7bd60af8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1972/lyceum-ballroom-london-england-7bd60af8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Promised Land",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugaree",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mr. Charlie",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black-Throated Wind",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Chinatown Shuffle",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Stranger (Two Souls in Communion)",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rockin' Pneumonia and the Boogie Woogie Flu",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mexicali Blues",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Ramble On Rose",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He's Gone",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Comes a Time",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hey! Bo Diddley",
+          "date": "1972-05-23",
+          "segue": true,
+          "info": "> 'Not Fade Away' reprise"
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Uncle John's Band",
+          "date": "1972-05-23",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Promised Land",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Sugaree",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Mr. Charlie",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Black-Throated Wind",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Tennessee Jed",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Next Time You See Me",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Jack Straw",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "China Cat Sunflower",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "I Know You Rider",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 10,
+      "songName": "Me and My Uncle",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 11,
+      "songName": "Chinatown Shuffle",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 12,
+      "songName": "Big Railroad Blues",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 13,
+      "songName": "The Stranger (Two Souls in Communion)",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 14,
+      "songName": "Playing in the Band",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 15,
+      "songName": "Sitting on Top of the World",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 16,
+      "songName": "Rockin' Pneumonia and the Boogie Woogie Flu",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 17,
+      "songName": "Mexicali Blues",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 18,
+      "songName": "Good Lovin'",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 19,
+      "songName": "Casey Jones",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 20,
+      "songName": "Ramble On Rose",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 21,
+      "songName": "Dark Star",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 22,
+      "songName": "Morning Dew",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 23,
+      "songName": "He's Gone",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 24,
+      "songName": "Sugar Magnolia",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 25,
+      "songName": "Comes a Time",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 26,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 27,
+      "songName": "Not Fade Away",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 28,
+      "songName": "Hey! Bo Diddley",
+      "date": "1972-05-23",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 29,
+      "songName": "Uncle John's Band",
+      "date": "1972-05-23",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

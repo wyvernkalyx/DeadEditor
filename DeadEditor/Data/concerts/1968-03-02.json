@@ -1,0 +1,46 @@
+{
+  "date": "1968-03-02",
+  "venue": "Clifford's Catering",
+  "city": "Walnut Creek",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "6bc7e276",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/cliffords-catering-walnut-creek-ca-6bc7e276.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1968-03-02",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-03-02",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Cold Rain and Snow",
+      "date": "1968-03-02",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-03-02",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

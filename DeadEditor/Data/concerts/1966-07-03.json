@@ -1,0 +1,267 @@
+{
+  "date": "1966-07-03",
+  "venue": "Fillmore Auditorium",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13dca931",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1966/fillmore-auditorium-san-francisco-ca-13dca931.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Nobody's Fault but Mine",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dancing in the Street",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Next Time You See Me",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Keep Rolling By",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tastebud",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cream Puff War",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Mess Up a Good Thing",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cardboard Cowboy",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Gangster of Love",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "You Don't Have to Ask",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "In the Midnight Hour",
+          "date": "1966-07-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Nobody's Fault but Mine",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Dancing in the Street",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "I Know You Rider",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "He Was a Friend of Mine",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Next Time You See Me",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Viola Lee Blues",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Big Boss Man",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Sitting on Top of the World",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Keep Rolling By",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Minglewood Blues",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Cold Rain and Snow",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Tastebud",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 13,
+      "songName": "Beat It on Down the Line",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 14,
+      "songName": "Cream Puff War",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 15,
+      "songName": "Don't Mess Up a Good Thing",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 16,
+      "songName": "Cardboard Cowboy",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 17,
+      "songName": "Gangster of Love",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 18,
+      "songName": "You Don't Have to Ask",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 19,
+      "songName": "In the Midnight Hour",
+      "date": "1966-07-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

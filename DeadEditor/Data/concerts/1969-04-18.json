@@ -1,0 +1,137 @@
+{
+  "date": "1969-04-18",
+  "venue": "Purdue Memorial Union",
+  "city": "West Lafayette",
+  "state": "IN",
+  "country": "US",
+  "setlistFmId": "53da6b81",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/purdue-memorial-union-west-lafayette-in-53da6b81.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Hard to Handle",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1969-04-18",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1969-04-18",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "I'm a King Bee",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Doin' That Rag",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cosmic Charlie",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1969-04-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Hard to Handle",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Morning Dew",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "That's It for the Other One",
+      "date": "1969-04-18",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Sitting on Top of the World",
+      "date": "1969-04-18",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "I'm a King Bee",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Doin' That Rag",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Cosmic Charlie",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Beat It on Down the Line",
+      "date": "1969-04-18",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "date": "1969-01-18",
+  "venue": "CBS Television City",
+  "city": "Los Angeles",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "5bdca75c",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/cbs-television-city-los-angeles-ca-5bdca75c.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "St. Stephen",
+          "date": "1969-01-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mountains of the Moon",
+          "date": "1969-01-18",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1969-01-18",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "St. Stephen",
+      "date": "1969-01-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Mountains of the Moon",
+      "date": "1969-01-18",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Turn On Your Love Light",
+      "date": "1969-01-18",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

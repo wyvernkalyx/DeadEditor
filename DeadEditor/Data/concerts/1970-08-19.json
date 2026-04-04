@@ -1,0 +1,363 @@
+{
+  "date": "1970-08-19",
+  "venue": "Fillmore West",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "53dc8351",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/fillmore-west-san-francisco-ca-53dc8351.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set I",
+      "songs": [
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "How Long Blues",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Friend of the Devil",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Hollow",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ripple",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Brokedown Palace",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Truckin'",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cocaine Blues",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Rosa Lee McFall",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wake Up, Little Susie",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Jordan",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Swing Low, Sweet Chariot",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set II",
+      "songs": [
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy Wind",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "St. Stephen",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Casey Jones",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-08-19",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "The Monkey and the Engineer",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 2,
+      "songName": "How Long Blues",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 3,
+      "songName": "Friend of the Devil",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 4,
+      "songName": "Dark Hollow",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 5,
+      "songName": "Candyman",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 6,
+      "songName": "Ripple",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 7,
+      "songName": "Brokedown Palace",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 8,
+      "songName": "Truckin'",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 9,
+      "songName": "Cocaine Blues",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 10,
+      "songName": "Rosa Lee McFall",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 11,
+      "songName": "Cumberland Blues",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 12,
+      "songName": "Wake Up, Little Susie",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 13,
+      "songName": "New Speedway Boogie",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 14,
+      "songName": "Cold Jordan",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 15,
+      "songName": "Swing Low, Sweet Chariot",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set I"
+    },
+    {
+      "position": 16,
+      "songName": "Cold Rain and Snow",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 17,
+      "songName": "Me and My Uncle",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 18,
+      "songName": "Easy Wind",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 19,
+      "songName": "China Cat Sunflower",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 20,
+      "songName": "I Know You Rider",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 21,
+      "songName": "St. Stephen",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 22,
+      "songName": "Sugar Magnolia",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 23,
+      "songName": "Minglewood Blues",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 24,
+      "songName": "Casey Jones",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 25,
+      "songName": "Not Fade Away",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    },
+    {
+      "position": 26,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-08-19",
+      "segue": false,
+      "set": "Set II"
+    }
+  ]
+}

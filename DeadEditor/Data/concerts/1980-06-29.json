@@ -1,0 +1,303 @@
+{
+  "date": "1980-06-29",
+  "venue": "Pauley Pavilion",
+  "city": "Los Angeles",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "23d6042f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1980/pauley-pavilion-los-angeles-ca-23d6042f.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Alabama Getaway",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Promised Land",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Minglewood Blues",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Looks Like Rain",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Easy to Love You",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Lost Sailor",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Saint of Circumstance",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Deal",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "songs": [
+        {
+          "name": "Feel Like a Stranger",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Don't Ease Me In",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Scarlet Begonias",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Drums",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Other One",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Black Peter",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1980-06-29",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Alabama Getaway",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Promised Land",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Loser",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Minglewood Blues",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Althea",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Looks Like Rain",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Easy to Love You",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Big Railroad Blues",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Lost Sailor",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Saint of Circumstance",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 11,
+      "songName": "Deal",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 12,
+      "songName": "Feel Like a Stranger",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 13,
+      "songName": "Don't Ease Me In",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 14,
+      "songName": "Estimated Prophet",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 15,
+      "songName": "Scarlet Begonias",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 16,
+      "songName": "Fire on the Mountain",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 17,
+      "songName": "Drums",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 18,
+      "songName": "The Other One",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 19,
+      "songName": "Black Peter",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 20,
+      "songName": "Sugar Magnolia",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": ""
+    },
+    {
+      "position": 21,
+      "songName": "U.S. Blues",
+      "date": "1980-06-29",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

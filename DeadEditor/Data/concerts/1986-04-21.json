@@ -1,0 +1,264 @@
+{
+  "date": "1986-04-21",
+  "venue": "Berkeley Community Theatre",
+  "city": "Berkeley",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "63d6067b",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1986/berkeley-community-theatre-berkeley-ca-63d6067b.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Mississippi Half-Step Uptown Toodeloo",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "El Paso",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Row Jimmy",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Desolation Row",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Ramble On Rose",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Touch of Grey",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Estimated Prophet",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Eyes of the World",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Drums",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": "With Brent Mydland on keys) (>"
+        },
+        {
+          "name": "Maybe You Know How I Feel",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Around and Around",
+          "date": "1986-04-21",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Not Fade Away",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "Don't Ease Me In",
+          "date": "1986-04-21",
+          "segue": false,
+          "info": "Preceded by 'Not Fade Away' reprise"
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Mississippi Half-Step Uptown Toodeloo",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "El Paso",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Row Jimmy",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "My Brother Esau",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Cumberland Blues",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Desolation Row",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Ramble On Rose",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Let It Grow",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Touch of Grey",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Estimated Prophet",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Eyes of the World",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Drums",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Maybe You Know How I Feel",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Morning Dew",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Around and Around",
+      "date": "1986-04-21",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Not Fade Away",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Don't Ease Me In",
+      "date": "1986-04-21",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

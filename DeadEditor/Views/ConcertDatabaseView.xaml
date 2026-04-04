@@ -1,0 +1,93 @@
+<UserControl x:Class="DeadEditor.ConcertDatabaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="#1E1E1E">
+
+    <UserControl.Resources>
+        <!-- DataGrid column header style -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#2A2D3E"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#3E3E42"/>
+            <Setter Property="MinHeight" Value="40"/>
+        </Style>
+
+        <!-- DataGrid row style -->
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2A2D3A"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#37373D"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- DataGrid cell style -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Concert Grid (full width — no slide-out panel) -->
+    <DataGrid x:Name="ConcertsDataGrid"
+              AutoGenerateColumns="False"
+              SelectionMode="Single"
+              IsReadOnly="True"
+              Background="#252526"
+              RowBackground="#252526"
+              AlternatingRowBackground="#2D2D30"
+              Foreground="#CCCCCC"
+              GridLinesVisibility="None"
+              HeadersVisibility="Column"
+              CanUserAddRows="False"
+              CanUserDeleteRows="False"
+              CanUserReorderColumns="False"
+              CanUserSortColumns="True"
+              MouseDoubleClick="ConcertsDataGrid_MouseDoubleClick"
+              VirtualizingPanel.IsVirtualizing="True"
+              VirtualizingPanel.VirtualizationMode="Recycling"
+              EnableRowVirtualization="True"
+              EnableColumnVirtualization="True">
+
+        <DataGrid.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#37373D"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E0E0E0"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+        </DataGrid.Resources>
+
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="110"/>
+            <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="Auto" MinWidth="200"/>
+            <DataGridTextColumn Header="City, State" Binding="{Binding FormattedLocation}" Width="Auto" MinWidth="140"/>
+            <DataGridTextColumn Header="Songs" Binding="{Binding SongCount}" Width="Auto" MinWidth="65"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

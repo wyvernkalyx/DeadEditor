@@ -1,0 +1,290 @@
+{
+  "date": "1994-07-13",
+  "venue": "Franklin County State Airport",
+  "city": "Swanton",
+  "state": "VT",
+  "country": "US",
+  "setlistFmId": "33d60031",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1994/franklin-county-state-airport-swanton-vt-33d60031.html",
+  "lastUpdated": "2026-04-04T17:02:56Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Good Times",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack Straw",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Althea",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Queen Jane Approximately",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Loser",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Tennessee Jed",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Truckin'",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Way to Go Home",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Corrina",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "I Want to Tell You",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "I Need a Miracle",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Standing on the Moon",
+          "date": "1994-07-13",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Sugar Magnolia",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "U.S. Blues",
+          "date": "1994-07-13",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Good Times",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Jack Straw",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Althea",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Queen Jane Approximately",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Loser",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "It's All Over Now",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Tennessee Jed",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Let It Grow",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Truckin'",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "New Speedway Boogie",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Way to Go Home",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Corrina",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Uncle John's Band",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Drums",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Space",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "I Want to Tell You",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "I Need a Miracle",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "Standing on the Moon",
+      "date": "1994-07-13",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 19,
+      "songName": "Sugar Magnolia",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 20,
+      "songName": "U.S. Blues",
+      "date": "1994-07-13",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

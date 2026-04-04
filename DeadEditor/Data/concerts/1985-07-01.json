@@ -1,0 +1,277 @@
+{
+  "date": "1985-07-01",
+  "venue": "Merriweather Post Pavilion",
+  "city": "Columbia",
+  "state": "MD",
+  "country": "US",
+  "setlistFmId": "53d607bd",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1985/merriweather-post-pavilion-columbia-md-53d607bd.html",
+  "lastUpdated": "2026-04-04T17:02:55Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Dancing in the Street",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dupree's Diamond Blues",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Walkin' Blues",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Jack-A-Roe",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "My Brother Esau",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Stagger Lee",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Let It Grow",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Keep Your Day Job",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Scarlet Begonias",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Fire on the Mountain",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Playing in the Band",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Drums",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Space",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Dear Mr. Fantasy",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Going Down the Road Feeling Bad",
+          "date": "1985-07-01",
+          "segue": true,
+          "info": "->"
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Encore",
+      "songs": [
+        {
+          "name": "(I Can't Get No) Satisfaction",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "It's All Over Now, Baby Blue",
+          "date": "1985-07-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Dancing in the Street",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Dupree's Diamond Blues",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "Walkin' Blues",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "Jack-A-Roe",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "My Brother Esau",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "Stagger Lee",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Let It Grow",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Keep Your Day Job",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Scarlet Begonias",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Fire on the Mountain",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "Playing in the Band",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 13,
+      "songName": "Drums",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Space",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "Dear Mr. Fantasy",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "Going Down the Road Feeling Bad",
+      "date": "1985-07-01",
+      "segue": true,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Good Lovin'",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 18,
+      "songName": "(I Can't Get No) Satisfaction",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Encore"
+    },
+    {
+      "position": 19,
+      "songName": "It's All Over Now, Baby Blue",
+      "date": "1985-07-01",
+      "segue": false,
+      "set": "Encore"
+    }
+  ]
+}

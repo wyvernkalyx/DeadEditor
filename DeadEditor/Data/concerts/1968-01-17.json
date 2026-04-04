@@ -1,0 +1,181 @@
+{
+  "date": "1968-01-17",
+  "venue": "Carousel Ballroom",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "13dca5c5",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/carousel-ballroom-san-francisco-ca-13dca5c5.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1",
+      "songs": [
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dark Star",
+          "date": "1968-01-17",
+          "segue": true,
+          "info": "Live debut) (>"
+        },
+        {
+          "name": "China Cat Sunflower",
+          "date": "1968-01-17",
+          "segue": true,
+          "info": "Live debut) (>"
+        },
+        {
+          "name": "The Eleven",
+          "date": "1968-01-17",
+          "segue": true,
+          "info": "Live debut) (>"
+        },
+        {
+          "name": "Feedback",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Potato Caboose",
+          "date": "1968-01-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Born Cross-Eyed",
+          "date": "1968-01-17",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Spanish Jam",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Beat It on Down the Line",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Morning Dew",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Morning, School Girl",
+          "date": "1968-01-17",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Turn On Your Love Light",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 2,
+      "songName": "Dark Star",
+      "date": "1968-01-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 3,
+      "songName": "China Cat Sunflower",
+      "date": "1968-01-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 4,
+      "songName": "The Eleven",
+      "date": "1968-01-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 5,
+      "songName": "Feedback",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 6,
+      "songName": "New Potato Caboose",
+      "date": "1968-01-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 7,
+      "songName": "Born Cross-Eyed",
+      "date": "1968-01-17",
+      "segue": true,
+      "set": "Set 1"
+    },
+    {
+      "position": 8,
+      "songName": "Spanish Jam",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 1"
+    },
+    {
+      "position": 9,
+      "songName": "Beat It on Down the Line",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 10,
+      "songName": "Morning Dew",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 11,
+      "songName": "That's It for the Other One",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 12,
+      "songName": "Good Morning, School Girl",
+      "date": "1968-01-17",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

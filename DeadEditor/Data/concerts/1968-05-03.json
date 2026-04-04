@@ -1,0 +1,72 @@
+{
+  "date": "1968-05-03",
+  "venue": "Low Library Plaza",
+  "city": "New York",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "63c7e257",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1968/low-library-plaza-new-york-ny-63c7e257.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Morning Dew",
+          "date": "1968-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Rain and Snow",
+          "date": "1968-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Sitting on Top of the World",
+          "date": "1968-05-03",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1968-05-03",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Morning Dew",
+      "date": "1968-05-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Cold Rain and Snow",
+      "date": "1968-05-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Sitting on Top of the World",
+      "date": "1968-05-03",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "That's It for the Other One",
+      "date": "1968-05-03",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

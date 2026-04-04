@@ -1,0 +1,246 @@
+{
+  "date": "1970-05-01",
+  "venue": "SAC Gym, Alfred State College",
+  "city": "Alfred",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "1bdc81e0",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/sac-gym-alfred-state-college-alfred-ny-1bdc81e0.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set 1: Acoustic",
+      "songs": [
+        {
+          "name": "Deep Elem Blues",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "I Know You Rider",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Monkey and the Engineer",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Candyman",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Mama Tried",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Race Is On",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wake Up, Little Susie",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "New Speedway Boogie",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cold Jordan",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Uncle John's Band",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    },
+    {
+      "name": "Set 2",
+      "songs": [
+        {
+          "name": "Not Fade Away",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Hard to Handle",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That's It for the Other One",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "High Time",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Turn On Your Love Light",
+          "date": "1970-05-01",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Deep Elem Blues",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 2,
+      "songName": "I Know You Rider",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 3,
+      "songName": "The Monkey and the Engineer",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 4,
+      "songName": "Candyman",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 5,
+      "songName": "Me and My Uncle",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 6,
+      "songName": "Mama Tried",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 7,
+      "songName": "Cumberland Blues",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 8,
+      "songName": "The Race Is On",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 9,
+      "songName": "Wake Up, Little Susie",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 10,
+      "songName": "New Speedway Boogie",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 11,
+      "songName": "Cold Jordan",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 12,
+      "songName": "Uncle John's Band",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 1: Acoustic"
+    },
+    {
+      "position": 13,
+      "songName": "Not Fade Away",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 14,
+      "songName": "Hard to Handle",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 15,
+      "songName": "That's It for the Other One",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 16,
+      "songName": "High Time",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 2"
+    },
+    {
+      "position": 17,
+      "songName": "Turn On Your Love Light",
+      "date": "1970-05-01",
+      "segue": false,
+      "set": "Set 2"
+    }
+  ]
+}

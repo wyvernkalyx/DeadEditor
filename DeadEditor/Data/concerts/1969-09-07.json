@@ -1,0 +1,137 @@
+{
+  "date": "1969-09-07",
+  "venue": "Family Dog on the Great Highway",
+  "city": "San Francisco",
+  "state": "CA",
+  "country": "US",
+  "setlistFmId": "7bda6ab8",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1969/family-dog-on-the-great-highway-san-francisco-ca-7bda6ab8.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Peggy Sue",
+          "date": "1969-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "That'll Be the Day",
+          "date": "1969-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Johnny B. Goode",
+          "date": "1969-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Baby What You Want Me to Do",
+          "date": "1969-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Wipe Out",
+          "date": "1969-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Big Railroad Blues",
+          "date": "1969-09-07",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Louie Louie",
+          "date": "1969-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Twist and Shout",
+          "date": "1969-09-07",
+          "segue": true,
+          "info": ">"
+        },
+        {
+          "name": "Blue Moon",
+          "date": "1969-09-07",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Peggy Sue",
+      "date": "1969-09-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "That'll Be the Day",
+      "date": "1969-09-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Johnny B. Goode",
+      "date": "1969-09-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Baby What You Want Me to Do",
+      "date": "1969-09-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Wipe Out",
+      "date": "1969-09-07",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Big Railroad Blues",
+      "date": "1969-09-07",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "Louie Louie",
+      "date": "1969-09-07",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Twist and Shout",
+      "date": "1969-09-07",
+      "segue": true,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "Blue Moon",
+      "date": "1969-09-07",
+      "segue": false,
+      "set": "Set"
+    }
+  ]
+}

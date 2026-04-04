@@ -1,0 +1,151 @@
+{
+  "date": "1970-03-21",
+  "venue": "Capitol Theatre",
+  "city": "Port Chester",
+  "state": "NY",
+  "country": "US",
+  "setlistFmId": "3c7d95f",
+  "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1970/capitol-theatre-port-chester-ny-3c7d95f.html",
+  "lastUpdated": "2026-04-04T17:02:54Z",
+  "hasSetlist": true,
+  "sets": [
+    {
+      "name": "Set",
+      "songs": [
+        {
+          "name": "Walking the Dog",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Me and My Uncle",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Death Don't Have No Mercy",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Good Lovin'",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Dire Wolf",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Big Boss Man",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "He Was a Friend of Mine",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Viola Lee Blues",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "The Seven",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        },
+        {
+          "name": "Cumberland Blues",
+          "date": "1970-03-21",
+          "segue": false,
+          "info": ""
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "position": 1,
+      "songName": "Walking the Dog",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 2,
+      "songName": "Me and My Uncle",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 3,
+      "songName": "Death Don't Have No Mercy",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 4,
+      "songName": "Good Lovin'",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 5,
+      "songName": "Dire Wolf",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 6,
+      "songName": "Big Boss Man",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 7,
+      "songName": "He Was a Friend of Mine",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 8,
+      "songName": "Viola Lee Blues",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 9,
+      "songName": "The Seven",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    },
+    {
+      "position": 10,
+      "songName": "Cumberland Blues",
+      "date": "1970-03-21",
+      "segue": false,
+      "set": "Set"
+    }
+  ],
+  "multiShow": true
+}
