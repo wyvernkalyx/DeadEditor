@@ -377,7 +377,8 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
        misidentifying audience recordings when `LibraryRootPath == OfficialReleasesPath`
      - For each release folder:
        - Counts audio files for `TrackCount` (directory listing only, NO TagLib reads)
-       - Reads ONE file per album via `ReadCustomFieldsIntoShow()` for venue/city/year/albumtype tags
+       - Reads ONE file per album via `ReadCustomFieldsIntoShow()` for venue/city/year/albumtype/albumname tags
+         - `AlbumName` priority: custom `ALBUMNAME` Xiph/TXXX field first; if empty, falls back to standard `ALBUM` tag (skipping DeadEditor-computed "yyyy-MM-dd - Venue" format values)
        - Creates `LibraryShow` with `Type = AlbumType.OfficialRelease`
        - **TrackTitles and ContainsDates are lazy-loaded** — NOT read at startup.
          They load on first access (triggered by search or By Date mode).

@@ -998,6 +998,15 @@ namespace DeadEditor
                 return;
             }
 
+            // Validate required fields before importing
+            if (_albumInfo.Type == AlbumType.AudienceRecording &&
+                string.IsNullOrWhiteSpace(_albumInfo.Date))
+            {
+                await ShowNotificationAsync("Missing Date",
+                    "Please enter a performance date for this audience recording.");
+                return;
+            }
+
             // Duplicate check
             bool exists = _libraryImportService.ShowExistsInLibrary(
                 _librarySettings.LibraryRootPath,

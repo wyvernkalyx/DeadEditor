@@ -192,7 +192,8 @@ namespace DeadEditor.Services
                 try
                 {
                     Debug.WriteLine($"[IMPORT] Reading original metadata: {track.FilePath}");
-                    using (var originalFile = TagLib.File.Create(track.FilePath))
+                    // PictureLazy: skip loading embedded artwork (only need Genre, Comment, etc.)
+                    using (var originalFile = TagLib.File.Create(track.FilePath, TagLib.ReadStyle.PictureLazy))
                     {
                         originalGenre = originalFile.Tag.FirstGenre;
                         originalComment = originalFile.Tag.Comment;

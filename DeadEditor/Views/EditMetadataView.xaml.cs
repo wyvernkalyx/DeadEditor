@@ -87,6 +87,9 @@ namespace DeadEditor
                 }
 
                 // Build AlbumInfo from LibraryShow data (same as MainWindow edit mode)
+                // NOTE: Do NOT set OfficialRelease here — it's an alias for AlbumName
+                // in AlbumInfo (setter overwrites AlbumName), so setting both would clobber
+                // AlbumName with the OfficialRelease value (often empty for audience recordings).
                 _albumInfo = new AlbumInfo
                 {
                     FolderPath = _show.FolderPath,
@@ -97,7 +100,6 @@ namespace DeadEditor
                                (!string.IsNullOrEmpty(_show.City) && !string.IsNullOrEmpty(_show.State) ? $"{_show.City}, {_show.State}" : ""),
                     AlbumName = _show.AlbumName ?? "",
                     Year = _show.ReleaseYear?.ToString() ?? "",
-                    OfficialRelease = _show.OfficialRelease ?? "",
                     Edition = _show.Edition ?? ""
                 };
 
@@ -192,8 +194,8 @@ namespace DeadEditor
                 AlbumNameTextBox.Text = _albumInfo.AlbumName ?? "";
                 YearTextBox.Text = _albumInfo.Year ?? "";
 
-                // Album type display
-                AlbumTypeText.Text = _albumInfo.Type == AlbumType.OfficialRelease ? "Official Release" : "Audience Recording";
+                // Album type dropdown
+                AlbumTypeComboBox.SelectedIndex = _albumInfo.Type == AlbumType.OfficialRelease ? 1 : 0;
 
                 // Artwork
                 LoadArtwork();
@@ -281,6 +283,17 @@ namespace DeadEditor
             {
                 UpdateAlbumNameSuggestions();
             }
+        }
+
+        private void AlbumTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (_isUpdating || _albumInfo == null) return;
+
+            _albumInfo.Type = AlbumTypeComboBox.SelectedIndex == 1
+                ? AlbumType.OfficialRelease
+                : AlbumType.AudienceRecording;
+            _albumInfo.IsModified = true;
+            _hasUnsavedChanges = true;
         }
 
         // ===== ALBUM NAME AUTOCOMPLETE =====
@@ -503,6 +516,9 @@ namespace DeadEditor
                 // Update the LibraryShow object in-place so the library grid
                 // reflects the edited fields without creating a duplicate entry.
                 // The folder path doesn't change — only the cached display fields do.
+                var typeChanged = _show.Type != _albumInfo.Type;
+                _show.Type = _albumInfo.Type;
+                _show.TypeFromTag = true;
                 _show.AlbumName = _albumInfo.AlbumName ?? "";
                 _show.Venue = _albumInfo.Venue ?? "";
                 _show.Date = _albumInfo.AlbumDate ?? "";
@@ -534,6 +550,22 @@ namespace DeadEditor
 
                 // Notify that save completed (so library can refresh)
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
+
+                // If album type changed, warn about potential folder move
+                if (typeChanged)
+                {
+                    var newTypeName = _albumInfo.Type == AlbumType.OfficialRelease
+                        ? "Official Release" : "Audience Recording";
+                    System.Windows.MessageBox.Show(
+                        $"Album type changed to {newTypeName}.\n\n" +
+                        "The tags have been updated, but the files remain in their current folder. " +
+                        "You may need to move the folder to your " +
+                        (_albumInfo.Type == AlbumType.OfficialRelease ? "Official Releases" : "Library Root") +
+                        " path for correct library organization.",
+                        "Album Type Changed",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
 
                 // Navigate back to album detail
                 _shell.Navigation.GoBack();

@@ -109,7 +109,8 @@ namespace DeadEditor.Models
                     {
                         try
                         {
-                            using var tagFile = TagLib.File.Create(file);
+                            // PictureLazy: skip loading embedded artwork (only need Title)
+                            using var tagFile = TagLib.File.Create(file, TagLib.ReadStyle.PictureLazy);
                             var title = tagFile.Tag.Title;
                             if (!string.IsNullOrEmpty(title))
                                 titles.Add(title);

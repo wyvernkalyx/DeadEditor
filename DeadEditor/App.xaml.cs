@@ -79,7 +79,8 @@ public partial class App : System.Windows.Application
 
                 try
                 {
-                    using (var file = TagLib.File.Create(path))
+                    // PictureLazy: skip loading embedded artwork (only need Title)
+                    using (var file = TagLib.File.Create(path, TagLib.ReadStyle.PictureLazy))
                     {
                         var rawTitle = file.Tag.Title ?? System.IO.Path.GetFileNameWithoutExtension(path);
 

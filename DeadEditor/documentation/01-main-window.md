@@ -344,6 +344,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
    - `ImportButton_Click` fires (line 866)
    - If no tracks or album info → shows "No Files" notification, exits
    - If `_librarySettings.LibraryRootPath` not set → shows "Library Not Set" notification, exits
+   - If audience recording with no date → shows "Missing Date" notification, exits
    - Checks if show already exists: `_libraryImportService.ShowExistsInLibrary(...)` (line 890)
      - If exists → shows "Show Already Exists. Overwrite?" notification
      - User clicks "No" → exits workflow

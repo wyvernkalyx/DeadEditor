@@ -36,6 +36,11 @@ namespace DeadEditor
         // Guard: LoadShowsAsync runs only on first Loaded event, not on back-navigation re-adds
         private bool _isInitialLoadComplete;
 
+        // Remember last-applied filter so LoadShowsAsync can re-apply after reload
+        private string _lastSearchText = "";
+        private string _lastTypeFilter = "All";
+        private string _lastYearFilter = "All Years";
+
         public int ConcertCount => _shows.Count;
         public int MissingShowCount => _missingShowRows.Count;
         public int TotalShowsInScope { get; private set; }
@@ -154,6 +159,12 @@ namespace DeadEditor
 
             // Hide loading indicator
             LoadingIndicator.Visibility = Visibility.Collapsed;
+
+            // Re-apply last filter if one was active (covers ReloadLibrary after import/settings)
+            if (_lastTypeFilter != "All" || !string.IsNullOrEmpty(_lastSearchText))
+            {
+                ApplyFilter(_lastSearchText, _lastTypeFilter, _lastYearFilter);
+            }
 
             Debug.WriteLine($"[STARTUP] Grid populated, window visible: {sw.ElapsedMilliseconds}ms");
         }
@@ -349,6 +360,11 @@ namespace DeadEditor
         /// </summary>
         public void ApplyFilter(string searchText, string typeFilter, string yearFilter = "All Years")
         {
+            // Remember filter state for re-apply after ReloadLibrary
+            _lastSearchText = searchText;
+            _lastTypeFilter = typeFilter;
+            _lastYearFilter = yearFilter;
+
             // Handle "Shows I Don't Have" mode
             if (typeFilter == "Shows I Don't Have")
             {
@@ -741,7 +757,8 @@ namespace DeadEditor
                               ?? Directory.GetFiles(folderPath, "*.mp3").FirstOrDefault();
                 if (firstAudio == null) return;
 
-                using var tagFile = TagLib.File.Create(firstAudio);
+                // PictureLazy: skip loading embedded artwork (not needed for custom field reads)
+                using var tagFile = TagLib.File.Create(firstAudio, TagLib.ReadStyle.PictureLazy);
 
                 string? venue = null;
                 string? cityState = null;
@@ -791,7 +808,21 @@ namespace DeadEditor
                     show.State = parts.Length > 1 ? parts[1] : "";
                 }
 
-                // Override folder-name-derived album name with tag value if present
+                // Override folder-name-derived album name with tag value if present.
+                // Fall back to standard ALBUM tag if the custom ALBUMNAME field is empty
+                // (handles files tagged externally without DeadEditor's custom fields).
+                // Skip ALBUM values that look like DeadEditor's computed "yyyy-MM-dd - Venue"
+                // format, since those aren't real album names.
+                if (string.IsNullOrEmpty(albumName))
+                {
+                    var standardAlbum = tagFile.Tag.Album;
+                    if (!string.IsNullOrEmpty(standardAlbum) &&
+                        !Regex.IsMatch(standardAlbum, @"^\d{4}-\d{2}-\d{2}\s*-"))
+                    {
+                        albumName = standardAlbum;
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(albumName))
                 {
                     show.AlbumName = albumName;

@@ -226,7 +226,8 @@ namespace DeadEditor
                         string? albumDate = null;
                         try
                         {
-                            using var probe = TagLib.File.Create(audioFiles[0]);
+                            // PictureLazy: skip loading embedded artwork (only need ALBUMDATE)
+                            using var probe = TagLib.File.Create(audioFiles[0], TagLib.ReadStyle.PictureLazy);
                             albumDate = ReadCustomField(probe, "ALBUMDATE");
                         }
                         catch { }

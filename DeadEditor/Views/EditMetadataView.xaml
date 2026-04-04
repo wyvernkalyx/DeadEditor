@@ -352,12 +352,18 @@
                 </StackPanel>
 
                 <!-- Album Type -->
-                <TextBlock x:Name="AlbumTypeText"
-                           Text="Album Type"
-                           Foreground="#888888"
-                           FontSize="14"
-                           Margin="0,12,0,0"
-                           HorizontalAlignment="Center"/>
+                <Label Content="TYPE" Foreground="#999999" FontSize="11"
+                       Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
+                <ComboBox x:Name="AlbumTypeComboBox"
+                          Width="170" Height="28" FontSize="13"
+                          Padding="6,4"
+                          VerticalContentAlignment="Center"
+                          Background="#3C3C3C" Foreground="#FFFFFF"
+                          BorderBrush="#555555"
+                          SelectionChanged="AlbumTypeComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Audience Recording"/>
+                    <ComboBoxItem Content="Official Release"/>
+                </ComboBox>
 
                 <!-- Track count -->
                 <TextBlock x:Name="TrackCountText"

@@ -862,7 +862,8 @@ namespace DeadEditor.Services
         {
             try
             {
-                using var file = TagLib.File.Create(filePath);
+                // Average: read audio properties (Duration). PictureLazy: defer embedded artwork.
+                using var file = TagLib.File.Create(filePath, TagLib.ReadStyle.Average | TagLib.ReadStyle.PictureLazy);
                 return (int)file.Properties.Duration.TotalSeconds;
             }
             catch

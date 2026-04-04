@@ -195,13 +195,17 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
   - Remove: shows placeholder, removes APIC tags from all FLAC files on save
   - Save also writes/deletes cover.jpg in album folder(s)
 - Change tracking: any edit to album fields, track cells, or artwork sets `_hasUnsavedChanges`
-- Album Type display in artwork panel area
+- **Album Type dropdown** in artwork panel area (ComboBox: "Audience Recording" / "Official Release")
+  - Populated from `_albumInfo.Type` on load
+  - Changes set `_albumInfo.Type` and mark unsaved changes
+  - On save: writes `ALBUMTYPE` tag, updates `_show.Type` and `_show.TypeFromTag = true`
+  - If type changed: shows info dialog advising user to move files to the correct library path manually
 
 **Save Changes behavior:**
 - Writes all track-level tags (TITLE, TRACKNUMBER, DISCNUMBER, DATE) per track
 - Writes album-level tags (ARTIST, ALBUM, YEAR) to every FLAC file
 - Writes custom FLAC Xiph fields (ALBUMDATE, VENUE, CITYSTATE, ALBUMNAME, ALBUMTYPE)
-- Updates LibraryShow in-place (no library re-scan needed)
+- Updates LibraryShow in-place (no library re-scan needed), including `Type` and `TypeFromTag`
 - Navigates back to Album Detail on success
 - Shows error message and stays on Edit view on failure
 

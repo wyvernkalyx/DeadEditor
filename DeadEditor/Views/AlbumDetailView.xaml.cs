@@ -42,16 +42,21 @@ namespace DeadEditor
         private async void AlbumDetailView_Loaded(object sender, RoutedEventArgs e)
         {
             LoadAlbumData();
-            LoadAlbumArt();
 
             // Show loading indicator while reading tags from disk
             TracksLoadingIndicator.Visibility = Visibility.Visible;
             TracksDataGrid.Visibility = Visibility.Collapsed;
 
-            // Heavy TagLib I/O off the UI thread
-            var tracks = await Task.Run(() => LoadTracksFromDisk());
+            // Run artwork + track I/O concurrently on background thread
+            BitmapImage? albumArt = null;
+            var tracks = await Task.Run(() =>
+            {
+                albumArt = LoadAlbumArtBackground();
+                return LoadTracksFromDisk();
+            });
 
-            // Back on UI thread — bind results
+            // Back on UI thread — apply artwork and bind track results
+            ApplyAlbumArt(albumArt);
             TracksLoadingIndicator.Visibility = Visibility.Collapsed;
             TracksDataGrid.Visibility = Visibility.Visible;
             BindTracksToUI(tracks);
@@ -99,78 +104,72 @@ namespace DeadEditor
             }
         }
 
-        private void LoadAlbumArt()
+        /// <summary>
+        /// Loads album artwork from disk. Runs on a background thread — no UI access.
+        /// Returns a frozen BitmapImage usable on the UI thread, or null.
+        /// </summary>
+        private BitmapImage? LoadAlbumArtBackground()
         {
-            // Use FolderPaths (plural) to support multi-folder albums
             var folders = _show.FolderPaths.Any() ? _show.FolderPaths : new List<string> { _show.FolderPath };
 
-            BitmapImage? bitmap = null;
-
-            // Try each folder in order until we find artwork
             foreach (var folder in folders)
             {
                 if (!Directory.Exists(folder))
                     continue;
 
-                // Try cover.jpg
+                // Try cover.jpg, then folder.jpg
                 var artworkPath = Path.Combine(folder, "cover.jpg");
                 if (!File.Exists(artworkPath))
-                {
-                    // Try folder.jpg
                     artworkPath = Path.Combine(folder, "folder.jpg");
-                }
 
                 if (File.Exists(artworkPath))
                 {
                     try
                     {
-                        bitmap = new BitmapImage();
+                        var bitmap = new BitmapImage();
                         bitmap.BeginInit();
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
                         bitmap.UriSource = new Uri(artworkPath, UriKind.Absolute);
                         bitmap.EndInit();
-                        break; // Found artwork, stop searching
+                        bitmap.Freeze();
+                        return bitmap;
                     }
-                    catch
-                    {
-                        bitmap = null;
-                    }
+                    catch { }
                 }
 
-                // If no file-based artwork, try embedded art in first audio file (FLAC or MP3)
-                if (bitmap == null)
+                // Fallback: embedded art in first audio file
+                var audioFiles = Directory.GetFiles(folder, "*.flac")
+                    .Concat(Directory.GetFiles(folder, "*.mp3"))
+                    .ToArray();
+                if (audioFiles.Length > 0)
                 {
-                    var audioFiles = Directory.GetFiles(folder, "*.flac")
-                        .Concat(Directory.GetFiles(folder, "*.mp3"))
-                        .ToArray();
-                    if (audioFiles.Length > 0)
+                    try
                     {
-                        try
+                        using var tagFile = TagLib.File.Create(audioFiles[0]);
+                        if (tagFile.Tag.Pictures.Length > 0)
                         {
-                            using var tagFile = TagLib.File.Create(audioFiles[0]);
-                            if (tagFile.Tag.Pictures.Length > 0)
-                            {
-                                var pic = tagFile.Tag.Pictures[0];
-                                bitmap = new BitmapImage();
-                                bitmap.BeginInit();
-                                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                                bitmap.StreamSource = new System.IO.MemoryStream(pic.Data.Data);
-                                bitmap.EndInit();
-                                break; // Found embedded artwork, stop searching
-                            }
-                        }
-                        catch
-                        {
-                            bitmap = null;
+                            var pic = tagFile.Tag.Pictures[0];
+                            var bitmap = new BitmapImage();
+                            bitmap.BeginInit();
+                            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmap.StreamSource = new MemoryStream(pic.Data.Data);
+                            bitmap.EndInit();
+                            bitmap.Freeze();
+                            return bitmap;
                         }
                     }
+                    catch { }
                 }
-
-                if (bitmap != null)
-                    break; // Found artwork in this folder, stop searching other folders
             }
 
-            // Set the image or show placeholder
+            return null;
+        }
+
+        /// <summary>
+        /// Applies a pre-loaded album art bitmap to the UI. Must run on the UI thread.
+        /// </summary>
+        private void ApplyAlbumArt(BitmapImage? bitmap)
+        {
             if (bitmap != null)
             {
                 AlbumArtImage.Source = bitmap;
@@ -209,7 +208,8 @@ namespace DeadEditor
                 {
                     try
                     {
-                        using (var tagFile = TagLib.File.Create(file))
+                        // Average: read audio properties (Duration). PictureLazy: defer embedded artwork.
+                        using (var tagFile = TagLib.File.Create(file, TagLib.ReadStyle.Average | TagLib.ReadStyle.PictureLazy))
                         {
                             var title = tagFile.Tag.Title ?? Path.GetFileNameWithoutExtension(file);
 
@@ -283,7 +283,6 @@ namespace DeadEditor
                 // Single-night: Sort by track number only
                 tracks = tracks.OrderBy(t => t.TrackNumber).ToList();
             }
-
             return tracks;
         }
 
@@ -325,13 +324,11 @@ namespace DeadEditor
 
             // Count heady versions in this album (in-memory lookups, fast)
             var heady = HeadyVersionService.Instance;
-            Debug.WriteLine($"[HEADY] Album: {AlbumName} | Show.Date='{_show.Date}' | Tracks={_tracks.Count}");
             int headyCount = 0;
             foreach (var t in _tracks)
             {
                 var match = (!string.IsNullOrEmpty(t.SongName) && !string.IsNullOrEmpty(t.TrackDate))
                     ? heady.GetHeadyVersion(t.SongName, t.TrackDate) : null;
-                Debug.WriteLine($"[HEADY] Track: '{t.SongName}' date: '{t.TrackDate}' -> match: {match != null}");
                 if (match != null) headyCount++;
             }
 
