@@ -19,9 +19,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Ain't Superstitious",
+          "OfficialTitle": "I Ain't Superstitious",
           "Aliases": [
-            "I Ain't Superstitious"
+            "I Ain't Superstitious",
+            "Ain't Superstitious"
           ]
         },
         {
@@ -35,34 +36,40 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "All Along the Watchtower",
+          "OfficialTitle": "All Along The Watchtower",
           "Aliases": [
-            "Watchtower"
+            "Watchtower",
+            "All Along the Watchtower"
           ]
         },
         {
-          "OfficialTitle": "All Around This World",
+          "OfficialTitle": "I've Been All Around This World",
           "Aliases": [
-            "I've Been All Around This World"
+            "I've Been All Around This World",
+            "All Around This World"
           ]
         },
         {
-          "OfficialTitle": "All New Minglewood Blues",
+          "OfficialTitle": "Minglewood Blues",
           "Aliases": [
             "New Minglewood Blues",
             "Minglewood Blues",
-            "Minglewood"
+            "Minglewood",
+            "All New Minglewood Blues"
           ]
         },
         {
-          "OfficialTitle": "All Too Much",
+          "OfficialTitle": "It's All Too Much",
           "Aliases": [
-            "It's All Too Much"
+            "It's All Too Much",
+            "All Too Much"
           ]
         },
         {
-          "OfficialTitle": "All of My Love",
-          "Aliases": []
+          "OfficialTitle": "All Of My Love",
+          "Aliases": [
+            "All of My Love"
+          ]
         },
         {
           "OfficialTitle": "Alligator",
@@ -77,11 +84,12 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "And We Bid You Goodnight",
+          "OfficialTitle": "And We Bid You Good Night",
           "Aliases": [
             "Bid You Goodnight Jam",
             "And We Bid You Goodnight Jam",
-            "We Bid You Goodnight"
+            "We Bid You Goodnight",
+            "And We Bid You Goodnight"
           ]
         },
         {
@@ -89,26 +97,33 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Are You Lonely for Me Baby",
-          "Aliases": []
-        },
-        {
-          "OfficialTitle": "Around and Around",
+          "OfficialTitle": "Are You Lonely For Me",
           "Aliases": [
-            "Around & Around"
+            "Are You Lonely for Me Baby"
           ]
         },
         {
-          "OfficialTitle": "Attics of My Life",
-          "Aliases": []
+          "OfficialTitle": "Around And Around",
+          "Aliases": [
+            "Around & Around",
+            "Around and Around"
+          ]
+        },
+        {
+          "OfficialTitle": "Attics Of My Life",
+          "Aliases": [
+            "Attics of My Life"
+          ]
         },
         {
           "OfficialTitle": "Baby Blue",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Baby What You Want Me to Do",
-          "Aliases": []
+          "OfficialTitle": "Baby What You Want Me To Do?",
+          "Aliases": [
+            "Baby What You Want Me to Do"
+          ]
         },
         {
           "OfficialTitle": "Back Door Man",
@@ -119,32 +134,40 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Ballad of Casey Jones",
+          "OfficialTitle": "Ballad Of Casey Jones",
           "Aliases": [
-            "The Ballad of Casey Jones"
+            "The Ballad of Casey Jones",
+            "Ballad of Casey Jones"
           ]
         },
         {
-          "OfficialTitle": "Ballad of Frankie Lee and Judas Priest",
-          "Aliases": []
+          "OfficialTitle": "The Ballad Of Frankie Lee And Judas Priest",
+          "Aliases": [
+            "Ballad of Frankie Lee and Judas Priest"
+          ]
         },
         {
-          "OfficialTitle": "Banana Boat Song",
-          "Aliases": []
+          "OfficialTitle": "Banana Boat Song (Day O)",
+          "Aliases": [
+            "Banana Boat Song"
+          ]
         },
         {
-          "OfficialTitle": "Banks of Ohio",
-          "Aliases": []
+          "OfficialTitle": "Banks Of The Ohio",
+          "Aliases": [
+            "Banks of Ohio"
+          ]
         },
         {
           "OfficialTitle": "Barbara Allen",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Beat It On Down the Line",
+          "OfficialTitle": "Beat It On Down The Line",
           "Aliases": [
             "Beat It On Down",
-            "BIODTL"
+            "BIODTL",
+            "Beat It On Down the Line"
           ]
         },
         {
@@ -152,8 +175,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Believe It or Not",
-          "Aliases": []
+          "OfficialTitle": "Believe It Or Not",
+          "Aliases": [
+            "Believe It or Not"
+          ]
         },
         {
           "OfficialTitle": "Bertha",
@@ -202,10 +227,11 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Black-Throated Wind",
+          "OfficialTitle": "Black Throated Wind",
           "Aliases": [
             "Black Throated Wind",
-            "BTW"
+            "BTW",
+            "Black-Throated Wind"
           ]
         },
         {
@@ -235,8 +261,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Blues for Allah",
-          "Aliases": []
+          "OfficialTitle": "Blues For Allah",
+          "Aliases": [
+            "Blues for Allah"
+          ]
         },
         {
           "OfficialTitle": "Bobby Jean",
@@ -249,12 +277,16 @@
           ]
         },
         {
-          "OfficialTitle": "Born on the Bayou",
-          "Aliases": []
+          "OfficialTitle": "Born On The Bayou",
+          "Aliases": [
+            "Born on the Bayou"
+          ]
         },
         {
-          "OfficialTitle": "Box of Rain",
-          "Aliases": []
+          "OfficialTitle": "Box Of Rain",
+          "Aliases": [
+            "Box of Rain"
+          ]
         },
         {
           "OfficialTitle": "Bring It On Home",
@@ -275,16 +307,19 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Brown-Eyed Women",
+          "OfficialTitle": "Brown Eyed Women",
           "Aliases": [
             "Brown Eyed Women",
             "BEW",
-            "Brown Eyed Handsome Man"
+            "Brown Eyed Handsome Man",
+            "Brown-Eyed Women"
           ]
         },
         {
-          "OfficialTitle": "Built to Last",
-          "Aliases": []
+          "OfficialTitle": "Built To Last",
+          "Aliases": [
+            "Built to Last"
+          ]
         },
         {
           "OfficialTitle": "Bummer",
@@ -332,10 +367,11 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Caution (Do Not Stop on Tracks)",
+          "OfficialTitle": "Caution",
           "Aliases": [
             "Caution",
-            "Caution Jam"
+            "Caution Jam",
+            "Caution (Do Not Stop on Tracks)"
           ]
         },
         {
@@ -347,8 +383,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Children of the Eighties",
-          "Aliases": []
+          "OfficialTitle": "Children Of The Eighties",
+          "Aliases": [
+            "Children of the Eighties"
+          ]
         },
         {
           "OfficialTitle": "China Cat Sunflower",
@@ -385,9 +423,10 @@
           ]
         },
         {
-          "OfficialTitle": "Cold Rain and Snow",
+          "OfficialTitle": "Cold Rain And Snow",
           "Aliases": [
-            "Cold Rain & Snow"
+            "Cold Rain & Snow",
+            "Cold Rain and Snow"
           ]
         },
         {
@@ -395,8 +434,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Comes a Time",
-          "Aliases": []
+          "OfficialTitle": "Comes A Time",
+          "Aliases": [
+            "Comes a Time"
+          ]
         },
         {
           "OfficialTitle": "Corrina",
@@ -429,12 +470,13 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Dancing in the Street",
+          "OfficialTitle": "Dancin' In The Streets",
           "Aliases": [
             "Dancing In The Streets",
             "DITS",
             "Dnacing in the Streets",
-            "Dnacing in the Street"
+            "Dnacing in the Street",
+            "Dancing in the Street"
           ]
         },
         {
@@ -456,14 +498,17 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Days Between",
+          "OfficialTitle": "The Days Between",
           "Aliases": [
-            "The Days Between"
+            "The Days Between",
+            "Days Between"
           ]
         },
         {
-          "OfficialTitle": "Dead Man Dead Man",
-          "Aliases": []
+          "OfficialTitle": "Dead Man, Dead Man",
+          "Aliases": [
+            "Dead Man Dead Man"
+          ]
         },
         {
           "OfficialTitle": "Deal",
@@ -496,8 +541,10 @@
           ]
         },
         {
-          "OfficialTitle": "Devil with a Blue Dress",
-          "Aliases": []
+          "OfficialTitle": "Devil With The Blue Dress",
+          "Aliases": [
+            "Devil with a Blue Dress"
+          ]
         },
         {
           "OfficialTitle": "Devil's Dream",
@@ -516,8 +563,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Do You Wanna Dance",
-          "Aliases": []
+          "OfficialTitle": "Do You Wanna Dance?",
+          "Aliases": [
+            "Do You Wanna Dance"
+          ]
         },
         {
           "OfficialTitle": "Doin' That Rag",
@@ -543,16 +592,20 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Don't Think Twice, It's All Right",
-          "Aliases": []
+          "OfficialTitle": "Don't Think Twice It's Alright",
+          "Aliases": [
+            "Don't Think Twice, It's All Right"
+          ]
         },
         {
           "OfficialTitle": "Down So Long",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Down in the Bottom",
-          "Aliases": []
+          "OfficialTitle": "Down In The Bottom",
+          "Aliases": [
+            "Down in the Bottom"
+          ]
         },
         {
           "OfficialTitle": "Drink Up and Go Home",
@@ -589,8 +642,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Easy to Love You",
-          "Aliases": []
+          "OfficialTitle": "Easy To Love You",
+          "Aliases": [
+            "Easy to Love You"
+          ]
         },
         {
           "OfficialTitle": "Eight Miles High",
@@ -623,15 +678,18 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Eyes of the World",
+          "OfficialTitle": "Eyes Of The World",
           "Aliases": [
             "Eyes",
-            "EOTW"
+            "EOTW",
+            "Eyes of the World"
           ]
         },
         {
-          "OfficialTitle": "Fair Chance to Know",
-          "Aliases": []
+          "OfficialTitle": "Fair Chance To Know",
+          "Aliases": [
+            "Fair Chance to Know"
+          ]
         },
         {
           "OfficialTitle": "Far From Me",
@@ -646,18 +704,21 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Feel Like a Stranger",
-          "Aliases": []
+          "OfficialTitle": "Feel Like A Stranger",
+          "Aliases": [
+            "Feel Like a Stranger"
+          ]
         },
         {
           "OfficialTitle": "Fever",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Fire on the Mountain",
+          "OfficialTitle": "Fire On The Mountain",
           "Aliases": [
             "Fire",
-            "FOTM"
+            "FOTM",
+            "Fire on the Mountain"
           ]
         },
         {
@@ -692,14 +753,17 @@
           ]
         },
         {
-          "OfficialTitle": "Friend of the Devil",
+          "OfficialTitle": "Friend Of The Devil",
           "Aliases": [
-            "FOTD"
+            "FOTD",
+            "Friend of the Devil"
           ]
         },
         {
-          "OfficialTitle": "From the Heart of Me",
-          "Aliases": []
+          "OfficialTitle": "From The Heart Of Me",
+          "Aliases": [
+            "From the Heart of Me"
+          ]
         },
         {
           "OfficialTitle": "Frozen Logger",
@@ -716,12 +780,16 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Gangster of Love",
-          "Aliases": []
+          "OfficialTitle": "Gangster Of Love",
+          "Aliases": [
+            "Gangster of Love"
+          ]
         },
         {
-          "OfficialTitle": "Gathering Flowers for the Master's Bouquet",
-          "Aliases": []
+          "OfficialTitle": "Gathering Flowers For The Master's Bouquet",
+          "Aliases": [
+            "Gathering Flowers for the Master's Bouquet"
+          ]
         },
         {
           "OfficialTitle": "Gentlemen Start Your Engines",
@@ -752,19 +820,21 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Goin' Down the Road Feeling Bad",
+          "OfficialTitle": "Goin' Down The Road Feelin' Bad",
           "Aliases": [
             "GDTRFB",
             "Goin Down The Road",
             "Going Down The Road",
-            "Going Down the Road Feeling Bad"
+            "Going Down the Road Feeling Bad",
+            "Goin' Down the Road Feeling Bad"
           ]
         },
         {
-          "OfficialTitle": "Golden Road (To Unlimited Devotion)",
+          "OfficialTitle": "Golden Road To Unlimited Devotion",
           "Aliases": [
             "Golden Road",
-            "The Golden Road"
+            "The Golden Road",
+            "Golden Road (To Unlimited Devotion)"
           ]
         },
         {
@@ -787,8 +857,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Good Night Irene",
-          "Aliases": []
+          "OfficialTitle": "Goodnight Irene",
+          "Aliases": [
+            "Good Night Irene"
+          ]
         },
         {
           "OfficialTitle": "Good Time Blues",
@@ -799,8 +871,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Got My Mojo Working",
-          "Aliases": []
+          "OfficialTitle": "I Got My Mojo Workin'",
+          "Aliases": [
+            "Got My Mojo Working"
+          ]
         },
         {
           "OfficialTitle": "Gotta Serve Somebody",
@@ -822,8 +896,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Green, Green Grass of Home",
-          "Aliases": []
+          "OfficialTitle": "Green Green Grass Of Home",
+          "Aliases": [
+            "Green, Green Grass of Home"
+          ]
         },
         {
           "OfficialTitle": "Greenback Dollar",
@@ -850,8 +926,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Hard to Handle",
-          "Aliases": []
+          "OfficialTitle": "Hard To Handle",
+          "Aliases": [
+            "Hard to Handle"
+          ]
         },
         {
           "OfficialTitle": "Hare Krishna",
@@ -862,9 +940,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "He Was a Friend of Mine",
+          "OfficialTitle": "He Was A Friend Of Mine",
           "Aliases": [
-            "Friend of Mine"
+            "Friend of Mine",
+            "He Was a Friend of Mine"
           ]
         },
         {
@@ -879,24 +958,30 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Heaven Help the Fool",
-          "Aliases": []
-        },
-        {
-          "OfficialTitle": "Hell in a Bucket",
+          "OfficialTitle": "Heaven Help The Fool",
           "Aliases": [
-            "Hell In A Bucket"
+            "Heaven Help the Fool"
           ]
         },
         {
-          "OfficialTitle": "Help Me Rhonda",
-          "Aliases": []
+          "OfficialTitle": "Hell In A Bucket",
+          "Aliases": [
+            "Hell In A Bucket",
+            "Hell in a Bucket"
+          ]
         },
         {
-          "OfficialTitle": "Help on the Way",
+          "OfficialTitle": "Help Me Ronda",
+          "Aliases": [
+            "Help Me Rhonda"
+          ]
+        },
+        {
+          "OfficialTitle": "Help On The Way",
           "Aliases": [
             "Help On The Way",
-            "HOTW"
+            "HOTW",
+            "Help on the Way"
           ]
         },
         {
@@ -920,8 +1005,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Hide Away",
-          "Aliases": []
+          "OfficialTitle": "Hideaway",
+          "Aliases": [
+            "Hide Away"
+          ]
         },
         {
           "OfficialTitle": "High Time",
@@ -974,8 +1061,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "I Fought the Law",
-          "Aliases": []
+          "OfficialTitle": "I Fought The Law",
+          "Aliases": [
+            "I Fought the Law"
+          ]
         },
         {
           "OfficialTitle": "I Get Around",
@@ -986,17 +1075,22 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "I Hear a Voice Calling",
-          "Aliases": []
-        },
-        {
-          "OfficialTitle": "I Just Want to Make Love to You",
-          "Aliases": []
-        },
-        {
-          "OfficialTitle": "I Know It's a Sin",
+          "OfficialTitle": "I Hear A Voice Callin'",
           "Aliases": [
-            "It's a Sin"
+            "I Hear a Voice Calling"
+          ]
+        },
+        {
+          "OfficialTitle": "I Just Want To Make Love To You",
+          "Aliases": [
+            "I Just Want to Make Love to You"
+          ]
+        },
+        {
+          "OfficialTitle": "I Know It's A Sin",
+          "Aliases": [
+            "It's a Sin",
+            "I Know It's a Sin"
           ]
         },
         {
@@ -1008,10 +1102,11 @@
           ]
         },
         {
-          "OfficialTitle": "I Need a Miracle",
+          "OfficialTitle": "I Need A Miracle",
           "Aliases": [
             "Miracle",
-            "INAM"
+            "INAM",
+            "I Need a Miracle"
           ]
         },
         {
@@ -1039,8 +1134,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "I Want to Tell You",
-          "Aliases": []
+          "OfficialTitle": "I Want To Tell You",
+          "Aliases": [
+            "I Want to Tell You"
+          ]
         },
         {
           "OfficialTitle": "I Will Take You Home",
@@ -1059,16 +1156,22 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "I'm a Hog for You Baby",
-          "Aliases": []
+          "OfficialTitle": "Hog For You Baby",
+          "Aliases": [
+            "I'm a Hog for You Baby"
+          ]
         },
         {
-          "OfficialTitle": "I'm a King Bee",
-          "Aliases": []
+          "OfficialTitle": "I'm A King Bee",
+          "Aliases": [
+            "I'm a King Bee"
+          ]
         },
         {
-          "OfficialTitle": "I'm a Man",
-          "Aliases": []
+          "OfficialTitle": "I'm A Man",
+          "Aliases": [
+            "I'm a Man"
+          ]
         },
         {
           "OfficialTitle": "I've Got a Tiger By the Tail",
@@ -1079,8 +1182,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "If I Had the World to Give",
-          "Aliases": []
+          "OfficialTitle": "If I Had The World To Give",
+          "Aliases": [
+            "If I Had the World to Give"
+          ]
         },
         {
           "OfficialTitle": "If You Hear Me When I'm Leaving",
@@ -1089,8 +1194,10 @@
           ]
         },
         {
-          "OfficialTitle": "If the Shoe Fits",
-          "Aliases": []
+          "OfficialTitle": "If The Shoe Fits",
+          "Aliases": [
+            "If the Shoe Fits"
+          ]
         },
         {
           "OfficialTitle": "Iko Iko",
@@ -1101,9 +1208,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "In the Midnight Hour",
+          "OfficialTitle": "Midnight Hour",
           "Aliases": [
-            "Midnight Hour"
+            "Midnight Hour",
+            "In the Midnight Hour"
           ]
         },
         {
@@ -1113,25 +1221,32 @@
           ]
         },
         {
-          "OfficialTitle": "It Must Have Been the Roses",
-          "Aliases": []
+          "OfficialTitle": "It Must Have Been The Roses",
+          "Aliases": [
+            "It Must Have Been the Roses"
+          ]
         },
         {
-          "OfficialTitle": "It Takes a Lot to Laugh, It Takes a Train to Cry",
-          "Aliases": []
+          "OfficialTitle": "It Takes A Lot To Laugh, It Takes A Train To Cry",
+          "Aliases": [
+            "It Takes a Lot to Laugh, It Takes a Train to Cry"
+          ]
         },
         {
           "OfficialTitle": "It's All Over Now",
           "Aliases": []
         },
         {
-          "OfficialTitle": "It's All Over Now, Baby Blue",
-          "Aliases": []
+          "OfficialTitle": "It's All Over Now Baby Blue",
+          "Aliases": [
+            "It's All Over Now, Baby Blue"
+          ]
         },
         {
-          "OfficialTitle": "It's a Man's Man's Man's World",
+          "OfficialTitle": "It's A Man's World",
           "Aliases": [
-            "It's A Man's World"
+            "It's A Man's World",
+            "It's a Man's Man's Man's World"
           ]
         },
         {
@@ -1180,9 +1295,10 @@
           ]
         },
         {
-          "OfficialTitle": "Jordan",
+          "OfficialTitle": "Cold Jordan",
           "Aliases": [
-            "Cold Jordan"
+            "Cold Jordan",
+            "Jordan"
           ]
         },
         {
@@ -1192,12 +1308,16 @@
           ]
         },
         {
-          "OfficialTitle": "Just a Little Light",
-          "Aliases": []
+          "OfficialTitle": "Just A Little Light",
+          "Aliases": [
+            "Just a Little Light"
+          ]
         },
         {
-          "OfficialTitle": "K.C. Moan",
-          "Aliases": []
+          "OfficialTitle": "KC Moan",
+          "Aliases": [
+            "K.C. Moan"
+          ]
         },
         {
           "OfficialTitle": "Kansas City",
@@ -1208,14 +1328,17 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Keep Your Day Job",
+          "OfficialTitle": "Day Job",
           "Aliases": [
-            "Day Job"
+            "Day Job",
+            "Keep Your Day Job"
           ]
         },
         {
-          "OfficialTitle": "Keep on Growing",
-          "Aliases": []
+          "OfficialTitle": "Keep On Growing",
+          "Aliases": [
+            "Keep on Growing"
+          ]
         },
         {
           "OfficialTitle": "Kentucky Song",
@@ -1234,8 +1357,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Knockin' on Heaven's Door",
-          "Aliases": []
+          "OfficialTitle": "Knockin' On Heaven's Door",
+          "Aliases": [
+            "Knockin' on Heaven's Door"
+          ]
         },
         {
           "OfficialTitle": "La Bamba",
@@ -1290,8 +1415,10 @@
           ]
         },
         {
-          "OfficialTitle": "Let the Good Times Roll",
-          "Aliases": []
+          "OfficialTitle": "Let The Good Times Roll",
+          "Aliases": [
+            "Let the Good Times Roll"
+          ]
         },
         {
           "OfficialTitle": "Let's Spend the Night Together",
@@ -1330,9 +1457,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Long Way to Go Home",
+          "OfficialTitle": "Way To Go Home",
           "Aliases": [
-            "Way to Go Home"
+            "Way to Go Home",
+            "Long Way to Go Home"
           ]
         },
         {
@@ -1340,8 +1468,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Look on Yonder's Wall",
-          "Aliases": []
+          "OfficialTitle": "Look On Yonder's Wall",
+          "Aliases": [
+            "Look on Yonder's Wall"
+          ]
         },
         {
           "OfficialTitle": "Looks Like Rain",
@@ -1380,8 +1510,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Love the One You're With",
-          "Aliases": []
+          "OfficialTitle": "Love The One You're With",
+          "Aliases": [
+            "Love the One You're With"
+          ]
         },
         {
           "OfficialTitle": "Love's Made a Fool of You",
@@ -1392,8 +1524,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Lucy in the Sky with Diamonds",
-          "Aliases": []
+          "OfficialTitle": "Lucy In The Sky With Diamonds",
+          "Aliases": [
+            "Lucy in the Sky with Diamonds"
+          ]
         },
         {
           "OfficialTitle": "Maggie's Farm",
@@ -1448,16 +1582,18 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Me and Bobby McGee",
+          "OfficialTitle": "Me And Bobby McGee",
           "Aliases": [
             "Me & Bobby McGee",
-            "Bobby McGee"
+            "Bobby McGee",
+            "Me and Bobby McGee"
           ]
         },
         {
-          "OfficialTitle": "Me and My Uncle",
+          "OfficialTitle": "Me And My Uncle",
           "Aliases": [
-            "Me & My Uncle"
+            "Me & My Uncle",
+            "Me and My Uncle"
           ]
         },
         {
@@ -1489,10 +1625,11 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Mighty Quinn",
+          "OfficialTitle": "Quinn The Eskimo",
           "Aliases": [
             "Quinn the Eskimo",
-            "The Mighty Quinn"
+            "The Mighty Quinn",
+            "Mighty Quinn"
           ]
         },
         {
@@ -1504,15 +1641,18 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Mission in the Rain",
-          "Aliases": []
+          "OfficialTitle": "Mission In The Rain",
+          "Aliases": [
+            "Mission in the Rain"
+          ]
         },
         {
-          "OfficialTitle": "Mississippi Half-Step Uptown Toodeloo",
+          "OfficialTitle": "Mississippi Half Step",
           "Aliases": [
             "Half Step",
             "Half-Step",
-            "Mississippi Half Step"
+            "Mississippi Half Step",
+            "Mississippi Half-Step Uptown Toodeloo"
           ]
         },
         {
@@ -1528,9 +1668,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Monkey and the Engineer",
+          "OfficialTitle": "Monkey And The Engineer",
           "Aliases": [
-            "Monkey & the Engineer"
+            "Monkey & the Engineer",
+            "Monkey and the Engineer"
           ]
         },
         {
@@ -1546,8 +1687,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Mountains of the Moon",
-          "Aliases": []
+          "OfficialTitle": "Mountains Of The Moon",
+          "Aliases": [
+            "Mountains of the Moon"
+          ]
         },
         {
           "OfficialTitle": "Mr. Charlie",
@@ -1566,10 +1709,11 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Music Never Stopped",
+          "OfficialTitle": "The Music Never Stopped",
           "Aliases": [
             "The Music Never Stopped",
-            "TMNS"
+            "TMNS",
+            "Music Never Stopped"
           ]
         },
         {
@@ -1593,8 +1737,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Never Trust a Woman",
-          "Aliases": []
+          "OfficialTitle": "Never Trust A Woman",
+          "Aliases": [
+            "Never Trust a Woman"
+          ]
         },
         {
           "OfficialTitle": "New Orleans",
@@ -1641,28 +1787,36 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Oh Boy!",
-          "Aliases": []
+          "OfficialTitle": "Oh Boy",
+          "Aliases": [
+            "Oh Boy!"
+          ]
         },
         {
-          "OfficialTitle": "Oh, Babe, It Ain't No Lie",
-          "Aliases": []
+          "OfficialTitle": "Oh Babe, It Ain't No Lie",
+          "Aliases": [
+            "Oh, Babe, It Ain't No Lie"
+          ]
         },
         {
           "OfficialTitle": "Old and In the Way",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Old, Old House",
-          "Aliases": []
+          "OfficialTitle": "Old Old House",
+          "Aliases": [
+            "Old, Old House"
+          ]
         },
         {
           "OfficialTitle": "Ollin Arageed",
           "Aliases": []
         },
         {
-          "OfficialTitle": "On the Road Again",
-          "Aliases": []
+          "OfficialTitle": "On The Road Again",
+          "Aliases": [
+            "On the Road Again"
+          ]
         },
         {
           "OfficialTitle": "One Kind Favor",
@@ -1684,8 +1838,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Only a Fool",
-          "Aliases": []
+          "OfficialTitle": "Only A Fool",
+          "Aliases": [
+            "Only a Fool"
+          ]
         },
         {
           "OfficialTitle": "Operator",
@@ -1704,8 +1860,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Pain in My Heart",
-          "Aliases": []
+          "OfficialTitle": "Pain In My Heart",
+          "Aliases": [
+            "Pain in My Heart"
+          ]
         },
         {
           "OfficialTitle": "Passenger",
@@ -1732,12 +1890,13 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Playing in the Band",
+          "OfficialTitle": "Playing In The Band",
           "Aliases": [
             "Playin",
             "Playin'",
             "PITB",
-            "Playin In The Band"
+            "Playin In The Band",
+            "Playing in the Band"
           ]
         },
         {
@@ -1777,9 +1936,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Race Is On",
+          "OfficialTitle": "The Race Is On",
           "Aliases": [
-            "The Race Is On"
+            "The Race Is On",
+            "Race Is On"
           ]
         },
         {
@@ -1787,8 +1947,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Rainy Day Women #12 & 35",
-          "Aliases": []
+          "OfficialTitle": "Rainy Day Women #12 and 35",
+          "Aliases": [
+            "Rainy Day Women #12 & 35"
+          ]
         },
         {
           "OfficialTitle": "Ramble On Rose",
@@ -1815,8 +1977,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Riot in Cell Block #9",
-          "Aliases": []
+          "OfficialTitle": "Riot In Cell Block #9",
+          "Aliases": [
+            "Riot in Cell Block #9"
+          ]
         },
         {
           "OfficialTitle": "Ripple",
@@ -1877,8 +2041,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Rubin and Cherise",
-          "Aliases": []
+          "OfficialTitle": "Reuben And Cherise",
+          "Aliases": [
+            "Rubin and Cherise"
+          ]
         },
         {
           "OfficialTitle": "Run Rudolph Run",
@@ -1893,8 +2059,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Sage and Spirit",
-          "Aliases": []
+          "OfficialTitle": "Sage And Spirit",
+          "Aliases": [
+            "Sage and Spirit"
+          ]
         },
         {
           "OfficialTitle": "Saint Stephen",
@@ -1904,28 +2072,34 @@
           ]
         },
         {
-          "OfficialTitle": "Saint of Circumstance",
-          "Aliases": []
+          "OfficialTitle": "Saint Of Circumstance",
+          "Aliases": [
+            "Saint of Circumstance"
+          ]
         },
         {
           "OfficialTitle": "Salt Lake City",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Samba in the Rain",
-          "Aliases": []
-        },
-        {
-          "OfficialTitle": "Same Thing",
+          "OfficialTitle": "Samba In The Rain",
           "Aliases": [
-            "The Same Thing"
+            "Samba in the Rain"
           ]
         },
         {
-          "OfficialTitle": "Samson and Delilah",
+          "OfficialTitle": "The Same Thing",
+          "Aliases": [
+            "The Same Thing",
+            "Same Thing"
+          ]
+        },
+        {
+          "OfficialTitle": "Samson And Delilah",
           "Aliases": [
             "Samson & Delilah",
-            "Samson"
+            "Samson",
+            "Samson and Delilah"
           ]
         },
         {
@@ -1949,9 +2123,10 @@
           ]
         },
         {
-          "OfficialTitle": "Sea Stones",
+          "OfficialTitle": "Seastones",
           "Aliases": [
-            "Seastones"
+            "Seastones",
+            "Sea Stones"
           ]
         },
         {
@@ -1959,8 +2134,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Seasons of My Heart",
-          "Aliases": []
+          "OfficialTitle": "Seasons Of My Heart",
+          "Aliases": [
+            "Seasons of My Heart"
+          ]
         },
         {
           "OfficialTitle": "See That My Grave Is Kept Clean",
@@ -1973,50 +2150,65 @@
           ]
         },
         {
-          "OfficialTitle": "She Belongs to Me",
-          "Aliases": []
+          "OfficialTitle": "She Belongs To Me",
+          "Aliases": [
+            "She Belongs to Me"
+          ]
         },
         {
           "OfficialTitle": "She Said She Said",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Shelter from the Storm",
-          "Aliases": []
+          "OfficialTitle": "Shelter From The Storm",
+          "Aliases": [
+            "Shelter from the Storm"
+          ]
         },
         {
-          "OfficialTitle": "Ship of Fools",
-          "Aliases": []
+          "OfficialTitle": "Ship Of Fools",
+          "Aliases": [
+            "Ship of Fools"
+          ]
         },
         {
-          "OfficialTitle": "Sick and Tired",
-          "Aliases": []
+          "OfficialTitle": "Sick And Tired",
+          "Aliases": [
+            "Sick and Tired"
+          ]
         },
         {
-          "OfficialTitle": "Sidewalks of New York",
-          "Aliases": []
+          "OfficialTitle": "Sidewalks Of New York",
+          "Aliases": [
+            "Sidewalks of New York"
+          ]
         },
         {
           "OfficialTitle": "Silent Way Jam",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Silver Threads and Golden Needles",
-          "Aliases": []
+          "OfficialTitle": "Silver Threads And Golden Needles",
+          "Aliases": [
+            "Silver Threads and Golden Needles"
+          ]
         },
         {
-          "OfficialTitle": "Simple Twist of Fate",
-          "Aliases": []
+          "OfficialTitle": "Simple Twist Of Fate",
+          "Aliases": [
+            "Simple Twist of Fate"
+          ]
         },
         {
           "OfficialTitle": "Sing Me Back Home",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Sittin' on Top of the World",
+          "OfficialTitle": "Sitting On Top Of The World",
           "Aliases": [
             "Sitting on Top of the World",
-            "Sitting On Top"
+            "Sitting On Top",
+            "Sittin' on Top of the World"
           ]
         },
         {
@@ -2032,8 +2224,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Slewfoot",
-          "Aliases": []
+          "OfficialTitle": "Ol' Slewfoot",
+          "Aliases": [
+            "Slewfoot"
+          ]
         },
         {
           "OfficialTitle": "Slipknot!",
@@ -2061,12 +2255,16 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "So Sad (To Watch Good Love Go Bad)",
-          "Aliases": []
+          "OfficialTitle": "So Sad (To See Good Love Go Bad)",
+          "Aliases": [
+            "So Sad (To Watch Good Love Go Bad)"
+          ]
         },
         {
-          "OfficialTitle": "So What",
-          "Aliases": []
+          "OfficialTitle": "So What?",
+          "Aliases": [
+            "So What"
+          ]
         },
         {
           "OfficialTitle": "Somebody to Love",
@@ -2105,16 +2303,22 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Stander on the Mountain",
-          "Aliases": []
+          "OfficialTitle": "Stander On The Mountain",
+          "Aliases": [
+            "Stander on the Mountain"
+          ]
         },
         {
-          "OfficialTitle": "Standing on the Corner",
-          "Aliases": []
+          "OfficialTitle": "Standing On The Corner",
+          "Aliases": [
+            "Standing on the Corner"
+          ]
         },
         {
-          "OfficialTitle": "Standing on the Moon",
-          "Aliases": []
+          "OfficialTitle": "Standing On The Moon",
+          "Aliases": [
+            "Standing on the Moon"
+          ]
         },
         {
           "OfficialTitle": "Star Spangled Banner",
@@ -2151,8 +2355,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Stuck Inside of Mobile with the Memphis Blues Again",
-          "Aliases": []
+          "OfficialTitle": "Stuck Inside Of Mobile With The Memphis Blues Again",
+          "Aliases": [
+            "Stuck Inside of Mobile with the Memphis Blues Again"
+          ]
         },
         {
           "OfficialTitle": "Sugar Magnolia",
@@ -2198,20 +2404,26 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Take Me to the River",
-          "Aliases": []
+          "OfficialTitle": "Take Me To The River",
+          "Aliases": [
+            "Take Me to the River"
+          ]
         },
         {
-          "OfficialTitle": "Tangled Up in Blue",
-          "Aliases": []
+          "OfficialTitle": "Tangled Up In Blue",
+          "Aliases": [
+            "Tangled Up in Blue"
+          ]
         },
         {
           "OfficialTitle": "Tastebud",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Tell It to Me",
-          "Aliases": []
+          "OfficialTitle": "Tell It To Me",
+          "Aliases": [
+            "Tell It to Me"
+          ]
         },
         {
           "OfficialTitle": "Tell Mama",
@@ -2234,8 +2446,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "That's All Right Mama",
-          "Aliases": []
+          "OfficialTitle": "That's Alright Mama",
+          "Aliases": [
+            "That's All Right Mama"
+          ]
         },
         {
           "OfficialTitle": "The Boxer",
@@ -2268,9 +2482,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "The Stranger (Two Souls in Communion)",
+          "OfficialTitle": "Two Souls In Communion",
           "Aliases": [
-            "Two Souls in Communion"
+            "Two Souls in Communion",
+            "The Stranger (Two Souls in Communion)"
           ]
         },
         {
@@ -2296,8 +2511,10 @@
           ]
         },
         {
-          "OfficialTitle": "There Is Something on Your Mind",
-          "Aliases": []
+          "OfficialTitle": "There's Something On Your Mind",
+          "Aliases": [
+            "There Is Something on Your Mind"
+          ]
         },
         {
           "OfficialTitle": "They Love Each Other",
@@ -2306,8 +2523,10 @@
           ]
         },
         {
-          "OfficialTitle": "Things I Used to Do",
-          "Aliases": []
+          "OfficialTitle": "The Things I Used To Do",
+          "Aliases": [
+            "Things I Used to Do"
+          ]
         },
         {
           "OfficialTitle": "Think",
@@ -2324,9 +2543,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Til the Morning Comes",
+          "OfficialTitle": "Till The Morning Comes",
           "Aliases": [
-            "Till the Morning Comes"
+            "Till the Morning Comes",
+            "Til the Morning Comes"
           ]
         },
         {
@@ -2334,8 +2554,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Times They Are A-Changin'",
-          "Aliases": []
+          "OfficialTitle": "The Times They Are A Changin'",
+          "Aliases": [
+            "Times They Are A-Changin'"
+          ]
         },
         {
           "OfficialTitle": "To Lay Me Down",
@@ -2346,25 +2568,30 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Tomorrow Is a Long Time",
-          "Aliases": []
+          "OfficialTitle": "Tomorrow Is A Long Time",
+          "Aliases": [
+            "Tomorrow Is a Long Time"
+          ]
         },
         {
           "OfficialTitle": "Tomorrow Never Knows",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Tons of Steel",
-          "Aliases": []
+          "OfficialTitle": "Tons Of Steel",
+          "Aliases": [
+            "Tons of Steel"
+          ]
         },
         {
           "OfficialTitle": "Too Much Monkey Business",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Touch of Grey",
+          "OfficialTitle": "Touch Of Grey",
           "Aliases": [
-            "Touch Of Gray"
+            "Touch Of Gray",
+            "Touch of Grey"
           ]
         },
         {
@@ -2391,11 +2618,12 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Turn On Your Love Light",
+          "OfficialTitle": "Turn On Your Lovelight",
           "Aliases": [
             "Love Light",
             "Lovelight",
-            "Turn On Your Lovelight"
+            "Turn On Your Lovelight",
+            "Turn On Your Love Light"
           ]
         },
         {
@@ -2429,9 +2657,10 @@
           ]
         },
         {
-          "OfficialTitle": "Uncle Sam's Blues",
+          "OfficialTitle": "Uncle Sam Blues",
           "Aliases": [
-            "Uncle Sams Blues"
+            "Uncle Sams Blues",
+            "Uncle Sam's Blues"
           ]
         },
         {
@@ -2451,16 +2680,20 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Victim or the Crime",
-          "Aliases": []
+          "OfficialTitle": "Victim Or The Crime",
+          "Aliases": [
+            "Victim or the Crime"
+          ]
         },
         {
           "OfficialTitle": "Viola Lee Blues",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Visions of Johanna",
-          "Aliases": []
+          "OfficialTitle": "Visions Of Johanna",
+          "Aliases": [
+            "Visions of Johanna"
+          ]
         },
         {
           "OfficialTitle": "Wabash Cannonball",
@@ -2471,8 +2704,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Wake Me, Shake Me",
-          "Aliases": []
+          "OfficialTitle": "Wake Me Shake Me",
+          "Aliases": [
+            "Wake Me, Shake Me"
+          ]
         },
         {
           "OfficialTitle": "Wake Up Little Susie",
@@ -2489,15 +2724,18 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Walking Blues",
+          "OfficialTitle": "Walkin' Blues",
           "Aliases": [
             "Walkin' Blues",
-            "Walkin Blues"
+            "Walkin Blues",
+            "Walking Blues"
           ]
         },
         {
-          "OfficialTitle": "Walking the Dog",
-          "Aliases": []
+          "OfficialTitle": "Walking The Dog",
+          "Aliases": [
+            "Walking the Dog"
+          ]
         },
         {
           "OfficialTitle": "Wang Dang Doodle",
@@ -2508,16 +2746,20 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Watching the River Flow",
-          "Aliases": []
+          "OfficialTitle": "Watching The River Flow",
+          "Aliases": [
+            "Watching the River Flow"
+          ]
         },
         {
           "OfficialTitle": "Wave That Flag",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Wave to the Wind",
-          "Aliases": []
+          "OfficialTitle": "Wave To The Wind",
+          "Aliases": [
+            "Wave to the Wind"
+          ]
         },
         {
           "OfficialTitle": "We Can Run",
@@ -2538,8 +2780,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Werewolves of London",
-          "Aliases": []
+          "OfficialTitle": "Werewolves Of London",
+          "Aliases": [
+            "Werewolves of London"
+          ]
         },
         {
           "OfficialTitle": "West L.A. Fadeaway",
@@ -2564,20 +2808,26 @@
           ]
         },
         {
-          "OfficialTitle": "When Push Comes to Shove",
-          "Aliases": []
+          "OfficialTitle": "When Push Comes To Shove",
+          "Aliases": [
+            "When Push Comes to Shove"
+          ]
         },
         {
           "OfficialTitle": "When a Man Loves a Woman",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Where Have All the Heroes Gone",
-          "Aliases": []
+          "OfficialTitle": "Where Have The Heroes Gone",
+          "Aliases": [
+            "Where Have All the Heroes Gone"
+          ]
         },
         {
-          "OfficialTitle": "Whiskey in the Jar",
-          "Aliases": []
+          "OfficialTitle": "Whiskey In The Jar",
+          "Aliases": [
+            "Whiskey in the Jar"
+          ]
         },
         {
           "OfficialTitle": "White Dove",
@@ -2592,20 +2842,26 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Who's Loving You Tonight",
-          "Aliases": []
+          "OfficialTitle": "Who's Lovin' You Tonight",
+          "Aliases": [
+            "Who's Loving You Tonight"
+          ]
         },
         {
-          "OfficialTitle": "Why Don't We Do It in the Road",
-          "Aliases": []
+          "OfficialTitle": "Why Don't We Do It In The Road",
+          "Aliases": [
+            "Why Don't We Do It in the Road"
+          ]
         },
         {
           "OfficialTitle": "Why Don't You Love Me",
           "Aliases": []
         },
         {
-          "OfficialTitle": "Wicked Messenger",
-          "Aliases": []
+          "OfficialTitle": "The Wicked Messenger",
+          "Aliases": [
+            "Wicked Messenger"
+          ]
         },
         {
           "OfficialTitle": "Wild Horses",
@@ -2620,9 +2876,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Working Man's Blues",
+          "OfficialTitle": "Workin' Man Blues",
           "Aliases": [
-            "Workin' Man Blues"
+            "Workin' Man Blues",
+            "Working Man's Blues"
           ]
         },
         {
@@ -2652,16 +2909,20 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "You Don't Have to Ask",
-          "Aliases": []
+          "OfficialTitle": "You Don't Have To Ask",
+          "Aliases": [
+            "You Don't Have to Ask"
+          ]
         },
         {
           "OfficialTitle": "You Don't Love Me",
           "Aliases": []
         },
         {
-          "OfficialTitle": "You See a Broken Heart",
-          "Aliases": []
+          "OfficialTitle": "You See A Broken Heart",
+          "Aliases": [
+            "You See a Broken Heart"
+          ]
         },
         {
           "OfficialTitle": "You Win Again",
@@ -2685,9 +2946,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Truck Driving Man",
+          "OfficialTitle": "Truck Drivin' Man",
           "Aliases": [
-            "Truck Drivin' Man"
+            "Truck Drivin' Man",
+            "Truck Driving Man"
           ]
         },
         {
@@ -2695,8 +2957,10 @@
           "Aliases": []
         },
         {
-          "OfficialTitle": "Willie and the Hand Jive",
-          "Aliases": []
+          "OfficialTitle": "Willie And The Hand Jive",
+          "Aliases": [
+            "Willie and the Hand Jive"
+          ]
         }
       ]
     }
