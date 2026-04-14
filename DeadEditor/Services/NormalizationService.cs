@@ -53,17 +53,24 @@ namespace DeadEditor.Services
             }
 
             // Load from legacy Songs structure (backward compatibility)
+            // Artist entries take precedence — only add legacy entries for keys not already present
             if (_database?.Songs != null)
             {
                 foreach (var song in _database.Songs)
                 {
-                    // Add official title as its own lookup
-                    _aliasLookup[song.OfficialTitle] = song.OfficialTitle;
+                    // Add official title as its own lookup (only if not already set by Artists)
+                    if (!_aliasLookup.ContainsKey(song.OfficialTitle))
+                    {
+                        _aliasLookup[song.OfficialTitle] = song.OfficialTitle;
+                    }
 
-                    // Add all aliases
+                    // Add all aliases (only if not already set by Artists)
                     foreach (var alias in song.Aliases ?? new List<string>())
                     {
-                        _aliasLookup[alias] = song.OfficialTitle;
+                        if (!_aliasLookup.ContainsKey(alias))
+                        {
+                            _aliasLookup[alias] = song.OfficialTitle;
+                        }
                     }
                 }
             }
@@ -398,6 +405,16 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
+        /// Looks up the canonical OfficialTitle for a song name (exact alias match only, no fuzzy matching).
+        /// Returns null if the input doesn't match any OfficialTitle or alias.
+        /// </summary>
+        public string? GetOfficialTitle(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return null;
+            return _aliasLookup.TryGetValue(input, out var official) ? official : null;
+        }
+
+        /// <summary>
         /// Gets all known song titles for autocomplete
         /// </summary>
         public List<string> GetAllTitles()
@@ -588,6 +605,70 @@ namespace DeadEditor.Services
                 return null;
 
             return $"{year:D4}-{month:D2}-{day:D2}";
+        }
+
+        /// <summary>
+        /// Adds an alias for an existing song's OfficialTitle. If the alias already exists, does nothing.
+        /// Reloads the alias lookup after saving so the new alias is immediately available.
+        /// </summary>
+        public bool AddAlias(string officialTitle, string alias)
+        {
+            if (string.IsNullOrEmpty(officialTitle) || string.IsNullOrEmpty(alias))
+                return false;
+
+            // Don't add if alias is same as official title (case-insensitive)
+            if (string.Equals(officialTitle, alias, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Re-read from disk to avoid overwriting concurrent changes
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "songs.json");
+            if (!File.Exists(path)) return false;
+
+            var json = File.ReadAllText(path);
+            var db = JsonConvert.DeserializeObject<SongDatabase>(json);
+            if (db == null) return false;
+
+            // Find the song entry by OfficialTitle
+            SongEntry? targetSong = null;
+            if (db.Artists != null)
+            {
+                foreach (var artist in db.Artists)
+                {
+                    targetSong = artist.Songs?.FirstOrDefault(s =>
+                        string.Equals(s.OfficialTitle, officialTitle, StringComparison.OrdinalIgnoreCase));
+                    if (targetSong != null) break;
+                }
+            }
+
+            // Fall back to legacy structure
+            if (targetSong == null && db.Songs != null)
+            {
+                targetSong = db.Songs.FirstOrDefault(s =>
+                    string.Equals(s.OfficialTitle, officialTitle, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (targetSong == null) return false;
+
+            // Check if alias already exists
+            if (targetSong.Aliases == null)
+                targetSong.Aliases = new List<string>();
+
+            if (targetSong.Aliases.Any(a => string.Equals(a, alias, StringComparison.OrdinalIgnoreCase)))
+                return false; // Already exists
+
+            targetSong.Aliases.Add(alias);
+
+            // Atomic write: temp file + rename
+            var tempPath = path + ".tmp";
+            var newJson = JsonConvert.SerializeObject(db, Formatting.Indented);
+            File.WriteAllText(tempPath, newJson);
+            File.Delete(path);
+            File.Move(tempPath, path);
+
+            // Reload in-memory state
+            LoadDatabase();
+
+            return true;
         }
 
         private void SaveDatabase()
