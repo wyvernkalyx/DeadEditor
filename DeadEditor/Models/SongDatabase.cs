@@ -16,10 +16,6 @@ namespace DeadEditor.Models
 
     public class SongDatabase
     {
-        // New artist-based structure
         public List<ArtistEntry> Artists { get; set; }
-
-        // Legacy structure for backward compatibility
-        public List<SongEntry> Songs { get; set; }
     }
 }

@@ -56,7 +56,7 @@ namespace DeadEditor
         {
             if (!File.Exists(_databasePath))
             {
-                _database = new SongDatabase { Songs = new List<SongEntry>(), Artists = new List<ArtistEntry>() };
+                _database = new SongDatabase { Artists = new List<ArtistEntry>() };
                 return;
             }
 
@@ -75,15 +75,7 @@ namespace DeadEditor
                 }
             }
 
-            // Also include legacy songs
-            if (_database?.Songs != null)
-            {
-                _allSongs.AddRange(_database.Songs);
-            }
-
             _allSongs = _allSongs
-                .GroupBy(s => s.OfficialTitle, StringComparer.OrdinalIgnoreCase)
-                .Select(g => g.First())
                 .OrderBy(s => s.OfficialTitle, StringComparer.OrdinalIgnoreCase)
                 .ToList();
         }
@@ -283,9 +275,6 @@ namespace DeadEditor
                     artist.Songs?.RemoveAll(s => s.OfficialTitle.Equals(song.OfficialTitle, StringComparison.OrdinalIgnoreCase));
                 }
             }
-
-            // Remove from legacy list
-            _database?.Songs?.RemoveAll(s => s.OfficialTitle.Equals(song.OfficialTitle, StringComparison.OrdinalIgnoreCase));
 
             SaveDatabase();
             LoadDatabase();

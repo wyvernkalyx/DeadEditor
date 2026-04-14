@@ -27,7 +27,7 @@ namespace DeadEditor.Services
             }
             else
             {
-                _database = new SongDatabase { Songs = new List<SongEntry>(), Artists = new List<ArtistEntry>() };
+                _database = new SongDatabase { Artists = new List<ArtistEntry>() };
             }
 
             // Build lookup dictionary
@@ -52,28 +52,6 @@ namespace DeadEditor.Services
                 }
             }
 
-            // Load from legacy Songs structure (backward compatibility)
-            // Artist entries take precedence — only add legacy entries for keys not already present
-            if (_database?.Songs != null)
-            {
-                foreach (var song in _database.Songs)
-                {
-                    // Add official title as its own lookup (only if not already set by Artists)
-                    if (!_aliasLookup.ContainsKey(song.OfficialTitle))
-                    {
-                        _aliasLookup[song.OfficialTitle] = song.OfficialTitle;
-                    }
-
-                    // Add all aliases (only if not already set by Artists)
-                    foreach (var alias in song.Aliases ?? new List<string>())
-                    {
-                        if (!_aliasLookup.ContainsKey(alias))
-                        {
-                            _aliasLookup[alias] = song.OfficialTitle;
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -294,7 +272,7 @@ namespace DeadEditor.Services
         /// </summary>
         private string? FindFuzzyMatch(string input)
         {
-            if (string.IsNullOrEmpty(input) || _database?.Songs == null) return null;
+            if (string.IsNullOrEmpty(input) || _aliasLookup == null || _aliasLookup.Count == 0) return null;
 
             int bestDistance = int.MaxValue;
             string? bestMatch = null;
@@ -421,7 +399,6 @@ namespace DeadEditor.Services
         {
             var titles = new List<string>();
 
-            // Get titles from new artist-based structure
             if (_database?.Artists != null)
             {
                 foreach (var artist in _database.Artists)
@@ -430,13 +407,7 @@ namespace DeadEditor.Services
                 }
             }
 
-            // Get titles from legacy structure
-            if (_database?.Songs != null)
-            {
-                titles.AddRange(_database.Songs.Select(s => s.OfficialTitle));
-            }
-
-            return titles.Distinct().OrderBy(t => t).ToList();
+            return titles.OrderBy(t => t).ToList();
         }
 
         /// <summary>
@@ -638,13 +609,6 @@ namespace DeadEditor.Services
                         string.Equals(s.OfficialTitle, officialTitle, StringComparison.OrdinalIgnoreCase));
                     if (targetSong != null) break;
                 }
-            }
-
-            // Fall back to legacy structure
-            if (targetSong == null && db.Songs != null)
-            {
-                targetSong = db.Songs.FirstOrDefault(s =>
-                    string.Equals(s.OfficialTitle, officialTitle, StringComparison.OrdinalIgnoreCase));
             }
 
             if (targetSong == null) return false;
