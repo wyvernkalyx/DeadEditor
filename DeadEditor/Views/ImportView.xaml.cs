@@ -628,6 +628,24 @@ namespace DeadEditor
             };
             menu.Items.Add(addItem);
 
+            // "Track Info" — always available for any track
+            menu.Items.Add(new Separator
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42))
+            });
+
+            var trackInfoItem = new MenuItem { Header = "\U0001F4C4  Track Info", Style = menuItemStyle };
+            trackInfoItem.Click += (s, args) =>
+            {
+                var dialog = new TrackInfoDialog(
+                    clickedTrack,
+                    artist: ArtistTextBox.Text,
+                    album: AlbumNameTextBox?.Text);
+                dialog.Owner = Window.GetWindow(this);
+                dialog.ShowDialog();
+            };
+            menu.Items.Add(trackInfoItem);
+
             // "Match to Song..." — only for unmatched tracks on overflow disc with setlist data
             if (_lastSetlistSongs != null && _lastClaimedPositions != null &&
                 _lastMatchDate != null && _overflowDiscNumber > 0 &&
