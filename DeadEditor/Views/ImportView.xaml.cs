@@ -55,6 +55,17 @@ namespace DeadEditor
         private bool _isUpdating = false;
         private TaskCompletionSource<bool>? _notificationResult;
 
+        // ===== MATCH SETLIST STATE (for overflow disc and Match to Song) =====
+
+        /// <summary>Flattened setlist songs from the last Match Setlist run.</summary>
+        private List<(string Name, string Canonical, int Position, bool Segue)>? _lastSetlistSongs;
+        /// <summary>Indices into _lastSetlistSongs that have been claimed by matched tracks.</summary>
+        private HashSet<int>? _lastClaimedPositions;
+        /// <summary>The date used for the last Match Setlist run.</summary>
+        private string? _lastMatchDate;
+        /// <summary>The overflow disc number assigned to unmatched tracks.</summary>
+        private int _overflowDiscNumber;
+
         // ===== PLAYBACK =====
 
         // ===== CONSTRUCTOR =====
@@ -238,6 +249,7 @@ namespace DeadEditor
                 ViewInfoButton.IsEnabled = !string.IsNullOrEmpty(_albumInfo.InfoFileContent);
             }
 
+            UpdateMatchSetlistButton();
             UpdateAlbumPreview();
             UpdateAllTrackDisplayTitles();
 
@@ -261,6 +273,8 @@ namespace DeadEditor
             FolderPreviewTextBlock.Text = "";
             WritePathTextBlock.Text = "";
             ViewInfoButton.IsEnabled = false;
+            MatchSetlistButton.IsEnabled = false;
+            MatchSetlistButton.ToolTip = "No setlist data for this date";
             ImportButton.IsEnabled = true;
             WriteButton.IsEnabled = true;
             ArtworkImage.Visibility = Visibility.Collapsed;
@@ -329,8 +343,7 @@ namespace DeadEditor
                 CityStateTextBox.Text = showInfo.FormattedLocation;
             }
 
-            // Check concert reference database for setlist data (future: auto-fill track names)
-            // var concert = ConcertLookupService.Instance.GetConcertByDate(date);
+            UpdateMatchSetlistButton();
         }
 
         // ===== ALBUM NAME AUTOCOMPLETE =====
@@ -450,19 +463,14 @@ namespace DeadEditor
                 return;
             }
 
-            string folderName = _albumInfo.AlbumTitle;
-
-            // Sanitize for Windows folder name display (replace : * ? " < > | etc.)
-            string sanitized = SanitizeFolderName(folderName);
-            FolderPreviewTextBlock.Text = sanitized;
+            // Build folder name using the same logic as the import service
+            var artistFolder = SanitizeFolderName(_albumInfo.Artist ?? "Unknown Artist");
+            var albumFolder = _libraryImportService.BuildLibraryFolderName(_albumInfo);
+            FolderPreviewTextBlock.Text = albumFolder;
 
             if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath))
             {
-                string basePath = _albumInfo.Type == AlbumType.OfficialRelease
-                    ? (_librarySettings.OfficialReleasesPath ?? _librarySettings.LibraryRootPath)
-                    : _librarySettings.LibraryRootPath;
-
-                WritePathTextBlock.Text = Path.Combine(basePath, sanitized);
+                WritePathTextBlock.Text = Path.Combine(_librarySettings.LibraryRootPath, artistFolder, albumFolder);
             }
             else
             {
@@ -620,8 +628,173 @@ namespace DeadEditor
             };
             menu.Items.Add(addItem);
 
+            // "Match to Song..." — only for unmatched tracks on overflow disc with setlist data
+            if (_lastSetlistSongs != null && _lastClaimedPositions != null &&
+                _lastMatchDate != null && _overflowDiscNumber > 0 &&
+                vm.Track.DiscNumber == _overflowDiscNumber)
+            {
+                // Build list of unclaimed setlist songs
+                var unmatchedSongs = BuildUnmatchedSetlistSongList();
+                if (unmatchedSongs.Count > 0)
+                {
+                    menu.Items.Add(new Separator
+                    {
+                        Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42))
+                    });
+
+                    var matchItem = new MenuItem { Header = "\U0001F3B5  Match to Song...", Style = menuItemStyle };
+                    matchItem.Click += (s, args) => MatchToSong_Click(vm);
+                    menu.Items.Add(matchItem);
+                }
+            }
+
             menu.IsOpen = true;
             e.Handled = true;
+        }
+
+        /// <summary>
+        /// Builds a list of setlist songs that have not yet been matched to tracks.
+        /// Each entry includes the setlist index and a display label like "Song Name (Set 2, #3)".
+        /// </summary>
+        private List<(int SetlistIndex, string DisplayLabel)> BuildUnmatchedSetlistSongList()
+        {
+            var result = new List<(int, string)>();
+            if (_lastSetlistSongs == null || _lastClaimedPositions == null || _lastMatchDate == null)
+                return result;
+
+            var setlist = ShowLookupService.Instance.GetSetlist(_lastMatchDate);
+            if (setlist == null) return result;
+
+            for (int i = 0; i < _lastSetlistSongs.Count; i++)
+            {
+                if (_lastClaimedPositions.Contains(i)) continue;
+
+                // Find which set and position within set this song belongs to
+                var discTrack = ShowLookupService.Instance.GetDiscTrack(_lastMatchDate, _lastSetlistSongs[i].Position);
+                string setLabel;
+                if (discTrack != null && discTrack.Value.Disc <= setlist.Count)
+                {
+                    var setInfo = setlist[discTrack.Value.Disc - 1];
+                    setLabel = $"{setInfo.Label}, #{discTrack.Value.Track}";
+                }
+                else
+                {
+                    setLabel = $"#{i + 1}";
+                }
+
+                result.Add((i, $"{_lastSetlistSongs[i].Name} ({setLabel})"));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Handles "Match to Song..." context menu click. Shows dialog, assigns track to setlist position,
+        /// adds alias to songs.json, and updates the grid.
+        /// </summary>
+        private void MatchToSong_Click(TrackInfoViewModel vm)
+        {
+            if (_lastSetlistSongs == null || _lastClaimedPositions == null || _lastMatchDate == null)
+                return;
+
+            var unmatchedSongs = BuildUnmatchedSetlistSongList();
+            if (unmatchedSongs.Count == 0) return;
+
+            // Get the cleaned track title (what normalization would have produced, or the raw name)
+            var cleanedTitle = vm.Track.SongName ?? "";
+
+            var dialog = new MatchToSongDialog(cleanedTitle, unmatchedSongs);
+            dialog.Owner = Window.GetWindow(this);
+
+            if (dialog.ShowDialog() != true || dialog.SelectedSetlistIndex < 0)
+                return;
+
+            var selectedIndex = dialog.SelectedSetlistIndex;
+            var selectedSong = _lastSetlistSongs[selectedIndex];
+
+            // 1. Assign disc/track from setlist position
+            var discTrack = ShowLookupService.Instance.GetDiscTrack(_lastMatchDate, selectedSong.Position);
+            if (discTrack == null) return;
+
+            vm.Track.DiscNumber = discTrack.Value.Disc;
+            vm.Track.TrackNumber = ShowLookupService.ToTrackNumber(discTrack.Value.Disc, discTrack.Value.Track);
+            vm.Track.IsModified = true;
+            vm.Track.IsMatched = true;
+
+            // Update the displayed song name to the canonical title from the setlist
+            vm.Track.SongName = selectedSong.Canonical;
+
+            // Apply segue from setlist
+            if (selectedSong.Segue)
+                vm.Track.Segue = true;
+
+            // Mark this position as claimed
+            _lastClaimedPositions.Add(selectedIndex);
+
+            // 2. Auto-add alias to songs.json
+            // The canonical title from the setlist song
+            var officialTitle = selectedSong.Canonical;
+            // The track's current title is the alias candidate
+            var aliasCandidate = cleanedTitle.Trim();
+
+            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(officialTitle))
+            {
+                _normalizationService.AddAlias(officialTitle, aliasCandidate);
+            }
+
+            // 3. Renumber remaining overflow tracks
+            RenumberOverflowTracks();
+
+            // 4. Update status
+            int matchCount = _lastClaimedPositions.Count;
+            int unmatchedCount = _tracks.Count - matchCount;
+            var segueMsg = "";
+            int segueCount = _tracks.Count(t => t.Track.Segue);
+            if (segueCount > 0) segueMsg = $", {segueCount} segues";
+
+            if (unmatchedCount > 0 && _overflowDiscNumber > 0)
+            {
+                StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}, {unmatchedCount} unmatched → Disc {_overflowDiscNumber}";
+            }
+            else
+            {
+                // All tracks matched — no more overflow
+                _overflowDiscNumber = 0;
+                StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}";
+            }
+
+            // Refresh and re-sort the grid so the matched track moves to its correct position
+            ICollectionView view = CollectionViewSource.GetDefaultView(TracksDataGrid.ItemsSource);
+            view.SortDescriptions.Clear();
+            view.SortDescriptions.Add(new SortDescription("DiscNumber", ListSortDirection.Ascending));
+            view.SortDescriptions.Add(new SortDescription("TrackNumber", ListSortDirection.Ascending));
+            TracksDataGrid.Items.Refresh();
+        }
+
+        /// <summary>
+        /// Renumbers tracks on the overflow disc sequentially (e.g., 401, 402...).
+        /// If no tracks remain on overflow, resets _overflowDiscNumber to 0.
+        /// </summary>
+        private void RenumberOverflowTracks()
+        {
+            if (_overflowDiscNumber <= 0) return;
+
+            var overflowTracks = _tracks
+                .Where(t => t.Track.DiscNumber == _overflowDiscNumber)
+                .ToList();
+
+            if (overflowTracks.Count == 0)
+            {
+                _overflowDiscNumber = 0;
+                return;
+            }
+
+            int trackNum = 1;
+            foreach (var tw in overflowTracks)
+            {
+                tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(_overflowDiscNumber, trackNum);
+                trackNum++;
+            }
         }
 
         // ===== DRAG-TO-REORDER =====
@@ -809,6 +982,165 @@ namespace DeadEditor
 
             TracksDataGrid.Items.Refresh();
             StatusTextBlock.Text = "Tracks renumbered using disc-aware 101/201/301 convention";
+        }
+
+        // ===== MATCH SETLIST =====
+
+        /// <summary>
+        /// Updates the Match Setlist button enabled state and tooltip based on
+        /// whether setlist data exists for the current album date.
+        /// </summary>
+        private void UpdateMatchSetlistButton()
+        {
+            var date = AlbumDateTextBox.Text?.Trim();
+            if (!string.IsNullOrEmpty(date) && date.Length == 10
+                && System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$"))
+            {
+                var setlist = ShowLookupService.Instance.GetSetlist(date);
+                if (setlist != null)
+                {
+                    MatchSetlistButton.IsEnabled = true;
+                    int songCount = setlist.Sum(s => s.Songs.Count);
+                    MatchSetlistButton.ToolTip = $"Match tracks to setlist ({songCount} songs in {setlist.Count} sets)";
+                    return;
+                }
+            }
+
+            MatchSetlistButton.IsEnabled = false;
+            MatchSetlistButton.ToolTip = "No setlist data for this date";
+        }
+
+        private async void MatchSetlistButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tracks.Count == 0 || _albumInfo == null)
+            {
+                await ShowNotificationAsync("No Tracks", "No tracks loaded to match.");
+                return;
+            }
+
+            var date = AlbumDateTextBox.Text?.Trim();
+            if (string.IsNullOrEmpty(date)) return;
+
+            var setlist = ShowLookupService.Instance.GetSetlist(date);
+            if (setlist == null)
+            {
+                await ShowNotificationAsync("No Setlist", "No setlist data available for this date.");
+                return;
+            }
+
+            // Flatten setlist into ordered list with global position
+            var setlistSongs = new List<(string Name, string Canonical, int Position, bool Segue)>();
+            int pos = 0;
+            foreach (var set in setlist)
+            {
+                foreach (var song in set.Songs)
+                {
+                    // Resolve setlist song name to canonical OfficialTitle
+                    var canonical = _normalizationService.GetOfficialTitle(song.Name) ?? song.Name;
+                    setlistSongs.Add((song.Name, canonical, pos, song.Segue));
+                    pos++;
+                }
+            }
+
+            // Track which setlist positions have been claimed (for duplicate handling)
+            var claimedPositions = new HashSet<int>();
+            var matchedTracks = new HashSet<TrackInfoViewModel>();
+            int matchCount = 0;
+            int segueCount = 0;
+
+            foreach (var tw in _tracks)
+            {
+                var trackName = tw.Track.SongName;
+                if (string.IsNullOrEmpty(trackName)) continue;
+
+                // Normalize the track title using the same pipeline as Normalize button
+                var normalized = _normalizationService.Normalize(trackName);
+                var nameToMatch = normalized ?? trackName;
+
+                // Resolve to canonical OfficialTitle for comparison
+                var trackCanonical = _normalizationService.GetOfficialTitle(nameToMatch) ?? nameToMatch;
+
+                // Find the first unclaimed setlist position that matches via canonical titles
+                int matchedIndex = -1;
+                for (int i = 0; i < setlistSongs.Count; i++)
+                {
+                    if (claimedPositions.Contains(i)) continue;
+
+                    if (string.Equals(trackCanonical, setlistSongs[i].Canonical, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchedIndex = i;
+                        break;
+                    }
+                }
+
+                if (matchedIndex < 0) continue;
+
+                // Assign disc/track from setlist position
+                claimedPositions.Add(matchedIndex);
+                var discTrack = ShowLookupService.Instance.GetDiscTrack(date, setlistSongs[matchedIndex].Position);
+                if (discTrack == null) continue;
+
+                tw.Track.DiscNumber = discTrack.Value.Disc;
+                tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(discTrack.Value.Disc, discTrack.Value.Track);
+                tw.Track.IsModified = true;
+                matchedTracks.Add(tw);
+                matchCount++;
+
+                // Apply segue from setlist
+                if (setlistSongs[matchedIndex].Segue)
+                {
+                    tw.Track.Segue = true;
+                    segueCount++;
+                }
+            }
+
+            // --- Overflow disc: move unmatched tracks to next disc ---
+            int unmatchedCount = _tracks.Count - matchCount;
+            int overflowDisc = 0;
+
+            if (unmatchedCount > 0 && matchCount > 0)
+            {
+                // Find the highest disc number among matched tracks
+                int maxDisc = 0;
+                foreach (var tw in _tracks)
+                {
+                    if (tw.Track.IsModified && tw.Track.DiscNumber > maxDisc)
+                        maxDisc = tw.Track.DiscNumber;
+                }
+                overflowDisc = maxDisc + 1;
+
+                int overflowTrack = 1;
+                foreach (var tw in _tracks)
+                {
+                    // Unmatched = not modified by this pass (IsModified was set above for matched tracks)
+                    // More precisely: tracks that were NOT in the matched set
+                    if (!matchedTracks.Contains(tw))
+                    {
+                        tw.Track.DiscNumber = overflowDisc;
+                        tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(overflowDisc, overflowTrack);
+                        overflowTrack++;
+                    }
+                }
+            }
+
+            // Store state for Match to Song feature
+            _lastSetlistSongs = setlistSongs;
+            _lastClaimedPositions = claimedPositions;
+            _lastMatchDate = date;
+            _overflowDiscNumber = overflowDisc;
+
+            TracksDataGrid.Items.Refresh();
+
+            if (matchCount == 0)
+            {
+                StatusTextBlock.Text = $"No tracks matched the setlist ({setlistSongs.Count} songs)";
+            }
+            else
+            {
+                var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
+                var unmatchedMsg = unmatchedCount > 0 ? $", {unmatchedCount} unmatched → Disc {overflowDisc}" : "";
+                StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
+            }
         }
 
         private async void MusicBrainzButton_Click(object sender, RoutedEventArgs e)
@@ -1013,8 +1345,7 @@ namespace DeadEditor
             // Duplicate check
             bool exists = _libraryImportService.ShowExistsInLibrary(
                 _librarySettings.LibraryRootPath,
-                _albumInfo,
-                _librarySettings.OfficialReleasesPath);
+                _albumInfo);
 
             if (exists)
             {
@@ -1055,8 +1386,7 @@ namespace DeadEditor
                         _librarySettings.LibraryRootPath,
                         _albumInfo,
                         trackList,
-                        progress,
-                        _librarySettings.OfficialReleasesPath);
+                        progress);
                 });
 
                 ProgressBar.Visibility = Visibility.Collapsed;
