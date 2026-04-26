@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "pairs": [
+    { "from": "China Cat Sunflower", "to": "I Know You Rider" },
+    { "from": "China Cat", "to": "I Know You Rider" },
+    { "from": "Scarlet Begonias", "to": "Fire on the Mountain" },
+    { "from": "Scarlet", "to": "Fire on the Mountain" },
+    { "from": "Help on the Way", "to": "Slipknot!" },
+    { "from": "Slipknot!", "to": "Franklin's Tower" },
+    { "from": "Lost Sailor", "to": "Saint of Circumstance" },
+    { "from": "Playing in the Band", "to": "Uncle John's Band" },
+    { "from": "Estimated Prophet", "to": "Eyes of the World" },
+    { "from": "Drums", "to": "Space" },
+    { "from": "Space", "to": "The Other One" }
+  ]
+}

@@ -23,6 +23,7 @@ namespace DeadEditor
         private List<EditableTrack> _tracks = new();
         private bool _hasUnsavedChanges;
 
+        // Structural labels for set assignment UI — these are display values, not song data
         private static readonly string[] SetChoices =
             { "Set 1", "Set 2", "Set 3", "Encore", "Encore 2" };
 
@@ -45,7 +46,7 @@ namespace DeadEditor
             LoadTrackData();
 
             // Set up the Set column's combo box items
-            var setColumn = TracksDataGrid.Columns[4] as DataGridComboBoxColumn;
+            var setColumn = TracksDataGrid.Columns[3] as DataGridComboBoxColumn;
             if (setColumn != null)
             {
                 setColumn.ItemsSource = SetChoices;
@@ -355,20 +356,23 @@ namespace DeadEditor
         public string SongName
         {
             get => _songName;
-            set { if (_songName != value) { _songName = value; OnPropertyChanged(nameof(SongName)); } }
+            set { if (_songName != value) { _songName = value; OnPropertyChanged(nameof(SongName)); OnPropertyChanged(nameof(SegueMarker)); OnPropertyChanged(nameof(DateDisplay)); } }
         }
 
         public string Date
         {
             get => _date;
-            set { if (_date != value) { _date = value; OnPropertyChanged(nameof(Date)); } }
+            set { if (_date != value) { _date = value; OnPropertyChanged(nameof(Date)); OnPropertyChanged(nameof(DateDisplay)); } }
         }
 
         public bool Segue
         {
             get => _segue;
-            set { if (_segue != value) { _segue = value; OnPropertyChanged(nameof(Segue)); } }
+            set { if (_segue != value) { _segue = value; OnPropertyChanged(nameof(Segue)); OnPropertyChanged(nameof(SegueMarker)); } }
         }
+
+        public string SegueMarker => Segue ? " >" : "";
+        public string DateDisplay => !string.IsNullOrEmpty(Date) ? $" ({Date})" : "";
 
         public string Set
         {

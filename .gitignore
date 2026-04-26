@@ -86,3 +86,7 @@ $RECYCLE.BIN/
 
 # User settings
 DeadEditor/bin/Debug/net8.0-windows/DeadEditor/settings.json
+
+# Claude Code local IDE state
+.claude/
+**/.claude/

@@ -1,3 +1,4 @@
+using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
 using System.Collections.Generic;
@@ -16,26 +17,17 @@ namespace DeadEditor
             _normalizationService = normalizationService;
             LoadArtists();
 
-            // Set default artist to Grateful Dead
-            ArtistComboBox.Text = "Grateful Dead";
+            // Pre-select the primary artist from settings
+            var primaryArtist = LibrarySettings.Load().PrimaryArtistName;
+            if (!string.IsNullOrEmpty(primaryArtist))
+                ArtistComboBox.Text = primaryArtist;
         }
 
         private void LoadArtists()
         {
+            // Derive artist list from songs.json — no hardcoded names
             var artists = _normalizationService.GetAllArtists();
-
-            // Add common artists if not present
-            var commonArtists = new List<string> { "Grateful Dead", "New Riders of the Purple Sage", "Jerry Garcia Band", "Bob Weir", "Phil Lesh" };
-            foreach (var artist in commonArtists)
-            {
-                if (!artists.Contains(artist))
-                {
-                    artists.Add(artist);
-                }
-            }
-
             artists = artists.OrderBy(a => a).ToList();
-
             ArtistComboBox.ItemsSource = artists;
         }
 

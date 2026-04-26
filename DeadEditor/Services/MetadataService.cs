@@ -1,4 +1,5 @@
 using DeadEditor.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,50 @@ namespace DeadEditor.Services
 {
     public class MetadataService
     {
+        private static Dictionary<string, string>? _seguePairs;
+
+        /// <summary>
+        /// Loads segue pairs from Data/segue-pairs.json. Cached after first load.
+        /// </summary>
+        private static Dictionary<string, string> LoadSeguePairs()
+        {
+            if (_seguePairs != null) return _seguePairs;
+
+            _seguePairs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "segue-pairs.json");
+
+            try
+            {
+                if (File.Exists(path))
+                {
+                    var json = File.ReadAllText(path);
+                    var data = JsonConvert.DeserializeAnonymousType(json, new
+                    {
+                        pairs = new[] { new { from = "", to = "" } }
+                    });
+
+                    if (data?.pairs != null)
+                    {
+                        foreach (var pair in data.pairs)
+                        {
+                            if (!string.IsNullOrEmpty(pair.from) && !string.IsNullOrEmpty(pair.to))
+                                _seguePairs[pair.from] = pair.to;
+                        }
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[MetadataService] segue-pairs.json not found at {path}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MetadataService] Error loading segue-pairs.json: {ex.Message}");
+            }
+
+            return _seguePairs;
+        }
+
         /// <summary>
         /// Reads metadata from all audio files (FLAC/MP3) in a folder
         /// </summary>
@@ -115,21 +160,7 @@ namespace DeadEditor.Services
 
         private void DetectSegues(List<TrackInfo> tracks)
         {
-            // Common segue pairs in Grateful Dead shows
-            var seguePairs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "China Cat Sunflower", "I Know You Rider" },
-                { "China Cat", "I Know You Rider" },
-                { "Scarlet Begonias", "Fire on the Mountain" },
-                { "Scarlet", "Fire on the Mountain" },
-                { "Help on the Way", "Slipknot!" },
-                { "Slipknot!", "Franklin's Tower" },
-                { "Lost Sailor", "Saint of Circumstance" },
-                { "Playing in the Band", "Uncle John's Band" },
-                { "Estimated Prophet", "Eyes of the World" },
-                { "Drums", "Space" },
-                { "Space", "The Other One" }
-            };
+            var seguePairs = LoadSeguePairs();
 
             for (int i = 0; i < tracks.Count - 1; i++)
             {
@@ -157,7 +188,7 @@ namespace DeadEditor.Services
             var albumInfo = new AlbumInfo
             {
                 FolderPath = folderPath,
-                Artist = "Grateful Dead"
+                Artist = LibrarySettings.Load().PrimaryArtistName
             };
 
             // Try to parse folder name for official release info
@@ -172,7 +203,7 @@ namespace DeadEditor.Services
             {
                 using (var file = TagLib.File.Create(firstFile))
                 {
-                    albumInfo.Artist = file.Tag.FirstPerformer ?? "Grateful Dead";
+                    albumInfo.Artist = file.Tag.FirstPerformer ?? LibrarySettings.Load().PrimaryArtistName;
 
                     // Try to read custom metadata fields first (FLAC or MP3)
                     bool hasCustomFields = false;

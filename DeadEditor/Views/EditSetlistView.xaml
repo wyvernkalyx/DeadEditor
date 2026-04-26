@@ -77,128 +77,142 @@
         </StackPanel>
 
         <!-- Row 2: Editable track grid -->
-        <DataGrid Grid.Row="2"
-                  x:Name="TracksDataGrid"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  IsReadOnly="False"
-                  HeadersVisibility="Column"
-                  GridLinesVisibility="None"
-                  Background="#252526"
-                  RowBackground="#252526"
-                  AlternatingRowBackground="#2D2D30"
-                  Foreground="#CCCCCC"
-                  BorderThickness="0"
-                  SelectionMode="Extended"
-                  CanUserSortColumns="False"
-                  PreviewKeyDown="TracksDataGrid_PreviewKeyDown"
-                  CellEditEnding="TracksDataGrid_CellEditEnding">
+        <Border Grid.Row="2" BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E">
+            <DataGrid x:Name="TracksDataGrid"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeRows="False"
+                      IsReadOnly="False"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#3F3F46"
+                      Background="#1E1E1E"
+                      RowBackground="#1E1E1E"
+                      AlternatingRowBackground="#252526"
+                      Foreground="#FFFFFF"
+                      BorderThickness="0"
+                      FontSize="16"
+                      RowHeight="28"
+                      SelectionMode="Extended"
+                      CanUserSortColumns="False"
+                      ColumnWidth="Auto"
+                      HorizontalAlignment="Left"
+                      PreviewKeyDown="TracksDataGrid_PreviewKeyDown"
+                      CellEditEnding="TracksDataGrid_CellEditEnding">
 
-            <DataGrid.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#37373D"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#E0E0E0"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#2D2D30"/>
+                        <Setter Property="Foreground" Value="#CCCCCC"/>
+                        <Setter Property="BorderBrush" Value="#3F3F46"/>
+                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                        <Setter Property="Padding" Value="6,4"/>
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
 
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="#2A2D3E"/>
-                    <Setter Property="Foreground" Value="#E0E0E0"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
-                    <Setter Property="FontSize" Value="15"/>
-                    <Setter Property="Padding" Value="12,10"/>
-                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                    <Setter Property="BorderBrush" Value="#3E3E42"/>
-                    <Setter Property="MinHeight" Value="40"/>
-                </Style>
+                <DataGrid.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#264F78"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
 
-                <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Foreground" Value="#E0E0E0"/>
-                    <Setter Property="MinHeight" Value="38"/>
-                    <Setter Property="FontSize" Value="15"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#2A2D30"/>
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#37373D"/>
-                            <Setter Property="Foreground" Value="#FFFFFF"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="6,2"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#264F78"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
 
-                <Style TargetType="DataGridCell">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Padding" Value="8,6"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="DataGridCell">
-                                <Border Background="{TemplateBinding Background}"
-                                        Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <!-- Track # (read-only) -->
+                    <DataGridTextColumn Header="#" Binding="{Binding Position}" Width="Auto" MinWidth="40" IsReadOnly="True"/>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="#" Binding="{Binding Position}" Width="50" IsReadOnly="True">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="#888888"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                    <!-- Song Name (display: "Song > (date)", edit: raw name) -->
+                    <DataGridTemplateColumn Header="Song Name" Width="Auto" MinWidth="250" SortMemberPath="SongName">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding SongName, Mode=OneWay}"/>
+                                    <Run Text="{Binding SegueMarker, Mode=OneWay}" Foreground="#AAAAAA"/>
+                                    <Run Text="{Binding DateDisplay, Mode=OneWay}" Foreground="#888888"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
+                                         Background="#3C3C3C" Foreground="#FFFFFF"
+                                         CaretBrush="#FFFFFF"
+                                         BorderBrush="#007ACC" BorderThickness="1"
+                                         Padding="4,2"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Song Name" Binding="{Binding SongName, UpdateSourceTrigger=LostFocus}" Width="*" MinWidth="250">
-                    <DataGridTextColumn.EditingElementStyle>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Background" Value="#3C3C3C"/>
-                            <Setter Property="Foreground" Value="#FFFFFF"/>
-                            <Setter Property="CaretBrush" Value="#FFFFFF"/>
-                            <Setter Property="Padding" Value="4,2"/>
-                        </Style>
-                    </DataGridTextColumn.EditingElementStyle>
-                </DataGridTextColumn>
+                    <!-- Segue (checkbox, matches Edit Metadata) -->
+                    <DataGridCheckBoxColumn Header="&#x2192;" Binding="{Binding Segue, UpdateSourceTrigger=PropertyChanged}" Width="Auto" MinWidth="30">
+                        <DataGridCheckBoxColumn.ElementStyle>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.ElementStyle>
+                        <DataGridCheckBoxColumn.EditingElementStyle>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.EditingElementStyle>
+                    </DataGridCheckBoxColumn>
 
-                <DataGridTextColumn Header="Date" Binding="{Binding Date, UpdateSourceTrigger=LostFocus}" Width="Auto" MinWidth="100">
-                    <DataGridTextColumn.EditingElementStyle>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Background" Value="#3C3C3C"/>
-                            <Setter Property="Foreground" Value="#FFFFFF"/>
-                            <Setter Property="CaretBrush" Value="#FFFFFF"/>
-                            <Setter Property="Padding" Value="4,2"/>
-                        </Style>
-                    </DataGridTextColumn.EditingElementStyle>
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="#AAAAAA"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                    <!-- Set -->
+                    <DataGridComboBoxColumn Header="Set" SelectedItemBinding="{Binding Set, UpdateSourceTrigger=PropertyChanged}" Width="Auto" MinWidth="80">
+                        <DataGridComboBoxColumn.EditingElementStyle>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="Background" Value="#3C3C3C"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Style>
+                        </DataGridComboBoxColumn.EditingElementStyle>
+                    </DataGridComboBoxColumn>
 
-                <DataGridCheckBoxColumn Header="→" Binding="{Binding Segue, UpdateSourceTrigger=PropertyChanged}" Width="45">
-                    <DataGridCheckBoxColumn.ElementStyle>
-                        <Style TargetType="CheckBox">
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridCheckBoxColumn.ElementStyle>
-                </DataGridCheckBoxColumn>
-
-                <DataGridComboBoxColumn Header="Set" SelectedItemBinding="{Binding Set, UpdateSourceTrigger=PropertyChanged}" Width="110">
-                    <DataGridComboBoxColumn.EditingElementStyle>
-                        <Style TargetType="ComboBox">
-                            <Setter Property="Background" Value="#3C3C3C"/>
-                            <Setter Property="Foreground" Value="#FFFFFF"/>
-                        </Style>
-                    </DataGridComboBoxColumn.EditingElementStyle>
-                </DataGridComboBoxColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <!-- Date -->
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date, UpdateSourceTrigger=LostFocus}" Width="Auto" MinWidth="100">
+                        <DataGridTextColumn.EditingElementStyle>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Background" Value="#3C3C3C"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                                <Setter Property="CaretBrush" Value="#FFFFFF"/>
+                                <Setter Property="BorderBrush" Value="#007ACC"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="Padding" Value="4,2"/>
+                            </Style>
+                        </DataGridTextColumn.EditingElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
 
         <!-- Row 3: Status bar -->
         <TextBlock Grid.Row="3" x:Name="BottomStatusText" Text=""
