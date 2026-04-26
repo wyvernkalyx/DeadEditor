@@ -85,24 +85,8 @@ namespace DeadEditor
                 DateText.Text = _show.Date;
             }
 
-            // Show Jerrybase link if there's a valid concert date
-            if (!string.IsNullOrEmpty(_show.Date) && Regex.IsMatch(_show.Date, @"^\d{4}-\d{2}-\d{2}$"))
-            {
-                JerrybaseLink.Visibility = Visibility.Visible;
-            }
         }
 
-        private void JerrybaseLink_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(_show.Date))
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = $"https://jerrybase.com/events/{_show.Date}",
-                    UseShellExecute = true
-                });
-            }
-        }
 
         /// <summary>
         /// Loads album artwork from disk. Runs on a background thread — no UI access.

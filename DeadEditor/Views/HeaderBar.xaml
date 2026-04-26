@@ -566,6 +566,22 @@
                            VerticalAlignment="Center"
                            Margin="16,0,0,0"/>
 
+                <!-- Ownership Filter -->
+                <TextBlock Text="Show:"
+                           Foreground="#999999"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           Margin="16,0,6,0"/>
+                <ComboBox x:Name="ConcertsOwnershipFilter"
+                          Width="110"
+                          VerticalAlignment="Center"
+                          SelectionChanged="ConcertsOwnershipFilter_SelectionChanged"
+                          Style="{StaticResource DarkComboBoxStyle}">
+                    <ComboBoxItem Content="All" IsSelected="True"/>
+                    <ComboBoxItem Content="Owned"/>
+                    <ComboBoxItem Content="Missing"/>
+                </ComboBox>
+
                 <!-- Search Box -->
                 <Grid Margin="16,0,0,0">
                     <TextBox x:Name="ConcertsSearchBox"

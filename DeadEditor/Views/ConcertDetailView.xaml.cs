@@ -1,11 +1,13 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DeadEditor
@@ -14,20 +16,23 @@ namespace DeadEditor
     {
         private readonly ShellWindow _shell;
         private readonly ConcertReference _concert;
+        private readonly List<LibraryShow>? _libraryShows;
 
         public string ConcertDate => _concert.Date;
         public string VenueName => _concert.Venue;
 
-        public ConcertDetailView(ShellWindow shell, ConcertReference concert)
+        public ConcertDetailView(ShellWindow shell, ConcertReference concert, List<LibraryShow>? libraryShows = null)
         {
             InitializeComponent();
             _shell = shell;
             _concert = concert;
+            _libraryShows = libraryShows;
         }
 
         private void ConcertDetailView_Loaded(object sender, RoutedEventArgs e)
         {
             BuildSetlistDisplay();
+            BuildLibrarySection();
         }
 
         private void BuildSetlistDisplay()
@@ -37,10 +42,6 @@ namespace DeadEditor
             VenueText.Text = _concert.Venue;
             LocationText.Text = _concert.FormattedLocation;
             SongCountText.Text = _concert.SongCount == 1 ? "1 song" : $"{_concert.SongCount} songs";
-
-            // Jerrybase link
-            if (Regex.IsMatch(_concert.Date, @"^\d{4}-\d{2}-\d{2}$"))
-                JerrybaseLink.Visibility = Visibility.Visible;
 
             // setlist.fm link
             if (!string.IsNullOrEmpty(_concert.SetlistFmUrl))
@@ -153,16 +154,128 @@ namespace DeadEditor
             }
         }
 
-        // ===== EXTERNAL LINKS =====
+        // ===== LIBRARY SECTION =====
 
-        private void JerrybaseLink_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void BuildLibrarySection()
         {
-            Process.Start(new ProcessStartInfo
+            LibrarySection.Children.Clear();
+
+            if (_libraryShows == null || _libraryShows.Count == 0)
             {
-                FileName = $"https://jerrybase.com/events/{_concert.Date}",
-                UseShellExecute = true
-            });
+                // Missing concert — show Import button
+                var importButton = new System.Windows.Controls.Button
+                {
+                    Content = "Import Recording for This Date\u2026",
+                    FontSize = 14,
+                    Padding = new Thickness(12, 8, 12, 8),
+                    Cursor = System.Windows.Input.Cursors.Hand,
+                    Margin = new Thickness(0, 4, 0, 0),
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Left
+                };
+
+                // Style to match dark theme
+                importButton.Style = CreateDarkButtonStyle();
+                importButton.Click += ImportButton_Click;
+                LibrarySection.Children.Add(importButton);
+            }
+            else
+            {
+                // Owned concert — show Recordings list
+                LibrarySection.Children.Add(new TextBlock
+                {
+                    Text = _libraryShows.Count == 1 ? "RECORDING" : "RECORDINGS",
+                    Foreground = Brush("#888888"),
+                    FontSize = 12,
+                    FontWeight = FontWeights.SemiBold,
+                    Margin = new Thickness(0, 0, 0, 6)
+                });
+
+                foreach (var show in _libraryShows)
+                {
+                    var label = BuildRecordingLabel(show);
+                    var link = new TextBlock
+                    {
+                        Text = label,
+                        Foreground = Brush("#4EC9B0"),
+                        FontSize = 14,
+                        Cursor = System.Windows.Input.Cursors.Hand,
+                        Margin = new Thickness(0, 2, 0, 2),
+                        TextWrapping = TextWrapping.Wrap,
+                        Tag = show
+                    };
+                    link.MouseLeftButtonUp += RecordingLink_Click;
+
+                    // Underline on hover
+                    link.MouseEnter += (s, e) =>
+                    {
+                        if (s is TextBlock tb) tb.TextDecorations = TextDecorations.Underline;
+                    };
+                    link.MouseLeave += (s, e) =>
+                    {
+                        if (s is TextBlock tb) tb.TextDecorations = null;
+                    };
+
+                    LibrarySection.Children.Add(link);
+                }
+            }
         }
+
+        private static string BuildRecordingLabel(LibraryShow show)
+        {
+            if (!string.IsNullOrEmpty(show.OfficialRelease))
+                return show.OfficialRelease;
+            if (!string.IsNullOrEmpty(show.AlbumName))
+                return show.AlbumName;
+
+            var typeLabel = show.Type == AlbumType.OfficialRelease ? "Official" : "Audience";
+            return $"{show.Date} ({typeLabel})";
+        }
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            _shell.ImportForConcertDate(_concert);
+        }
+
+        private void RecordingLink_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock tb && tb.Tag is LibraryShow show)
+            {
+                var albumView = new AlbumDetailView(_shell, show);
+                _shell.Navigation.NavigateTo(albumView, show);
+            }
+        }
+
+        private Style CreateDarkButtonStyle()
+        {
+            var buttonType = typeof(System.Windows.Controls.Button);
+            var style = new Style(buttonType);
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.BackgroundProperty, Brush("#3E3E42")));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.ForegroundProperty, Brush("#E0E0E0")));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.BorderBrushProperty, Brush("#555555")));
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.BorderThicknessProperty, new Thickness(1)));
+
+            var template = new ControlTemplate(buttonType);
+            var border = new FrameworkElementFactory(typeof(Border));
+            border.SetBinding(Border.BackgroundProperty, new System.Windows.Data.Binding("Background") { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
+            border.SetBinding(Border.BorderBrushProperty, new System.Windows.Data.Binding("BorderBrush") { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
+            border.SetBinding(Border.BorderThicknessProperty, new System.Windows.Data.Binding("BorderThickness") { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
+            border.SetBinding(Border.PaddingProperty, new System.Windows.Data.Binding("Padding") { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
+            border.SetValue(Border.CornerRadiusProperty, new CornerRadius(4));
+            var presenter = new FrameworkElementFactory(typeof(ContentPresenter));
+            presenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
+            presenter.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+            border.AppendChild(presenter);
+            template.VisualTree = border;
+
+            var hoverTrigger = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
+            hoverTrigger.Setters.Add(new Setter(System.Windows.Controls.Control.BackgroundProperty, Brush("#555555")));
+            template.Triggers.Add(hoverTrigger);
+
+            style.Setters.Add(new Setter(System.Windows.Controls.Control.TemplateProperty, template));
+            return style;
+        }
+
+        // ===== EXTERNAL LINKS =====
 
         private void SetlistFmLink_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {

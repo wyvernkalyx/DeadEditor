@@ -42,6 +42,11 @@ namespace DeadEditor
         private string _lastYearFilter = "All Years";
 
         public int ConcertCount => _shows.Count;
+
+        /// <summary>
+        /// Public read-only access to library shows for cross-referencing (e.g., Concerts view ownership).
+        /// </summary>
+        public IReadOnlyList<LibraryShow> Shows => _shows;
         public int MissingShowCount => _missingShowRows.Count;
         public int TotalShowsInScope { get; private set; }
         public int FilteredCount => _isMissingShowsMode ? _filteredMissingRows.Count
@@ -52,6 +57,9 @@ namespace DeadEditor
 
         // Event to notify when concert count changes
         public event EventHandler<int>? ConcertCountChanged;
+
+        /// <summary>Fired after library shows are loaded/reloaded so ShellWindow can update cross-references.</summary>
+        public event EventHandler? LibraryLoaded;
 
         public LibraryGridView(ShellWindow shell)
         {
@@ -149,6 +157,9 @@ namespace DeadEditor
             }
 
             Debug.WriteLine($"[STARTUP] Grid populated, window visible: {sw.ElapsedMilliseconds}ms");
+
+            // Notify ShellWindow so it can update cross-references (Concerts view ownership)
+            LibraryLoaded?.Invoke(this, EventArgs.Empty);
         }
 
         // ===== COLUMN MANAGEMENT =====
@@ -1096,14 +1107,9 @@ namespace DeadEditor
                 return;
             }
 
-            // "Shows I Don't Have" mode — open Jerrybase for the date
-            if (_isMissingShowsMode && ShowsDataGrid.SelectedItem is DateRow missingRow)
+            // "Shows I Don't Have" mode — no action on double-click
+            if (_isMissingShowsMode)
             {
-                if (!string.IsNullOrEmpty(missingRow.Date))
-                {
-                    var url = $"https://www.jerrybase.com/default/date/{missingRow.Date}";
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
-                }
                 return;
             }
 

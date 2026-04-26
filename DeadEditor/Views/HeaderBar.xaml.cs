@@ -93,6 +93,9 @@ namespace DeadEditor
         /// <summary>Fired when the concerts search text changes.</summary>
         public event EventHandler<string>? ConcertsSearchChanged;
 
+        /// <summary>Fired when the concerts ownership filter changes.</summary>
+        public event EventHandler<string>? ConcertsOwnershipFilterChanged;
+
         private void HideAllHeaders()
         {
             LibraryHeader.Visibility = Visibility.Collapsed;
@@ -215,6 +218,22 @@ namespace DeadEditor
         {
             ConcertsSearchBox.Text = "";
             ConcertsSearchBox.Focus();
+        }
+
+        private void ConcertsOwnershipFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ConcertsOwnershipFilter?.SelectedItem is ComboBoxItem item)
+            {
+                var filter = item.Content?.ToString() ?? "All";
+                ConcertsOwnershipFilterChanged?.Invoke(this, filter);
+            }
+        }
+
+        /// <summary>Resets the ownership filter to "All" (session-only persistence).</summary>
+        public void ResetConcertsOwnershipFilter()
+        {
+            if (ConcertsOwnershipFilter != null)
+                ConcertsOwnershipFilter.SelectedIndex = 0;
         }
 
         public void ShowSettingsHeader()

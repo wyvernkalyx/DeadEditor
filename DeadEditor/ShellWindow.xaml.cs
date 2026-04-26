@@ -53,6 +53,7 @@ namespace DeadEditor
             HeaderBar.SaveDatesRequested += HeaderBar_SaveDatesRequested;
             HeaderBar.CancelDatesRequested += HeaderBar_CancelDatesRequested;
             HeaderBar.ConcertsSearchChanged += HeaderBar_ConcertsSearchChanged;
+            HeaderBar.ConcertsOwnershipFilterChanged += HeaderBar_ConcertsOwnershipFilterChanged;
             HeaderBar.EditSetlistRequested += HeaderBar_EditSetlistRequested;
             HeaderBar.DeleteConcertRequested += HeaderBar_DeleteConcertRequested;
 
@@ -445,29 +446,45 @@ namespace DeadEditor
                         _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode,
                         _libraryView.TotalShowsInScope);
                 };
+                // Refresh concerts view library dates after library loads/reloads
+                _libraryView.LibraryLoaded += (s, args) =>
+                {
+                    RefreshConcertsLibraryDates();
+                };
             }
 
             // Navigate to root (clears back stack)
             _navigationService.NavigateToRoot(_libraryView);
         }
 
-        private void NavigateToImport()
+        /// <summary>
+        /// Ensures the ImportView exists and is wired up. Returns the typed ImportView.
+        /// </summary>
+        private ImportView EnsureImportView()
         {
             if (_importView == null)
             {
                 var importView = new ImportView();
 
-                // When an import completes, refresh the library grid
+                // When an import completes, refresh the library grid and concerts dates
                 importView.ImportCompleted += (s, destinationPath) =>
                 {
                     // Reload library data so the new album shows up immediately
                     _libraryView?.ReloadLibrary();
+                    // Note: RefreshConcertsLibraryDates will be called by LibraryLoaded event
+                    // after ReloadLibrary completes
                 };
 
                 _importView = importView;
             }
 
-            _navigationService.NavigateToRoot(_importView);
+            return (ImportView)_importView;
+        }
+
+        private void NavigateToImport()
+        {
+            EnsureImportView();
+            _navigationService.NavigateToRoot(_importView!);
         }
 
         private void NavigateToSongs()
@@ -500,6 +517,14 @@ namespace DeadEditor
             }
 
             _concertsView.LoadConcerts();
+
+            // Reset ownership filter (session-only persistence)
+            _concertsView.ResetOwnershipFilter();
+            HeaderBar.ResetConcertsOwnershipFilter();
+
+            // Set library dates if library is loaded
+            RefreshConcertsLibraryDates();
+
             _navigationService.NavigateToRoot(_concertsView);
         }
 
@@ -512,14 +537,70 @@ namespace DeadEditor
             }
         }
 
+        private void HeaderBar_ConcertsOwnershipFilterChanged(object? sender, string filter)
+        {
+            if (_concertsView != null)
+            {
+                _concertsView.SetOwnershipFilter(filter);
+                HeaderBar.UpdateConcertsCount(_concertsView.FilteredCount, _concertsView.TotalCount);
+            }
+        }
+
         /// <summary>
         /// Navigate to the Concert Detail view for a specific concert.
         /// Called by ConcertDatabaseView on double-click.
         /// </summary>
-        public void NavigateToConcertDetail(ConcertReference concert)
+        public void NavigateToConcertDetail(ConcertReference concert, List<LibraryShow>? libraryShows = null)
         {
-            var detailView = new ConcertDetailView(this, concert);
+            var detailView = new ConcertDetailView(this, concert, libraryShows);
             _navigationService.NavigateTo(detailView, concert);
+        }
+
+        /// <summary>
+        /// Opens a folder picker for importing a recording for a specific concert date.
+        /// Called from ConcertDatabaseView right-click menu and ConcertDetailView import button.
+        /// </summary>
+        public void ImportForConcertDate(ConcertReference concert)
+        {
+            var dlg = new System.Windows.Forms.FolderBrowserDialog
+            {
+                Description = $"Select recording folder for {concert.Date}"
+            };
+
+            if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            var importView = EnsureImportView();
+            importView.ImportForConcert(
+                dlg.SelectedPath,
+                concert.Date,
+                concert.Venue,
+                concert.FormattedLocation);
+
+            _navigationService.NavigateToRoot(_importView!);
+        }
+
+        /// <summary>
+        /// Refreshes the concerts view library dates from the current library shows.
+        /// Called after library loads and after each import completion.
+        /// </summary>
+        private void RefreshConcertsLibraryDates()
+        {
+            if (_concertsView == null || _libraryView == null) return;
+
+            var showsByDate = new Dictionary<string, List<LibraryShow>>();
+            foreach (var show in _libraryView.Shows)
+            {
+                if (string.IsNullOrEmpty(show.Date)) continue;
+                if (!showsByDate.TryGetValue(show.Date, out var list))
+                {
+                    list = new List<LibraryShow>();
+                    showsByDate[show.Date] = list;
+                }
+                list.Add(show);
+            }
+
+            _concertsView.SetLibraryShows(showsByDate);
         }
 
         private void HeaderBar_EditSetlistRequested(object? sender, EventArgs e)

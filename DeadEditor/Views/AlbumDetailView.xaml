@@ -64,23 +64,6 @@
                        Margin="0,4,0,0"
                        Visibility="Collapsed"/>
 
-            <TextBlock x:Name="JerrybaseLink"
-                       Text="Jerrybase ↗"
-                       Foreground="#5B9BD5" FontSize="13"
-                       Margin="0,8,0,0"
-                       Cursor="Hand"
-                       Visibility="Collapsed"
-                       MouseLeftButtonUp="JerrybaseLink_Click">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="TextDecorations" Value="Underline"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
         </StackPanel>
 
         <!-- Right: Track List -->

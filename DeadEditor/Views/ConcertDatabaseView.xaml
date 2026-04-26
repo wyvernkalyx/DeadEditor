@@ -71,6 +71,8 @@
               CanUserReorderColumns="False"
               CanUserSortColumns="True"
               MouseDoubleClick="ConcertsDataGrid_MouseDoubleClick"
+              LoadingRow="ConcertsDataGrid_LoadingRow"
+              MouseRightButtonUp="ConcertsDataGrid_MouseRightButtonUp"
               VirtualizingPanel.IsVirtualizing="True"
               VirtualizingPanel.VirtualizationMode="Recycling"
               EnableRowVirtualization="True"

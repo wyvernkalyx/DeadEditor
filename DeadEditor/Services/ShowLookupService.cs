@@ -59,9 +59,25 @@ namespace DeadEditor.Services
         {
             get
             {
-                if (!string.IsNullOrEmpty(State) && Country == "US")
-                    return $"{City}, {State}";
-                return $"{City}, {Country}";
+                var parts = new System.Collections.Generic.List<string>();
+
+                if (!string.IsNullOrEmpty(City))
+                    parts.Add(City);
+
+                if (Country == "US")
+                {
+                    // US: show State (if present). Never show "US" itself.
+                    if (!string.IsNullOrEmpty(State))
+                        parts.Add(State);
+                }
+                else
+                {
+                    // Non-US: show Country (if present). State is ignored outside US.
+                    if (!string.IsNullOrEmpty(Country))
+                        parts.Add(Country);
+                }
+
+                return string.Join(", ", parts);
             }
         }
 
