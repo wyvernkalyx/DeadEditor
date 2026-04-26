@@ -28,7 +28,6 @@ namespace DeadEditor
             _librarySettings = LibrarySettings.Load();
 
             LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
-            OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
             FpcalcPathTextBox.Text = _librarySettings.FpcalcPath;
             PrimaryArtistTextBox.Text = _librarySettings.PrimaryArtistName;
 
@@ -52,23 +51,6 @@ namespace DeadEditor
                 _librarySettings.Save();
                 LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
                 StatusText.Text = "Library root path updated";
-            }
-        }
-
-        private void BrowseOfficialReleasesButton_Click(object sender, RoutedEventArgs e)
-        {
-            var folderDialog = new System.Windows.Forms.FolderBrowserDialog
-            {
-                Description = "Select Official Releases Folder (Dave's Picks, Road Trips, etc.)",
-                SelectedPath = _librarySettings.OfficialReleasesPath
-            };
-
-            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                _librarySettings.OfficialReleasesPath = folderDialog.SelectedPath;
-                _librarySettings.Save();
-                OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
-                StatusText.Text = "Official releases path updated";
             }
         }
 
@@ -155,41 +137,17 @@ namespace DeadEditor
 
             try
             {
-                // Collect all album folders from both library paths
+                // Collect all album folders from universal structure: {LibraryRoot}/{Artist}/{Album}/
                 var folders = new List<string>();
 
                 if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) &&
                     Directory.Exists(_librarySettings.LibraryRootPath))
                 {
-                    foreach (var yearFolder in Directory.GetDirectories(_librarySettings.LibraryRootPath))
+                    foreach (var artistFolder in Directory.GetDirectories(_librarySettings.LibraryRootPath))
                     {
-                        if (!System.Text.RegularExpressions.Regex.IsMatch(Path.GetFileName(yearFolder), @"^\d{4}$"))
-                            continue;
-                        folders.AddRange(Directory.GetDirectories(yearFolder));
+                        folders.AddRange(Directory.GetDirectories(artistFolder));
                     }
                 }
-
-                if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) &&
-                    Directory.Exists(_librarySettings.OfficialReleasesPath))
-                {
-                    // Studio Albums
-                    var studioPath = Path.Combine(_librarySettings.OfficialReleasesPath, "Studio Albums");
-                    if (Directory.Exists(studioPath))
-                        folders.AddRange(Directory.GetDirectories(studioPath));
-
-                    // Series folders (Dave's Picks, etc.)
-                    foreach (var seriesFolder in Directory.GetDirectories(_librarySettings.OfficialReleasesPath))
-                    {
-                        var name = Path.GetFileName(seriesFolder);
-                        if (name.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase) ||
-                            System.Text.RegularExpressions.Regex.IsMatch(name, @"^\d{4}$"))
-                            continue;
-                        folders.AddRange(Directory.GetDirectories(seriesFolder));
-                    }
-                }
-
-                // Deduplicate (when both paths point to same directory)
-                folders = folders.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
 
                 int totalFolders = folders.Count;
                 int updatedTracks = 0;
@@ -405,28 +363,6 @@ namespace DeadEditor
                         deletedItems++;
                     }
                     foreach (var file in Directory.GetFiles(_librarySettings.LibraryRootPath))
-                    {
-                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
-                            file,
-                            Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
-                            Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
-                        deletedItems++;
-                    }
-                }
-
-                // Delete official releases contents
-                if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) &&
-                    Directory.Exists(_librarySettings.OfficialReleasesPath))
-                {
-                    foreach (var dir in Directory.GetDirectories(_librarySettings.OfficialReleasesPath))
-                    {
-                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(
-                            dir,
-                            Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
-                            Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
-                        deletedItems++;
-                    }
-                    foreach (var file in Directory.GetFiles(_librarySettings.OfficialReleasesPath))
                     {
                         Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
                             file,

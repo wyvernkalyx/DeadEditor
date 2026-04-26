@@ -48,17 +48,6 @@
                 <Button Grid.Column="1" Content="Browse..." Margin="10,0,0,0" Click="BrowseLibraryButton_Click" Height="34"/>
             </Grid>
 
-            <!-- Official Releases Path -->
-            <TextBlock Text="Official Releases Path (Dave's Picks, Road Trips, etc.)" FontSize="14" Margin="0,0,0,6"/>
-            <Grid Margin="0,0,0,18">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" x:Name="OfficialReleasesTextBox" IsReadOnly="True" Height="34"/>
-                <Button Grid.Column="1" Content="Browse..." Margin="10,0,0,0" Click="BrowseOfficialReleasesButton_Click" Height="34"/>
-            </Grid>
-
             <!-- fpcalc.exe Path -->
             <TextBlock Text="fpcalc.exe Path (MusicBrainz Fingerprinting)" FontSize="14" Margin="0,0,0,4"/>
             <TextBlock Text="Required for MusicBrainz audio fingerprinting. Download from https://acoustid.org/chromaprint"

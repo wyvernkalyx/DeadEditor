@@ -75,7 +75,6 @@ namespace DeadEditor
         {
             // Re-read settings in case the library path changed
             _settings.LibraryRootPath = LibrarySettings.Load().LibraryRootPath;
-            _settings.OfficialReleasesPath = LibrarySettings.Load().OfficialReleasesPath;
             await LoadShowsAsync();
         }
 
@@ -89,7 +88,6 @@ namespace DeadEditor
 
             // Capture settings for background thread
             var libraryRoot = _settings.LibraryRootPath;
-            var officialPath = _settings.OfficialReleasesPath;
 
             // Run all heavy I/O (folder scanning, TagLib reads) on a background thread
             var shows = await Task.Run(() =>
@@ -98,30 +96,14 @@ namespace DeadEditor
 
                 if (!string.IsNullOrEmpty(libraryRoot) && Directory.Exists(libraryRoot))
                 {
-                    LoadAudienceRecordingsInto(result, libraryRoot);
-                    Debug.WriteLine($"[STARTUP] Audience recordings scanned: {sw.ElapsedMilliseconds}ms ({result.Count} shows)");
-                }
+                    LoadAlbumsInto(result, libraryRoot);
+                    Debug.WriteLine($"[STARTUP] Albums scanned: {sw.ElapsedMilliseconds}ms ({result.Count} shows)");
 
-                int audienceCount = result.Count;
-
-                if (!string.IsNullOrEmpty(officialPath) && Directory.Exists(officialPath))
-                {
-                    LoadOfficialReleasesInto(result, officialPath);
-                    Debug.WriteLine($"[STARTUP] Official releases scanned: {sw.ElapsedMilliseconds}ms ({result.Count - audienceCount} releases)");
-
-                    // Merge official releases that share the same ALBUMNAME into single entries
+                    // Merge albums that share the same ALBUMNAME into single entries
                     // (e.g., box sets split across multiple folders)
-                    MergeOfficialReleasesByAlbumName(result, audienceCount);
-                    Debug.WriteLine($"[STARTUP] After merge: {sw.ElapsedMilliseconds}ms ({result.Count - audienceCount} releases)");
+                    MergeOfficialReleasesByAlbumName(result, 0);
+                    Debug.WriteLine($"[STARTUP] After merge: {sw.ElapsedMilliseconds}ms ({result.Count} shows)");
                 }
-
-                // Deduplicate by FolderPath — when LibraryRootPath == OfficialReleasesPath,
-                // the same folder can be scanned by both loading methods. Prefer the entry
-                // whose Type was set from the ALBUMTYPE tag; otherwise keep the first (audience).
-                result = result
-                    .GroupBy(s => s.FolderPath)
-                    .Select(g => g.OrderByDescending(s => s.TypeFromTag ? 1 : 0).First())
-                    .ToList();
 
                 // Sort by date descending (newest first)
                 result = result.OrderByDescending(s => s.Date).ToList();
@@ -869,138 +851,81 @@ namespace DeadEditor
 
         // ===== LIBRARY LOADING =====
 
-        private static void LoadAudienceRecordingsInto(List<LibraryShow> shows, string libraryRootPath)
+        /// <summary>
+        /// Loads all albums from the universal folder structure:
+        ///   {LibraryRoot}/{Artist}/{AlbumFolder}/
+        /// Each subfolder under an artist folder is one album.
+        /// Metadata (type, venue, date, etc.) comes from custom FLAC tags.
+        /// Folder name is parsed as fallback for initial field values.
+        /// </summary>
+        private static void LoadAlbumsInto(List<LibraryShow> shows, string libraryRootPath)
         {
-            var topFolders = Directory.GetDirectories(libraryRootPath);
-
-            foreach (var yearFolder in topFolders)
+            foreach (var artistFolder in Directory.GetDirectories(libraryRootPath))
             {
-                var yearName = Path.GetFileName(yearFolder);
-                if (!Regex.IsMatch(yearName, @"^\d{4}$"))
-                    continue;
-
-                var showFolders = Directory.GetDirectories(yearFolder);
-
-                foreach (var showFolder in showFolders)
+                foreach (var albumFolder in Directory.GetDirectories(artistFolder))
                 {
-                    var folderName = Path.GetFileName(showFolder);
-                    var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
-
-                    if (parts.Length >= 2)
-                    {
-                        string date = parts[0];
-                        string venue = "";
-                        string city = "";
-                        string state = "";
-
-                        if (parts.Length == 3)
-                        {
-                            venue = parts[1];
-                            var locationParts = parts[2].Split(new[] { ", " }, StringSplitOptions.None);
-                            city = locationParts.Length > 0 ? locationParts[0] : "";
-                            state = locationParts.Length > 1 ? locationParts[1] : "";
-                        }
-                        else if (parts.Length == 2)
-                        {
-                            var venueParts = parts[1].Split(new[] { ", " }, StringSplitOptions.None);
-                            venue = venueParts.Length > 0 ? venueParts[0] : "";
-                            city = venueParts.Length > 1 ? venueParts[1] : "";
-                            state = venueParts.Length > 2 ? venueParts[2] : "";
-                        }
-
-                        var flacCount = Directory.GetFiles(showFolder, "*.flac").Length;
-                        var mp3Count = Directory.GetFiles(showFolder, "*.mp3").Length;
-
-                        var show = new LibraryShow
-                        {
-                            Type = AlbumType.AudienceRecording,
-                            Date = date,
-                            Venue = venue,
-                            City = city,
-                            State = state,
-                            Location = !string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(state) ? $"{city}, {state}" : city + state,
-                            TrackCount = flacCount + mp3Count,
-                            FolderPath = showFolder
-                        };
-
-                        // Override folder-name-parsed values with custom FLAC tags if present
-                        // (written by Edit Metadata save)
-                        ReadCustomFieldsIntoShow(show, showFolder);
-
-                        shows.Add(show);
-                    }
-                }
-            }
-        }
-
-        private static void LoadOfficialReleasesInto(List<LibraryShow> shows, string officialReleasesPath)
-        {
-            // Load from Studio Albums folder
-            var studioPath = Path.Combine(officialReleasesPath, "Studio Albums");
-            if (Directory.Exists(studioPath))
-            {
-                foreach (var albumFolder in Directory.GetDirectories(studioPath))
-                {
-                    var folderName = Path.GetFileName(albumFolder);
                     var flacCount = Directory.GetFiles(albumFolder, "*.flac").Length;
                     var mp3Count = Directory.GetFiles(albumFolder, "*.mp3").Length;
 
-                    string albumName = folderName;
-                    int? year = null;
+                    if (flacCount + mp3Count == 0) continue;
 
-                    var yearMatch = Regex.Match(folderName, @"^(.+?)\s*\((\d{4})\)");
-                    if (yearMatch.Success)
+                    var folderName = Path.GetFileName(albumFolder);
+
+                    // Parse folder name segments: "Artist - Date - Venue - City, ST - AlbumName"
+                    // or "Artist - Year - AlbumName" for studio albums
+                    var parts = folderName.Split(new[] { " - " }, StringSplitOptions.None);
+
+                    string date = "";
+                    string venue = "";
+                    string location = "";
+                    string albumName = "";
+
+                    if (parts.Length >= 2)
                     {
-                        albumName = yearMatch.Groups[1].Value.Trim();
-                        if (int.TryParse(yearMatch.Groups[2].Value, out var y))
-                            year = y;
+                        // Skip first segment (artist) since it's the parent folder name
+                        // Detect pattern: if second segment looks like a date (yyyy-MM-dd), it's a live recording
+                        if (Regex.IsMatch(parts[1], @"^\d{4}-\d{2}-\d{2}$"))
+                        {
+                            // Live: Artist - Date - Venue - City, ST [- AlbumName]
+                            date = parts[1];
+                            if (parts.Length >= 3) venue = parts[2];
+                            if (parts.Length >= 4) location = parts[3];
+                            if (parts.Length >= 5) albumName = parts[4];
+                        }
+                        else if (Regex.IsMatch(parts[1], @"^\d{4}$"))
+                        {
+                            // Studio: Artist - Year - AlbumName
+                            if (parts.Length >= 3) albumName = parts[2];
+                        }
+                        else
+                        {
+                            // Unknown pattern — treat remaining as album name
+                            albumName = string.Join(" - ", parts.Skip(1));
+                        }
                     }
 
-                    var studioShow = new LibraryShow
+                    var show = new LibraryShow
                     {
-                        Type = AlbumType.OfficialRelease,
+                        Date = date,
+                        Venue = venue,
+                        Location = location,
                         AlbumName = albumName,
-                        ReleaseYear = year,
                         TrackCount = flacCount + mp3Count,
                         FolderPath = albumFolder
                     };
-                    ReadCustomFieldsIntoShow(studioShow, albumFolder);
-                    shows.Add(studioShow);
-                }
-            }
 
-            // Load from series folders (Dave's Picks, etc.)
-            // Skip "Studio Albums" (handled above) and year folders (e.g. "1971", "2024")
-            // which belong to audience recordings. When LibraryRootPath and OfficialReleasesPath
-            // point to the same directory, year folders would otherwise be misidentified as series.
-            var seriesFolders = Directory.GetDirectories(officialReleasesPath)
-                .Where(f =>
-                {
-                    var name = Path.GetFileName(f);
-                    return !name.Equals("Studio Albums", StringComparison.OrdinalIgnoreCase)
-                        && !Regex.IsMatch(name, @"^\d{4}$");
-                });
-
-            foreach (var seriesFolder in seriesFolders)
-            {
-                foreach (var releaseFolder in Directory.GetDirectories(seriesFolder))
-                {
-                    var folderName = Path.GetFileName(releaseFolder);
-                    var flacCount = Directory.GetFiles(releaseFolder, "*.flac").Length;
-                    var mp3Count = Directory.GetFiles(releaseFolder, "*.mp3").Length;
-
-                    if (flacCount + mp3Count == 0) continue;
-
-                    var seriesShow = new LibraryShow
+                    // Parse city/state from location
+                    if (!string.IsNullOrEmpty(location))
                     {
-                        Type = AlbumType.OfficialRelease,
-                        AlbumName = folderName,
-                        OfficialRelease = folderName,
-                        TrackCount = flacCount + mp3Count,
-                        FolderPath = releaseFolder
-                    };
-                    ReadCustomFieldsIntoShow(seriesShow, releaseFolder);
-                    shows.Add(seriesShow);
+                        var locParts = location.Split(new[] { ", " }, 2, StringSplitOptions.None);
+                        show.City = locParts.Length > 0 ? locParts[0] : "";
+                        show.State = locParts.Length > 1 ? locParts[1] : "";
+                    }
+
+                    // Override folder-name-parsed values with custom FLAC tags (source of truth)
+                    ReadCustomFieldsIntoShow(show, albumFolder);
+
+                    shows.Add(show);
                 }
             }
         }

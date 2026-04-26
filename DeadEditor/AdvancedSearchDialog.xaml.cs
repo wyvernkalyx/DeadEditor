@@ -340,23 +340,10 @@ namespace DeadEditor
         {
             var results = new List<TrackSearchResult>();
 
-            // Search audience recordings
+            // Search all albums under universal folder structure: {LibraryRoot}/{Artist}/{Album}/
             if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) && Directory.Exists(_librarySettings.LibraryRootPath))
             {
                 SearchInFolder(_librarySettings.LibraryRootPath, AlbumType.AudienceRecording, searchDate, searchVenue, results);
-            }
-
-            // Search official releases
-            if (!string.IsNullOrEmpty(_librarySettings.OfficialReleasesPath) && Directory.Exists(_librarySettings.OfficialReleasesPath))
-            {
-                SearchInFolder(_librarySettings.OfficialReleasesPath, AlbumType.OfficialRelease, searchDate, searchVenue, results);
-            }
-
-            // Search studio albums
-            var studioAlbumsPath = Path.Combine(_librarySettings.LibraryRootPath, "Studio Albums");
-            if (Directory.Exists(studioAlbumsPath))
-            {
-                SearchInFolder(studioAlbumsPath, AlbumType.OfficialRelease, searchDate, searchVenue, results);
             }
 
             return results;
