@@ -711,6 +711,19 @@ namespace DeadEditor
                 menu.Items.Add(addSelectedItem);
             }
 
+            // Track Info
+            var trackInfoItem = new System.Windows.Controls.MenuItem { Header = "\U0001F4C4  Track Info", Style = menuItemStyle };
+            trackInfoItem.Click += (s, args) =>
+            {
+                var dialog = new TrackInfoDialog(
+                    clickedTrack,
+                    artist: null,
+                    album: _show?.AlbumName);
+                dialog.Owner = Window.GetWindow(this);
+                dialog.ShowDialog();
+            };
+            menu.Items.Add(trackInfoItem);
+
             // Separator before destructive action
             menu.Items.Add(new System.Windows.Controls.Separator
             {

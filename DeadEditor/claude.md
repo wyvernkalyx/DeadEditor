@@ -48,6 +48,7 @@ Live music metadata suffers from:
 | `ManageSongsDialog.xaml/.cs` | [documentation/05-manage-songs-dialog.md](documentation/05-manage-songs-dialog.md) | ~8,200 words | Browse songs, filter, export to text |
 | `ReleaseSelectorDialog.xaml/.cs` | [documentation/07-release-selector-dialog.md](documentation/07-release-selector-dialog.md) | ~7,400 words | Select from multiple MusicBrainz releases |
 | `AlbumSearchDialog.xaml/.cs` | [documentation/08-album-search-dialog.md](documentation/08-album-search-dialog.md) | ~7,000 words | Manual MusicBrainz search by name |
+| `MatchToSongDialog.xaml/.cs` | [documentation/01-main-window.md](documentation/01-main-window.md) § Match to Song | - | Manual match unmatched track to setlist song with auto-alias |
 | **Services** | | | |
 | `MetadataService.cs` | [documentation/11-metadata-service.md](documentation/11-metadata-service.md) | ~8,000 words | ID3 tags, ParseAlbumTitle regex, box set vs official release |
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
@@ -368,6 +369,7 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `AddSongDialog.xaml/.cs` - Add songs on-the-fly
 - `ManageSongsDialog.xaml/.cs` - Browse/export song database
 - `ReleaseSelectorDialog.xaml/.cs` - Select from multiple MusicBrainz releases
+- `MatchToSongDialog.xaml/.cs` - Manual match unmatched track to setlist song with auto-alias
 
 #### Data
 - `Data/songs.json` - Song database (598 songs, artist-organized)

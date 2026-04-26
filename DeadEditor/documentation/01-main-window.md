@@ -66,7 +66,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 - **Edit Mode:** "Editing: [Album Name]" label
 
 **Action Bar:**
-- **Import Mode:** Read, MusicBrainz, Normalize, Renumber, View Info (left) | Write to Files, Import to Library, Cancel (right)
+- **Import Mode:** Read, MusicBrainz, Normalize, Renumber, Match Setlist, View Info (left) | Write to Files, Import to Library, Cancel (right)
 - **Edit Mode:** MusicBrainz, Normalize, Renumber, View Info (left) | Save Changes, Cancel (right)
 
 **Main Content (Two-Column Grid):**
@@ -118,6 +118,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Read from Files | Button | `ReadButton` | Re-loads current folder (redundant, auto-loads on browse) | `LoadFolder(FolderPathTextBox.Text)` | Working (unnecessary) | Import mode only |
 | Normalize All Songs | Button | `NormalizeButton` | Normalizes all track titles using fuzzy matching, highlights unmatched songs in yellow/gold | `_normalizationService.NormalizeAll(_tracks)` | Working | Both modes |
 | Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention based on current row order (use after drag-to-reorder) | Disc-aware sequential numbering (line 424-451) | Working | Both modes |
+| Match Setlist | Button | `MatchSetlistButton` | Matches imported tracks to known setlist data by song name, assigns disc/track numbers and segue flags from setlist. Enabled only when setlist data exists for the album date. Uses NormalizationService for fuzzy title matching and ShowLookupService for setlist lookup. Does not auto-apply — user reviews suggestions before import. Renumber button overrides setlist suggestions if clicked afterward. | `ShowLookupService.GetSetlist()`, `NormalizationService.Normalize()`, `ShowLookupService.GetDiscTrack()` | Working | Import mode only |
 | Write to Files | Button | `WriteButton` | Writes metadata to audio files after confirmation | `_metadataService.WriteMetadata(_albumInfo, _tracks)` | Working | Import mode only |
 | View Info File | Button | `ViewInfoButton` | Opens non-modal window showing .txt info file content | Opens new Window with TextBox (line 823-851) | Working | Both modes |
 | Import to Library | Button | `ImportButton` | Imports concert to library folder structure with progress bar | `_libraryImportService.ImportToLibrary(...)` | Working | Import mode only |
@@ -634,6 +635,60 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 - Drag-to-reorder works independently of disc numbers (move tracks across disc boundaries freely)
 - After reordering, Renumber button respects current row order when assigning numbers
 - Visual feedback (insertion line) shows exactly where row will land before dropping
+
+### Match Setlist Workflow
+
+When the album date corresponds to a show with setlist data in shows.json (~1,800 shows), the "Match Setlist" button becomes enabled and provides automated disc/track number and segue suggestions.
+
+**How it works:**
+1. **Button state:** Enabled only when `ShowLookupService.GetSetlist(date)` returns non-null. Tooltip shows song/set count when enabled, "No setlist data for this date" when disabled.
+2. **User clicks "Match Setlist":**
+   - Flattens the setlist across all sets into an ordered song list
+   - For each imported track, normalizes the title via `NormalizationService.Normalize()` and compares against setlist song names (case-insensitive)
+   - Matched tracks get disc/track numbers from their setlist position (Set 1 → Disc 1, Set 2 → Disc 2, Encore → Disc 3, etc.)
+   - Segue flags from the setlist are also applied to matched tracks
+3. **Duplicate handling:** If a song appears multiple times in the setlist, each import track matches the first unclaimed setlist occurrence (positional order)
+4. **Overflow disc for unmatched tracks:** Tracks that don't match any setlist song are moved to an overflow disc (one disc number higher than the highest matched disc). They are numbered sequentially (e.g., 401, 402, 403...) in their original file order. This keeps the matched tracks cleanly organized and groups unmatched tracks visibly at the end.
+5. **User reviews:** The grid updates immediately; user can manually edit any cell before import
+6. **Override:** Clicking "Renumber" after "Match Setlist" overwrites the setlist suggestions
+
+**Status message:** "Matched N of M tracks to setlist, K segues, X unmatched → Disc D"
+
+### Right-Click "Match to Song..." (Manual Matching)
+
+After Match Setlist runs, unmatched tracks on the overflow disc can be manually matched to setlist songs via the right-click context menu:
+
+1. **Right-click an unmatched track** (on overflow disc) → context menu shows "🎵 Match to Song..." item (below separator, after Play Now / Add to Playlist)
+2. **Dialog appears** showing:
+   - The track's current title (in gold)
+   - A list of setlist songs that have NOT yet been matched, with set labels (e.g., "Goin' Down The Road Feelin' Bad (Set 2, #9)")
+3. **User selects a song and clicks Match:**
+   - Track is assigned the correct disc/track number from the setlist position
+   - Segue flag is applied if the setlist indicates one
+   - Track's current title is automatically added as an alias in `songs.json` for the matched song's OfficialTitle (so future imports with the same variant match automatically)
+   - Remaining overflow tracks are renumbered sequentially
+   - Status message updates with new match count
+4. **Disabled when:** Track is already matched (not on overflow disc), no setlist data exists, or all setlist songs are already matched
+
+**Auto-alias learning:** When a track like "Goin' Down the Road Feeling Bad" is matched to "Goin' Down The Road Feelin' Bad", the variant is saved as an alias in `songs.json`. Next time any recording with that variant is imported, it matches automatically without manual intervention.
+
+### Right-Click "Track Info" (File Metadata Inspector)
+
+The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspecting a track's actual metadata. Opened via the right-click context menu on any track in the grid.
+
+**Two-section layout:**
+
+1. **File Metadata** — Read fresh from FLAC/MP3 tags on disk using TagLib#. Shows ground-truth values:
+   - Standard tags: Title, Track Number, Disc Number, Artist, Album Artist, Album, Year, Genre, Comment, Duration
+   - Custom FLAC Vorbis Comment fields: ALBUMDATE, VENUE, CITYSTATE, ALBUMNAME, ALBUMTYPE
+   - For MP3: reads equivalent ID3v2 user text frames
+
+2. **Import Status** — In-memory pipeline state from the TrackInfo object:
+   - File Path, Original Title (RawTitle), Current Song Name, Is Matched, Is Modified
+
+**Key design principle:** The File Metadata section always reflects what is actually stored in the file on disk, NOT the in-memory working values that Normalize/Match Setlist/Match to Song may have changed. This makes it a reliable diagnostic tool for verifying whether changes have been written to files.
+
+**Error handling:** If the file cannot be read (locked, missing, etc.), an error message is displayed in the File Metadata section instead of crashing.
 
 ---
 

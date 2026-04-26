@@ -57,8 +57,8 @@ namespace DeadEditor.Services
                         else
                         {
                             // IMPORT MODE: Parse and transform title
-                            // Parse title to separate song name from trailing date
-                            var (songName, extractedDate) = ParseTitleAndDate(rawTitle);
+                            // Parse title to separate song name, segue flag, and trailing date
+                            var (songName, parsedSegue, extractedDate) = ParseTitleAndDate(rawTitle);
 
                             track = new TrackInfo
                             {
@@ -70,11 +70,9 @@ namespace DeadEditor.Services
                                 RawTitle = rawTitle,  // Store original title for library browser display
                                 TrackDate = extractedDate ?? "",  // Use extracted date or empty string
                                 Duration = file.Properties.Duration.ToString(@"mm\:ss"),
+                                HasSegue = parsedSegue,
                                 IsModified = false
                             };
-
-                            // Check for existing segue markers before cleaning
-                            track.HasSegue = HasSegueMarker(rawTitle);
                         }
 
                         // DON'T populate TrackDate with album date here!
@@ -449,15 +447,19 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Parses a title to separate the song name from any trailing date in parentheses.
-        /// Prevents date doubling when re-importing files with existing formatted metadata.
+        /// Parses a noisy title (which may contain trailing segue markers and/or date suffixes)
+        /// into clean components: song name, segue flag, and date.
+        /// The returned songName is clean: no segue marker, no date suffix, no extra whitespace.
         /// </summary>
-        /// <param name="title">Full title from ID3 tag, e.g. "Bertha (1971-04-27)"</param>
-        /// <returns>Tuple of (songName, date). Date is null if no date found.</returns>
-        public (string songName, string? date) ParseTitleAndDate(string title)
+        /// <param name="title">Full title from ID3 tag or MB API, e.g. "Dark Star > (1968-02-23)"</param>
+        /// <returns>Tuple of (songName, hasSegue, date). Date is null if no date found.</returns>
+        public (string songName, bool hasSegue, string? date) ParseTitleAndDate(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
-                return (title, null);
+                return (title, false, null);
+
+            // Detect segue from the raw title before any stripping
+            bool hasSegue = HasSegueMarker(title);
 
             // PATTERN 1: MusicBrainz format with M/D/YYYY date inside "(Live at/in...)" parentheses
             // Examples:
@@ -487,7 +489,7 @@ namespace DeadEditor.Services
 
                 // Convert M/D/YYYY to yyyy-MM-dd format
                 var date = $"{year:D4}-{month:D2}-{day:D2}";
-                return (songName, date);
+                return (songName, hasSegue, date);
             }
 
             // PATTERN 1B: MusicBrainz format with M/D/YYYY date inside "[Live at/in...]" square brackets
@@ -504,7 +506,7 @@ namespace DeadEditor.Services
                 var year = int.Parse(match.Groups[4].Value);
 
                 var date = $"{year:D4}-{month:D2}-{day:D2}";
-                return (songName, date);
+                return (songName, hasSegue, date);
             }
 
             // PATTERN 1C: Square bracket venue with M/D/YY or M/D/YYYY date (no "Live at/in" prefix)
@@ -527,7 +529,7 @@ namespace DeadEditor.Services
                 if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
                 {
                     var date = $"{year:D4}-{month:D2}-{day:D2}";
-                    return (songName, date);
+                    return (songName, hasSegue, date);
                 }
             }
 
@@ -550,7 +552,7 @@ namespace DeadEditor.Services
                 if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
                 {
                     var date = $"{year:D4}-{month:D2}-{day:D2}";
-                    return (songName, date);
+                    return (songName, hasSegue, date);
                 }
             }
 
@@ -577,7 +579,7 @@ namespace DeadEditor.Services
                 songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
 
                 var date = match.Groups[2].Value;
-                return (songName, date);
+                return (songName, hasSegue, date);
             }
 
             // PATTERN 3: Year-only + tour/album name in parentheses
@@ -592,13 +594,13 @@ namespace DeadEditor.Services
             {
                 var songName = match.Groups[1].Value.Trim();
                 songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-                return (songName, null);
+                return (songName, hasSegue, null);
             }
 
             // No date found - return original title with no date
             // Still strip segue markers from song name if present
             var cleanTitle = Regex.Replace(title, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-            return (cleanTitle, null);
+            return (cleanTitle, hasSegue, null);
         }
 
         private string? ExtractDateFromTitle(string title)

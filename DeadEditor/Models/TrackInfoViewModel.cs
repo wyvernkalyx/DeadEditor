@@ -32,7 +32,7 @@ namespace DeadEditor
 
         private void Track_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(TrackInfo.SongName))
+            if (e.PropertyName == nameof(TrackInfo.SongName) || e.PropertyName == nameof(TrackInfo.Segue))
             {
                 UpdateDisplayTitle();
             }

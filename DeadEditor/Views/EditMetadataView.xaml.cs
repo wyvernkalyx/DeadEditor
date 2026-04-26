@@ -1,14 +1,24 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
+using DeadEditor.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WpfMouseEventArgs = System.Windows.Input.MouseEventArgs;
+using WpfDragEventArgs = System.Windows.DragEventArgs;
+using WpfDragDropEffects = System.Windows.DragDropEffects;
+using WpfPoint = System.Windows.Point;
+using WpfVector = System.Windows.Vector;
 
 namespace DeadEditor
 {
@@ -20,7 +30,7 @@ namespace DeadEditor
         private readonly NormalizationService _normalizationService;
 
         private AlbumInfo? _albumInfo;
-        private List<TrackInfo> _tracks = new();
+        private ObservableCollection<TrackInfoViewModel> _tracks = new();
         private bool _isUpdating = false;
         private bool _hasUnsavedChanges = false;
 
@@ -29,6 +39,16 @@ namespace DeadEditor
         private ArtworkState _artworkState = ArtworkState.Unchanged;
         private byte[]? _newArtworkData;
         private string? _newArtworkMimeType;
+
+        // Match Setlist state
+        private bool _matchSetlistHasRun = false;
+        private List<(string Name, string Canonical, int Position, bool Segue)>? _lastSetlistSongs;
+        private HashSet<int>? _lastClaimedPositions;
+
+        // Drag-to-reorder state
+        private WpfPoint _dragStartPoint;
+        private TrackInfoViewModel? _draggedItem;
+        private bool _isDragging;
 
         /// <summary>
         /// The album name for the header bar back button text.
@@ -69,7 +89,7 @@ namespace DeadEditor
 
                 // Read tracks from all folders in edit mode (as-is, no transforms)
                 var folders = _show.FolderPaths.Any() ? _show.FolderPaths : new List<string> { _show.FolderPath };
-                _tracks.Clear();
+                var rawTracks = new List<TrackInfo>();
 
                 foreach (var folder in folders)
                 {
@@ -77,10 +97,10 @@ namespace DeadEditor
                         continue;
 
                     var folderTracks = _metadataService.ReadFolder(folder, editMode: true);
-                    _tracks.AddRange(folderTracks);
+                    rawTracks.AddRange(folderTracks);
                 }
 
-                if (_tracks.Count == 0)
+                if (rawTracks.Count == 0)
                 {
                     StatusTextBlock.Text = "No audio files found";
                     return;
@@ -104,7 +124,7 @@ namespace DeadEditor
                 };
 
                 // Read artist and artwork from first FLAC file
-                var firstFile = _tracks.FirstOrDefault()?.FilePath;
+                var firstFile = rawTracks.FirstOrDefault()?.FilePath;
                 if (firstFile != null)
                 {
                     using (var file = TagLib.File.Create(firstFile))
@@ -120,50 +140,53 @@ namespace DeadEditor
                     }
                 }
 
-                // Extract dates from raw titles for display (edit mode doesn't parse them)
-                foreach (var track in _tracks)
+                // Fix double-date suffix: ReadFolder(editMode: true) leaves the full FLAC
+                // title in SongName (e.g. "Dark Star > (1968-02-23)"). Since DisplayTitle
+                // aggregates SongName + TrackDate, we must strip the date from SongName here
+                // or it appears twice. See: documentation/double-date-bug-diagnostic-2026-04-25.md
+                foreach (var track in rawTracks)
                 {
-                    if (string.IsNullOrEmpty(track.TrackDate) && !string.IsNullOrEmpty(track.SongName))
-                    {
-                        var dateMatch = System.Text.RegularExpressions.Regex.Match(
-                            track.SongName, @"\((\d{4}-\d{2}-\d{2})\)");
-                        if (dateMatch.Success)
-                        {
-                            track.TrackDate = dateMatch.Groups[1].Value;
-                        }
-                    }
+                    var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.SongName);
+                    track.SongName = cleanName;
+                    track.HasSegue = parsedSegue;
+                    if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
+                        track.TrackDate = date;
                 }
 
-                // Sort tracks: multi-night by date then track#, else by disc then track#
-                var distinctDates = _tracks.Where(t => !string.IsNullOrEmpty(t.TrackDate))
-                                          .Select(t => t.TrackDate)
-                                          .Distinct()
-                                          .Count();
+                // Sort raw tracks BEFORE wrapping in ViewModels (matching ImportView pattern)
+                var distinctDates = rawTracks.Where(t => !string.IsNullOrEmpty(t.TrackDate))
+                                            .Select(t => t.TrackDate)
+                                            .Distinct()
+                                            .Count();
 
-                var hasDiscNumbers = _tracks.Any(t => t.DiscNumber > 1);
+                var hasDiscNumbers = rawTracks.Any(t => t.DiscNumber > 1);
 
+                List<TrackInfo> sortedTracks;
                 if (distinctDates > 1)
                 {
-                    _tracks = _tracks.OrderBy(t => string.IsNullOrEmpty(t.TrackDate) ? "9999-99-99" : t.TrackDate)
-                                     .ThenBy(t => t.DiscNumber)
-                                     .ThenBy(t => t.TrackNumber)
-                                     .ToList();
+                    sortedTracks = rawTracks.OrderBy(t => string.IsNullOrEmpty(t.TrackDate) ? "9999-99-99" : t.TrackDate)
+                                            .ThenBy(t => t.DiscNumber)
+                                            .ThenBy(t => t.TrackNumber)
+                                            .ToList();
                 }
                 else if (hasDiscNumbers)
                 {
-                    _tracks = _tracks.OrderBy(t => t.DiscNumber)
-                                     .ThenBy(t => t.TrackNumber)
-                                     .ToList();
+                    sortedTracks = rawTracks.OrderBy(t => t.DiscNumber)
+                                            .ThenBy(t => t.TrackNumber)
+                                            .ToList();
                 }
                 else
                 {
-                    _tracks = _tracks.OrderBy(t => t.TrackNumber).ToList();
+                    sortedTracks = rawTracks.OrderBy(t => t.TrackNumber).ToList();
                 }
 
-                // Subscribe to property changes on each track for change tracking
-                foreach (var track in _tracks)
+                // Wrap sorted tracks in ViewModels with isEditMode: false (aggregated display)
+                _tracks.Clear();
+                foreach (var track in sortedTracks)
                 {
-                    track.PropertyChanged += Track_PropertyChanged;
+                    var vm = new TrackInfoViewModel(track, _albumInfo!, isEditMode: false);
+                    vm.PropertyChanged += ViewModel_PropertyChanged;
+                    _tracks.Add(vm);
                 }
 
                 // Bind tracks to DataGrid
@@ -174,6 +197,11 @@ namespace DeadEditor
 
                 StatusTextBlock.Text = $"{_tracks.Count} tracks loaded";
                 _hasUnsavedChanges = false;
+
+                // Display managed folder path
+                var displayPath = _show.FolderPaths.Any() ? _show.FolderPaths.First() : _show.FolderPath;
+                FolderPathTextBox.Text = !string.IsNullOrEmpty(displayPath) ? displayPath : "(unknown)";
+                OpenFolderButton.IsEnabled = !string.IsNullOrEmpty(displayPath);
             }
             catch (Exception ex)
             {
@@ -200,6 +228,24 @@ namespace DeadEditor
                 // Artwork
                 LoadArtwork();
             }
+
+            // MBID display
+            var mbid = _show.MusicBrainzReleaseId;
+            if (!string.IsNullOrEmpty(mbid))
+            {
+                MbidDisplayText.Text = mbid;
+                MbidDisplayText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
+                MbidCopyButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MbidDisplayText.Text = "\u2014";
+                MbidDisplayText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+                MbidCopyButton.Visibility = Visibility.Collapsed;
+            }
+
+            // Enable Match Setlist button if setlist data exists for this date
+            UpdateMatchSetlistButton();
 
             TrackCountText.Text = _tracks.Count == 1 ? "1 track" : $"{_tracks.Count} tracks";
 
@@ -455,9 +501,13 @@ namespace DeadEditor
 
                 // Write metadata to FLAC files IN-PLACE (no copy, no new folder)
                 var folders = _show.FolderPaths.Any() ? _show.FolderPaths : new List<string> { _show.FolderPath };
+                var saveTrackList = _tracks.Select(t => t.Track).ToList();
                 await Task.Run(() =>
                 {
-                    _metadataService.WriteMetadata(_albumInfo, _tracks);
+                    _metadataService.WriteMetadata(_albumInfo, saveTrackList);
+
+                    // Write MBID to all tracks if set
+                    WriteMbidToTracks();
 
                     // Handle cover.jpg file alongside FLAC tag artwork
                     foreach (var folder in folders)
@@ -484,7 +534,7 @@ namespace DeadEditor
                 // Diagnostic: verify tags were actually written to disk
                 if (_tracks.Count > 0)
                 {
-                    var testPath = _tracks[0].FilePath;
+                    var testPath = _tracks[0].Track.FilePath;
                     Debug.WriteLine($"[SAVE VERIFY] Verifying: {testPath}");
                     using var testFile = TagLib.File.Create(testPath);
 
@@ -540,8 +590,8 @@ namespace DeadEditor
 
                 // Re-cache track titles for search
                 _show.TrackTitles = _tracks
-                    .Where(t => !string.IsNullOrEmpty(t.SongName))
-                    .Select(t => t.SongName!)
+                    .Where(t => !string.IsNullOrEmpty(t.Track.SongName))
+                    .Select(t => t.Track.SongName!)
                     .ToList();
 
                 ProgressBar.Visibility = Visibility.Collapsed;
@@ -610,21 +660,20 @@ namespace DeadEditor
 
         // ===== TRACK GRID EDITING =====
 
-        private void Track_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             // Track any property change (Segue checkbox, etc.) as unsaved
             if (_isUpdating) return;
 
-            if (e.PropertyName == nameof(TrackInfo.Segue) ||
-                e.PropertyName == nameof(TrackInfo.SongName) ||
-                e.PropertyName == nameof(TrackInfo.RawTitle) ||
-                e.PropertyName == nameof(TrackInfo.TrackDate) ||
-                e.PropertyName == nameof(TrackInfo.DiscNumber))
+            if (e.PropertyName == nameof(TrackInfoViewModel.Segue) ||
+                e.PropertyName == nameof(TrackInfoViewModel.SongName) ||
+                e.PropertyName == nameof(TrackInfoViewModel.TrackDate) ||
+                e.PropertyName == nameof(TrackInfoViewModel.DiscNumber))
             {
                 _hasUnsavedChanges = true;
-                if (sender is TrackInfo track)
+                if (sender is TrackInfoViewModel vm)
                 {
-                    track.IsModified = true;
+                    vm.Track.IsModified = true;
                 }
             }
         }
@@ -640,23 +689,28 @@ namespace DeadEditor
             {
                 _hasUnsavedChanges = true;
 
-                // Mark the individual track as modified
-                if (e.Row.Item is TrackInfo track)
+                // Mark the individual track as modified, then refresh DisplayTitle
+                if (e.Row.Item is TrackInfoViewModel vm)
                 {
-                    track.IsModified = true;
+                    vm.Track.IsModified = true;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        vm.UpdateDisplayTitle();
+                    }), System.Windows.Threading.DispatcherPriority.Background);
                 }
             }
         }
 
         /// <summary>
         /// Rebuild RawTitle from normalized components (SongName + Segue + TrackDate).
-        /// Called after NormalizeAll so the grid (bound to RawTitle) shows the corrected title.
-        /// This is also what WriteMetadata will use as the basis for the FLAC TITLE tag.
+        /// Kept for compatibility — WriteMetadata reads SongName directly, so RawTitle
+        /// is not strictly needed for save. May be removable in a future cleanup.
         /// </summary>
         private void ReconstructRawTitles()
         {
-            foreach (var track in _tracks)
+            foreach (var vm in _tracks)
             {
+                var track = vm.Track;
                 var title = track.SongName ?? "";
 
                 // Strip any existing segue markers and date suffixes to prevent multiplication
@@ -690,15 +744,18 @@ namespace DeadEditor
                 // Clean SongName before normalizing — edit mode loads raw FLAC titles
                 // (e.g., "Dark Star > > (1968-02-23)") which need the same ParseTitleAndDate
                 // cleanup that import mode gets during ReadFolder.
-                foreach (var track in _tracks)
+                foreach (var vm in _tracks)
                 {
-                    var (cleanName, date) = _metadataService.ParseTitleAndDate(track.RawTitle);
+                    var track = vm.Track;
+                    var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.RawTitle);
                     track.SongName = cleanName;
+                    track.HasSegue = parsedSegue;
                     if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
                         track.TrackDate = date;
                 }
 
-                int matched = _normalizationService.NormalizeAll(_tracks);
+                var trackList = _tracks.Select(t => t.Track).ToList();
+                int matched = _normalizationService.NormalizeAll(trackList);
 
                 // Reconstruct RawTitle from normalized components so the grid
                 // (bound to RawTitle) shows the corrected title.
@@ -716,7 +773,8 @@ namespace DeadEditor
                 if (unmatched > 0)
                 {
                     var unmatchedTracks = _tracks
-                        .Where(t => t.IsMatched == false)
+                        .Where(t => t.Track.IsMatched == false)
+                        .Select(t => t.Track)
                         .ToList();
 
                     var parentWindow = Window.GetWindow(this);
@@ -729,7 +787,7 @@ namespace DeadEditor
                     {
                         ReconstructRawTitles();
                         TracksDataGrid.Items.Refresh();
-                        int nowMatched = _tracks.Count(t => t.IsMatched == true);
+                        int nowMatched = _tracks.Count(t => t.Track.IsMatched == true);
                         var correctionStatus = $"Corrections applied. Matched {nowMatched} of {_tracks.Count} songs";
                         NormalizeStatusText.Text = correctionStatus;
                         StatusTextBlock.Text = correctionStatus;
@@ -747,7 +805,7 @@ namespace DeadEditor
             if (_tracks.Count == 0) return;
 
             var tracksByDisc = _tracks
-                .GroupBy(t => t.DiscNumber > 0 ? t.DiscNumber : 1)
+                .GroupBy(t => t.Track.DiscNumber > 0 ? t.Track.DiscNumber : 1)
                 .OrderBy(g => g.Key);
 
             foreach (var discGroup in tracksByDisc)
@@ -755,10 +813,10 @@ namespace DeadEditor
                 int discNumber = discGroup.Key;
                 int trackIndex = 1;
 
-                foreach (var track in discGroup)
+                foreach (var vm in discGroup)
                 {
-                    track.TrackNumber = (discNumber * 100) + trackIndex;
-                    track.IsModified = true;
+                    vm.Track.TrackNumber = (discNumber * 100) + trackIndex;
+                    vm.Track.IsModified = true;
                     trackIndex++;
                 }
             }
@@ -766,6 +824,730 @@ namespace DeadEditor
             TracksDataGrid.Items.Refresh();
             _hasUnsavedChanges = true;
             StatusTextBlock.Text = "Tracks renumbered using disc-aware 101/201/301 convention";
+        }
+
+        // ===== DATE AUTO-LOOKUP =====
+
+        private void AlbumDateTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (_isUpdating || _albumInfo == null) return;
+
+            var date = AlbumDateTextBox.Text?.Trim();
+            if (string.IsNullOrEmpty(date) || date.Length != 10) return;
+            if (!Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$")) return;
+
+            var showInfo = ShowLookupService.Instance.GetShowByDate(date);
+            if (showInfo != null)
+            {
+                if (string.IsNullOrWhiteSpace(VenueTextBox.Text))
+                {
+                    VenueTextBox.Text = showInfo.Venue;
+                }
+                if (string.IsNullOrWhiteSpace(CityStateTextBox.Text))
+                {
+                    CityStateTextBox.Text = showInfo.FormattedLocation;
+                }
+            }
+
+            UpdateMatchSetlistButton();
+        }
+
+        private void UpdateMatchSetlistButton()
+        {
+            var date = AlbumDateTextBox.Text?.Trim();
+            var setlist = ShowLookupService.Instance.GetSetlist(date ?? "");
+            if (setlist != null)
+            {
+                MatchSetlistButton.IsEnabled = true;
+                MatchSetlistButton.ToolTip = "Match tracks to setlist data";
+            }
+            else
+            {
+                MatchSetlistButton.IsEnabled = false;
+                MatchSetlistButton.ToolTip = "No setlist data for this date";
+            }
+        }
+
+        // ===== MBID DISPLAY =====
+
+        private void MbidCopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var mbid = _show.MusicBrainzReleaseId;
+            if (!string.IsNullOrEmpty(mbid))
+            {
+                System.Windows.Clipboard.SetText(mbid);
+                StatusTextBlock.Text = "MBID copied to clipboard";
+            }
+        }
+
+        // ===== CONTEXT MENU =====
+
+        private void TracksDataGrid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var hit = VisualTreeHelper.HitTest(TracksDataGrid, e.GetPosition(TracksDataGrid));
+            if (hit == null) return;
+
+            var element = hit.VisualHit as FrameworkElement;
+            while (element != null && element is not DataGridRow)
+            {
+                element = VisualTreeHelper.GetParent(element) as FrameworkElement;
+            }
+
+            if (element is not DataGridRow row) return;
+            if (row.Item is not TrackInfoViewModel clickedVm) return;
+            var clickedTrack = clickedVm.Track;
+
+            // Build dark-themed context menu
+            var menu = new ContextMenu
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
+                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0)),
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42)),
+                BorderThickness = new Thickness(1),
+                Padding = new Thickness(2)
+            };
+
+            var menuItemStyle = new Style(typeof(MenuItem));
+            menuItemStyle.Setters.Add(new Setter(MenuItem.ForegroundProperty,
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0))));
+            menuItemStyle.Setters.Add(new Setter(MenuItem.PaddingProperty, new Thickness(8, 6, 20, 6)));
+            menuItemStyle.Setters.Add(new Setter(MenuItem.FontSizeProperty, 14.0));
+
+            var playNowItem = new MenuItem { Header = "▶  Play Now", Style = menuItemStyle };
+            playNowItem.Click += (s, args) =>
+            {
+                if (!App.PlaybackService.Playlist.Contains(clickedTrack))
+                    App.PlaybackService.Playlist.Add(clickedTrack);
+                App.PlaybackService.Play(clickedTrack);
+            };
+            menu.Items.Add(playNowItem);
+
+            var addItem = new MenuItem { Header = "＋  Add to Playlist", Style = menuItemStyle };
+            addItem.Click += (s, args) =>
+            {
+                if (!App.PlaybackService.Playlist.Contains(clickedTrack))
+                    App.PlaybackService.Playlist.Add(clickedTrack);
+            };
+            menu.Items.Add(addItem);
+
+            // Track Info
+            menu.Items.Add(new Separator
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42))
+            });
+
+            var trackInfoItem = new MenuItem { Header = "\U0001F4C4  Track Info", Style = menuItemStyle };
+            trackInfoItem.Click += (s, args) =>
+            {
+                var dialog = new TrackInfoDialog(
+                    clickedTrack,
+                    artist: _albumInfo?.Artist,
+                    album: _albumInfo?.AlbumName);
+                dialog.Owner = Window.GetWindow(this);
+                dialog.ShowDialog();
+            };
+            menu.Items.Add(trackInfoItem);
+
+            // Match to Song — only after Match Setlist has run and for unmatched tracks
+            if (_matchSetlistHasRun && clickedTrack.IsMatched != true &&
+                _lastSetlistSongs != null && _lastClaimedPositions != null)
+            {
+                var unmatchedSongs = BuildUnmatchedSetlistSongList();
+                if (unmatchedSongs.Count > 0)
+                {
+                    menu.Items.Add(new Separator
+                    {
+                        Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42))
+                    });
+
+                    var matchItem = new MenuItem { Header = "\U0001F3B5  Match to Song\u2026", Style = menuItemStyle };
+                    matchItem.Click += (s, args) => MatchToSong_Click(clickedVm);
+                    menu.Items.Add(matchItem);
+                }
+            }
+
+            menu.IsOpen = true;
+            e.Handled = true;
+        }
+
+        // ===== MATCH TO SONG =====
+
+        private List<(int SetlistIndex, string DisplayLabel)> BuildUnmatchedSetlistSongList()
+        {
+            var result = new List<(int, string)>();
+            if (_lastSetlistSongs == null || _lastClaimedPositions == null)
+                return result;
+
+            var date = AlbumDateTextBox.Text?.Trim() ?? "";
+            var setlist = ShowLookupService.Instance.GetSetlist(date);
+            if (setlist == null) return result;
+
+            for (int i = 0; i < _lastSetlistSongs.Count; i++)
+            {
+                if (_lastClaimedPositions.Contains(i)) continue;
+
+                var discTrack = ShowLookupService.Instance.GetDiscTrack(date, _lastSetlistSongs[i].Position);
+                string setLabel;
+                if (discTrack != null && discTrack.Value.Disc <= setlist.Count)
+                {
+                    var setInfo = setlist[discTrack.Value.Disc - 1];
+                    setLabel = $"{setInfo.Label}, #{discTrack.Value.Track}";
+                }
+                else
+                {
+                    setLabel = $"#{i + 1}";
+                }
+
+                result.Add((i, $"{_lastSetlistSongs[i].Name} ({setLabel})"));
+            }
+
+            return result;
+        }
+
+        private void MatchToSong_Click(TrackInfoViewModel vm)
+        {
+            if (_lastSetlistSongs == null || _lastClaimedPositions == null)
+                return;
+
+            var unmatchedSongs = BuildUnmatchedSetlistSongList();
+            if (unmatchedSongs.Count == 0) return;
+
+            var track = vm.Track;
+            var cleanedTitle = track.SongName ?? "";
+            var dialog = new MatchToSongDialog(cleanedTitle, unmatchedSongs);
+            dialog.Owner = Window.GetWindow(this);
+
+            if (dialog.ShowDialog() != true || dialog.SelectedSetlistIndex < 0)
+                return;
+
+            var selectedIndex = dialog.SelectedSetlistIndex;
+            var selectedSong = _lastSetlistSongs[selectedIndex];
+
+            // Update song name to canonical title (no disc/track reassignment in Edit Metadata)
+            track.SongName = selectedSong.Canonical;
+            track.IsMatched = true;
+            track.IsModified = true;
+
+            // Apply segue from setlist
+            if (selectedSong.Segue)
+                track.Segue = true;
+
+            // Mark position as claimed
+            _lastClaimedPositions.Add(selectedIndex);
+
+            // Auto-add alias to songs.json
+            var aliasCandidate = cleanedTitle.Trim();
+            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(selectedSong.Canonical))
+            {
+                _normalizationService.AddAlias(selectedSong.Canonical, aliasCandidate);
+            }
+
+            ReconstructRawTitles();
+            TracksDataGrid.Items.Refresh();
+            _hasUnsavedChanges = true;
+
+            int remaining = _lastSetlistSongs.Count - _lastClaimedPositions.Count;
+            StatusTextBlock.Text = $"Matched '{aliasCandidate}' → '{selectedSong.Canonical}'. {remaining} setlist songs remaining.";
+        }
+
+        // ===== MATCH SETLIST =====
+
+        private void MatchSetlistButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tracks.Count == 0 || _albumInfo == null)
+            {
+                StatusTextBlock.Text = "No tracks to match";
+                return;
+            }
+
+            var date = AlbumDateTextBox.Text?.Trim();
+            if (string.IsNullOrEmpty(date)) return;
+
+            var setlist = ShowLookupService.Instance.GetSetlist(date);
+            if (setlist == null)
+            {
+                StatusTextBlock.Text = "No setlist data available for this date";
+                return;
+            }
+
+            // Flatten setlist into ordered list with canonical names
+            var setlistSongs = new List<(string Name, string Canonical, int Position, bool Segue)>();
+            int pos = 0;
+            foreach (var set in setlist)
+            {
+                foreach (var song in set.Songs)
+                {
+                    var canonical = _normalizationService.GetOfficialTitle(song.Name) ?? song.Name;
+                    setlistSongs.Add((song.Name, canonical, pos, song.Segue));
+                    pos++;
+                }
+            }
+
+            var claimedPositions = new HashSet<int>();
+            int matchCount = 0;
+            int segueCount = 0;
+
+            foreach (var vm in _tracks)
+            {
+                var track = vm.Track;
+                var trackName = track.SongName;
+                if (string.IsNullOrEmpty(trackName)) continue;
+
+                var normalized = _normalizationService.Normalize(trackName);
+                var nameToMatch = normalized ?? trackName;
+                var trackCanonical = _normalizationService.GetOfficialTitle(nameToMatch) ?? nameToMatch;
+
+                int matchedIndex = -1;
+                for (int i = 0; i < setlistSongs.Count; i++)
+                {
+                    if (claimedPositions.Contains(i)) continue;
+
+                    if (string.Equals(trackCanonical, setlistSongs[i].Canonical, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchedIndex = i;
+                        break;
+                    }
+                }
+
+                if (matchedIndex < 0) continue;
+
+                // Confident match: update title and segue, but NOT disc/track numbers
+                claimedPositions.Add(matchedIndex);
+                track.SongName = setlistSongs[matchedIndex].Canonical;
+                track.IsMatched = true;
+                track.IsModified = true;
+                matchCount++;
+
+                // Always apply segue from setlist data
+                track.Segue = setlistSongs[matchedIndex].Segue;
+                if (setlistSongs[matchedIndex].Segue)
+                    segueCount++;
+            }
+
+            // Store state for Match to Song
+            _lastSetlistSongs = setlistSongs;
+            _lastClaimedPositions = claimedPositions;
+            _matchSetlistHasRun = true;
+
+            ReconstructRawTitles();
+            TracksDataGrid.Items.Refresh();
+            _hasUnsavedChanges = true;
+
+            int unmatchedCount = _tracks.Count - matchCount;
+            var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
+            var unmatchedMsg = unmatchedCount > 0
+                ? $". {unmatchedCount} unmatched \u2014 right-click to match manually."
+                : "";
+            StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
+        }
+
+        // ===== MUSICBRAINZ LOOKUP =====
+
+        private async void MusicBrainzButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tracks.Count == 0)
+            {
+                StatusTextBlock.Text = "No tracks loaded";
+                return;
+            }
+
+            try
+            {
+                var librarySettings = LibrarySettings.Load();
+                var musicBrainzService = new MusicBrainzService("asa4wLQhwJ", librarySettings);
+
+                // If MBID already exists, offer two paths
+                if (!string.IsNullOrEmpty(_show.MusicBrainzReleaseId))
+                {
+                    var result = System.Windows.MessageBox.Show(
+                        "This album already has a MusicBrainz Release ID.\n\n" +
+                        "Click Yes to refresh metadata from the existing MBID.\n" +
+                        "Click No to search for a different release.",
+                        "Existing MBID Found",
+                        MessageBoxButton.YesNoCancel,
+                        MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Cancel) return;
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        // Refresh from existing MBID — skip search, go directly to candidate dialog
+                        await ShowMbidCandidateDialog(musicBrainzService, null, _show.MusicBrainzReleaseId);
+                        return;
+                    }
+                    // result == No → fall through to fingerprint/search
+                }
+
+                MusicBrainzButton.IsEnabled = false;
+                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsIndeterminate = true;
+                StatusTextBlock.Text = "Looking up album on MusicBrainz...";
+
+                List<ReleaseOption>? releases = null;
+
+                // Fingerprint path
+                var mbTrackList = _tracks.Select(t => t.Track).ToList();
+                releases = await musicBrainzService.LookupAllReleasesAsync(mbTrackList, mbTrackList.Count);
+
+                // Name search fallback
+                if ((releases == null || releases.Count == 0) && _albumInfo != null)
+                {
+                    var fpcalcPath = librarySettings.FpcalcPath;
+                    if (string.IsNullOrEmpty(fpcalcPath) || !File.Exists(fpcalcPath))
+                    {
+                        StatusTextBlock.Text = "fpcalc not configured \u2014 using name search";
+                    }
+                    else
+                    {
+                        StatusTextBlock.Text = "Fingerprint found no matches \u2014 trying name search...";
+                    }
+
+                    releases = await musicBrainzService.SearchReleasesByNameAsync(
+                        _albumInfo.AlbumName ?? "",
+                        _albumInfo.Artist ?? "",
+                        _albumInfo.Year);
+                }
+
+                ProgressBar.Visibility = Visibility.Collapsed;
+                MusicBrainzButton.IsEnabled = true;
+
+                if (releases == null || releases.Count == 0)
+                {
+                    StatusTextBlock.Text = "No MusicBrainz candidates found";
+                    // Still show dialog for manual MBID entry
+                    releases = new List<ReleaseOption>();
+                }
+
+                await ShowMbidCandidateDialog(musicBrainzService, releases, null);
+            }
+            catch (Exception ex)
+            {
+                ProgressBar.Visibility = Visibility.Collapsed;
+                MusicBrainzButton.IsEnabled = true;
+                StatusTextBlock.Text = $"MusicBrainz lookup error: {ex.Message}";
+            }
+        }
+
+        private async Task ShowMbidCandidateDialog(MusicBrainzService musicBrainzService,
+            List<ReleaseOption>? candidates, string? refreshMbid)
+        {
+            // If refreshing from existing MBID, create a single-candidate list
+            if (!string.IsNullOrEmpty(refreshMbid) && (candidates == null || candidates.Count == 0))
+            {
+                // Fetch release info for the existing MBID
+                StatusTextBlock.Text = "Fetching release info...";
+                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsIndeterminate = true;
+
+                try
+                {
+                    var tracks = await musicBrainzService.GetReleaseTracksAsync(refreshMbid);
+                    candidates = new List<ReleaseOption>
+                    {
+                        new ReleaseOption
+                        {
+                            ReleaseId = refreshMbid,
+                            Title = _show.AlbumName ?? "Unknown",
+                            Artist = _albumInfo?.Artist ?? "",
+                            Year = _show.ReleaseYear?.ToString(),
+                            TotalTrackCount = tracks?.Count
+                        }
+                    };
+                }
+                catch
+                {
+                    candidates = new List<ReleaseOption>();
+                }
+
+                ProgressBar.Visibility = Visibility.Collapsed;
+            }
+
+            var dialog = new MbidCandidateDialog(
+                _show,
+                candidates ?? new List<ReleaseOption>(),
+                null,
+                null,
+                _albumInfo,
+                showFieldCheckboxes: true);
+            dialog.Owner = Window.GetWindow(this);
+
+            if (dialog.ShowDialog() == true && dialog.UserAction == CandidateAction.Confirm)
+            {
+                var applyResult = dialog.ApplyResult;
+                if (applyResult == null || string.IsNullOrEmpty(applyResult.Mbid)) return;
+
+                // Always apply MBID
+                _show.MusicBrainzReleaseId = applyResult.Mbid;
+                MbidDisplayText.Text = applyResult.Mbid;
+                MbidDisplayText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
+                MbidCopyButton.Visibility = Visibility.Visible;
+
+                // Apply checked fields
+                if (applyResult.ApplyAlbumTitle && applyResult.SelectedRelease != null)
+                {
+                    _isUpdating = true;
+                    AlbumNameTextBox.Text = applyResult.SelectedRelease.Title;
+                    _isUpdating = false;
+                    if (_albumInfo != null)
+                        _albumInfo.AlbumName = applyResult.SelectedRelease.Title;
+                }
+
+                if (applyResult.ApplyAlbumArtist && applyResult.SelectedRelease != null)
+                {
+                    _isUpdating = true;
+                    ArtistTextBox.Text = applyResult.SelectedRelease.Artist;
+                    _isUpdating = false;
+                    if (_albumInfo != null)
+                        _albumInfo.Artist = applyResult.SelectedRelease.Artist;
+                }
+
+                if (applyResult.ApplyReleaseYear && applyResult.SelectedRelease != null)
+                {
+                    _isUpdating = true;
+                    YearTextBox.Text = applyResult.SelectedRelease.Year ?? "";
+                    _isUpdating = false;
+                    if (_albumInfo != null)
+                        _albumInfo.Year = applyResult.SelectedRelease.Year ?? "";
+                }
+
+                if (applyResult.ApplyTrackTitles)
+                {
+                    await ApplyMbTrackTitles(musicBrainzService, applyResult.Mbid);
+                }
+
+                _hasUnsavedChanges = true;
+                StatusTextBlock.Text = $"MusicBrainz data applied (MBID: {applyResult.Mbid.Substring(0, 8)}\u2026). Save to commit.";
+            }
+            else
+            {
+                StatusTextBlock.Text = "MusicBrainz lookup cancelled";
+            }
+        }
+
+        private async Task ApplyMbTrackTitles(MusicBrainzService musicBrainzService, string mbid)
+        {
+            try
+            {
+                StatusTextBlock.Text = "Fetching track titles from MusicBrainz...";
+                var mbTracks = await musicBrainzService.GetReleaseTracksAsync(mbid);
+                if (mbTracks == null || mbTracks.Count == 0)
+                {
+                    StatusTextBlock.Text = "No track data available from MusicBrainz";
+                    return;
+                }
+
+                int matchedCount = 0;
+                foreach (var vm in _tracks)
+                {
+                    var localTrack = vm.Track;
+                    // Match by disc + position (track number within disc)
+                    var discNum = localTrack.DiscNumber > 0 ? localTrack.DiscNumber : 1;
+                    var trackInDisc = localTrack.TrackNumber % 100;
+                    if (trackInDisc == 0) trackInDisc = localTrack.TrackNumber;
+
+                    var mbTrack = mbTracks.FirstOrDefault(t =>
+                        t.DiscNumber == discNum && t.Position == trackInDisc);
+
+                    if (mbTrack != null)
+                    {
+                        var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title);
+                        localTrack.SongName = cleanName;
+                        localTrack.HasSegue = mbSegue;
+                        localTrack.IsMatched = true;
+                        localTrack.IsModified = true;
+                        matchedCount++;
+                    }
+                }
+
+                ReconstructRawTitles();
+                TracksDataGrid.Items.Refresh();
+                StatusTextBlock.Text = $"Track titles: {matchedCount} of {_tracks.Count} matched from MusicBrainz";
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Error fetching track titles: {ex.Message}";
+            }
+        }
+
+        // ===== DRAG-TO-REORDER =====
+
+        private void Row_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row)
+            {
+                _dragStartPoint = e.GetPosition(null);
+                _draggedItem = row.Item as TrackInfoViewModel;
+                _isDragging = false;
+            }
+        }
+
+        private void Row_MouseMove(object sender, WpfMouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && _draggedItem != null && !_isDragging)
+            {
+                WpfPoint current = e.GetPosition(null);
+                WpfVector diff = _dragStartPoint - current;
+
+                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    _isDragging = true;
+                    if (sender is DataGridRow row)
+                        DragDrop.DoDragDrop(row, _draggedItem, WpfDragDropEffects.Move);
+                    _isDragging = false;
+                }
+            }
+        }
+
+        private void Row_DragOver(object sender, WpfDragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TrackInfoViewModel)))
+            {
+                e.Effects = WpfDragDropEffects.Move;
+
+                if (sender is DataGridRow targetRow && _draggedItem != null)
+                {
+                    var targetItem = targetRow.Item as TrackInfoViewModel;
+                    if (targetItem != null && targetItem != _draggedItem)
+                        UpdateDropIndicator(targetRow);
+                }
+            }
+            else
+            {
+                e.Effects = WpfDragDropEffects.None;
+            }
+            e.Handled = true;
+        }
+
+        private void Row_Drop(object sender, WpfDragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TrackInfoViewModel)) && sender is DataGridRow targetRow)
+            {
+                var targetItem = targetRow.Item as TrackInfoViewModel;
+                if (targetItem != null && _draggedItem != null && targetItem != _draggedItem)
+                {
+                    // Block cross-disc drags
+                    if (_draggedItem.DiscNumber != targetItem.DiscNumber)
+                    {
+                        HideDropIndicator();
+                        e.Handled = true;
+                        return;
+                    }
+
+                    int draggedIndex = _tracks.IndexOf(_draggedItem);
+                    int targetIndex = _tracks.IndexOf(targetItem);
+
+                    if (draggedIndex >= 0 && targetIndex >= 0)
+                    {
+                        _tracks.RemoveAt(draggedIndex);
+                        _tracks.Insert(targetIndex, _draggedItem);
+                        TracksDataGrid.SelectedItem = _draggedItem;
+
+                        // Auto-renumber within the affected disc
+                        RenumberDisc(_draggedItem.Track.DiscNumber > 0 ? _draggedItem.Track.DiscNumber : 1);
+
+                        TracksDataGrid.Items.Refresh();
+                        _hasUnsavedChanges = true;
+                    }
+                }
+            }
+
+            HideDropIndicator();
+            e.Handled = true;
+        }
+
+        private void RenumberDisc(int discNumber)
+        {
+            int trackNum = 1;
+            foreach (var vm in _tracks)
+            {
+                var track = vm.Track;
+                var trackDisc = track.DiscNumber > 0 ? track.DiscNumber : 1;
+                if (trackDisc == discNumber)
+                {
+                    track.TrackNumber = discNumber * 100 + trackNum;
+                    track.IsModified = true;
+                    trackNum++;
+                }
+            }
+        }
+
+        private void UpdateDropIndicator(DataGridRow targetRow)
+        {
+            try
+            {
+                var position = targetRow.TranslatePoint(new WpfPoint(0, 0), TracksDataGrid);
+                DropIndicator.Visibility = Visibility.Visible;
+                DropIndicator.Margin = new Thickness(5, position.Y, 5, 0);
+            }
+            catch
+            {
+                HideDropIndicator();
+            }
+        }
+
+        private void HideDropIndicator()
+        {
+            DropIndicator.Visibility = Visibility.Collapsed;
+        }
+
+        // ===== SAVE: MBID WRITE =====
+
+        private void WriteMbidToTracks()
+        {
+            var mbid = _show.MusicBrainzReleaseId;
+            if (string.IsNullOrEmpty(mbid)) return;
+
+            foreach (var vm in _tracks)
+            {
+                if (string.IsNullOrEmpty(vm.Track.FilePath) || !File.Exists(vm.Track.FilePath))
+                    continue;
+
+                try
+                {
+                    using var file = TagLib.File.Create(vm.Track.FilePath);
+
+                    if (file is TagLib.Flac.File)
+                    {
+                        var xiph = (TagLib.Ogg.XiphComment?)file.GetTag(TagLib.TagTypes.Xiph);
+                        xiph?.SetField("MUSICBRAINZ_ALBUMID", mbid);
+                    }
+                    else
+                    {
+                        var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2, true);
+                        if (id3v2 != null)
+                        {
+                            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "MusicBrainz Album Id", true);
+                            frame.Text = new[] { mbid };
+                        }
+                    }
+
+                    file.Save();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[MBID Write] Error writing to {vm.Track.FilePath}: {ex.Message}");
+                }
+            }
+        }
+
+        // ===== OPEN FOLDER =====
+
+        private void OpenFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var path = FolderPathTextBox.Text;
+            if (string.IsNullOrEmpty(path) || path == "(unknown)")
+                return;
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Folder not found: {path}";
+                Debug.WriteLine($"[EDIT] Open folder failed: {ex.Message}");
+            }
         }
     }
 }

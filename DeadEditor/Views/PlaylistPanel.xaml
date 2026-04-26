@@ -136,6 +136,7 @@
                   CanUserResizeRows="False"
                   SelectionMode="Single"
                   MouseDoubleClick="PlaylistDataGrid_MouseDoubleClick"
+                  MouseRightButtonUp="PlaylistDataGrid_MouseRightButtonUp"
                   RowStyle="{StaticResource PlaylistRowStyle}"
                   ColumnHeaderStyle="{StaticResource PlaylistHeaderStyle}">
 

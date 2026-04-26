@@ -5,7 +5,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DeadEditor
 {
@@ -120,6 +122,63 @@ namespace DeadEditor
                 return true;
             }
             return false;
+        }
+
+        private void PlaylistDataGrid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var hit = VisualTreeHelper.HitTest(PlaylistDataGrid, e.GetPosition(PlaylistDataGrid));
+            if (hit == null) return;
+
+            var element = hit.VisualHit as FrameworkElement;
+            while (element != null && element is not DataGridRow)
+            {
+                element = VisualTreeHelper.GetParent(element) as FrameworkElement;
+            }
+
+            if (element is not DataGridRow row) return;
+            if (row.Item is not PlaylistTrackViewModel vm) return;
+
+            var clickedTrack = vm.Track;
+
+            var menu = new ContextMenu
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
+                Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0)),
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42)),
+                BorderThickness = new Thickness(1),
+                Padding = new Thickness(2)
+            };
+
+            var menuItemStyle = new Style(typeof(MenuItem));
+            menuItemStyle.Setters.Add(new Setter(MenuItem.ForegroundProperty,
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0))));
+            menuItemStyle.Setters.Add(new Setter(MenuItem.PaddingProperty, new Thickness(8, 6, 20, 6)));
+            menuItemStyle.Setters.Add(new Setter(MenuItem.FontSizeProperty, 14.0));
+
+            var playNowItem = new MenuItem { Header = "▶  Play Now", Style = menuItemStyle };
+            playNowItem.Click += (s, args) => _player.Play(clickedTrack);
+            menu.Items.Add(playNowItem);
+
+            var trackInfoItem = new MenuItem { Header = "\U0001F4C4  Track Info", Style = menuItemStyle };
+            trackInfoItem.Click += (s, args) =>
+            {
+                var dialog = new TrackInfoDialog(clickedTrack);
+                dialog.Owner = Window.GetWindow(this);
+                dialog.ShowDialog();
+            };
+            menu.Items.Add(trackInfoItem);
+
+            menu.Items.Add(new Separator
+            {
+                Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3E, 0x3E, 0x42))
+            });
+
+            var removeItem = new MenuItem { Header = "🗑  Remove from Playlist", Style = menuItemStyle };
+            removeItem.Click += (s, args) => _player.Playlist.Remove(clickedTrack);
+            menu.Items.Add(removeItem);
+
+            menu.IsOpen = true;
+            e.Handled = true;
         }
 
         private void Header_Click(object sender, MouseButtonEventArgs e)

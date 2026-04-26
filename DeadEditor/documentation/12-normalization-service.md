@@ -594,6 +594,36 @@ File.WriteAllText(path, json);
 
 ---
 
+### AddAlias
+
+**Signature:**
+```csharp
+public bool AddAlias(string officialTitle, string alias)
+```
+
+**Purpose:** Adds a new alias for an existing song's OfficialTitle in songs.json. Used by the "Match to Song" feature in ImportView to auto-learn title variants when a user manually matches an unmatched track to a setlist song.
+
+**Parameters:**
+- `officialTitle` (string) - The canonical song title to add the alias for
+- `alias` (string) - The variant title to add as an alias
+
+**Return Value:** `bool` - `true` if alias was added, `false` if not (already exists, song not found, or same as official title)
+
+**Business Logic:**
+1. **Validation:** Returns false if either parameter is empty, or if alias equals officialTitle (case-insensitive)
+2. **Re-read from disk:** Loads a fresh copy of songs.json to avoid overwriting concurrent changes (does NOT use in-memory `_database`)
+3. **Find song:** Searches artists-based structure first, then legacy Songs list
+4. **Check duplicates:** Returns false if alias already exists (case-insensitive)
+5. **Add alias:** Appends to the song's Aliases list
+6. **Atomic write:** Writes to temp file (`.tmp`), deletes original, renames temp → prevents corruption on crash
+7. **Reload:** Calls `LoadDatabase()` to rebuild `_aliasLookup` so the new alias is immediately available for subsequent normalization calls
+
+**Thread Safety:** Not thread-safe. Caller should ensure single-threaded access (ImportView runs on UI thread).
+
+**Error Handling:** IOException from file operations is unhandled (caller must catch).
+
+---
+
 ### NormalizeDateInTitle
 
 **Signature:**

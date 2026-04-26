@@ -71,6 +71,16 @@
                             Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
                             Padding="12,6" Cursor="Hand"
                             ToolTip="Renumber tracks sequentially (disc-aware)"/>
+                    <Button x:Name="MatchSetlistButton" Content="Match Setlist" Height="32"
+                            Click="MatchSetlistButton_Click" Margin="0,0,6,0" FontSize="16"
+                            Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
+                            Padding="12,6" Cursor="Hand" IsEnabled="False"
+                            ToolTip="No setlist data for this date"/>
+                    <Button x:Name="MusicBrainzButton" Content="&#x1F50E; MusicBrainz" Height="32"
+                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
+                            Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
+                            Padding="12,6" Cursor="Hand"
+                            ToolTip="Look up album on MusicBrainz"/>
                 </StackPanel>
 
                 <!-- Right: Normalization status -->
@@ -107,6 +117,7 @@
                 <Label Grid.Row="0" Grid.Column="1" Content="DATE" VerticalAlignment="Top" Margin="5,0,0,0"/>
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="AlbumDateTextBox"
                          Margin="5,0,5,0" TextChanged="AlbumInfo_Changed"
+                         LostFocus="AlbumDateTextBox_LostFocus"
                          ToolTip="yyyy-MM-dd (performance date)"/>
 
                 <!-- Venue -->
@@ -188,6 +199,7 @@
 
             <!-- Track List -->
             <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E" Margin="0,0,10,0">
+                <Grid>
                 <DataGrid x:Name="TracksDataGrid"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
@@ -207,7 +219,9 @@
                           FontSize="16"
                           RowHeight="28"
                           CellEditEnding="TracksDataGrid_CellEditEnding"
-                          BeginningEdit="TracksDataGrid_BeginningEdit">
+                          BeginningEdit="TracksDataGrid_BeginningEdit"
+                          MouseRightButtonUp="TracksDataGrid_MouseRightButtonUp"
+                          AllowDrop="True">
 
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
@@ -251,6 +265,16 @@
                         </Style>
                     </DataGrid.Resources>
 
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Row_PreviewMouseLeftButtonDown"/>
+                            <EventSetter Event="MouseMove" Handler="Row_MouseMove"/>
+                            <EventSetter Event="DragOver" Handler="Row_DragOver"/>
+                            <EventSetter Event="Drop" Handler="Row_Drop"/>
+                            <Setter Property="AllowDrop" Value="True"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+
                     <DataGrid.Columns>
                         <!-- Track # (read-only display) -->
                         <DataGridTextColumn Header="#" Width="Auto" MinWidth="40"
@@ -261,20 +285,27 @@
                         <DataGridTextColumn Header="Disc" Width="Auto" MinWidth="40"
                                             Binding="{Binding DiscNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <!-- Title: shows RawTitle (exact FLAC tag), edits RawTitle directly -->
-                        <DataGridTextColumn Header="Title" Width="Auto" MinWidth="250"
-                                            Binding="{Binding RawTitle, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
-                            <DataGridTextColumn.EditingElementStyle>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="Background" Value="#3C3C3C"/>
-                                    <Setter Property="Foreground" Value="#FFFFFF"/>
-                                    <Setter Property="CaretBrush" Value="#FFFFFF"/>
-                                    <Setter Property="BorderBrush" Value="#007ACC"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
-                                    <Setter Property="Padding" Value="4,2"/>
-                                </Style>
-                            </DataGridTextColumn.EditingElementStyle>
-                        </DataGridTextColumn>
+                        <!-- Title: display shows aggregated DisplayTitle, edit targets SongName -->
+                        <DataGridTemplateColumn Header="Title" Width="Auto" MinWidth="250">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DisplayTitle}"
+                                               VerticalAlignment="Center"
+                                               Padding="4,0"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
+                                             Background="#3C3C3C"
+                                             Foreground="#FFFFFF"
+                                             CaretBrush="#FFFFFF"
+                                             BorderBrush="#007ACC"
+                                             BorderThickness="1"
+                                             Padding="4,2"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
 
                         <!-- Segue (checkbox, single-click toggle) -->
                         <DataGridCheckBoxColumn Header="&#x2192;" Width="Auto" MinWidth="30"
@@ -315,6 +346,16 @@
                                             IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <!-- Drop indicator line for drag-to-reorder -->
+                <Border x:Name="DropIndicator"
+                        Background="#007ACC"
+                        Height="3"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Visibility="Collapsed"
+                        IsHitTestVisible="False"/>
+                </Grid>
             </Border>
 
             <!-- Artwork Panel -->
@@ -365,6 +406,29 @@
                     <ComboBoxItem Content="Official Release"/>
                 </ComboBox>
 
+                <!-- MBID display -->
+                <Label Content="MBID" Foreground="#999999" FontSize="11"
+                       Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
+                <Grid HorizontalAlignment="Center" Width="170">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="MbidDisplayText"
+                               Text="—"
+                               Foreground="#888888"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="MusicBrainz Release ID"/>
+                    <Button x:Name="MbidCopyButton" Grid.Column="1"
+                            Content="&#x1F4CB;" FontSize="11"
+                            Background="Transparent" Foreground="#888888"
+                            BorderThickness="0" Cursor="Hand" Padding="4,0"
+                            Click="MbidCopyButton_Click" Visibility="Collapsed"
+                            ToolTip="Copy MBID to clipboard"/>
+                </Grid>
+
                 <!-- Track count -->
                 <TextBlock x:Name="TrackCountText"
                            Text="0 tracks"
@@ -378,16 +442,46 @@
         <!-- ===== SECTION 3: STATUS BAR ===== -->
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" x:Name="StatusTextBlock"
+            <!-- Folder path + Open Folder button -->
+            <DockPanel Grid.Column="0" VerticalAlignment="Center">
+                <Button x:Name="OpenFolderButton" DockPanel.Dock="Right"
+                        Height="26" Click="OpenFolderButton_Click"
+                        Margin="6,0,12,0"
+                        ToolTip="Open this folder in File Explorer"
+                        Padding="8,2" Cursor="Hand"
+                        Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="13"
+                                   VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <TextBlock Text="Open Folder" FontSize="13" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <TextBox x:Name="FolderPathTextBox"
+                         Text="(unknown)"
+                         IsReadOnly="True"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Foreground="#AAAAAA"
+                         FontSize="13"
+                         Padding="0"
+                         MinHeight="0"
+                         VerticalContentAlignment="Center"
+                         TextWrapping="NoWrap"
+                         IsTabStop="False"
+                         MaxWidth="500"/>
+            </DockPanel>
+
+            <TextBlock Grid.Column="1" x:Name="StatusTextBlock"
                        Text="Ready" FontSize="14"
                        VerticalAlignment="Center"
                        Foreground="#888888"/>
 
-            <ProgressBar Grid.Column="1" x:Name="ProgressBar"
+            <ProgressBar Grid.Column="2" x:Name="ProgressBar"
                          Width="200" Height="16"
                          Visibility="Collapsed"
                          Margin="10,0,0,0"/>
