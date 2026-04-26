@@ -120,6 +120,12 @@ namespace DeadEditor
 
         // ===== LIBRARY MAINTENANCE =====
 
+        private void MbidMigrationButton_Click(object sender, RoutedEventArgs e)
+        {
+            var shell = Window.GetWindow(this) as ShellWindow;
+            shell?.NavigateToMbidMigration();
+        }
+
         private async void ReenrichButton_Click(object sender, RoutedEventArgs e)
         {
             var result = System.Windows.MessageBox.Show(

@@ -1,5 +1,6 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
+using DeadEditor.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -240,6 +241,10 @@ namespace DeadEditor
             else if (view is ConcertDatabaseView concertsView)
             {
                 HeaderBar.ShowConcertsHeader(concertsView);
+            }
+            else if (view is MbidMigrationView)
+            {
+                HeaderBar.ShowSettingsHeader();
             }
             else if (view is SettingsView)
             {
@@ -572,7 +577,7 @@ namespace DeadEditor
             }
         }
 
-        private void NavigateToSettings()
+        public void NavigateToSettings()
         {
             if (_settingsView == null)
             {
@@ -580,6 +585,14 @@ namespace DeadEditor
             }
 
             _navigationService.NavigateToRoot(_settingsView);
+        }
+
+        public void NavigateToMbidMigration()
+        {
+            // Get library shows for the migration view
+            var libraryShows = _libraryView?.Shows?.ToList() ?? new List<LibraryShow>();
+            var migrationView = new Views.MbidMigrationView(libraryShows);
+            _navigationService.NavigateTo(migrationView);
         }
     }
 }

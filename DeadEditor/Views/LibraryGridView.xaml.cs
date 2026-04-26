@@ -746,6 +746,7 @@ namespace DeadEditor
                 string? cityState = null;
                 string? albumName = null;
                 string? albumType = null;
+                string? mbid = null;
 
                 if (tagFile is TagLib.Flac.File flacFile)
                 {
@@ -757,6 +758,7 @@ namespace DeadEditor
                         cityState = xiph.GetFirstField("CITYSTATE");
                         albumName = xiph.GetFirstField("ALBUMNAME");
                         albumType = xiph.GetFirstField("ALBUMTYPE");
+                        mbid = xiph.GetFirstField("MUSICBRAINZ_ALBUMID");
                     }
                 }
                 else
@@ -776,6 +778,9 @@ namespace DeadEditor
 
                         var typeFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "ALBUMTYPE", false);
                         if (typeFrame?.Text.Length > 0) albumType = typeFrame.Text[0];
+
+                        var mbidFrame = TagLib.Id3v2.UserTextInformationFrame.Get(id3v2, "MusicBrainz Album Id", false);
+                        if (mbidFrame?.Text.Length > 0) mbid = mbidFrame.Text[0];
                     }
                 }
 
@@ -811,6 +816,9 @@ namespace DeadEditor
                     if (!string.IsNullOrEmpty(show.OfficialRelease))
                         show.OfficialRelease = albumName;
                 }
+
+                if (!string.IsNullOrEmpty(mbid))
+                    show.MusicBrainzReleaseId = mbid;
 
                 // Override Type from ALBUMTYPE tag if present (source of truth over folder-based inference).
                 // This handles the case where LibraryRootPath == OfficialReleasesPath and a show

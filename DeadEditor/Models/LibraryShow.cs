@@ -57,6 +57,9 @@ namespace DeadEditor.Models
         public int? ReleaseYear { get; set; }
         public string Edition { get; set; } = "";
 
+        // MusicBrainz release ID (read from MUSICBRAINZ_ALBUMID tag during library scan)
+        public string? MusicBrainzReleaseId { get; set; }
+
         // Common properties
         public int TrackCount { get; set; }
         public List<string> FolderPaths { get; set; } = new List<string>();

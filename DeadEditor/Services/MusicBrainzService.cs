@@ -14,13 +14,31 @@ namespace DeadEditor.Services
         private readonly string _acoustIdApiKey;
         private readonly HttpClient _httpClient;
         private readonly LibrarySettings _librarySettings;
+        private DateTime _lastMbCall = DateTime.MinValue;
+        private DateTime _lastAcoustIdCall = DateTime.MinValue;
 
         public MusicBrainzService(string acoustIdApiKey, LibrarySettings librarySettings)
         {
             _acoustIdApiKey = acoustIdApiKey;
             _librarySettings = librarySettings;
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "DeadEditor/1.0 (https://github.com/yourrepo)");
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "DeadEditor/1.0 (gregg.westgate@gmail.com)");
+        }
+
+        private async Task ThrottleMusicBrainz()
+        {
+            var elapsed = (DateTime.UtcNow - _lastMbCall).TotalMilliseconds;
+            if (elapsed < 1100)
+                await Task.Delay((int)(1100 - elapsed));
+            _lastMbCall = DateTime.UtcNow;
+        }
+
+        private async Task ThrottleAcoustId()
+        {
+            var elapsed = (DateTime.UtcNow - _lastAcoustIdCall).TotalMilliseconds;
+            if (elapsed < 350)
+                await Task.Delay((int)(350 - elapsed));
+            _lastAcoustIdCall = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -129,6 +147,7 @@ namespace DeadEditor.Services
 
                 var searchUrl = $"https://musicbrainz.org/ws/2/release-group/?query={queryBuilder}&fmt=json&limit=10";
 
+                await ThrottleMusicBrainz();
                 var response = await _httpClient.GetAsync(searchUrl);
                 response.EnsureSuccessStatusCode();
 
@@ -171,8 +190,7 @@ namespace DeadEditor.Services
                         allReleaseOptions.AddRange(releases);
                     }
 
-                    // Rate limiting
-                    await Task.Delay(1000);
+                    await ThrottleMusicBrainz();
                 }
 
                 // Remove duplicates
@@ -337,6 +355,8 @@ namespace DeadEditor.Services
                 // Get duration from file
                 int duration = GetDurationInSeconds(filePath);
 
+                await ThrottleAcoustId();
+
                 // Query AcoustID API directly via HTTP
                 var url = $"https://api.acoustid.org/v2/lookup?client={_acoustIdApiKey}&duration={duration}&fingerprint={fingerprint}&meta=recordings+releasegroups";
 
@@ -387,6 +407,7 @@ namespace DeadEditor.Services
                     Console.WriteLine($"\nQuerying recording: {recordingId}");
                     var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json";
 
+                    await ThrottleMusicBrainz();
                     var response = await _httpClient.GetAsync(url);
                     response.EnsureSuccessStatusCode();
 
@@ -428,8 +449,7 @@ namespace DeadEditor.Services
                         }
                     }
 
-                    // Rate limiting for MusicBrainz API (1 request per second)
-                    await Task.Delay(1000);
+                    await ThrottleMusicBrainz();
                 }
 
                 // Find release-groups that have the most matches
@@ -472,8 +492,7 @@ namespace DeadEditor.Services
                         allReleaseOptions.AddRange(releases);
                     }
 
-                    // Rate limiting
-                    await Task.Delay(1000);
+                    await ThrottleMusicBrainz();
                 }
 
                 // Remove duplicates — include track count so different editions aren't collapsed
@@ -501,6 +520,8 @@ namespace DeadEditor.Services
         {
             try
             {
+                await ThrottleMusicBrainz();
+
                 // Use the release endpoint with release-group filter to get all releases with media info
                 var url = $"https://musicbrainz.org/ws/2/release?release-group={releaseGroupId}&inc=media+labels&fmt=json&limit=100";
 
@@ -589,6 +610,7 @@ namespace DeadEditor.Services
                 // Query MusicBrainz API for recording details
                 var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json";
 
+                await ThrottleMusicBrainz();
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -705,6 +727,7 @@ namespace DeadEditor.Services
                 // Query MusicBrainz API for recording details
                 var url = $"https://musicbrainz.org/ws/2/recording/{recordingId}?inc=releases+release-groups+artists&fmt=json";
 
+                await ThrottleMusicBrainz();
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -773,6 +796,7 @@ namespace DeadEditor.Services
                 // Query MusicBrainz API for release details with recordings
                 var url = $"https://musicbrainz.org/ws/2/release/{releaseId}?inc=recordings+artists&fmt=json";
 
+                await ThrottleMusicBrainz();
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
