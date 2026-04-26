@@ -8,6 +8,35 @@ using System.Threading;
 
 namespace DeadEditor.Services
 {
+    /// <summary>
+    /// Result of a per-file conflict prompt during import.
+    /// </summary>
+    public enum ConflictAction
+    {
+        Overwrite,
+        Skip,
+        Rename,
+        CancelImport
+    }
+
+    /// <summary>
+    /// Result from a conflict prompt, including the chosen action and whether to apply to all remaining.
+    /// </summary>
+    public class ConflictResult
+    {
+        public ConflictAction Action { get; set; }
+        public bool ApplyToAll { get; set; }
+    }
+
+    /// <summary>
+    /// Callback delegate for per-file conflict prompts during import.
+    /// </summary>
+    /// <param name="targetFileName">The filename that already exists in the managed folder.</param>
+    /// <param name="sourceFilePath">Full path to the source file being copied.</param>
+    /// <param name="context">Description of the conflict context (e.g., "re-import" or "flatten collision").</param>
+    /// <returns>The user's chosen action and whether to apply to all remaining conflicts.</returns>
+    public delegate ConflictResult ConflictPromptCallback(string targetFileName, string sourceFilePath, string context);
+
     public class LibraryImportService
     {
         private readonly MetadataService _metadataService;
@@ -18,9 +47,14 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Imports tracks to the managed library with organized folder structure
+        /// Imports tracks to the managed library with organized folder structure.
+        /// All album types use the universal folder convention:
+        ///   {LibraryRoot}/{Artist}/{BuildLibraryFolderName()}/
         /// </summary>
-        public void ImportToLibrary(string libraryRoot, AlbumInfo albumInfo, List<TrackInfo> tracks, IProgress<(int current, int total, string message)>? progress = null, string? officialReleasesPath = null)
+        public void ImportToLibrary(string libraryRoot, AlbumInfo albumInfo, List<TrackInfo> tracks,
+            IProgress<(int current, int total, string message)>? progress = null,
+            string? sourceFolderPath = null,
+            ConflictPromptCallback? onConflict = null)
         {
             if (string.IsNullOrEmpty(libraryRoot))
             {
@@ -35,89 +69,22 @@ namespace DeadEditor.Services
             var totalTracks = tracks.Count;
             var processedTracks = 0;
 
-            // Handle official releases (studio albums, live albums, box sets, series)
-            if (albumInfo.Type == AlbumType.OfficialRelease)
+            // Universal folder structure: {LibraryRoot}/{Artist}/{AlbumFolder}/
+            var artistFolder = SanitizeFolderName(albumInfo.Artist ?? "Unknown Artist");
+            var albumFolder = BuildLibraryFolderName(albumInfo);
+            var targetFolder = Path.Combine(libraryRoot, artistFolder, albumFolder);
+
+            if (!Directory.Exists(targetFolder))
             {
-                if (string.IsNullOrEmpty(officialReleasesPath))
-                {
-                    throw new ArgumentException("Official releases path is not set");
-                }
-
-                if (!Directory.Exists(officialReleasesPath))
-                {
-                    Directory.CreateDirectory(officialReleasesPath);
-                }
-
-                string targetFolder;
-
-                // Determine folder structure based on whether it's a series release or standalone album
-                if (!string.IsNullOrEmpty(albumInfo.OfficialRelease))
-                {
-                    // Series release (Dave's Picks, Dick's Picks, etc.)
-                    var seriesName = SanitizeFolderName(ExtractSeriesName(albumInfo.OfficialRelease));
-                    var folderName = SanitizeFolderName(albumInfo.OfficialRelease);
-                    targetFolder = Path.Combine(officialReleasesPath, seriesName, folderName);
-                }
-                else
-                {
-                    // Studio album or standalone official release
-                    var folderName = !string.IsNullOrEmpty(albumInfo.AlbumName)
-                        ? (albumInfo.ReleaseYear.HasValue
-                            ? $"{albumInfo.AlbumName} ({albumInfo.ReleaseYear.Value})"
-                            : albumInfo.AlbumName)
-                        : "Unknown Album";
-
-                    folderName = SanitizeFolderName(folderName);
-                    targetFolder = Path.Combine(officialReleasesPath, "Studio Albums", folderName);
-                }
-
-                if (!Directory.Exists(targetFolder))
-                {
-                    Directory.CreateDirectory(targetFolder);
-                }
-
-                // Import all tracks to this folder (official releases don't split by date)
-                ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress, isOfficialRelease: true);
+                Directory.CreateDirectory(targetFolder);
             }
-            else // AudienceRecording
+
+            ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
+
+            // Phase 2: Copy non-audio files from source folder (flattened)
+            if (!string.IsNullOrEmpty(sourceFolderPath) && Directory.Exists(sourceFolderPath))
             {
-                // Folder = Unit of Import: ALL tracks go into ONE folder regardless of
-                // individual track dates. The album's primary date determines the folder name.
-                // Individual track dates are preserved in tags but don't affect folder structure.
-                var date = albumInfo.Date;
-
-                if (string.IsNullOrWhiteSpace(date))
-                {
-                    throw new InvalidOperationException("Audience recordings must have a performance date");
-                }
-
-                if (!DateTime.TryParse(date, out var parsedDate))
-                {
-                    throw new InvalidOperationException($"Invalid date format: {date}. Expected yyyy-MM-dd format.");
-                }
-
-                var year = parsedDate.Year.ToString();
-
-                // Build folder name from album's primary metadata
-                var venue = string.IsNullOrWhiteSpace(albumInfo.Venue) ? "Unknown Venue" : albumInfo.Venue;
-                var city = string.IsNullOrWhiteSpace(albumInfo.City) ? "Unknown City" : albumInfo.City;
-                var state = string.IsNullOrWhiteSpace(albumInfo.State) ? "" : albumInfo.State;
-
-                var folderName = string.IsNullOrWhiteSpace(state)
-                    ? $"{date} - {venue} - {city}"
-                    : $"{date} - {venue} - {city}, {state}";
-
-                folderName = SanitizeFolderName(folderName);
-
-                var targetFolder = Path.Combine(libraryRoot, year, folderName);
-
-                if (!Directory.Exists(targetFolder))
-                {
-                    Directory.CreateDirectory(targetFolder);
-                }
-
-                // Import ALL tracks to this single folder
-                ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
+                CopyNonAudioFiles(sourceFolderPath, targetFolder, progress, onConflict);
             }
         }
 
@@ -125,10 +92,11 @@ namespace DeadEditor.Services
         /// Imports tracks to a specific folder
         /// </summary>
         private void ImportTracksToFolder(string targetFolder, AlbumInfo albumInfo, List<TrackInfo> tracks,
-            ref int processedTracks, int totalTracks, IProgress<(int current, int total, string message)>? progress, string? dateForTitle = null, bool isOfficialRelease = false)
+            ref int processedTracks, int totalTracks, IProgress<(int current, int total, string message)>? progress, string? dateForTitle = null)
         {
-            // For studio albums, dateForTitle will be null
-            var isStudioAlbum = albumInfo.Type == AlbumType.OfficialRelease;
+            // OfficialRelease type covers both studio albums and live official releases (Dave's Picks, etc.)
+            // Both use filenames without date; only AudienceRecording gets date in filename
+            var isOfficialRelease = albumInfo.Type == AlbumType.OfficialRelease;
 
             // Copy and write metadata for each track
             foreach (var track in tracks)
@@ -147,19 +115,14 @@ namespace DeadEditor.Services
                 var extension = Path.GetExtension(track.FilePath);
 
                 string newFileName;
-                if (isStudioAlbum)
+                if (isOfficialRelease)
                 {
-                    // Studio album: "01 - Song Name.flac" or "01 - Song Name.mp3"
-                    newFileName = $"{track.TrackNumber:D2} - {trackTitle}{extension}";
-                }
-                else if (isOfficialRelease)
-                {
-                    // Official release: "01 - Song Name.flac" (title already has date/venue embedded from original metadata)
+                    // Official release (studio or live): "01 - Song Name.flac" — no date in filename
                     newFileName = $"{track.TrackNumber:D2} - {trackTitle}{extension}";
                 }
                 else
                 {
-                    // Live recording: "01 - Song Name (1971-04-25).flac" or "01 - Song Name (1971-04-25).mp3"
+                    // Audience recording: "01 - Song Name (1971-04-25).flac"
                     var date = dateForTitle ?? track.PerformanceDate ?? albumInfo.Date;
                     newFileName = $"{track.TrackNumber:D2} - {trackTitle} ({date}){extension}";
                 }
@@ -203,8 +166,72 @@ namespace DeadEditor.Services
                 var originalPath = track.FilePath;
                 track.FilePath = targetPath;
 
-                // Write metadata to the copied file
+                // Write metadata to the copied file with retry logic.
+                // Newly-copied files on Windows can be transiently locked by Defender,
+                // Search Indexer, or NTFS journal flushing. Retry the entire open-modify-save
+                // sequence so a fresh file handle is acquired on each attempt.
                 Debug.WriteLine($"[IMPORT] Writing metadata to: {targetPath}");
+                try
+                {
+                    WriteMetadataWithRetry(targetPath, track, albumInfo, isOfficialRelease, dateForTitle,
+                        originalGenre, originalComment, originalCopyright, originalPublisher, originalComposer);
+                }
+                finally
+                {
+                    // Restore original path
+                    track.FilePath = originalPath;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes a user-defined TXXX text frame to an ID3v2 tag (for MP3 custom fields).
+        /// </summary>
+        private static void SetId3v2TextField(TagLib.Id3v2.Tag tag, string description, string value)
+        {
+            var existing = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, false);
+            if (existing != null)
+                tag.RemoveFrame(existing);
+
+            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, true);
+            frame.Text = new[] { value ?? "" };
+        }
+
+        /// <summary>
+        /// Copies a file with retry logic for transient IOExceptions.
+        /// Retries up to 3 times with 500ms delay between attempts.
+        /// Common causes: antivirus scanning, delayed file handle release, Windows indexer.
+        /// </summary>
+        private static void CopyFileWithRetry(string source, string destination, int maxRetries = 3)
+        {
+            for (int attempt = 0; attempt < maxRetries; attempt++)
+            {
+                try
+                {
+                    File.Copy(source, destination, overwrite: true);
+                    return;
+                }
+                catch (IOException ex) when (attempt < maxRetries - 1)
+                {
+                    Debug.WriteLine($"[IMPORT] Retry {attempt + 1}/{maxRetries} for copy: {ex.Message}");
+                    Thread.Sleep(500);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Opens a copied file, writes all metadata tags, and saves with retry logic.
+        /// Retries the entire open-modify-save sequence up to 3 times with 500ms delay.
+        /// This handles transient file locks from antivirus, Windows indexer, or delayed
+        /// handle release after File.Copy.
+        /// </summary>
+        private void WriteMetadataWithRetry(string targetPath, TrackInfo track, AlbumInfo albumInfo,
+            bool isOfficialRelease, string? dateForTitle,
+            string? originalGenre, string? originalComment, string? originalCopyright,
+            string? originalPublisher, string? originalComposer, int maxRetries = 3)
+        {
+            for (int attempt = 0; attempt < maxRetries; attempt++)
+            {
                 try
                 {
                     using (var file = TagLib.File.Create(targetPath))
@@ -232,11 +259,11 @@ namespace DeadEditor.Services
                         file.Tag.Disc = (uint)track.DiscNumber;
 
                         // Set year based on album type
-                        if (isStudioAlbum && albumInfo.ReleaseYear.HasValue)
+                        if (isOfficialRelease && albumInfo.ReleaseYear.HasValue)
                         {
                             file.Tag.Year = (uint)albumInfo.ReleaseYear.Value;
                         }
-                        else if (!isStudioAlbum && DateTime.TryParse(albumInfo.Date, out var parsedDate))
+                        else if (!isOfficialRelease && DateTime.TryParse(albumInfo.Date, out var parsedDate))
                         {
                             file.Tag.Year = (uint)parsedDate.Year;
                         }
@@ -311,106 +338,65 @@ namespace DeadEditor.Services
                         file.Save();
                         Debug.WriteLine($"[IMPORT] Successfully wrote: {targetPath}");
                     }
+                    return; // Success — exit retry loop
+                }
+                catch (IOException ex) when (attempt < maxRetries - 1)
+                {
+                    Debug.WriteLine($"[IMPORT] Retry {attempt + 1}/{maxRetries} for metadata write to {targetPath}: {ex.Message}");
+                    Thread.Sleep(500);
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[IMPORT ERROR] Failed writing metadata to {targetPath}: {ex.GetType().Name}: {ex.Message}");
-                    throw; // Re-throw to propagate to caller
-                }
-                finally
-                {
-                    // Restore original path
-                    track.FilePath = originalPath;
+                    throw;
                 }
             }
         }
 
         /// <summary>
-        /// Writes a user-defined TXXX text frame to an ID3v2 tag (for MP3 custom fields).
+        /// Builds the universal library folder name from AlbumInfo fields.
+        /// Live recordings: "{Artist} - {Date} - {Venue} - {City}, {State} - {AlbumName}"
+        /// Studio albums:   "{Artist} - {Year} - {AlbumName}"
+        /// Segments with empty values are omitted (except Artist which falls back to "Unknown Artist").
         /// </summary>
-        private static void SetId3v2TextField(TagLib.Id3v2.Tag tag, string description, string value)
+        public string BuildLibraryFolderName(AlbumInfo albumInfo)
         {
-            var existing = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, false);
-            if (existing != null)
-                tag.RemoveFrame(existing);
+            var segments = new List<string>();
 
-            var frame = TagLib.Id3v2.UserTextInformationFrame.Get(tag, description, true);
-            frame.Text = new[] { value ?? "" };
-        }
+            // Artist is always present
+            segments.Add(albumInfo.Artist ?? "Unknown Artist");
 
-        /// <summary>
-        /// Copies a file with retry logic for transient IOExceptions.
-        /// Retries up to 3 times with 500ms delay between attempts.
-        /// Common causes: antivirus scanning, delayed file handle release, Windows indexer.
-        /// </summary>
-        private static void CopyFileWithRetry(string source, string destination, int maxRetries = 3)
-        {
-            for (int attempt = 0; attempt < maxRetries; attempt++)
+            bool isStudioAlbum = albumInfo.Type == AlbumType.OfficialRelease
+                && (string.IsNullOrEmpty(albumInfo.AlbumDate) || string.IsNullOrEmpty(albumInfo.Venue));
+
+            if (isStudioAlbum)
             {
-                try
-                {
-                    File.Copy(source, destination, overwrite: true);
-                    return;
-                }
-                catch (IOException ex) when (attempt < maxRetries - 1)
-                {
-                    Debug.WriteLine($"[IMPORT] Retry {attempt + 1}/{maxRetries} for copy: {ex.Message}");
-                    Thread.Sleep(500);
-                }
+                // Studio album: {Artist} - {Year} - {AlbumName}
+                if (!string.IsNullOrEmpty(albumInfo.Year))
+                    segments.Add(albumInfo.Year);
+
+                if (!string.IsNullOrEmpty(albumInfo.AlbumName))
+                    segments.Add(albumInfo.AlbumName);
             }
-        }
-
-        private string ExtractSeriesName(string officialRelease)
-        {
-            if (string.IsNullOrWhiteSpace(officialRelease))
+            else
             {
-                return "Unknown Series";
+                // Live recording (audience or official release with date+venue):
+                // {Artist} - {Date} - {Venue} - {City}, {State} - {AlbumName}
+                if (!string.IsNullOrEmpty(albumInfo.AlbumDate))
+                    segments.Add(albumInfo.AlbumDate);
+
+                if (!string.IsNullOrEmpty(albumInfo.Venue))
+                    segments.Add(albumInfo.Venue);
+
+                if (!string.IsNullOrEmpty(albumInfo.CityState))
+                    segments.Add(albumInfo.CityState);
+
+                if (!string.IsNullOrEmpty(albumInfo.AlbumName))
+                    segments.Add(albumInfo.AlbumName);
             }
 
-            // Extract series name from full release name
-            // Examples:
-            // "Dave's Picks Volume 28" -> "Dave's Picks"
-            // "Road Trips Vol. 3 No. 4" -> "Road Trips"
-            // "Dick's Picks Volume 14" -> "Dick's Picks"
-            // "Download Series" -> "Download Series"
-            // "Spring 1990" -> "Spring 1990"
-
-            var patterns = new[]
-            {
-                @"^(Dave's Picks)",
-                @"^(Dick's Picks)",
-                @"^(Road Trips)",
-                @"^(Download Series)",
-                @"^(Spring \d{4})",
-                @"^(Here Comes Sunshine)"
-            };
-
-            foreach (var pattern in patterns)
-            {
-                var match = System.Text.RegularExpressions.Regex.Match(
-                    officialRelease,
-                    pattern,
-                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-
-                if (match.Success)
-                {
-                    return match.Groups[1].Value;
-                }
-            }
-
-            // If no pattern matches, return the first few words (up to "Volume", "Vol", etc.)
-            var volumeMatch = System.Text.RegularExpressions.Regex.Match(
-                officialRelease,
-                @"^(.+?)\s+(?:Vol(?:ume|\.)?\s+\d+|Volume\s+\d+|No\.\s+\d+)",
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-
-            if (volumeMatch.Success)
-            {
-                return volumeMatch.Groups[1].Value.Trim();
-            }
-
-            // Fallback: use the whole string
-            return officialRelease;
+            var folderName = string.Join(" - ", segments);
+            return SanitizeFolderName(folderName);
         }
 
         private string SanitizeFolderName(string name)
@@ -469,81 +455,203 @@ namespace DeadEditor.Services
             return nameWithoutExt + extension;
         }
 
+        // ===== SKIPLIST =====
+
+        private static readonly HashSet<string> SkipFileNames = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Thumbs.db",
+            ".DS_Store",
+            "desktop.ini"
+        };
+
+        private static readonly HashSet<string> SkipExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".lnk"
+        };
+
+        private static readonly HashSet<string> AudioExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".flac",
+            ".mp3"
+        };
+
+        private static bool ShouldSkipFile(string fileName)
+        {
+            if (SkipFileNames.Contains(fileName))
+                return true;
+
+            var ext = Path.GetExtension(fileName);
+            if (SkipExtensions.Contains(ext))
+                return true;
+
+            return false;
+        }
+
         /// <summary>
-        /// Checks if this show/album already exists in the library
+        /// Copies all non-audio files from the source folder (recursively) into the managed folder (flattened).
+        /// Skips audio files (already copied in Phase 1) and OS junk files.
         /// </summary>
-        public bool ShowExistsInLibrary(string libraryRoot, AlbumInfo albumInfo, string? officialReleasesPath = null)
+        private void CopyNonAudioFiles(string sourceFolderPath, string targetFolder,
+            IProgress<(int current, int total, string message)>? progress,
+            ConflictPromptCallback? onConflict)
+        {
+            // Enumerate all files recursively
+            var allFiles = Directory.GetFiles(sourceFolderPath, "*", SearchOption.AllDirectories);
+
+            // Filter: skip audio files and skiplist files
+            var filesToCopy = new List<string>();
+            foreach (var file in allFiles)
+            {
+                var fileName = Path.GetFileName(file);
+                var ext = Path.GetExtension(file);
+
+                // Skip audio files (already handled in Phase 1)
+                if (AudioExtensions.Contains(ext))
+                    continue;
+
+                // Skip OS junk files
+                if (ShouldSkipFile(fileName))
+                    continue;
+
+                filesToCopy.Add(file);
+            }
+
+            if (filesToCopy.Count == 0)
+                return;
+
+            // Track "Apply to all" state within this import session
+            ConflictAction? applyToAllAction = null;
+            var copiedCount = 0;
+            var failureCount = 0;
+            var copiedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            for (int i = 0; i < filesToCopy.Count; i++)
+            {
+                var sourceFile = filesToCopy[i];
+                var fileName = Path.GetFileName(sourceFile);
+                var targetPath = Path.Combine(targetFolder, fileName);
+
+                progress?.Report((i + 1, filesToCopy.Count, $"Copying additional files... {i + 1} of {filesToCopy.Count}: {fileName}"));
+
+                try
+                {
+                    // Check for collision: either with existing file in managed folder, or with a file already copied in this batch
+                    bool collision = File.Exists(targetPath) || copiedNames.Contains(fileName);
+
+                    if (collision)
+                    {
+                        if (applyToAllAction.HasValue)
+                        {
+                            // Use remembered action
+                            targetPath = HandleConflictAction(applyToAllAction.Value, sourceFile, targetPath, targetFolder);
+                            if (targetPath == null)
+                                continue; // Skip
+                        }
+                        else if (onConflict != null)
+                        {
+                            var context = copiedNames.Contains(fileName)
+                                ? "Another file from this import already copied"
+                                : "File already exists in managed folder";
+
+                            var result = onConflict(fileName, sourceFile, context);
+
+                            if (result.Action == ConflictAction.CancelImport)
+                            {
+                                Debug.WriteLine($"[IMPORT] Import cancelled by user during non-audio copy");
+                                progress?.Report((filesToCopy.Count, filesToCopy.Count,
+                                    $"Import cancelled. Copied {copiedCount} additional files before cancellation."));
+                                return;
+                            }
+
+                            if (result.ApplyToAll)
+                                applyToAllAction = result.Action;
+
+                            targetPath = HandleConflictAction(result.Action, sourceFile, targetPath, targetFolder);
+                            if (targetPath == null)
+                                continue; // Skip
+                        }
+                        else
+                        {
+                            // No conflict callback — fall back to overwrite (legacy behavior)
+                            Debug.WriteLine($"[IMPORT] Overwriting (no conflict callback): {fileName}");
+                        }
+                    }
+
+                    CopyFileWithRetry(sourceFile, targetPath);
+                    copiedNames.Add(Path.GetFileName(targetPath));
+                    copiedCount++;
+                }
+                catch (Exception ex)
+                {
+                    failureCount++;
+                    Debug.WriteLine($"[IMPORT] Warning: Failed to copy non-audio file {sourceFile}: {ex.Message}");
+                }
+            }
+
+            var message = $"Copied {copiedCount} additional file{(copiedCount == 1 ? "" : "s")}";
+            if (failureCount > 0)
+                message += $" ({failureCount} failure{(failureCount == 1 ? "" : "s")})";
+            progress?.Report((filesToCopy.Count, filesToCopy.Count, message));
+        }
+
+        /// <summary>
+        /// Applies a conflict action and returns the final target path, or null if the file should be skipped.
+        /// </summary>
+        private static string? HandleConflictAction(ConflictAction action, string sourceFile, string targetPath, string targetFolder)
+        {
+            switch (action)
+            {
+                case ConflictAction.Overwrite:
+                    return targetPath; // Will overwrite via CopyFileWithRetry (overwrite: true)
+
+                case ConflictAction.Skip:
+                    Debug.WriteLine($"[IMPORT] Skipping (user choice): {Path.GetFileName(sourceFile)}");
+                    return null;
+
+                case ConflictAction.Rename:
+                    return FindNonCollidingName(targetPath);
+
+                default:
+                    return targetPath;
+            }
+        }
+
+        /// <summary>
+        /// Finds a non-colliding filename by appending (2), (3), etc.
+        /// </summary>
+        private static string FindNonCollidingName(string targetPath)
+        {
+            var dir = Path.GetDirectoryName(targetPath)!;
+            var nameWithoutExt = Path.GetFileNameWithoutExtension(targetPath);
+            var ext = Path.GetExtension(targetPath);
+
+            for (int n = 2; n < 1000; n++)
+            {
+                var candidate = Path.Combine(dir, $"{nameWithoutExt} ({n}){ext}");
+                if (!File.Exists(candidate))
+                    return candidate;
+            }
+
+            // Extremely unlikely — fall back to overwrite
+            return targetPath;
+        }
+
+        /// <summary>
+        /// Checks if this show/album already exists in the library.
+        /// Uses the universal folder name as the identity key.
+        /// </summary>
+        public bool ShowExistsInLibrary(string libraryRoot, AlbumInfo albumInfo)
         {
             if (string.IsNullOrEmpty(libraryRoot) || !Directory.Exists(libraryRoot))
             {
                 return false;
             }
 
-            if (albumInfo.Type == AlbumType.OfficialRelease)
-            {
-                // Check in official releases path
-                if (string.IsNullOrEmpty(officialReleasesPath) || !Directory.Exists(officialReleasesPath))
-                {
-                    return false;
-                }
+            var artistFolder = SanitizeFolderName(albumInfo.Artist ?? "Unknown Artist");
+            var albumFolder = BuildLibraryFolderName(albumInfo);
+            var targetPath = Path.Combine(libraryRoot, artistFolder, albumFolder);
 
-                var seriesName = SanitizeFolderName(ExtractSeriesName(albumInfo.OfficialRelease));
-                var seriesFolder = Path.Combine(officialReleasesPath, seriesName);
-
-                if (!Directory.Exists(seriesFolder))
-                {
-                    return false;
-                }
-
-                var folderPattern = $"{SanitizeFolderName(albumInfo.OfficialRelease)}*";
-                var matchingFolders = Directory.GetDirectories(seriesFolder, folderPattern);
-                return matchingFolders.Length > 0;
-            }
-            else if (albumInfo.Type == AlbumType.OfficialRelease)
-            {
-                // Check in Studio Albums folder
-                var studioAlbumsFolder = Path.Combine(libraryRoot, "Studio Albums");
-
-                if (!Directory.Exists(studioAlbumsFolder))
-                {
-                    return false;
-                }
-
-                // Build exact folder name to match (same logic as import)
-                var folderName = albumInfo.ReleaseYear.HasValue
-                    ? $"{albumInfo.AlbumName} ({albumInfo.ReleaseYear.Value})"
-                    : albumInfo.AlbumName;
-
-                folderName = SanitizeFolderName(folderName);
-                var targetPath = Path.Combine(studioAlbumsFolder, folderName);
-
-                return Directory.Exists(targetPath);
-            }
-            else
-            {
-                // Check in year folders for audience recordings
-                if (string.IsNullOrWhiteSpace(albumInfo.Date))
-                {
-                    return false; // Can't find audience recording without a date
-                }
-
-                if (!DateTime.TryParse(albumInfo.Date, out var parsedDate))
-                {
-                    return false; // Invalid date format
-                }
-
-                var year = parsedDate.Year.ToString();
-                var folderPattern = $"{albumInfo.Date}*";
-                var yearFolder = Path.Combine(libraryRoot, year);
-
-                if (!Directory.Exists(yearFolder))
-                {
-                    return false;
-                }
-
-                var matchingFolders = Directory.GetDirectories(yearFolder, folderPattern);
-                return matchingFolders.Length > 0;
-            }
+            return Directory.Exists(targetPath);
         }
 
         /// <summary>

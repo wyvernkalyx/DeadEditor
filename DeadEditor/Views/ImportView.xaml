@@ -99,17 +99,48 @@
                 <Button x:Name="RenumberButton" Content="Renumber" Height="32"
                         Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
                         ToolTip="Renumber tracks sequentially"/>
+                <Button x:Name="MatchSetlistButton" Content="Match Setlist" Height="32"
+                        Style="{StaticResource AccentButton}"
+                        Click="MatchSetlistButton_Click" Margin="0,0,6,0" FontSize="16"
+                        IsEnabled="False"
+                        ToolTip="No setlist data for this date"/>
                 <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
                         Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="16"
                         IsEnabled="False"
                         ToolTip="View info file"/>
             </StackPanel>
 
-            <!-- Center: Status Text -->
-            <TextBlock Grid.Column="1" x:Name="StatusTextBlock"
-                       Text="Ready — select a folder to begin" FontSize="16"
-                       VerticalAlignment="Center" HorizontalAlignment="Center"
-                       Foreground="#CCCCCC"/>
+            <!-- Center: Folder Path + Status Text -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                <DockPanel>
+                    <Button x:Name="OpenFolderButton" DockPanel.Dock="Right"
+                            Height="26" Click="OpenFolderButton_Click"
+                            IsEnabled="False" Margin="6,0,0,0"
+                            ToolTip="Open this folder in File Explorer"
+                            Padding="8,2" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="13"
+                                       VerticalAlignment="Center" Margin="0,0,4,0"/>
+                            <TextBlock Text="Open Folder" FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <TextBox x:Name="FolderPathTextBox"
+                             Text="No folder loaded"
+                             IsReadOnly="True"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Foreground="#AAAAAA"
+                             FontSize="13"
+                             Padding="0"
+                             MinHeight="0"
+                             VerticalContentAlignment="Center"
+                             TextWrapping="NoWrap"
+                             IsTabStop="False"/>
+                </DockPanel>
+                <TextBlock x:Name="StatusTextBlock"
+                           Text="Ready — select a folder to begin" FontSize="14"
+                           Foreground="#CCCCCC" Margin="0,2,0,0"/>
+            </StackPanel>
 
             <!-- Right: Write/Import Buttons -->
             <StackPanel Grid.Column="2" Orientation="Horizontal">
@@ -601,6 +632,73 @@
                                 Click="NotificationOk_Click"
                                 FontSize="16" FontWeight="SemiBold"/>
                     </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+        <!-- Conflict Panel (Modal Overlay for per-file conflict prompts) -->
+        <Grid x:Name="ConflictPanel" Grid.RowSpan="4" Panel.ZIndex="1001" Visibility="Collapsed">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.7"/>
+            </Grid.Background>
+            <Border Background="#2D2D30"
+                    BorderBrush="#007ACC"
+                    BorderThickness="2"
+                    CornerRadius="6"
+                    MaxWidth="600"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Padding="25">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="30"
+                                      ShadowDepth="0" Opacity="0.8"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="File Already Exists"
+                               FontSize="18" FontWeight="Bold"
+                               Margin="0,0,0,10" Foreground="#FFFFFF"/>
+                    <TextBlock Grid.Row="1" x:Name="ConflictMessage"
+                               TextWrapping="Wrap" FontSize="14"
+                               Foreground="#CCCCCC" Margin="0,0,0,15" LineHeight="20"/>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal"
+                                HorizontalAlignment="Center" Margin="0,0,0,10">
+                        <Button x:Name="ConflictOverwriteButton" Content="Overwrite"
+                                Width="100" Height="36" Margin="5"
+                                Click="ConflictOverwrite_Click"
+                                FontSize="14" FontWeight="SemiBold"/>
+                        <Button x:Name="ConflictSkipButton" Content="Skip"
+                                Width="100" Height="36" Margin="5"
+                                Click="ConflictSkip_Click"
+                                FontSize="14"/>
+                        <Button x:Name="ConflictRenameButton" Content="Rename"
+                                Width="100" Height="36" Margin="5"
+                                Click="ConflictRename_Click"
+                                FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Apply to all checkbox -->
+                    <CheckBox Grid.Row="3" x:Name="ConflictApplyToAllCheckBox"
+                              Content="Apply to all remaining conflicts"
+                              Foreground="#CCCCCC" FontSize="13"
+                              HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+                    <!-- Cancel Import -->
+                    <Button Grid.Row="4" x:Name="ConflictCancelButton"
+                            Content="Cancel Import"
+                            Click="ConflictCancel_Click"
+                            Background="Transparent" Foreground="#CC6666"
+                            BorderThickness="0" FontSize="13"
+                            HorizontalAlignment="Center" Cursor="Hand"
+                            Padding="8,4"/>
                 </Grid>
             </Border>
         </Grid>

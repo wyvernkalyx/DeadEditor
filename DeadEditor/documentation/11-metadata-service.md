@@ -569,34 +569,33 @@ private string? ExtractDateFromAlbum(string? album)
 private void DetectSegues(List<TrackInfo> tracks)
 ```
 
-**Purpose:** Auto-detects segues based on known consecutive song pairs in Grateful Dead repertoire.
+**Purpose:** Auto-detects segues based on known consecutive song pairs loaded from `Data/segue-pairs.json`.
 
 **Parameters:**
 - `tracks` (List<TrackInfo>) - Ordered track list (must be in performance order)
 
 **Business Logic:**
 
-1. **Known Segue Pairs** (line 85-98):
+1. **Known Segue Pairs** (loaded from `Data/segue-pairs.json`):
+   - Loaded via `LoadSeguePairs()` static method, cached after first load
    - Dictionary<string, string> with case-insensitive comparison
-   - **Key:** First song in pair
-   - **Value:** Second song in pair
+   - **Key:** First song in pair (`"from"` field in JSON)
+   - **Value:** Second song in pair (`"to"` field in JSON)
 
-   **Pairs Defined:**
-   ```csharp
-   "China Cat Sunflower" → "I Know You Rider"
-   "China Cat" → "I Know You Rider"
-   "Scarlet Begonias" → "Fire on the Mountain"
-   "Scarlet" → "Fire on the Mountain"
-   "Help on the Way" → "Slipknot!"
-   "Slipknot!" → "Franklin's Tower"
-   "Lost Sailor" → "Saint of Circumstance"
-   "Playing in the Band" → "Uncle John's Band"
-   "Estimated Prophet" → "Eyes of the World"
-   "Drums" → "Space"
-   "Space" → "The Other One"
+   **Data file format** (`Data/segue-pairs.json`):
+   ```json
+   {
+     "version": 1,
+     "pairs": [
+       { "from": "China Cat Sunflower", "to": "I Know You Rider" },
+       { "from": "Scarlet Begonias", "to": "Fire on the Mountain" }
+     ]
+   }
    ```
 
-2. **Pair Matching** (line 100-115):
+   See `Data/segue-pairs.json` for the complete list of pairs.
+
+2. **Pair Matching:**
    - Loop through tracks (i = 0 to count - 2)
    - Compare current track title with next track title
    - Case-insensitive match: `StringComparison.OrdinalIgnoreCase`
@@ -609,8 +608,7 @@ private void DetectSegues(List<TrackInfo> tracks)
 - Case-insensitive matching (handles "china cat" vs "China Cat")
 - Requires exact title match (no fuzzy matching here)
 - Matches both full title and abbreviated versions (e.g., "Scarlet" or "Scarlet Begonias")
-
-**Limitation:** Hardcoded Grateful Dead segues. For other artists, this method does nothing useful (no pairs match).
+- Segue pairs are data-driven (loaded from JSON), not hardcoded in source code
 
 ---
 

@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -66,6 +68,9 @@ namespace DeadEditor
         /// <summary>The overflow disc number assigned to unmatched tracks.</summary>
         private int _overflowDiscNumber;
 
+        /// <summary>Pre-populated concert metadata for click-to-import from Concerts view.</summary>
+        private (string Date, string Venue, string CityState)? _prePopulatedConcert;
+
         // ===== PLAYBACK =====
 
         // ===== CONSTRUCTOR =====
@@ -121,6 +126,22 @@ namespace DeadEditor
         /// <summary>True if tracks are loaded but not yet imported to library.</summary>
         public bool HasUnsavedWork => _tracks.Count > 0;
 
+        /// <summary>
+        /// Pre-populates import fields from a concert reference and loads a folder.
+        /// Called from ShellWindow when user imports via Concerts view.
+        /// Folder parsing overrides pre-populated values (folder parsing wins).
+        /// </summary>
+        public void ImportForConcert(string folderPath, string date, string venue, string cityState)
+        {
+            ClearView();
+            _prePopulatedConcert = (date, venue, cityState);
+            _currentFolderPath = folderPath;
+            _ = LoadFolderAsync(folderPath);
+
+            // Notify header bar about the new path
+            FolderPathSelected?.Invoke(this, folderPath);
+        }
+
         // ===== FOLDER LOADING =====
 
         private async Task LoadFolderAsync(string folderPath)
@@ -133,8 +154,23 @@ namespace DeadEditor
 
                 if (trackList.Count == 0)
                 {
-                    await ShowNotificationAsync("No Files",
-                        "No audio files (FLAC/MP3) found in the selected folder.");
+                    // Multi-disc guidance: if folder has subfolders, explain why it won't import
+                    bool hasSubfolders = false;
+                    try { hasSubfolders = Directory.GetDirectories(folderPath).Length > 0; } catch { }
+
+                    if (hasSubfolders)
+                    {
+                        await ShowNotificationAsync("No Audio Files Found",
+                            "No audio files found in this folder. This folder contains subfolders that may be individual discs.\n\n" +
+                            "To import, either:\n" +
+                            "• Select each disc folder separately and import as separate albums\n" +
+                            "• Combine the disc contents into a single folder in File Explorer, then import the combined folder");
+                    }
+                    else
+                    {
+                        await ShowNotificationAsync("No Files",
+                            "No audio files (FLAC/MP3) found in the selected folder.");
+                    }
                     StatusTextBlock.Text = "No audio files found";
                     return;
                 }
@@ -199,6 +235,20 @@ namespace DeadEditor
                     }
                 }
 
+                // Apply pre-populated concert data for any remaining empty fields
+                // (folder parsing and ShowLookupService have already had their chance)
+                if (_prePopulatedConcert.HasValue && _albumInfo != null)
+                {
+                    var pp = _prePopulatedConcert.Value;
+                    if (string.IsNullOrEmpty(_albumInfo.AlbumDate))
+                        _albumInfo.AlbumDate = pp.Date;
+                    if (string.IsNullOrEmpty(_albumInfo.Venue))
+                        _albumInfo.Venue = pp.Venue;
+                    if (string.IsNullOrEmpty(_albumInfo.CityState))
+                        _albumInfo.CityState = pp.CityState;
+                    _prePopulatedConcert = null;
+                }
+
                 // Populate ViewModels
                 _tracks.Clear();
                 foreach (var track in trackList)
@@ -210,11 +260,32 @@ namespace DeadEditor
                 RefreshUI();
 
                 StatusTextBlock.Text = $"{_tracks.Count} tracks loaded";
+
+                // Update folder path display
+                UpdateFolderPathDisplay();
             }
             catch (Exception ex)
             {
                 await ShowNotificationAsync("Error", $"Error loading folder: {ex.Message}");
                 StatusTextBlock.Text = "Error loading folder";
+            }
+        }
+
+        private void UpdateFolderPathDisplay()
+        {
+            if (!string.IsNullOrEmpty(_currentFolderPath))
+            {
+                FolderPathTextBox.Text = _currentFolderPath;
+                FolderPathTextBox.Foreground = new SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#AAAAAA"));
+                OpenFolderButton.IsEnabled = true;
+            }
+            else
+            {
+                FolderPathTextBox.Text = "No folder loaded";
+                FolderPathTextBox.Foreground = new SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#666666"));
+                OpenFolderButton.IsEnabled = false;
             }
         }
 
@@ -1066,6 +1137,11 @@ namespace DeadEditor
             int matchCount = 0;
             int segueCount = 0;
 
+            // Diagnostic: snapshot SongName before matching
+            foreach (var tw in _tracks)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[MatchSetlist-BEFORE] #{tw.Track.TrackNumber} SongName='{tw.Track.SongName}'");
+
             foreach (var tw in _tracks)
             {
                 var trackName = tw.Track.SongName;
@@ -1077,6 +1153,10 @@ namespace DeadEditor
 
                 // Resolve to canonical OfficialTitle for comparison
                 var trackCanonical = _normalizationService.GetOfficialTitle(nameToMatch) ?? nameToMatch;
+
+                System.Diagnostics.Debug.WriteLine(
+                    $"[MatchSetlist] Track #{tw.Track.TrackNumber} '{trackName}' " +
+                    $"→ normalized '{nameToMatch}' → canonical '{trackCanonical}'");
 
                 // Find the first unclaimed setlist position that matches via canonical titles
                 int matchedIndex = -1;
@@ -1090,6 +1170,10 @@ namespace DeadEditor
                         break;
                     }
                 }
+
+                System.Diagnostics.Debug.WriteLine(
+                    $"[MatchSetlist] Track #{tw.Track.TrackNumber} matchedIndex={matchedIndex}" +
+                    (matchedIndex >= 0 ? $" → setlist[{matchedIndex}]='{setlistSongs[matchedIndex].Canonical}'" : " → UNMATCHED"));
 
                 if (matchedIndex < 0) continue;
 
@@ -1134,12 +1218,20 @@ namespace DeadEditor
                     // More precisely: tracks that were NOT in the matched set
                     if (!matchedTracks.Contains(tw))
                     {
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[MatchSetlist] Track #{tw.Track.TrackNumber} '{tw.Track.SongName}' → overflow disc {overflowDisc}");
                         tw.Track.DiscNumber = overflowDisc;
                         tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(overflowDisc, overflowTrack);
                         overflowTrack++;
                     }
                 }
             }
+
+            // Diagnostic: snapshot SongName after matching
+            foreach (var tw in _tracks)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[MatchSetlist-AFTER] #{tw.Track.TrackNumber} SongName='{tw.Track.SongName}' " +
+                    $"IsMatched={tw.Track.IsMatched} Disc={tw.Track.DiscNumber}");
 
             // Store state for Match to Song feature
             _lastSetlistSongs = setlistSongs;
@@ -1268,7 +1360,9 @@ namespace DeadEditor
 
                         if (mbTrack != null)
                         {
-                            localTrack.Track.SongName = mbTrack.Title;
+                            var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title);
+                            localTrack.Track.SongName = cleanName;
+                            localTrack.Track.HasSegue = mbSegue;
                             localTrack.Track.IsMatched = true;
                             localTrack.Track.IsModified = true;
                             localTrack.UpdateDisplayTitle();
@@ -1398,17 +1492,52 @@ namespace DeadEditor
 
                 var trackList = _tracks.Select(t => t.Track).ToList();
 
+                // Capture source folder path and conflict callback for background thread.
+                // Uses ManualResetEventSlim to avoid deadlock: Dispatcher.InvokeAsync shows the panel,
+                // background thread blocks on the event, button clicks signal the event.
+                var sourcePath = _currentFolderPath;
+                ConflictPromptCallback conflictCallback = (fileName, sourceFilePath, context) =>
+                {
+                    ConflictResult? result = null;
+                    var waitHandle = new ManualResetEventSlim(false);
+
+                    Dispatcher.InvokeAsync(() =>
+                    {
+                        _conflictResult = new TaskCompletionSource<ConflictResult>();
+                        ConflictMessage.Text = $"{context}:\n\n\"{fileName}\"\n\nSource: {sourceFilePath}";
+                        ConflictApplyToAllCheckBox.IsChecked = false;
+                        ConflictPanel.Visibility = Visibility.Visible;
+
+                        _conflictResult.Task.ContinueWith(t =>
+                        {
+                            result = t.Result;
+                            waitHandle.Set();
+                        });
+                    });
+
+                    waitHandle.Wait();
+                    return result!;
+                };
+
                 await Task.Run(() =>
                 {
                     _libraryImportService.ImportToLibrary(
                         _librarySettings.LibraryRootPath,
                         _albumInfo,
                         trackList,
-                        progress);
+                        progress,
+                        sourcePath,
+                        conflictCallback);
                 });
 
                 ProgressBar.Visibility = Visibility.Collapsed;
-                StatusTextBlock.Text = $"Successfully imported {_tracks.Count} tracks";
+                // Build final status combining audio tracks and any non-audio files
+                var lastStatus = StatusTextBlock.Text;
+                var audioMsg = $"Imported {_tracks.Count} tracks";
+                if (lastStatus.Contains("additional file"))
+                    StatusTextBlock.Text = $"{audioMsg}. {lastStatus}";
+                else
+                    StatusTextBlock.Text = $"Successfully {audioMsg.ToLower()}";
 
                 // Remember box set name
                 if (_albumInfo.Type == AlbumType.OfficialRelease &&
@@ -1542,6 +1671,43 @@ namespace DeadEditor
                 NoArtworkText.Visibility = Visibility.Visible;
             }
         }
+
+        // ===== OPEN FOLDER =====
+
+        private void OpenFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentFolderPath))
+                return;
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(_currentFolderPath) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Folder not found: {_currentFolderPath}";
+                System.Diagnostics.Debug.WriteLine($"[IMPORT] Open folder failed: {ex.Message}");
+            }
+        }
+
+        // ===== CONFLICT PANEL =====
+
+        private TaskCompletionSource<ConflictResult>? _conflictResult;
+
+        private void ResolveConflict(ConflictAction action)
+        {
+            ConflictPanel.Visibility = Visibility.Collapsed;
+            _conflictResult?.SetResult(new ConflictResult
+            {
+                Action = action,
+                ApplyToAll = ConflictApplyToAllCheckBox.IsChecked == true
+            });
+        }
+
+        private void ConflictOverwrite_Click(object sender, RoutedEventArgs e) => ResolveConflict(ConflictAction.Overwrite);
+        private void ConflictSkip_Click(object sender, RoutedEventArgs e) => ResolveConflict(ConflictAction.Skip);
+        private void ConflictRename_Click(object sender, RoutedEventArgs e) => ResolveConflict(ConflictAction.Rename);
+        private void ConflictCancel_Click(object sender, RoutedEventArgs e) => ResolveConflict(ConflictAction.CancelImport);
 
         // ===== NOTIFICATION PANEL =====
 
