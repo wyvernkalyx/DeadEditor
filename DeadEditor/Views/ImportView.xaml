@@ -92,6 +92,12 @@
                         Style="{StaticResource AccentButton}"
                         Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
                         ToolTip="Lookup album on MusicBrainz"/>
+                <CheckBox x:Name="ReFingerprintCheckBox"
+                          Content="Re-fingerprint"
+                          Foreground="#CCCCCC"
+                          VerticalAlignment="Center"
+                          Margin="0,0,6,0"
+                          ToolTip="Ignore any existing MusicBrainz ID in source files and identify the release by audio fingerprint instead."/>
                 <Button x:Name="NormalizeButton" Content="✨ Normalize" Height="32"
                         Style="{StaticResource AccentButton}"
                         Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="16"

@@ -1261,6 +1261,34 @@ namespace DeadEditor
                 return;
             }
 
+            // Decide between MBID-driven re-match and fingerprinting.
+            // The "Re-fingerprint" checkbox forces fingerprinting for this session
+            // even when source files already carry MBID tags.
+            bool forceFingerprint = ReFingerprintCheckBox.IsChecked == true;
+
+            if (!forceFingerprint)
+            {
+                var perTrackMbids = _tracks
+                    .Select(vm =>
+                    {
+                        try { return MbidModalHelper.ReadMbidFromFile(vm.Track.FilePath); }
+                        catch { return null; }
+                    })
+                    .ToList();
+
+                var modal = MbidModalHelper.ComputeModal(perTrackMbids);
+                if (modal.AnyPresent && !string.IsNullOrEmpty(modal.ModalMbid))
+                {
+                    await LookupByExistingMbidAsync(modal.ModalMbid, modal.AllAgree);
+                    return;
+                }
+            }
+
+            await LookupByFingerprintAsync();
+        }
+
+        private async Task LookupByFingerprintAsync()
+        {
             try
             {
                 MusicBrainzButton.IsEnabled = false;
@@ -1303,6 +1331,52 @@ namespace DeadEditor
                 MusicBrainzButton.IsEnabled = true;
                 await ShowNotificationAsync("Error", $"Error looking up album: {ex.Message}");
                 StatusTextBlock.Text = "Album lookup error";
+            }
+        }
+
+        private async Task LookupByExistingMbidAsync(string mbid, bool allAgree)
+        {
+            try
+            {
+                MusicBrainzButton.IsEnabled = false;
+                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsIndeterminate = true;
+
+                var shortMbid = mbid.Length >= 8 ? mbid.Substring(0, 8) : mbid;
+                StatusTextBlock.Text = allAgree
+                    ? $"Looking up MBID {shortMbid}…"
+                    : $"⚠ Tracks have inconsistent MBIDs; using {shortMbid}…";
+
+                var tracks = await _musicBrainzService.GetReleaseTracksAsync(mbid);
+
+                ProgressBar.Visibility = Visibility.Collapsed;
+                MusicBrainzButton.IsEnabled = true;
+
+                var stub = new ReleaseOption
+                {
+                    ReleaseId = mbid,
+                    Title = _albumInfo?.AlbumName ?? "",
+                    Artist = _albumInfo?.Artist ?? "",
+                    Year = _albumInfo?.Year ?? "",
+                    TotalTrackCount = tracks?.Count
+                };
+
+                var selector = new ReleaseSelectorDialog("Confirm MusicBrainz Release", new List<ReleaseOption> { stub });
+                if (selector.ShowDialog() == true && selector.SelectedRelease != null)
+                {
+                    await ApplyMusicBrainzData(selector.SelectedRelease);
+                }
+                else
+                {
+                    StatusTextBlock.Text = "MBID lookup cancelled";
+                }
+            }
+            catch (Exception ex)
+            {
+                ProgressBar.Visibility = Visibility.Collapsed;
+                MusicBrainzButton.IsEnabled = true;
+                await ShowNotificationAsync("Error", $"Error looking up MBID: {ex.Message}");
+                StatusTextBlock.Text = "MBID lookup error";
             }
         }
 
