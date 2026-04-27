@@ -67,6 +67,12 @@ Live music metadata suffers from:
 | `Data/releases.json` | (inline — no separate doc) | - | Series templates + standalone album names for autocomplete |
 | `%APPDATA%/DeadEditor/settings.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § settings.json | ~11,000 words | Settings JSON schema, all 12 keys with defaults |
 
+### Future Design Documents
+
+Stubs for design conversations not yet implemented:
+
+- [verification-model.md](documentation/verification-model.md) — verification status for curated records (placeholder)
+
 ### Documentation-First Development Workflow
 
 **ALWAYS follow this workflow when making changes:**
