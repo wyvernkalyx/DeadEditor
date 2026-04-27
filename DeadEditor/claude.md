@@ -393,6 +393,17 @@ dotnet build DeadEditor.csproj
 dotnet run --project DeadEditor.csproj
 ```
 
+### Running Tests
+Automated tests live in `DeadEditor.Tests/` (xUnit, .NET 8). Run from repo root:
+
+```bash
+dotnet test DeadEditor.sln
+```
+
+- The repo root contains the canonical `.sln`; do not create additional `.sln` files inside subdirectories.
+- New regression tests for feature commits go in `DeadEditor.Tests/`, not in the main project.
+- Tests should not require WPF runtime initialization. Reference plain models, services, and helpers from the main project; do not instantiate `Window`/`UserControl` types in test code.
+
 ### Testing with Real Data
 - Primary test library: User's personal Grateful Dead taper collection
 - Add songs/aliases as unmatched tracks are encountered
