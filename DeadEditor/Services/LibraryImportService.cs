@@ -320,6 +320,8 @@ namespace DeadEditor.Services
                                 xiph.SetField("CITYSTATE", albumInfo.CityState ?? "");
                                 xiph.SetField("ALBUMNAME", albumInfo.AlbumName ?? "");
                                 xiph.SetField("ALBUMTYPE", albumInfo.Type.ToString());
+                                if (!string.IsNullOrEmpty(albumInfo.MusicBrainzReleaseId))
+                                    xiph.SetField("MUSICBRAINZ_ALBUMID", albumInfo.MusicBrainzReleaseId);
                             }
                         }
                         else
@@ -332,6 +334,8 @@ namespace DeadEditor.Services
                                 SetId3v2TextField(id3v2, "CITYSTATE", albumInfo.CityState ?? "");
                                 SetId3v2TextField(id3v2, "ALBUMNAME", albumInfo.AlbumName ?? "");
                                 SetId3v2TextField(id3v2, "ALBUMTYPE", albumInfo.Type.ToString());
+                                if (!string.IsNullOrEmpty(albumInfo.MusicBrainzReleaseId))
+                                    SetId3v2TextField(id3v2, "MusicBrainz Album Id", albumInfo.MusicBrainzReleaseId);
                             }
                         }
 

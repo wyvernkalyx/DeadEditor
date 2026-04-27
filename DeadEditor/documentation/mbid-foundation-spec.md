@@ -452,7 +452,7 @@ Fingerprint and name search may return overlapping results. Before displaying:
 
 ## 12. Out of Scope / Future Work
 
-- **Phase 2:** Import-time MBID write — persist `ReleaseOption.ReleaseId` from existing import flow into tags during import (the MBID is already available at [ImportView.xaml.cs:1271](Views/ImportView.xaml.cs#L1271) via `ApplyMusicBrainzData`, just never written to tags)
+- ~~**Phase 2:** Import-time MBID write — persist `ReleaseOption.ReleaseId` from existing import flow into tags during import~~ — **Completed (Commit 1).** `AlbumInfo.MusicBrainzReleaseId` is set in [ImportView.ApplyMusicBrainzData](Views/ImportView.xaml.cs#L1309) from the user's `ReleaseSelectorDialog` choice and written to FLAC `MUSICBRAINZ_ALBUMID` and MP3 `MusicBrainz Album Id` TXXX in [LibraryImportService.WriteMetadataWithRetry](Services/LibraryImportService.cs#L228). The "Write Metadata" in-place path via `MetadataService.WriteMetadata` is still pending (Commit 1.6).
 - **Phase 2:** MBID edit/clear field in Edit Metadata view
 - **Phase 2:** Enrich `releases.json` entries with MBIDs (enables releases owned/missing UI)
 - **Phase 3:** Recording-level MBIDs (per-track `MUSICBRAINZ_TRACKID`)

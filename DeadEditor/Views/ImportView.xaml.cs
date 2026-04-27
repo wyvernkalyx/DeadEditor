@@ -1325,6 +1325,7 @@ namespace DeadEditor
                     _albumInfo.Artist = release.Artist;
                     _albumInfo.AlbumName = release.Title;
                     _albumInfo.Year = release.Year.ToString();
+                    _albumInfo.MusicBrainzReleaseId = release.ReleaseId;
                 }
 
                 // Download artwork
