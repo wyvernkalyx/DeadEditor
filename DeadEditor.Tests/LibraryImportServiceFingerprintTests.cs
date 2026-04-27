@@ -7,22 +7,22 @@ using Xunit;
 namespace DeadEditor.Tests;
 
 /// <summary>
-/// Regression tests for MBID write during import. Verifies that
-/// <see cref="LibraryImportService"/> writes MUSICBRAINZ_ALBUMID to FLAC Xiph
-/// comments when <see cref="AlbumInfo.MusicBrainzReleaseId"/> is supplied,
-/// and preserves any pre-existing MBID tag when it is not.
+/// Regression tests for ACOUSTID_FINGERPRINT write during import. Verifies that
+/// <see cref="LibraryImportService"/> writes the cached <see cref="TrackInfo.AcoustIdFingerprint"/>
+/// to FLAC Xiph comments when supplied, and preserves any pre-existing fingerprint tag when
+/// the in-memory value is empty (matching the MBID write-or-preserve pattern from Commit 1).
 ///
-/// Tests the writer-reader contract by re-reading the imported file with the
-/// same Xiph accessor pattern used by LibraryGridView.ReadCustomFieldsIntoShow,
-/// asserting the writer produces output the existing reader will accept.
+/// fpcalc-driven end-to-end fingerprint computation is intentionally NOT exercised here —
+/// the minimal FLAC fixture has no decodable audio frames. The MusicBrainzService passed in
+/// has no FpcalcPath, so the fingerprint pre-step takes the "fpcalc not configured" path.
 /// </summary>
-public class LibraryImportServiceMbidTests
+public class LibraryImportServiceFingerprintTests
 {
-    private const string TestMbid = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
-    private const string PreexistingMbid = "11111111-2222-3333-4444-555555555555";
+    private const string TestFingerprint = "AQADtFRSXcS-MUz1nZHk6_jM50dPJI3qPM-ho-mD7Eum6Yt-9MWP9MGPHj1y9MfJOEd_Iv2Q9Mhx9EePHkdy9OmTPMd_PHmO_PiR8seRP9HxoaeS9MeJPshxJEf6IH3Q4z967IePPUePoz-S5_jR50d_5MOPI3l-fOidI3lyJDfyHk2OfsiPHE-OHs9R9DiOI8eR48iRH8mTJ8eR48iPI8mPHsfx40iSI8mP5MeR48jx5DiOIzny40hyJEd-HMlxJD-O5DhyHEdyHMmRHEdyJEdyHEdyJMdxJEdyHEdyHMmRHMdxJEdyHEdyJMdxJEdyHMmRHMdx";
+    private const string PreexistingFingerprint = "AQADtBpZ8axBhXJzNH1ENcTRdNRTNB1qPYjUJTuOPMnRJEeOPP2RPMdxJEf6oXmO_kj-INKR9OOR_DiOPjmO_kgenkme40hyJEd-JEeOJDmO5MdxHMdxHEdyHEdyHMlxJEdyJMeRHMlxHMdxJEdyHMdxJEdyHMlxHMdxHMdxHMdxJMdxHMdxHEdyHMdxHEdyHMdxJMdxJEdyHMdxJMeRHMdxJMlxHMdxHMdxHEdyHMdxHEdyJMdxHMdxJEdy";
 
     [Fact]
-    public void ImportToLibrary_WithMbidSupplied_WritesMbidToFlacXiph()
+    public void ImportToLibrary_WithFingerprintSupplied_WritesFingerprintToFlacXiph()
     {
         var sourceDir = CreateTempDir();
         var libraryRoot = CreateTempDir();
@@ -33,8 +33,6 @@ public class LibraryImportServiceMbidTests
             CreateMinimalFlacFile(sourceFlac);
 
             var album = BuildTestAlbumInfo();
-            album.MusicBrainzReleaseId = TestMbid;
-
             var track = new TrackInfo
             {
                 FilePath = sourceFlac,
@@ -42,6 +40,7 @@ public class LibraryImportServiceMbidTests
                 TrackNumber = 1,
                 DiscNumber = 1,
                 SongName = "Test Song",
+                AcoustIdFingerprint = TestFingerprint,
             };
 
             var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
@@ -50,8 +49,8 @@ public class LibraryImportServiceMbidTests
             var importedFile = FindImportedFlacFile(libraryRoot);
             Assert.NotNull(importedFile);
 
-            var actual = ReadXiphMbid(importedFile!);
-            Assert.Equal(TestMbid, actual);
+            var actual = ReadXiphFingerprint(importedFile!);
+            Assert.Equal(TestFingerprint, actual);
         }
         finally
         {
@@ -61,7 +60,7 @@ public class LibraryImportServiceMbidTests
     }
 
     [Fact]
-    public void ImportToLibrary_WithoutMbid_PreservesExistingMbidTag()
+    public void ImportToLibrary_WithoutFingerprint_PreservesExistingFingerprintTag()
     {
         var sourceDir = CreateTempDir();
         var libraryRoot = CreateTempDir();
@@ -70,11 +69,9 @@ public class LibraryImportServiceMbidTests
         {
             var sourceFlac = Path.Combine(sourceDir, "track1.flac");
             CreateMinimalFlacFile(sourceFlac);
-            WriteXiphMbid(sourceFlac, PreexistingMbid);
+            WriteXiphFingerprint(sourceFlac, PreexistingFingerprint);
 
             var album = BuildTestAlbumInfo();
-            album.MusicBrainzReleaseId = null;
-
             var track = new TrackInfo
             {
                 FilePath = sourceFlac,
@@ -82,6 +79,7 @@ public class LibraryImportServiceMbidTests
                 TrackNumber = 1,
                 DiscNumber = 1,
                 SongName = "Test Song",
+                AcoustIdFingerprint = null,
             };
 
             var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
@@ -90,8 +88,8 @@ public class LibraryImportServiceMbidTests
             var importedFile = FindImportedFlacFile(libraryRoot);
             Assert.NotNull(importedFile);
 
-            var actual = ReadXiphMbid(importedFile!);
-            Assert.Equal(PreexistingMbid, actual);
+            var actual = ReadXiphFingerprint(importedFile!);
+            Assert.Equal(PreexistingFingerprint, actual);
         }
         finally
         {
@@ -103,7 +101,6 @@ public class LibraryImportServiceMbidTests
     /// <summary>
     /// Builds a MusicBrainzService whose FpcalcPath is unset, so the import pipeline's
     /// fingerprint pre-step takes the "fpcalc not configured" path and skips silently.
-    /// Tests that exercise the import write path without exercising fpcalc.
     /// </summary>
     private static MusicBrainzService CreateOfflineMusicBrainzService()
         => new MusicBrainzService("test-key", new LibrarySettings());
@@ -125,26 +122,21 @@ public class LibraryImportServiceMbidTests
         return files.Length > 0 ? files[0] : null;
     }
 
-    /// <summary>
-    /// Reads MUSICBRAINZ_ALBUMID using the same accessor pattern as
-    /// LibraryGridView.ReadCustomFieldsIntoShow. We are deliberately exercising
-    /// the writer's output through the reader's contract.
-    /// </summary>
-    private static string? ReadXiphMbid(string filePath)
+    private static string? ReadXiphFingerprint(string filePath)
     {
         using var tagFile = TagLib.File.Create(filePath, TagLib.ReadStyle.PictureLazy);
         if (tagFile is not TagLib.Flac.File flacFile) return null;
         var xiph = (TagLib.Ogg.XiphComment?)flacFile.GetTag(TagLib.TagTypes.Xiph);
-        return xiph?.GetFirstField("MUSICBRAINZ_ALBUMID");
+        return xiph?.GetFirstField("ACOUSTID_FINGERPRINT");
     }
 
-    private static void WriteXiphMbid(string filePath, string mbid)
+    private static void WriteXiphFingerprint(string filePath, string fingerprint)
     {
         using var file = TagLib.File.Create(filePath);
         if (file is TagLib.Flac.File flacFile)
         {
             var xiph = (TagLib.Ogg.XiphComment?)flacFile.GetTag(TagLib.TagTypes.Xiph);
-            xiph?.SetField("MUSICBRAINZ_ALBUMID", mbid);
+            xiph?.SetField("ACOUSTID_FINGERPRINT", fingerprint);
             file.Save();
         }
     }
@@ -171,26 +163,19 @@ public class LibraryImportServiceMbidTests
 
     /// <summary>
     /// Creates a minimal valid FLAC file that TagLib can open and tag.
-    /// Mirrors the helper in PlaylistRestorationTests; intentionally duplicated
-    /// rather than extracted to keep this test self-contained.
+    /// Mirrors the helper in LibraryImportServiceMbidTests.
     /// </summary>
     private static void CreateMinimalFlacFile(string path)
     {
         using (var fs = new FileStream(path, FileMode.Create))
         {
-            // FLAC signature: "fLaC"
             fs.Write(new byte[] { 0x66, 0x4C, 0x61, 0x43 }, 0, 4);
-
-            // STREAMINFO block header (last metadata block flag + type 0 + length 34)
             fs.Write(new byte[] { 0x80, 0x00, 0x00, 0x22 }, 0, 4);
 
-            // STREAMINFO data (34 bytes) with minimal valid values
             var streaminfo = new byte[34];
-            streaminfo[0] = 0x10; streaminfo[1] = 0x00;            // min block size 4096
-            streaminfo[2] = 0x10; streaminfo[3] = 0x00;            // max block size 4096
-            // Sample rate 44100 packed across bytes 10..12
+            streaminfo[0] = 0x10; streaminfo[1] = 0x00;
+            streaminfo[2] = 0x10; streaminfo[3] = 0x00;
             streaminfo[10] = 0x0A; streaminfo[11] = 0xC4; streaminfo[12] = 0x42;
-            // Total samples = 44100 (1 second), packed in lower 36 bits
             const long totalSamples = 44100;
             streaminfo[13] = (byte)((totalSamples >> 32) & 0x0F);
             streaminfo[14] = (byte)((totalSamples >> 24) & 0xFF);
@@ -199,12 +184,10 @@ public class LibraryImportServiceMbidTests
             streaminfo[17] = (byte)(totalSamples & 0xFF);
             fs.Write(streaminfo, 0, 34);
 
-            // Minimal frame header + padding so the file isn't degenerate
             fs.Write(new byte[] { 0xFF, 0xF8, 0x69, 0x04 }, 0, 4);
             fs.Write(new byte[100], 0, 100);
         }
 
-        // Touch the file with TagLib to ensure it's valid for subsequent operations.
         using var file = TagLib.File.Create(path);
         file.Save();
     }

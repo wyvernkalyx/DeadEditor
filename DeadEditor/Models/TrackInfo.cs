@@ -99,6 +99,7 @@ namespace DeadEditor.Models
         }
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
         public bool IsModified { get; set; }           // Has user made changes?
+        public string? AcoustIdFingerprint { get; set; }  // ACOUSTID_FINGERPRINT (FLAC Xiph) / "Acoustid Fingerprint" TXXX (MP3). Persisted across import/write.
 
         // IsMatched with PropertyChanged notification for WPF DataTrigger binding
         public bool? IsMatched

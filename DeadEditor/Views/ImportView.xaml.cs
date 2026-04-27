@@ -82,8 +82,8 @@ namespace DeadEditor
             _metadataService = new MetadataService();
             _normalizationService = new NormalizationService();
             _librarySettings = LibrarySettings.Load();
-            _libraryImportService = new LibraryImportService(_metadataService);
             _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
+            _libraryImportService = new LibraryImportService(_metadataService, _musicBrainzService);
 
             TracksDataGrid.ItemsSource = _tracks;
         }

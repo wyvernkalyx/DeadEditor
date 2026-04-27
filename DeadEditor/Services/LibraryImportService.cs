@@ -40,10 +40,12 @@ namespace DeadEditor.Services
     public class LibraryImportService
     {
         private readonly MetadataService _metadataService;
+        private readonly MusicBrainzService _musicBrainzService;
 
-        public LibraryImportService(MetadataService metadataService)
+        public LibraryImportService(MetadataService metadataService, MusicBrainzService musicBrainzService)
         {
             _metadataService = metadataService;
+            _musicBrainzService = musicBrainzService;
         }
 
         /// <summary>
@@ -79,13 +81,92 @@ namespace DeadEditor.Services
                 Directory.CreateDirectory(targetFolder);
             }
 
+            // Pre-compute fingerprints into TrackInfo.AcoustIdFingerprint before the
+            // per-track copy/write loop. Sequential — fpcalc invocations block via
+            // .GetAwaiter().GetResult(). Already on a background thread (Task.Run from ImportView).
+            int fingerprintFailures = PrecomputeFingerprints(tracks, progress);
+
             ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
+
+            if (fingerprintFailures > 0)
+            {
+                progress?.Report((totalTracks, totalTracks,
+                    $"({fingerprintFailures} of {tracks.Count} tracks not fingerprinted — fpcalc not configured or unavailable)"));
+            }
 
             // Phase 2: Copy non-audio files from source folder (flattened)
             if (!string.IsNullOrEmpty(sourceFolderPath) && Directory.Exists(sourceFolderPath))
             {
                 CopyNonAudioFiles(sourceFolderPath, targetFolder, progress, onConflict);
             }
+        }
+
+        /// <summary>
+        /// Computes Chromaprint fingerprints for any tracks that don't already carry one.
+        /// Returns the number of tracks that ended up without a fingerprint (e.g., fpcalc unavailable
+        /// or per-track failure). Reports progress through the supplied IProgress channel.
+        /// </summary>
+        /// <remarks>
+        /// Existing fingerprint tags are trusted and not recomputed: a Chromaprint fingerprint is
+        /// a deterministic function of the decoded audio bytes, so the stored value is correct as
+        /// long as the audio hasn't been re-encoded externally. Recomputing on every import would
+        /// add minutes per album for no reliability gain.
+        /// </remarks>
+        private int PrecomputeFingerprints(List<TrackInfo> tracks,
+            IProgress<(int current, int total, string message)>? progress)
+        {
+            int failureCount = 0;
+            bool fpcalcUnavailable = false;
+            int total = tracks.Count;
+
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                var track = tracks[i];
+
+                // Trust existing tag — fingerprint is deterministic from audio bytes.
+                if (!string.IsNullOrEmpty(track.AcoustIdFingerprint))
+                    continue;
+
+                if (fpcalcUnavailable)
+                {
+                    failureCount++;
+                    continue;
+                }
+
+                progress?.Report((i + 1, total, $"Fingerprinting tracks ({i + 1} of {total})..."));
+
+                try
+                {
+                    track.AcoustIdFingerprint = _musicBrainzService
+                        .GetFingerprintAsync(track.FilePath)
+                        .GetAwaiter()
+                        .GetResult();
+
+                    if (string.IsNullOrEmpty(track.AcoustIdFingerprint))
+                        failureCount++;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Debug.WriteLine($"[IMPORT] Fingerprinting unavailable: {ex.Message}");
+                    progress?.Report((i + 1, total, "fpcalc not configured — skipping fingerprinting"));
+                    fpcalcUnavailable = true;
+                    failureCount++;
+                }
+                catch (FileNotFoundException ex)
+                {
+                    Debug.WriteLine($"[IMPORT] Fingerprinting unavailable: {ex.Message}");
+                    progress?.Report((i + 1, total, "fpcalc.exe not found — skipping fingerprinting"));
+                    fpcalcUnavailable = true;
+                    failureCount++;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[IMPORT] Fingerprint failed for {track.FilePath}: {ex.Message}");
+                    failureCount++;
+                }
+            }
+
+            return failureCount;
         }
 
         /// <summary>
@@ -322,6 +403,8 @@ namespace DeadEditor.Services
                                 xiph.SetField("ALBUMTYPE", albumInfo.Type.ToString());
                                 if (!string.IsNullOrEmpty(albumInfo.MusicBrainzReleaseId))
                                     xiph.SetField("MUSICBRAINZ_ALBUMID", albumInfo.MusicBrainzReleaseId);
+                                if (!string.IsNullOrEmpty(track.AcoustIdFingerprint))
+                                    xiph.SetField("ACOUSTID_FINGERPRINT", track.AcoustIdFingerprint);
                             }
                         }
                         else
@@ -336,6 +419,8 @@ namespace DeadEditor.Services
                                 SetId3v2TextField(id3v2, "ALBUMTYPE", albumInfo.Type.ToString());
                                 if (!string.IsNullOrEmpty(albumInfo.MusicBrainzReleaseId))
                                     SetId3v2TextField(id3v2, "MusicBrainz Album Id", albumInfo.MusicBrainzReleaseId);
+                                if (!string.IsNullOrEmpty(track.AcoustIdFingerprint))
+                                    SetId3v2TextField(id3v2, "Acoustid Fingerprint", track.AcoustIdFingerprint);
                             }
                         }
 

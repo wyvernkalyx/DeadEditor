@@ -128,6 +128,18 @@ namespace DeadEditor.Services
                         // Cleaning will happen during normalization for matching purposes
                         // track.Title = CleanTitle(track.Title);  // REMOVED - this was destroying original metadata
 
+                        if (file is TagLib.Flac.File flacFile)
+                        {
+                            var xiph = (TagLib.Ogg.XiphComment?)flacFile.GetTag(TagLib.TagTypes.Xiph);
+                            track.AcoustIdFingerprint = xiph?.GetFirstField("ACOUSTID_FINGERPRINT");
+                        }
+                        else
+                        {
+                            var id3v2 = (TagLib.Id3v2.Tag?)file.GetTag(TagLib.TagTypes.Id3v2);
+                            if (id3v2 != null)
+                                track.AcoustIdFingerprint = GetId3v2TextField(id3v2, "Acoustid Fingerprint");
+                        }
+
                         tracks.Add(track);
                     }
                 }
@@ -411,6 +423,8 @@ namespace DeadEditor.Services
                             xiph.SetField("ALBUMTYPE", album.Type.ToString());
                             if (!string.IsNullOrEmpty(album.MusicBrainzReleaseId))
                                 xiph.SetField("MUSICBRAINZ_ALBUMID", album.MusicBrainzReleaseId);
+                            if (!string.IsNullOrEmpty(track.AcoustIdFingerprint))
+                                xiph.SetField("ACOUSTID_FINGERPRINT", track.AcoustIdFingerprint);
                         }
                     }
                     else
@@ -426,6 +440,8 @@ namespace DeadEditor.Services
                             SetId3v2TextField(id3v2, "ALBUMTYPE", album.Type.ToString());
                             if (!string.IsNullOrEmpty(album.MusicBrainzReleaseId))
                                 SetId3v2TextField(id3v2, "MusicBrainz Album Id", album.MusicBrainzReleaseId);
+                            if (!string.IsNullOrEmpty(track.AcoustIdFingerprint))
+                                SetId3v2TextField(id3v2, "Acoustid Fingerprint", track.AcoustIdFingerprint);
                         }
                     }
 

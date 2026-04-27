@@ -294,7 +294,7 @@ namespace DeadEditor.Services
             }
         }
 
-        private async Task<string?> GetFingerprintAsync(string filePath)
+        public async Task<string?> GetFingerprintAsync(string filePath)
         {
             try
             {
