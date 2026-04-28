@@ -102,71 +102,24 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Computes Chromaprint fingerprints for any tracks that don't already carry one.
-        /// Returns the number of tracks that ended up without a fingerprint (e.g., fpcalc unavailable
-        /// or per-track failure). Reports progress through the supplied IProgress channel.
+        /// Delegates to the shared <see cref="FingerprintService"/> to compute Chromaprint
+        /// fingerprints for any tracks that don't already carry one. Returns the number of
+        /// tracks that ended up without a fingerprint (e.g., fpcalc unavailable or per-track
+        /// failure) so the existing import-status reporting contract is preserved.
         /// </summary>
         /// <remarks>
-        /// Existing fingerprint tags are trusted and not recomputed: a Chromaprint fingerprint is
-        /// a deterministic function of the decoded audio bytes, so the stored value is correct as
-        /// long as the audio hasn't been re-encoded externally. Recomputing on every import would
-        /// add minutes per album for no reliability gain.
+        /// The import path does not pass an onTrackComplete callback — fingerprint tags are
+        /// persisted later by <see cref="WriteMetadataWithRetry"/>'s full-tag write pass.
         /// </remarks>
         private int PrecomputeFingerprints(List<TrackInfo> tracks,
             IProgress<(int current, int total, string message)>? progress)
         {
-            int failureCount = 0;
-            bool fpcalcUnavailable = false;
-            int total = tracks.Count;
-
-            for (int i = 0; i < tracks.Count; i++)
-            {
-                var track = tracks[i];
-
-                // Trust existing tag — fingerprint is deterministic from audio bytes.
-                if (!string.IsNullOrEmpty(track.AcoustIdFingerprint))
-                    continue;
-
-                if (fpcalcUnavailable)
-                {
-                    failureCount++;
-                    continue;
-                }
-
-                progress?.Report((i + 1, total, $"Fingerprinting tracks ({i + 1} of {total})..."));
-
-                try
-                {
-                    track.AcoustIdFingerprint = _musicBrainzService
-                        .GetFingerprintAsync(track.FilePath)
-                        .GetAwaiter()
-                        .GetResult();
-
-                    if (string.IsNullOrEmpty(track.AcoustIdFingerprint))
-                        failureCount++;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Debug.WriteLine($"[IMPORT] Fingerprinting unavailable: {ex.Message}");
-                    progress?.Report((i + 1, total, "fpcalc not configured — skipping fingerprinting"));
-                    fpcalcUnavailable = true;
-                    failureCount++;
-                }
-                catch (FileNotFoundException ex)
-                {
-                    Debug.WriteLine($"[IMPORT] Fingerprinting unavailable: {ex.Message}");
-                    progress?.Report((i + 1, total, "fpcalc.exe not found — skipping fingerprinting"));
-                    fpcalcUnavailable = true;
-                    failureCount++;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"[IMPORT] Fingerprint failed for {track.FilePath}: {ex.Message}");
-                    failureCount++;
-                }
-            }
-
-            return failureCount;
+            var fingerprintService = new FingerprintService(_musicBrainzService);
+            var result = fingerprintService
+                .PrecomputeFingerprintsAsync(tracks, progress)
+                .GetAwaiter()
+                .GetResult();
+            return result.Failed;
         }
 
         /// <summary>

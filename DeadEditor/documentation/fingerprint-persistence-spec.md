@@ -151,3 +151,107 @@ The Edit Metadata view ([Views/EditMetadataView.xaml](../Views/EditMetadataView.
 - Library Grid per-row fingerprint badges — deferred to Commit 3.5 because they touch scan-time performance.
 - "Verify fingerprint" affordance (recompute and compare) — queued, not in this commit.
 - Editable fingerprint field — fingerprints are derived from audio bytes, so user-editable display would be misleading.
+
+## 10. Fingerprint Tracks Button (Commit 3.6)
+
+Albums imported before Commit 2a have no fingerprints. The `🎵 Fingerprint` button in the Edit Metadata sidebar lets users back-fill fingerprints for an existing library album.
+
+### 10.1 Scope
+
+- **Missing-only.** Tracks that already have a non-empty `AcoustIdFingerprint` are skipped. There is no "force re-fingerprint" mode in this commit.
+- **Live disk commit.** Each fingerprint is written to the track's tag immediately after computation, not staged for Save Changes. Partial completion survives a mid-run crash because the next click resumes (skip-existing handles it).
+- **No cancellation.** The user cannot interrupt a run mid-batch. Exiting the view while a run is in progress is unsupported behavior; the run continues until completion.
+- **Sequential.** No `fpcalc` parallelization in this commit (deferred to Commit 2b).
+- **No bulk affordance.** This button operates on the single album in the open Edit Metadata view. A library-wide "fingerprint all albums" button is deferred (Option 2 from the Commit 3.6 conversation).
+
+### 10.2 Shared `FingerprintService`
+
+The fingerprint precompute logic is extracted from `LibraryImportService` into [Services/FingerprintService.cs](../Services/FingerprintService.cs):
+
+```csharp
+public record FingerprintBatchResult(
+    int Computed,        // newly fingerprinted
+    int SkippedExisting, // had a fingerprint already, untouched
+    int Failed,          // attempted but produced no fingerprint
+    bool FpcalcAvailable // false if the run determined fpcalc to be unconfigured/missing
+);
+
+public class FingerprintService
+{
+    public FingerprintService(MusicBrainzService musicBrainzService);
+
+    public Task<FingerprintBatchResult> PrecomputeFingerprintsAsync(
+        IList<TrackInfo> tracks,
+        IProgress<(int current, int total, string message)>? progress = null,
+        Func<TrackInfo, Task>? onTrackComplete = null);
+
+    public static void WriteFingerprintToTrackFile(TrackInfo track);
+}
+```
+
+- The service stamps `track.AcoustIdFingerprint` in memory; **disk writing is caller-responsibility** so the import path can rely on its existing `WriteMetadataWithRetry` full-tag pass while the Edit Metadata path can do a focused per-field write.
+- `onTrackComplete` is invoked exactly once per *newly computed* fingerprint (not for skipped-existing or failed tracks). The Edit Metadata caller passes a callback that wraps `FingerprintService.WriteFingerprintToTrackFile` in `Task.Run` so the synchronous TagLib save runs off the UI thread.
+- On the first fpcalc-unavailable failure, the service sets a sticky flag so subsequent tracks skip the `GetFingerprintAsync` attempt and fail fast.
+
+### 10.3 `LibraryImportService` refactor
+
+`LibraryImportService.PrecomputeFingerprints` now delegates to `FingerprintService.PrecomputeFingerprintsAsync` and returns `result.Failed` to preserve the existing `int fingerprintFailures` contract. The import path passes neither `onTrackComplete` (relies on `WriteMetadataWithRetry` for tag writes) nor a different progress reporter. **Behavior of the import path is unchanged** — verified by the existing `LibraryImportServiceFingerprintTests` and `MetadataServiceFingerprintTests` regression suites.
+
+### 10.4 Edit Metadata sidebar button
+
+[Views/EditMetadataView.xaml](../Views/EditMetadataView.xaml) places a compact button immediately below `FingerprintSummaryText`:
+
+```xml
+<Button x:Name="FingerprintButton"
+        Content="🎵 Fingerprint"
+        Width="170" Height="24" Margin="0,4,0,0"
+        FontSize="12" Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+        Padding="6,2" Cursor="Hand" HorizontalAlignment="Center"
+        Click="FingerprintButton_Click"
+        ToolTip="Compute Chromaprint fingerprints for tracks that don't have one"/>
+```
+
+Styling matches the sidebar's secondary-button idiom (170px wide, 12pt, muted palette).
+
+### 10.5 Click handler
+
+`FingerprintButton_Click` ([Views/EditMetadataView.xaml.cs](../Views/EditMetadataView.xaml.cs)):
+
+1. Disables the button, shows the `ProgressBar` in determinate mode (`Maximum = _tracks.Count`).
+2. Constructs `MusicBrainzService` per-click (mirrors `MusicBrainzButton_Click`'s pattern) and wraps it in a fresh `FingerprintService`.
+3. Builds an `IProgress` reporter via `new Progress<...>(...)`. Because `Progress<T>` captures the construction-time `SynchronizationContext`, callbacks fire on the UI thread. The lambda updates `StatusTextBlock.Text`, advances `ProgressBar.Value`, and calls `UpdateFingerprintSummary()` — all UI-safe.
+4. Awaits `PrecomputeFingerprintsAsync` inside `Task.Run` so the entire batch runs off the UI thread. The `onTrackComplete` callback re-wraps `FingerprintService.WriteFingerprintToTrackFile` in `Task.Run` so the synchronous TagLib save also runs on the thread pool.
+5. After completion, sets a final status message:
+   - `attempted == 0` (all skipped existing) → `"All tracks already fingerprinted"`
+   - `!FpcalcAvailable` → `"fpcalc not configured — open Settings to configure"`
+   - `Failed == 0` → `"Fingerprinted N tracks"`
+   - else → `"Fingerprinted N tracks (K failed)"`
+6. Re-enables the button, hides the ProgressBar, runs a final `UpdateFingerprintSummary()` to backstop the post-loop tick.
+
+### 10.6 `UpdateFingerprintSummary` extraction
+
+The fingerprint-summary block (lines counting fingerprinted tracks and toggling between "—", "No fingerprints", "N / M tracks fingerprinted", "All tracks fingerprinted") is extracted from `RefreshUI` into a standalone `UpdateFingerprintSummary()` method. `RefreshUI` calls it, and the click handler's `Progress` lambda calls it on each progress report.
+
+Calling the full `RefreshUI` 30 times during a batch would re-decode the album artwork bitmap and re-run `ShowLookupService.GetSetlist` 30 times — extracting the summary update is a correctness fix, not a refactor for its own sake.
+
+### 10.7 Disk-write helper
+
+`FingerprintService.WriteFingerprintToTrackFile(TrackInfo track)` (public static) opens the file with TagLib, writes `ACOUSTID_FINGERPRINT` (FLAC Xiph) or the `Acoustid Fingerprint` TXXX frame (MP3), and saves. No-op when `track.AcoustIdFingerprint` is null/empty or the file is missing. Per-track exceptions are swallowed and logged to `Debug.WriteLine` — same pattern as the existing `WriteMbidToTracks` in Edit Metadata.
+
+The helper lives on `FingerprintService` (not on `EditMetadataView`) so it remains unit-testable without WPF runtime initialization.
+
+### 10.8 Tests
+
+[DeadEditor.Tests/FingerprintServiceTests.cs](../DeadEditor.Tests/FingerprintServiceTests.cs) covers:
+
+| Test | Verifies |
+|---|---|
+| `PrecomputeFingerprintsAsync_AllTracksAlreadyFingerprinted_SkipsAll` | Pre-stamped tracks → `SkippedExisting=N, Computed=0, Failed=0`; `onTrackComplete` not invoked |
+| `PrecomputeFingerprintsAsync_FpcalcNotConfigured_FailsAttempted_SetsFpcalcAvailableFalse` | Offline `MusicBrainzService` → all attempted tracks counted as failed; `FpcalcAvailable=false`; pre-stamped tracks still counted as `SkippedExisting` |
+| `PrecomputeFingerprintsAsync_ReportsProgress` | Progress reporter receives the per-track tuple format and the fpcalc-unavailable status message |
+| `PrecomputeFingerprintsAsync_EmptyTrackList_ReturnsZeroCounts` | Empty input is well-defined; `FpcalcAvailable=true` (no determination made) |
+| `WriteFingerprintToTrackFile_WithFingerprint_WritesToFlacXiph` | Writes the value to `ACOUSTID_FINGERPRINT` |
+| `WriteFingerprintToTrackFile_WithEmptyFingerprint_PreservesExistingTag` | No-op when `AcoustIdFingerprint` is null/empty |
+| `WriteFingerprintToTrackFile_OverwritesExistingValue` | Replaces an existing tag value |
+
+The "successful fingerprinting" path is not unit-tested — it requires real audio plus `fpcalc.exe` (the same gap that exists in `LibraryImportServiceFingerprintTests`).

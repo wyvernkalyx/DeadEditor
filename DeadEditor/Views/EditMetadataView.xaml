@@ -439,6 +439,15 @@
                            HorizontalAlignment="Center"
                            TextTrimming="CharacterEllipsis"
                            ToolTip="Per-track Chromaprint fingerprint coverage"/>
+                <Button x:Name="FingerprintButton"
+                        Content="&#x1F3B5; Fingerprint"
+                        Width="170" Height="24" Margin="0,4,0,0"
+                        FontSize="12"
+                        Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                        Padding="6,2" Cursor="Hand"
+                        HorizontalAlignment="Center"
+                        Click="FingerprintButton_Click"
+                        ToolTip="Compute Chromaprint fingerprints for tracks that don't have one"/>
 
                 <!-- Track count -->
                 <TextBlock x:Name="TrackCountText"

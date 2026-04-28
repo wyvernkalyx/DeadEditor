@@ -246,11 +246,28 @@ namespace DeadEditor
 
             // Fingerprint coverage summary - aggregate over the in-memory tracks
             // (populated at folder-load per fingerprint-persistence-spec \u00a7 2).
+            UpdateFingerprintSummary();
+
+            // Enable Match Setlist button if setlist data exists for this date
+            UpdateMatchSetlistButton();
+
+            TrackCountText.Text = _tracks.Count == 1 ? "1 track" : $"{_tracks.Count} tracks";
+
+            _isUpdating = false;
+        }
+
+        /// <summary>
+        /// Refreshes only the FINGERPRINTS sidebar summary. Extracted from RefreshUI so
+        /// the Fingerprint button's progress callbacks can update the count live without
+        /// triggering RefreshUI's heavier work (artwork decode, setlist lookup).
+        /// </summary>
+        private void UpdateFingerprintSummary()
+        {
             var totalTracks = _tracks.Count;
             var fingerprinted = _tracks.Count(t => !string.IsNullOrWhiteSpace(t.Track.AcoustIdFingerprint));
             if (totalTracks == 0)
             {
-                FingerprintSummaryText.Text = "\u2014";
+                FingerprintSummaryText.Text = "—";
                 FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
             }
             else if (fingerprinted == 0)
@@ -268,13 +285,6 @@ namespace DeadEditor
                 FingerprintSummaryText.Text = $"{fingerprinted} / {totalTracks} tracks fingerprinted";
                 FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
             }
-
-            // Enable Match Setlist button if setlist data exists for this date
-            UpdateMatchSetlistButton();
-
-            TrackCountText.Text = _tracks.Count == 1 ? "1 track" : $"{_tracks.Count} tracks";
-
-            _isUpdating = false;
         }
 
         private void LoadArtwork()
@@ -902,6 +912,80 @@ namespace DeadEditor
             {
                 System.Windows.Clipboard.SetText(mbid);
                 StatusTextBlock.Text = "MBID copied to clipboard";
+            }
+        }
+
+        // ===== FINGERPRINT BUTTON =====
+
+        private async void FingerprintButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_tracks.Count == 0)
+            {
+                StatusTextBlock.Text = "No tracks loaded";
+                return;
+            }
+
+            try
+            {
+                FingerprintButton.IsEnabled = false;
+                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsIndeterminate = false;
+                ProgressBar.Maximum = _tracks.Count;
+                ProgressBar.Value = 0;
+
+                var librarySettings = LibrarySettings.Load();
+                var musicBrainzService = new MusicBrainzService("asa4wLQhwJ", librarySettings);
+                var fingerprintService = new FingerprintService(musicBrainzService);
+
+                var trackList = _tracks.Select(t => t.Track).ToList();
+
+                // Progress<T> captures the construction-time SynchronizationContext, so this
+                // lambda fires on the UI thread. Safe to touch StatusTextBlock and ProgressBar.
+                var progress = new Progress<(int current, int total, string message)>(report =>
+                {
+                    StatusTextBlock.Text = report.message;
+                    ProgressBar.Value = report.current;
+                    UpdateFingerprintSummary();
+                });
+
+                // Run the entire batch off the UI thread. onTrackComplete also wraps in
+                // Task.Run because TagLib.File.Save is synchronous.
+                var result = await Task.Run(() => fingerprintService.PrecomputeFingerprintsAsync(
+                    trackList,
+                    progress,
+                    onTrackComplete: t => Task.Run(() => FingerprintService.WriteFingerprintToTrackFile(t))));
+
+                var attempted = trackList.Count - result.SkippedExisting;
+                string finalStatus;
+                if (attempted == 0)
+                {
+                    finalStatus = "All tracks already fingerprinted";
+                }
+                else if (!result.FpcalcAvailable)
+                {
+                    finalStatus = "fpcalc not configured — open Settings to configure";
+                }
+                else if (result.Failed == 0)
+                {
+                    finalStatus = $"Fingerprinted {result.Computed} tracks";
+                }
+                else
+                {
+                    finalStatus = $"Fingerprinted {result.Computed} tracks ({result.Failed} failed)";
+                }
+
+                StatusTextBlock.Text = finalStatus;
+                UpdateFingerprintSummary();
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Fingerprint error: {ex.Message}";
+                Debug.WriteLine($"[FINGERPRINT] {ex}");
+            }
+            finally
+            {
+                FingerprintButton.IsEnabled = true;
+                ProgressBar.Visibility = Visibility.Collapsed;
             }
         }
 
