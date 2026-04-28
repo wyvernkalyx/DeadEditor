@@ -429,6 +429,17 @@
                             ToolTip="Copy MBID to clipboard"/>
                 </Grid>
 
+                <!-- Fingerprint summary -->
+                <Label Content="FINGERPRINTS" Foreground="#999999" FontSize="11"
+                       Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="FingerprintSummaryText"
+                           Text="—"
+                           Foreground="#888888"
+                           FontSize="11"
+                           HorizontalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="Per-track Chromaprint fingerprint coverage"/>
+
                 <!-- Track count -->
                 <TextBlock x:Name="TrackCountText"
                            Text="0 tracks"

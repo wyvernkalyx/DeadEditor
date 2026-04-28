@@ -63,6 +63,8 @@ namespace DeadEditor
                         AddField("ALBUMNAME", xiph.GetFirstField("ALBUMNAME") ?? "");
                         AddField("ALBUMTYPE", xiph.GetFirstField("ALBUMTYPE") ?? "");
                         AddField("Release MBID", xiph.GetFirstField("MUSICBRAINZ_ALBUMID") ?? "");
+                        var fpRaw = xiph.GetFirstField("ACOUSTID_FINGERPRINT") ?? "";
+                        AddField("Acoustid Fingerprint", TrackInfo.FormatFingerprintForDisplay(fpRaw), fpRaw);
                     }
                 }
                 // Custom MP3 ID3v2 fields
@@ -77,6 +79,8 @@ namespace DeadEditor
                         AddField("ALBUMNAME", GetId3v2TextField(id3v2, "ALBUMNAME"));
                         AddField("ALBUMTYPE", GetId3v2TextField(id3v2, "ALBUMTYPE"));
                         AddField("Release MBID", GetId3v2TextField(id3v2, "MusicBrainz Album Id"));
+                        var fpRaw = GetId3v2TextField(id3v2, "Acoustid Fingerprint");
+                        AddField("Acoustid Fingerprint", TrackInfo.FormatFingerprintForDisplay(fpRaw), fpRaw);
                     }
                 }
             }
@@ -121,6 +125,12 @@ namespace DeadEditor
         }
 
         private void AddField(string label, string value)
+            => AddField(label, value, value);
+
+        // Display-vs-clipboard variant: shows displayValue, copies clipboardValue.
+        // The copy button is shown when clipboardValue is non-empty (display may be a
+        // truncated form like "AQADtMmS_\u2026" while the clipboard receives the full string).
+        private void AddField(string label, string displayValue, string? clipboardValue)
         {
             var row = new Grid { Margin = new Thickness(0, 4, 0, 4) };
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(110) });
@@ -137,11 +147,12 @@ namespace DeadEditor
             Grid.SetColumn(labelBlock, 0);
             row.Children.Add(labelBlock);
 
+            var isEmpty = string.IsNullOrEmpty(displayValue);
             var valueBlock = new TextBlock
             {
-                Text = string.IsNullOrEmpty(value) ? "\u2014" : value,
+                Text = isEmpty ? "\u2014" : displayValue,
                 Foreground = new SolidColorBrush(
-                    string.IsNullOrEmpty(value)
+                    isEmpty
                         ? System.Windows.Media.Color.FromRgb(0x66, 0x66, 0x66)
                         : System.Windows.Media.Color.FromRgb(0xE0, 0xE0, 0xE0)),
                 FontSize = 13,
@@ -152,13 +163,13 @@ namespace DeadEditor
             Grid.SetColumn(valueBlock, 1);
             row.Children.Add(valueBlock);
 
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(clipboardValue))
             {
                 var copyBtn = new System.Windows.Controls.Button
                 {
                     Content = "\U0001F4CB",
                     Style = (Style)FindResource("CopyButtonStyle"),
-                    Tag = value
+                    Tag = clipboardValue
                 };
                 copyBtn.Click += CopyButton_Click;
                 Grid.SetColumn(copyBtn, 2);

@@ -240,6 +240,17 @@ namespace DeadEditor.Models
             }
         }
 
+        // Truncates a Chromaprint fingerprint for compact display (first 12 chars + ellipsis).
+        // Returns em-dash for null/empty/whitespace; full value when length <= 12.
+        // Callers using this for a copy-to-clipboard affordance must keep the raw value
+        // separately - the truncated form is display-only.
+        public static string FormatFingerprintForDisplay(string? fingerprint)
+        {
+            if (string.IsNullOrWhiteSpace(fingerprint)) return "—";
+            if (fingerprint.Length <= 12) return fingerprint;
+            return fingerprint.Substring(0, 12) + "…";
+        }
+
         // Override Equals and GetHashCode for value-based equality (needed for IndexOf in playlists)
         // Two tracks are equal if they refer to the same file
         public override bool Equals(object? obj)

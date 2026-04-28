@@ -115,4 +115,39 @@ Four new tests, parallel to the MBID pair on both paths:
 - Parallel `fpcalc` invocations (Commit 2b)
 - "Re-fingerprint" affordance to force recomputation when audio is re-encoded externally
 - End-to-end `fpcalc` tests with real audio fixtures
-- Surfacing fingerprint values in Track Info dialog or Edit Metadata view
+- Library Grid badges or per-row fingerprint indicators (deferred to Commit 3.5)
+
+## 9. UI Surfacing (Commit 3)
+
+Fingerprint state is shown in two places, with **deliberately asymmetric treatment** because the data is per-track and the two surfaces operate at different levels of granularity. There is no single "the album's fingerprint" to display.
+
+### 9.1 Track Info dialog (per-track)
+
+The Track Info dialog ([TrackInfoDialog.xaml.cs](../TrackInfoDialog.xaml.cs)) shows one track's metadata. A new field row is added after the existing `Release MBID` row in both the FLAC branch and the MP3 branch:
+
+- **Label:** `Acoustid Fingerprint`
+- **Value source:** read directly from disk via `xiph.GetFirstField("ACOUSTID_FINGERPRINT")` (FLAC) or the `Acoustid Fingerprint` TXXX frame (MP3) — same disk-read pattern used for every other field in this dialog.
+- **Display:** truncated via `TrackInfo.FormatFingerprintForDisplay` — first 12 chars + horizontal-ellipsis when length > 12; full value when ≤ 12; em-dash when null/empty/whitespace.
+- **Copy button:** copies the **full** raw fingerprint, not the truncated display. Implemented via a small `AddField(label, displayValue, clipboardValue)` overload that decouples the visible string from the clipboard payload. The button is suppressed when the raw fingerprint is empty.
+
+### 9.2 Edit Metadata view (album-level summary)
+
+The Edit Metadata view ([Views/EditMetadataView.xaml](../Views/EditMetadataView.xaml)) operates at album level, so showing one fingerprint in its sidebar would misrepresent the data. Instead, the sidebar carries a **coverage summary** beneath the existing MBID row:
+
+- **Label:** `FINGERPRINTS`
+- **Three states**, computed in `RefreshUI` by counting `_tracks` where `Track.AcoustIdFingerprint` is not null/whitespace:
+  - `All tracks fingerprinted` — every track has a fingerprint
+  - `N / M tracks fingerprinted` — partial coverage (`0 < N < M`)
+  - `No fingerprints` — none of the tracks have a fingerprint
+- **Value source:** in-memory `_tracks` collection only. No tag re-reads from disk — `MetadataService.ReadFolder` already populates `TrackInfo.AcoustIdFingerprint` at folder-load per § 2.
+- **No copy button** — there is no single value to copy. Users who need a specific track's fingerprint open Track Info for that track.
+
+### 9.3 Truncation helper
+
+`TrackInfo.FormatFingerprintForDisplay(string?)` ([Models/TrackInfo.cs](../Models/TrackInfo.cs)) is the single source of truth for the truncation rule. Edit Metadata's summary does not use it (no truncation needed — the summary is plain English), but the Track Info dialog uses it directly.
+
+### 9.4 Deferred
+
+- Library Grid per-row fingerprint badges — deferred to Commit 3.5 because they touch scan-time performance.
+- "Verify fingerprint" affordance (recompute and compare) — queued, not in this commit.
+- Editable fingerprint field — fingerprints are derived from audio bytes, so user-editable display would be misleading.

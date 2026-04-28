@@ -244,6 +244,31 @@ namespace DeadEditor
                 MbidCopyButton.Visibility = Visibility.Collapsed;
             }
 
+            // Fingerprint coverage summary - aggregate over the in-memory tracks
+            // (populated at folder-load per fingerprint-persistence-spec \u00a7 2).
+            var totalTracks = _tracks.Count;
+            var fingerprinted = _tracks.Count(t => !string.IsNullOrWhiteSpace(t.Track.AcoustIdFingerprint));
+            if (totalTracks == 0)
+            {
+                FingerprintSummaryText.Text = "\u2014";
+                FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+            }
+            else if (fingerprinted == 0)
+            {
+                FingerprintSummaryText.Text = "No fingerprints";
+                FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+            }
+            else if (fingerprinted == totalTracks)
+            {
+                FingerprintSummaryText.Text = "All tracks fingerprinted";
+                FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
+            }
+            else
+            {
+                FingerprintSummaryText.Text = $"{fingerprinted} / {totalTracks} tracks fingerprinted";
+                FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
+            }
+
             // Enable Match Setlist button if setlist data exists for this date
             UpdateMatchSetlistButton();
 
