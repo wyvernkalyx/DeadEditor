@@ -309,143 +309,74 @@ private bool HasSegueMarker(string title)
 public (string songName, bool hasSegue, string? date) ParseTitleAndDate(string title, string? albumDate = null)
 ```
 
-**Purpose:** Parse track title to separate song name from trailing date suffix, handling both MusicBrainz format (M/D/YYYY in "Live at..." parentheses) and DeadEditor format (yyyy-MM-dd). This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields.
+**Delegation note (commit Y2K-2c):** This method is now a thin wrapper that delegates to [`TitleStructureParser.Parse`](../Services/TitleStructureParser.cs). The parsing rules — paren/bracket classification, date extraction, segue handling — are documented in [title-structure-parser-spec.md](title-structure-parser-spec.md). The richer `Venue` and `RawMetadataFragments` fields produced by the parser are dropped here to preserve the legacy `(songName, hasSegue, date)` tuple shape; no caller currently consumes them.
+
+**Purpose:** Parse track title to separate song name from trailing date suffix. This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields, and from EditMetadataView to clean raw FLAC titles before normalization.
 
 **Parameters:**
 - `title` (string) - Full title from ID3 tag (e.g., "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__")
-- `albumDate` (string?, optional) - Album date in `yyyy-MM-dd` or `yyyy` form. When supplied, two-digit years in PATTERN 1C/1D are resolved against the album's century where consistent (within ±1 year). When null, a `currentYear+5` pivot is used. See [12-normalization-service.md § Two-Digit Year Resolution](12-normalization-service.md#two-digit-year-resolution).
+- `albumDate` (string?, optional) - Album date in `yyyy-MM-dd` or `yyyy` form. Forwarded to the parser for two-digit-year resolution. When supplied, two-digit years are resolved against the album's century where consistent (within ±1 year). When null, a `currentYear+5` pivot is used. See [12-normalization-service.md § Two-Digit Year Resolution](12-normalization-service.md#two-digit-year-resolution).
 
 **Return Value:** Tuple of (songName, hasSegue, date)
-- `songName` - Song name with date/venue stripped (e.g., "Jack Straw")
-- `hasSegue` - `true` if the original title contained a segue marker (`>`, `->`, `→`, etc.)
+- `songName` - Song name with metadata parens/brackets stripped, canonical parens preserved (e.g., "Jack Straw" or "The Stranger (Two Souls in Communion)")
+- `hasSegue` - `true` if the original title contained a segue marker (`>`, `->`, `→`, `[>]`, etc.)
 - `date` - Date in yyyy-MM-dd format, or null if no date found
 
-**Regex Patterns (checked in order):**
+**Parsing pipeline:** Refer to [title-structure-parser-spec.md](title-structure-parser-spec.md) for the seven-step pipeline (cosmetic prep → artist-suffix strip → year-tour suffix strip → paren/bracket walk with content-vs-metadata classification → segue handling → dash normalization → whitespace collapse) and the classification rules (ISO/year-first/US-slash dates, US/Canadian state codes, "Live at"/"Filler:"/"Remaster"/"Reprise"/standalone "Live" markers). The parser supersedes the pattern-by-pattern regex stack that previously lived in this method.
 
-**Pattern 1: MusicBrainz format with M/D/YYYY in parentheses**
-```csharp
-@"^(.+?)\s*\(Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$"
-```
-
-**Pattern Explanation:**
-- `^(.+?)` - Capture group 1: Song name (non-greedy, before opening paren)
-- `\s*\(Live (?:at|in) ` - "(Live at..." or "(Live in..." (case-insensitive)
-- `.+?[,\s]\s*` - Venue/location text ending with comma or space (handles both "IL, 2/1/1978" and "NY 2/21/1971")
-- `(\d{1,2})/(\d{1,2})/(\d{4})` - Groups 2-4: M/D/YYYY date
-- `\)` - Closing paren
-- `(?:\s*\[[^\]]*\])*` - Optional bracket suffixes (e.g., "[2020 Remaster]", zero or more)
-- `(?:\s*-\s*.+)?$` - Optional artist suffix (e.g., " - Grateful Dead__")
-
-**Pattern 1B: MusicBrainz format with M/D/YYYY in square brackets**
-```csharp
-@"^(.+?)\s*\[Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\](?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$"
-```
-
-Same as Pattern 1 but for square-bracket venue info: `"Song (False Start) [Live at Venue, City, ST 2/21/1971] [2020 Remaster]"`. Song name preserves subtitles like "(False Start)".
-
-**Pattern 2: yyyy-MM-dd date with any suffix**
-```csharp
-@"^(.+?)\s*\((\d{4}-\d{2}-\d{2})[^)]*\)\s*$"
-```
-
-**Pattern Explanation:**
-- `^(.+?)` - Capture group 1: Song name (non-greedy). Because it's non-greedy, the regex engine skips parentheticals that don't start with a date (e.g., "(Two Souls In Communion)") and only matches the LAST parenthetical that contains a yyyy-MM-dd date.
-- `\s*` - Optional whitespace before paren
-- `\(` - Opening parenthesis (escaped)
-- `(\d{4}-\d{2}-\d{2})` - Capture group 2: Date in yyyy-MM-dd format
-- `[^)]*` - Any remaining text inside parentheses (venue, tour name, location — all discarded)
-- `\)` - Closing parenthesis (escaped)
-- `\s*$` - Optional trailing whitespace
-
-**Pattern 3: Year-only + tour/album name**
-```csharp
-@"^(.+?)\s*\((\d{4})\s*[-–]\s*[^)]+\)\s*$"
-```
-
-**Pattern Explanation:**
-- `^(.+?)` - Capture group 1: Song name (non-greedy, same subtitle-preserving behavior as Pattern 2)
-- `\s*\(` - Opening parenthesis
-- `(\d{4})` - Capture group 2: 4-digit year (not used — year alone isn't a concert date)
-- `\s*[-–]\s*` - Dash separator (hyphen or en-dash) with optional spaces
-- `[^)]+` - Tour/album name text (e.g., "Europe '72")
-- `\)\s*$` - Closing parenthesis, end of string
-
-**Note:** Pattern 3 strips the year+tour suffix but returns `null` for date because a year alone is not a full concert date.
-
-**Supported Formats:**
+**Worked examples** (the parser handles each via the pipeline above):
 
 1. **MusicBrainz with artist suffix:** `"Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__"`
-   - Returns: `("Jack Straw", "1978-02-01")`
+   - Returns: `("Jack Straw", false, "1978-02-01")`
 
 2. **MusicBrainz without artist suffix:** `"Terrapin Station (Live in Chicago, 1/31/1978)"`
-   - Returns: `("Terrapin Station", "1978-01-31")`
+   - Returns: `("Terrapin Station", false, "1978-01-31")`
 
 2b. **MusicBrainz with [Remaster] suffix:** `"Cold Rain And Snow (Live at the Capitol Theatre, Port Chester, NY 2/21/1971) [2020 Remaster]"`
-   - Returns: `("Cold Rain And Snow", "1971-02-21")`
+   - Returns: `("Cold Rain And Snow", false, "1971-02-21")`
 
 2c. **MusicBrainz with [Remaster] + artist:** `"Song (Live at Venue, City, ST, 3/15/1990) [2020 Remaster] - Grateful Dead__"`
-   - Returns: `("Song", "1990-03-15")`
+   - Returns: `("Song", false, "1990-03-15")`
 
 2d. **MusicBrainz square-bracket venue with subtitle:** `"Ripple (False Start) [Live at the Capitol Theatre, Port Chester, NY 2/21/1971] [2020 Remaster]"`
-   - Returns: `("Ripple (False Start)", "1971-02-21")`
+   - Returns: `("Ripple (False Start)", false, "1971-02-21")` — canonical-paren `(False Start)` survives because no metadata signal fires inside it.
 
 3. **Simple yyyy-MM-dd date:** `"Bertha (1971-04-27)"`
-   - Returns: `("Bertha", "1971-04-27")`
+   - Returns: `("Bertha", false, "1971-04-27")`
 
 4. **Date with venue (dash-separated):** `"Mama Tried (1971-04-26 - New York, NY - Fillmore East)"`
-   - Returns: `("Mama Tried", "1971-04-26")`
+   - Returns: `("Mama Tried", false, "1971-04-26")`
 
 5. **Date with full metadata:** `"Johnny B. Goode (1971-03-24 - San Francisco, CA - Winterland - Skull & Roses)"`
-   - Returns: `("Johnny B. Goode", "1971-03-24")`
+   - Returns: `("Johnny B. Goode", false, "1971-03-24")`
 
 6. **Full date + tour name (space-separated):** `"He's Gone (1972-05-10 Europe '72)"`
-   - Returns: `("He's Gone", "1972-05-10")`
+   - Returns: `("He's Gone", false, "1972-05-10")`
 
 7. **Song with subtitle + full date + tour:** `"The Stranger (Two Souls In Communion) (1972-05-10 Europe '72)"`
-   - Returns: `("The Stranger (Two Souls In Communion)", "1972-05-10")`
+   - Returns: `("The Stranger (Two Souls In Communion)", false, "1972-05-10")`
 
 8. **Year-only + tour name:** `"Good Lovin' (1972 - Europe '72)"`
-   - Returns: `("Good Lovin'", null)` — suffix stripped, no full date extracted
+   - Returns: `("Good Lovin'", false, null)` — year-tour suffix stripped, no full date extracted (year alone isn't a concert date).
 
 9. **Song with subtitle + year-only + tour:** `"The Stranger (Two Souls In Communion) (1972 - Europe '72)"`
-   - Returns: `("The Stranger (Two Souls In Communion)", null)`
+   - Returns: `("The Stranger (Two Souls In Communion)", false, null)`
 
 10. **No date:** `"Radio AD"`
-    - Returns: `("Radio AD", null)`
+    - Returns: `("Radio AD", false, null)`
 
-**Business Logic:**
-1. Return immediately if title is null/whitespace
-2. Try Pattern 1 (MusicBrainz M/D/YYYY in parentheses):
-   - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name (Regex: `@"(\s*[-–]?\s*>)+\s*$"`)
-   - Extract month/day/year from groups 2-4
-   - Convert to yyyy-MM-dd format
-   - Return tuple
-3. If no match, try Pattern 1B (MusicBrainz M/D/YYYY in square brackets):
-   - Same extraction logic as Pattern 1
-4. If no match, try Pattern 2 (yyyy-MM-dd with any suffix):
-   - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name (Regex: `@"(\s*[-–]?\s*>)+\s*$"`)
-   - Extract date from group 2 (already yyyy-MM-dd)
-   - Return tuple
-5. If no match, try Pattern 3 (year-only + tour name):
-   - Extract song name from group 1, trim whitespace
-   - **Strip trailing segue markers** from song name
-   - Return (songName, null) — suffix stripped but no full date to extract
-6. If no match from any pattern:
-   - **Strip trailing segue markers** from title
-   - Return (cleaned title, null)
+11. **Venue-first paren with M/D/YY** (newly supported via the parser): `"Cold Rain And Snow (San Francisco, 11/2/69)"`
+    - Returns: `("Cold Rain And Snow", false, "1969-11-02")` — previously fell through to the no-match path.
 
 **Business Rules:**
-- **MusicBrainz priority:** Pattern 1 (M/D/YYYY) checked first to handle MusicBrainz titles
-- **Date format conversion:** M/D/YYYY converted to yyyy-MM-dd for consistency
-- **Venue stripping:** MusicBrainz "(Live at...)" parenthetical completely removed from song name
-- **Artist suffix handling:** " - Artist__" suffix stripped automatically
-- **Date-first extraction:** Pulls yyyy-MM-dd date and discards venue/location/album metadata
-- **Whitespace handling:** Trims trailing spaces from song name
-- **Graceful fallback:** Returns original title unchanged if no date pattern found
-- **Prevents date doubling:** ParseTitleAndDate strips existing dates during ReadFolder, preventing duplicate dates when re-importing already-formatted files
-- **FIX 1: Segue marker stripping:** All four return paths strip trailing segue markers (" >", " ->", " - >", " –>") from songName using greedy regex `@"(\s*[-–]?\s*>)+\s*$"`. The `+` quantifier handles multiple/doubled segue markers (e.g., "Dark Star > >" → "Dark Star"). The segue state is captured by the HasSegue boolean flag — it should not also live in the SongName string.
+- **Two-digit-year resolution:** Years < 100 are routed through `TwoDigitYearResolver.ResolveTwoDigitYear` using `albumDate` when provided.
+- **Date format conversion:** M/D/YYYY (and validated M/D/YY) are converted to yyyy-MM-dd for consistency.
+- **Canonical-paren preservation:** Parens/brackets without a metadata signal (date, state code, "Live at", "Filler:", "Remaster", "Reprise", standalone "Live") are preserved verbatim — e.g., `"Caution (Do Not Stop on Tracks)"`, `"The Stranger (Two Souls in Communion)"`.
+- **Artist suffix handling:** " - Artist__" suffix stripped automatically.
+- **Date-first extraction:** Pulls a date from any metadata fragment and discards venue/location/album metadata from the song name.
+- **Graceful fallback:** Returns original title unchanged (modulo whitespace collapse and dash normalization) if no metadata fragment is found.
+- **Prevents date doubling:** Strips existing date suffixes during ReadFolder, preventing duplicate dates when re-importing already-formatted files.
+- **Segue marker stripping:** Trailing segue markers (`>`, `->`, `–>`, `→`, `[>]` and repeated forms like `> > >`) are stripped from song name; embedded segue markers (mid-title) are preserved per the spec's embedded-segue rule. The segue state is captured by the `hasSegue` boolean flag.
 - **Public visibility:** ParseTitleAndDate is public so EditMetadataView can call it to clean raw FLAC titles before normalization, giving the normalizer the same clean input it gets in import mode.
 
 **Usage in ReadFolder:**

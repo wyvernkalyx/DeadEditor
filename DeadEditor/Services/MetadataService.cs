@@ -501,160 +501,24 @@ namespace DeadEditor.Services
         /// Parses a noisy title (which may contain trailing segue markers and/or date suffixes)
         /// into clean components: song name, segue flag, and date.
         /// The returned songName is clean: no segue marker, no date suffix, no extra whitespace.
+        /// <para>
+        /// As of commit Y2K-2c, this method is a thin wrapper that delegates to
+        /// <see cref="TitleStructureParser.Parse"/>. The richer <c>Venue</c> and
+        /// <c>RawMetadataFragments</c> fields produced by the parser are dropped here to preserve
+        /// the legacy <c>(songName, hasSegue, date)</c> tuple shape; no caller currently consumes them.
+        /// </para>
         /// </summary>
         /// <param name="title">Full title from ID3 tag or MB API, e.g. "Dark Star > (1968-02-23)"</param>
-        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). When provided,
-        /// two-digit years in PATTERN 1C/1D are resolved against the album's century where
-        /// possible. See <see cref="TwoDigitYearResolver"/>.</param>
+        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). Forwarded to the parser
+        /// for two-digit-year resolution. See <see cref="TwoDigitYearResolver"/>.</param>
         /// <returns>Tuple of (songName, hasSegue, date). Date is null if no date found.</returns>
         public (string songName, bool hasSegue, string? date) ParseTitleAndDate(string title, string? albumDate = null)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return (title, false, null);
 
-            // Detect segue from the raw title before any stripping
-            bool hasSegue = HasSegueMarker(title);
-
-            // PATTERN 1: MusicBrainz format with M/D/YYYY date inside "(Live at/in...)" parentheses
-            // Examples:
-            //   "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__"
-            //   "Terrapin Station (Live in Chicago, 1/31/1978)"
-            //   "Cold Rain And Snow (Live at the Capitol Theatre, Port Chester, NY 2/21/1971) [2020 Remaster]"
-            //   "Ripple (Live at the Capitol Theatre, Port Chester, NY 2/21/1971) [2020 Remaster] - Grateful Dead__"
-            //
-            // Regex pattern: "(Live at/in ...[,/ ]M/D/YYYY) [optional bracket suffix] [optional artist suffix]"
-            // Captures:
-            //   Group 1: Song name (everything before opening paren)
-            //   Group 2: Month (1 or 2 digits)
-            //   Group 3: Day (1 or 2 digits)
-            //   Group 4: Year (4 digits)
-            // The entire "(Live at...)" parenthetical and any bracket/artist suffix are stripped
-            var match = Regex.Match(title, @"^(.+?)\s*\(Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\)(?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$", RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                var songName = match.Groups[1].Value.Trim();
-                // Strip trailing segue markers (" >" or " > ") from song name
-                // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
-                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-
-                var month = int.Parse(match.Groups[2].Value);
-                var day = int.Parse(match.Groups[3].Value);
-                var year = int.Parse(match.Groups[4].Value);
-
-                // Convert M/D/YYYY to yyyy-MM-dd format
-                var date = $"{year:D4}-{month:D2}-{day:D2}";
-                return (songName, hasSegue, date);
-            }
-
-            // PATTERN 1B: MusicBrainz format with M/D/YYYY date inside "[Live at/in...]" square brackets
-            // Examples:
-            //   "Ripple (False Start) [Live at the Capitol Theatre, Port Chester, NY 2/21/1971] [2020 Remaster]"
-            match = Regex.Match(title, @"^(.+?)\s*\[Live (?:at|in) .+?[,\s]\s*(\d{1,2})/(\d{1,2})/(\d{4})\](?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$", RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                var songName = match.Groups[1].Value.Trim();
-                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-
-                var month = int.Parse(match.Groups[2].Value);
-                var day = int.Parse(match.Groups[3].Value);
-                var year = int.Parse(match.Groups[4].Value);
-
-                var date = $"{year:D4}-{month:D2}-{day:D2}";
-                return (songName, hasSegue, date);
-            }
-
-            // PATTERN 1C: Square bracket venue with M/D/YY or M/D/YYYY date (no "Live at/in" prefix)
-            // Handles official releases and box sets where MusicBrainz tags use bracket venue/date format
-            // Examples:
-            //   "Promised Land [Kiel Opera House, St. Louis, MO 12/9/71]"
-            //   "Bird Song [Fox Theatre, St. Louis, MO 12/9/1971]"
-            //   "Bertha [12/31/71, Winterland Arena, San Francisco, CA]"
-            match = Regex.Match(title, @"^(.+?)\s*\[.*?(\d{1,2})/(\d{1,2})/(\d{2,4}).*?\](?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$");
-            if (match.Success)
-            {
-                var songName = match.Groups[1].Value.Trim();
-                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-
-                var month = int.Parse(match.Groups[2].Value);
-                var day = int.Parse(match.Groups[3].Value);
-                var year = int.Parse(match.Groups[4].Value);
-                year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
-
-                if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
-                {
-                    var date = $"{year:D4}-{month:D2}-{day:D2}";
-                    return (songName, hasSegue, date);
-                }
-            }
-
-            // PATTERN 1D: Parenthetical with slash date and venue (no "Live at/in" prefix)
-            // Handles titles where a slash-formatted date appears at the start of the parenthetical
-            // Examples:
-            //   "Bird Song (12/9/71 Fox Theatre, St. Louis, MO)"
-            //   "Sugar Magnolia (10/18/72 Fox Theatre)"
-            match = Regex.Match(title, @"^(.+?)\s*\((\d{1,2})/(\d{1,2})/(\d{2,4})\s+[^)]+\)(?:\s*\[[^\]]*\])*(?:\s*-\s*.+)?$");
-            if (match.Success)
-            {
-                var songName = match.Groups[1].Value.Trim();
-                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-
-                var month = int.Parse(match.Groups[2].Value);
-                var day = int.Parse(match.Groups[3].Value);
-                var year = int.Parse(match.Groups[4].Value);
-                year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
-
-                if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
-                {
-                    var date = $"{year:D4}-{month:D2}-{day:D2}";
-                    return (songName, hasSegue, date);
-                }
-            }
-
-            // PATTERN 2: yyyy-MM-dd date in parentheses (with any optional suffix)
-            // Matches the LAST parenthetical that starts with yyyy-MM-dd.
-            // The non-greedy .+? skips parentheticals that don't start with a date,
-            // so subtitles like "(Two Souls In Communion)" are preserved in the song name.
-            // Examples:
-            //   "Bertha (1971-04-27)" → ("Bertha", "1971-04-27")
-            //   "Mama Tried (1971-04-26 - New York, NY - Fillmore East)" → ("Mama Tried", "1971-04-26")
-            //   "He's Gone (1972-05-10 Europe '72)" → ("He's Gone", "1972-05-10")
-            //   "The Stranger (Two Souls In Communion) (1972-05-10 Europe '72)" → ("The Stranger (Two Souls In Communion)", "1972-05-10")
-            //
-            // Captures:
-            //   Group 1: Song name (everything before the date parenthetical, may include earlier parentheticals)
-            //   Group 2: Date in yyyy-MM-dd format
-            //   (Discards everything after the date inside the parentheses)
-            match = Regex.Match(title, @"^(.+?)\s*\((\d{4}-\d{2}-\d{2})[^)]*\)\s*$");
-            if (match.Success)
-            {
-                var songName = match.Groups[1].Value.Trim();
-                // Strip trailing segue markers (" >" or " > " or " > > ") from song name
-                // The segue state is captured by the Segue/HasSegue boolean - it should not also live in SongName
-                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-
-                var date = match.Groups[2].Value;
-                return (songName, hasSegue, date);
-            }
-
-            // PATTERN 3: Year-only + tour/album name in parentheses
-            // Matches the LAST parenthetical that starts with a 4-digit year followed by
-            // a dash separator and descriptive text (tour name, album name, etc.).
-            // Only the suffix is stripped; no full date is extracted (year alone isn't a concert date).
-            // Examples:
-            //   "Good Lovin' (1972 - Europe '72)" → ("Good Lovin'", null)
-            //   "The Stranger (Two Souls In Communion) (1972 - Europe '72)" → ("The Stranger (Two Souls In Communion)", null)
-            match = Regex.Match(title, @"^(.+?)\s*\((\d{4})\s*[-–]\s*[^)]+\)\s*$");
-            if (match.Success)
-            {
-                var songName = match.Groups[1].Value.Trim();
-                songName = Regex.Replace(songName, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-                return (songName, hasSegue, null);
-            }
-
-            // No date found - return original title with no date
-            // Still strip segue markers from song name if present
-            var cleanTitle = Regex.Replace(title, @"(\s*[-–]?\s*>)+\s*$", "").Trim();
-            return (cleanTitle, hasSegue, null);
+            var result = TitleStructureParser.Parse(title, albumDate);
+            return (result.SongName, result.HasSegue, result.TrackDate);
         }
 
         private string? ExtractDateFromTitle(string title)
