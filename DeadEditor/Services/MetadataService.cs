@@ -503,8 +503,11 @@ namespace DeadEditor.Services
         /// The returned songName is clean: no segue marker, no date suffix, no extra whitespace.
         /// </summary>
         /// <param name="title">Full title from ID3 tag or MB API, e.g. "Dark Star > (1968-02-23)"</param>
+        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). When provided,
+        /// two-digit years in PATTERN 1C/1D are resolved against the album's century where
+        /// possible. See <see cref="TwoDigitYearResolver"/>.</param>
         /// <returns>Tuple of (songName, hasSegue, date). Date is null if no date found.</returns>
-        public (string songName, bool hasSegue, string? date) ParseTitleAndDate(string title)
+        public (string songName, bool hasSegue, string? date) ParseTitleAndDate(string title, string? albumDate = null)
         {
             if (string.IsNullOrWhiteSpace(title))
                 return (title, false, null);
@@ -575,7 +578,7 @@ namespace DeadEditor.Services
                 var month = int.Parse(match.Groups[2].Value);
                 var day = int.Parse(match.Groups[3].Value);
                 var year = int.Parse(match.Groups[4].Value);
-                if (year < 100) year += (year >= 70) ? 1900 : 2000;
+                year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
 
                 if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
                 {
@@ -598,7 +601,7 @@ namespace DeadEditor.Services
                 var month = int.Parse(match.Groups[2].Value);
                 var day = int.Parse(match.Groups[3].Value);
                 var year = int.Parse(match.Groups[4].Value);
-                if (year < 100) year += (year >= 70) ? 1900 : 2000;
+                year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
 
                 if (month >= 1 && month <= 12 && day >= 1 && day <= 31 && year >= 1900 && year <= 2100)
                 {

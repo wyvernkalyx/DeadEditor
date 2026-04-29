@@ -628,13 +628,14 @@ public bool AddAlias(string officialTitle, string alias)
 
 **Signature:**
 ```csharp
-private string NormalizeDateInTitle(string title)
+public string NormalizeDateInTitle(string title, string? albumDate = null)
 ```
 
 **Purpose:** Parse slash-formatted dates in parenthetical suffixes, strip venue info, convert to yyyy-MM-dd format.
 
 **Parameters:**
 - `title` (string) - Track title with potential date suffix
+- `albumDate` (string?, optional) - Album date in `yyyy-MM-dd` or `yyyy` form. When supplied, two-digit years are resolved against the album's century where consistent (within ±1 year). When null, a `currentYear+5` pivot is used. See [Two-Digit Year Resolution](#two-digit-year-resolution) below.
 
 **Return Value:** `string` - Title with normalized date or unchanged if no date found
 
@@ -658,7 +659,7 @@ private string NormalizeDateInTitle(string title)
      * year = part1, month = part2, day = part3
    - `M/d/yy` format:
      * month = part1, day = part2, year = part3
-     * If year < 100, add 1900 or 2000 (assumes 1970-2069 range)
+     * Two-digit year resolution delegates to [`TwoDigitYearResolver.ResolveTwoDigitYear`](../Services/TwoDigitYearResolver.cs). See [Two-Digit Year Resolution](#two-digit-year-resolution) below.
 
 4. **Reconstruct title**:
    - Extract base title (before date parentheses)
@@ -674,9 +675,57 @@ private string NormalizeDateInTitle(string title)
 - Invalid date parsing → return original title unchanged
 - Date components out of range → return original title unchanged
 
-**Year Inference Rules (2-digit years):**
-- 70-99 → 1970-1999
-- 00-69 → 2000-2069
+**Two-digit year resolution:** See [Two-Digit Year Resolution](#two-digit-year-resolution).
+
+---
+
+## Two-Digit Year Resolution
+
+**Status:** Bug fix — replaced a hard-coded `year >= 70 ? 1900 : 2000` pivot at four sites that previously misclassified pre-1970 dates as 21st-century. With no test coverage, the bug went unnoticed until an audit. This section documents the new strategy and the helper that backs it; the audit also added the first regression test coverage for these parsers.
+
+**Helper:** [`TwoDigitYearResolver.ResolveTwoDigitYear(int twoDigitYear, string? albumDate, int? currentYear)`](../Services/TwoDigitYearResolver.cs) — a stateless static helper used by:
+
+| Site | Method |
+|------|--------|
+| 1 | [`NormalizationService.NormalizeDateInTitle`](../Services/NormalizationService.cs) |
+| 2 | [`NormalizationService.ParseSlashDate`](../Services/NormalizationService.cs) (private, via `ExtractDateFromRawTitle` from `NormalizeAll`) |
+| 3 | [`MetadataService.ParseTitleAndDate`](../Services/MetadataService.cs) PATTERN 1C (square bracket venue + slash date) |
+| 4 | [`MetadataService.ParseTitleAndDate`](../Services/MetadataService.cs) PATTERN 1D (parenthetical with slash date and venue) |
+
+### Rules
+
+The helper applies two rules in order:
+
+**Rule 1 — Album-date preference.** If `albumDate` parses as a four-digit year, build a candidate four-digit year by combining the album's century with the two-digit input. If that candidate is within ±1 of the album year, use it. The ±1 fuzz handles year-boundary recordings (e.g., a track from `1972-01-01` on an album dated `1971-12-31`).
+
+**Rule 2 — Pivot fallback.** Otherwise pivot at `currentYear + 5`:
+
+- Years ≤ pivot → current century (e.g., `25` → `2025` in 2026)
+- Years > pivot → previous century (e.g., `69` → `1969` in 2026)
+
+The pivot tracks wall-clock time, so the strategy stays correct as years pass.
+
+### Examples (currentYear = 2026, pivot = 31)
+
+| Input | Album date | Result | Reason |
+|-------|------------|--------|--------|
+| `69` | `null` | `1969` | Pivot: 69 > 31 → 19XX |
+| `69` | `"1969-12-26"` | `1969` | Album-date match |
+| `10` | `null` | `2010` | Pivot: 10 ≤ 31 → 20XX |
+| `10` | `"2010-05-15"` | `2010` | Album-date match |
+| `72` | `"1971-12-31"` | `1972` | Album-date ±1 fuzz |
+| `73` | `"1971-12-31"` | `1973` | Outside fuzz → pivot path (agrees) |
+| `25` | `null` | `2025` | Pivot: 25 ≤ 31 → 20XX |
+| `31` | `null` | `2031` | At pivot → 20XX |
+| `32` | `null` | `1932` | Just above pivot → 19XX |
+
+### Known limitation
+
+A track recorded between **1900 and 1931** in an album with no album-date context will misroute to 20XX. We accept this as out-of-scope for the live-music collections this app targets.
+
+### History
+
+The previous implementation used `if (year < 100) year += (year >= 70) ? 1900 : 2000;` at all four sites. For year 69, this produced 2069 — corrupting every show in 1969 and earlier (which includes a substantial portion of the early Grateful Dead catalog) when its title contained a two-digit year. The fix replaces the four sites with a single shared helper and adds the first dedicated test coverage for these parsers ([`TwoDigitYearResolverTests`](../../DeadEditor.Tests/TwoDigitYearResolverTests.cs), [`TitleDateParsingY2KTests`](../../DeadEditor.Tests/TitleDateParsingY2KTests.cs)).
 
 ---
 

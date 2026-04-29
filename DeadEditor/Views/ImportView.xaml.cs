@@ -1435,7 +1435,7 @@ namespace DeadEditor
 
                         if (mbTrack != null)
                         {
-                            var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title);
+                            var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title, _albumInfo?.AlbumDate);
                             localTrack.Track.SongName = cleanName;
                             localTrack.Track.HasSegue = mbSegue;
                             localTrack.Track.IsMatched = true;

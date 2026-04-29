@@ -306,16 +306,18 @@ private bool HasSegueMarker(string title)
 
 **Signature:**
 ```csharp
-public (string songName, string? date) ParseTitleAndDate(string title)
+public (string songName, bool hasSegue, string? date) ParseTitleAndDate(string title, string? albumDate = null)
 ```
 
 **Purpose:** Parse track title to separate song name from trailing date suffix, handling both MusicBrainz format (M/D/YYYY in "Live at..." parentheses) and DeadEditor format (yyyy-MM-dd). This is the primary date extraction method called during ReadFolder to populate SongName and TrackDate fields.
 
 **Parameters:**
 - `title` (string) - Full title from ID3 tag (e.g., "Jack Straw (Live at Uptown Theatre, Chicago, IL, 2/1/1978) - Grateful Dead__")
+- `albumDate` (string?, optional) - Album date in `yyyy-MM-dd` or `yyyy` form. When supplied, two-digit years in PATTERN 1C/1D are resolved against the album's century where consistent (within ±1 year). When null, a `currentYear+5` pivot is used. See [12-normalization-service.md § Two-Digit Year Resolution](12-normalization-service.md#two-digit-year-resolution).
 
-**Return Value:** Tuple of (songName, date)
+**Return Value:** Tuple of (songName, hasSegue, date)
 - `songName` - Song name with date/venue stripped (e.g., "Jack Straw")
+- `hasSegue` - `true` if the original title contained a segue marker (`>`, `->`, `→`, etc.)
 - `date` - Date in yyyy-MM-dd format, or null if no date found
 
 **Regex Patterns (checked in order):**

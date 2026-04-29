@@ -146,7 +146,7 @@ namespace DeadEditor
                 // or it appears twice. See: documentation/double-date-bug-diagnostic-2026-04-25.md
                 foreach (var track in rawTracks)
                 {
-                    var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.SongName);
+                    var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.SongName, _albumInfo.AlbumDate);
                     track.SongName = cleanName;
                     track.HasSegue = parsedSegue;
                     if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
@@ -782,7 +782,7 @@ namespace DeadEditor
                 foreach (var vm in _tracks)
                 {
                     var track = vm.Track;
-                    var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.RawTitle);
+                    var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.RawTitle, _albumInfo?.AlbumDate);
                     track.SongName = cleanName;
                     track.HasSegue = parsedSegue;
                     if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
@@ -1459,7 +1459,7 @@ namespace DeadEditor
 
                     if (mbTrack != null)
                     {
-                        var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title);
+                        var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title, _albumInfo?.AlbumDate);
                         localTrack.SongName = cleanName;
                         localTrack.HasSegue = mbSegue;
                         localTrack.IsMatched = true;

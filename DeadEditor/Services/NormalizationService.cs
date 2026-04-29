@@ -346,7 +346,7 @@ namespace DeadEditor.Services
                 if (string.IsNullOrEmpty(track.TrackDate))
                 {
                     var rawTitle = !string.IsNullOrEmpty(track.RawTitle) ? track.RawTitle : track.SongName;
-                    var extractedDate = ExtractDateFromRawTitle(rawTitle);
+                    var extractedDate = ExtractDateFromRawTitle(rawTitle, track.AlbumDate);
                     if (extractedDate != null)
                     {
                         track.TrackDate = extractedDate;
@@ -360,7 +360,7 @@ namespace DeadEditor.Services
 
                 // Normalize any slash-formatted dates remaining in the title
                 // (handles cases ParseTitleAndDate didn't recognize, e.g. "(1971/07/02 Filmore West)")
-                var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize);
+                var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize, track.AlbumDate);
                 if (dateNormalizedTitle != titleToNormalize)
                 {
                     titleToNormalize = dateNormalizedTitle;
@@ -467,9 +467,13 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Normalize slash-formatted dates in parenthetical suffixes to yyyy-MM-dd format
+        /// Normalize slash-formatted dates in parenthetical suffixes to yyyy-MM-dd format.
         /// </summary>
-        public string NormalizeDateInTitle(string title)
+        /// <param name="title">Title that may contain a trailing slash-formatted date.</param>
+        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). When provided,
+        /// two-digit years are resolved against the album's century where possible.
+        /// See <see cref="TwoDigitYearResolver"/>.</param>
+        public string NormalizeDateInTitle(string title, string? albumDate = null)
         {
             // Match pattern: (M/d/yy Venue) or (yyyy/MM/dd Venue) or (MM/DD/YYYY Venue)
             var match = System.Text.RegularExpressions.Regex.Match(
@@ -505,11 +509,9 @@ namespace DeadEditor.Services
                     day = int.Parse(parts[1]);
                     year = int.Parse(parts[2]);
 
-                    // Handle 2-digit years (70-99 → 1970-1999, 00-69 → 2000-2069)
-                    if (year < 100)
-                    {
-                        year += (year >= 70) ? 1900 : 2000;
-                    }
+                    // Resolve two-digit years using album-date context (when available)
+                    // and a current-year-relative pivot. See TwoDigitYearResolver.
+                    year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
                 }
 
                 // Validate date components
@@ -534,7 +536,9 @@ namespace DeadEditor.Services
         /// Handles bracket dates [Venue M/D/YY], parenthetical dates (M/D/YY Venue),
         /// (Live at/in Venue M/D/YYYY), and yyyy-MM-dd formats.
         /// </summary>
-        private string? ExtractDateFromRawTitle(string title)
+        /// <param name="title">Raw title to scan.</param>
+        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form) used to disambiguate two-digit years.</param>
+        private string? ExtractDateFromRawTitle(string title, string? albumDate = null)
         {
             if (string.IsNullOrEmpty(title)) return null;
 
@@ -542,14 +546,14 @@ namespace DeadEditor.Services
             var match = System.Text.RegularExpressions.Regex.Match(title, @"\[.*?(\d{1,2})/(\d{1,2})/(\d{2,4}).*?\]");
             if (match.Success)
             {
-                return ParseSlashDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
+                return ParseSlashDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value, albumDate);
             }
 
             // Pattern B: Slash date inside parentheses (M/D/YY ...) or (... M/D/YYYY)
             match = System.Text.RegularExpressions.Regex.Match(title, @"\(.*?(\d{1,2})/(\d{1,2})/(\d{2,4}).*?\)");
             if (match.Success)
             {
-                return ParseSlashDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
+                return ParseSlashDate(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value, albumDate);
             }
 
             // Pattern C: yyyy-MM-dd in parentheses (already handled by ParseTitleAndDate, but just in case)
@@ -566,12 +570,13 @@ namespace DeadEditor.Services
         /// Parses M/D/YY or M/D/YYYY slash-formatted date parts into yyyy-MM-dd string.
         /// Returns null if date is invalid.
         /// </summary>
-        private string? ParseSlashDate(string monthStr, string dayStr, string yearStr)
+        /// <param name="albumDate">Optional album date used to resolve two-digit years.</param>
+        private string? ParseSlashDate(string monthStr, string dayStr, string yearStr, string? albumDate = null)
         {
             if (!int.TryParse(monthStr, out var month) || !int.TryParse(dayStr, out var day) || !int.TryParse(yearStr, out var year))
                 return null;
 
-            if (year < 100) year += (year >= 70) ? 1900 : 2000;
+            year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
             if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100)
                 return null;
 
