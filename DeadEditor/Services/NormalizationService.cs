@@ -55,114 +55,41 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Attempts to normalize a single song title
+        /// Attempts to normalize a single song title to a canonical OfficialTitle.
+        /// <para>
+        /// As of commit Y2K-2d, the legacy 13-stage strip stack (S1-S13) is replaced by a
+        /// call to <see cref="TitleStructureParser.Parse"/>. The parser handles cosmetic
+        /// prep (tape markers, apostrophes), artist-suffix stripping, paren/bracket
+        /// classification, segue stripping, dash normalization, and whitespace collapse.
+        /// The L1-L9 alias-lookup stack runs on the parser's <c>SongName</c> output. See
+        /// <c>documentation/title-structure-parser-spec.md</c> and
+        /// <c>documentation/12-normalization-service.md</c>.
+        /// </para>
         /// </summary>
-        public string? Normalize(string title)
+        /// <param name="title">Raw track title from ID3 tag, file name, or external source.</param>
+        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). Forwarded to the parser
+        /// for two-digit-year resolution. See <see cref="TwoDigitYearResolver"/>.</param>
+        public string? Normalize(string title, string? albumDate = null)
         {
             if (string.IsNullOrEmpty(title)) return null;
 
-            // Clean the title first - remove tape markers and trim
-            var cleaned = title
-                .Replace("//", "")  // Remove tape change/splice markers
-                .Trim();
+            // Y2K-2d: replace S1-S13 strip stack with parser delegation. Cosmetic prep,
+            // metadata-paren stripping, segue handling, dash normalization, and whitespace
+            // collapse all happen inside Parse(). The parser preserves canonical parens
+            // (e.g. "Ain't It Crazy (The Rub)") that the position-based strip stack could
+            // not distinguish from metadata.
+            var parsed = TitleStructureParser.Parse(title, albumDate);
+            var cleaned = parsed.SongName;
+            if (string.IsNullOrEmpty(cleaned)) return null;
 
-            // Normalize apostrophes (convert curly/typographic apostrophes to regular ones)
-            cleaned = cleaned
-                .Replace("'", "'")  // Curly apostrophe to straight
-                .Replace("'", "'")  // Another variant
-                .Replace("`", "'"); // Backtick to apostrophe
-
-            // Strip common metadata patterns before matching
-            // This ensures we clean the title thoroughly before any lookups
-
-            // Remove (Filler: yyyy-MM-dd - Venue, City, State) pattern
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\(Filler:\s*\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Normalize slash-formatted dates: (M/d/yy Venue) → (yyyy-MM-dd)
-            cleaned = NormalizeDateInTitle(cleaned);
-
-            // Remove venue suffix from dash-formatted dates: (yyyy-MM-dd - Location) → (yyyy-MM-dd)
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\((\d{4}-\d{2}-\d{2})\s*-\s*[^)]+\)\s*$",
-                " ($1)").Trim();
-
-            // Remove (YYYY Remaster), (YYYY Remastered), (Remaster), (Remastered) patterns
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\((?:\d{4}\s+)?Remastere?d?\)\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove [YYYY Remaster], [Remaster] patterns
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove [M/D/YY, Venue pattern
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$",
-                "").Trim();
-
-            // Remove artist suffix (e.g., " - Grateful Dead__", " - Artist Name")
-            // MUST come BEFORE "(Live at...)" removal because MusicBrainz titles have format:
-            // "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching
-            // Requires whitespace before the dash (\s+) to distinguish " - Artist" from hyphenated
-            // words like "Brown-Eyed" where the dash is part of the song name
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s+-\s+[^-]+_{0,2}\s*$",
-                "").Trim();
-
-            // Remove [Live in...] or [Live at...] patterns (square brackets)
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\[Live (?:at|in) [^\]]+\]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove (Live at...) or (Live in...) patterns (parentheses)
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\(Live (?:at|in) [^)]+\)\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove [Venue, Location M/D/YY] or [Kiel Opera House, St. Louis, MO 10/24/70] patterns
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$",
-                "").Trim();
-
-            // Remove (Reprise) or [Reprise] editorial suffixes
-            // MUST come AFTER venue pattern removal so "Song (Reprise) [Live at Venue]" works correctly
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*[\(\[]Reprise[\)\]]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove (Live) or [Live] standalone editorial markers (NOT "Live at/in" patterns)
-            // MUST come AFTER venue pattern removal to avoid interfering with "[Live at Venue]"
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*[\(\[]Live[\)\]]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            // Remove segue markers at the end: >, ->, →, [>]
-            // MUST come AFTER suffix removal to clean up trailing ">" from "Song > (Reprise)" → "Song >"
-            cleaned = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
-                "").Trim();
-
-            // Direct lookup after all cleaning
+            // L1: direct alias-table lookup.
             if (_aliasLookup.TryGetValue(cleaned, out var official))
             {
                 return official;
             }
 
+            // L2: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
+            //     See documentation/title-structure-parser-spec.md.
             // Try stripping date/venue info for matching (but don't change the actual title)
             // Pattern: "Song [M/D/YY, Venue" or "[MM/DD/YYYY, Venue" (for bonus tracks from different dates)
             var withoutDateVenue = System.Text.RegularExpressions.Regex.Replace(
@@ -175,6 +102,8 @@ namespace DeadEditor.Services
                 return official;
             }
 
+            // L3: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
+            //     See documentation/title-structure-parser-spec.md.
             // Try stripping [Live in...] or [Live at...] patterns for matching
             var withoutLiveInfo = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
@@ -186,12 +115,13 @@ namespace DeadEditor.Services
                 return official;
             }
 
+            // L4: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
+            //     See documentation/title-structure-parser-spec.md.
             // Try stripping (yyyy-MM-dd - Location) pattern AND segue markers for matching
             var withoutDateLocation = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
                 @"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
                 "").Trim();
-            // Also remove segue marker after stripping date
             withoutDateLocation = System.Text.RegularExpressions.Regex.Replace(
                 withoutDateLocation,
                 @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
@@ -202,12 +132,13 @@ namespace DeadEditor.Services
                 return official;
             }
 
+            // L5: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
+            //     See documentation/title-structure-parser-spec.md.
             // Try stripping (yyyy-MM-dd) pattern AND segue markers for matching
             var withoutDateOnly = System.Text.RegularExpressions.Regex.Replace(
                 cleaned,
                 @"\s*\(\d{4}-\d{2}-\d{2}\)\s*$",
                 "").Trim();
-            // Also remove segue marker after stripping date
             withoutDateOnly = System.Text.RegularExpressions.Regex.Replace(
                 withoutDateOnly,
                 @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
@@ -218,7 +149,9 @@ namespace DeadEditor.Services
                 return official;
             }
 
-            // Try normalizing different dash characters (hyphen, en-dash, em-dash, box-drawing)
+            // L6: dash normalization re-lookup. The parser handles en-dash, em-dash, and
+            // box-drawing horizontal in step 6, but does NOT normalize U+2212 MINUS SIGN.
+            // Kept for that gap.
             var normalizedDashes = cleaned
                 .Replace("–", "-")  // en-dash to hyphen
                 .Replace("—", "-")  // em-dash to hyphen
@@ -230,7 +163,9 @@ namespace DeadEditor.Services
                 return official;
             }
 
-            // Try without common suffixes
+            // L7: parser preserves canonical parens, so " (1)"/" (2)" survive as content
+            // parens. Strip them here. Also handles bare " Reprise" suffix that has no
+            // paren/bracket boundary for the parser to detect.
             var withoutSuffix = cleaned
                 .Replace(" (1)", "")
                 .Replace(" (2)", "")
@@ -243,6 +178,8 @@ namespace DeadEditor.Services
                 return official;
             }
 
+            // L8: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
+            //     See documentation/title-structure-parser-spec.md.
             // Try normalized dashes without suffixes
             var normalizedWithoutSuffix = normalizedDashes
                 .Replace(" (1)", "")
@@ -256,7 +193,7 @@ namespace DeadEditor.Services
                 return official;
             }
 
-            // Try fuzzy matching as last resort (for typos)
+            // L9: fuzzy match (Levenshtein) as last resort for typos.
             var fuzzyMatch = FindFuzzyMatch(cleaned);
             if (fuzzyMatch != null)
             {
@@ -358,16 +295,19 @@ namespace DeadEditor.Services
                 // Fall back to Title (RawTitle) only if SongName is empty.
                 var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
 
-                // Normalize any slash-formatted dates remaining in the title
-                // (handles cases ParseTitleAndDate didn't recognize, e.g. "(1971/07/02 Filmore West)")
-                var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize, track.AlbumDate);
-                if (dateNormalizedTitle != titleToNormalize)
-                {
-                    titleToNormalize = dateNormalizedTitle;
-                }
+                // REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
+                //     See documentation/title-structure-parser-spec.md.
+                // Normalize() now forwards albumDate to the parser, which extracts and strips
+                // slash-formatted dates internally. The pre-pass below is no-op-equivalent for
+                // every input the parser handles.
+                // var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize, track.AlbumDate);
+                // if (dateNormalizedTitle != titleToNormalize)
+                // {
+                //     titleToNormalize = dateNormalizedTitle;
+                // }
 
                 // Then normalize the song name for matching
-                var normalized = Normalize(titleToNormalize);
+                var normalized = Normalize(titleToNormalize, track.AlbumDate);
                 if (normalized != null)
                 {
                     track.SongName = normalized;

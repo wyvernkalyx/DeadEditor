@@ -64,169 +64,53 @@ public NormalizationService()
 
 **Signature:**
 ```csharp
-public string? Normalize(string title)
+public string? Normalize(string title, string? albumDate = null)
 ```
 
-**Purpose:** Normalize single track title to canonical song name using multi-stage cleaning and fuzzy matching.
+**Purpose:** Normalize a single track title to a canonical OfficialTitle. Cleans the title via the structural parser, then resolves it against the alias table with fall-through cleanup stages and a final fuzzy-match step.
 
 **Parameters:**
 - `title` (string) - Raw track title from ID3 tag or filename
+- `albumDate` (string?, optional) - Album date in `yyyy-MM-dd` or `yyyy` form. Forwarded to the parser for two-digit-year resolution. See [Two-Digit Year Resolution](#two-digit-year-resolution).
 
 **Return Value:**
 - `string` - Canonical song name if match found
 - `null` - No match found (unknown song)
 
-**Business Logic (15-stage pipeline):**
+**Pipeline:**
 
-#### Stage 1: Basic Cleaning (line 80-82)
-- Remove tape splice markers: `//`
-- Trim whitespace
+#### Step A — Structural parse (delegation)
 
-#### Stage 2: Apostrophe Normalization (line 85-88)
+The legacy 13-stage strip stack (S1-S13) is replaced as of commit Y2K-2d by a single call to [`TitleStructureParser.Parse`](../Services/TitleStructureParser.cs):
+
 ```csharp
-.Replace("'", "'")  // Curly apostrophe → straight
-.Replace("'", "'")  // Another variant
-.Replace("`", "'")  // Backtick → apostrophe
+var parsed = TitleStructureParser.Parse(title, albumDate);
+var cleaned = parsed.SongName;
 ```
 
-**Rationale:** Different text sources use different apostrophe characters.
+Inside `Parse` the title is cosmetically cleaned (tape markers, apostrophes), the MusicBrainz artist-suffix tail is stripped, every `(...)` and `[...]` group is classified as metadata (date / state code / "Live at" / "Filler:" / "Remaster" / "Reprise" / standalone "Live") or content, trailing segue markers are removed, dashes are normalized, and whitespace is collapsed. **Canonical-paren song titles like `Ain't It Crazy (The Rub)` survive** because their inner text fires no metadata signal — a guarantee the position-based strip stack could not provide.
 
-#### Stage 3: Date Normalization and Metadata Stripping (line 93-157)
+Full rules: see [`documentation/title-structure-parser-spec.md`](title-structure-parser-spec.md).
 
-**Date Convention:** All dates normalized to `(yyyy-MM-dd)` format. Venue info stripped, dates preserved and normalized.
+The parser's `TrackDate` and `Venue` fields are not used by `Normalize` — date plumbing for the `TrackInfo` record is handled separately in `NormalizeAll` via [`ExtractDateFromRawTitle`](#extractdatefromrawtitle).
 
-**Patterns Processed (in order):**
+#### Step B — Alias-lookup stack (L1-L9)
 
-1. **Filler Pattern** (line 94-97):
-   - Regex: `@"\s*\(Filler:\s*\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$"`
-   - Example: "Song (Filler: 1972-05-04 - Olympia Theatre)"
-   - **Action:** Strip entirely (filler metadata, not part of title)
+After `cleaned = parsed.SongName`, the lookup stack runs against the alias table:
 
-2. **Slash Date with Venue in Parentheses** (line 100-115):
-   - Patterns matched:
-     * `(yyyy/MM/dd Venue)` → `(yyyy-MM-dd)`
-     * `(M/d/yy Venue)` → `(yyyy-MM-dd)`
-     * `(MM/DD/YYYY Venue)` → `(yyyy-MM-dd)`
-   - Example: "Drums (1971/07/02 Filmore West)" → "Drums (1971-07-02)"
-   - Example: "Not Fade Away (5/7/77 Barton Hall)" → "Not Fade Away (1977-05-07)"
-   - Example: "Good Loving' (1971/07/02)" → "Good Loving' (1971-07-02)"
-   - **Action:** Parse date, strip venue, convert to yyyy-MM-dd, re-add to title
+| Stage | Operation | Status |
+|------|-----------|--------|
+| **L1** | Direct `_aliasLookup[cleaned]` lookup | active |
+| **L2** | Strip `[M/D/YY,…]$` then re-lookup | redundant (parser handles); kept until next cleanup commit |
+| **L3** | Strip `[Live at\|in ...]$` then re-lookup | redundant (parser handles); kept until next cleanup commit |
+| **L4** | Strip `(yyyy-MM-dd - Loc)$` + segue then re-lookup | redundant (parser handles); kept until next cleanup commit |
+| **L5** | Strip `(yyyy-MM-dd)$` + segue then re-lookup | redundant (parser handles); kept until next cleanup commit |
+| **L6** | Normalize dashes (en-dash, em-dash, minus, box-drawing) → hyphen, re-lookup | active — **covers U+2212 MINUS SIGN, which the parser does not normalize** |
+| **L7** | Strip ` (1)`, ` (2)`, ` Reprise`, ` reprise` then re-lookup | active — track-position markers are content parens to the parser, and the bare " Reprise" suffix has no paren/bracket boundary for the parser to detect |
+| **L8** | Combined L6+L7 belt-and-suspenders | redundant (covered by L6 and L7 individually); kept until next cleanup commit |
+| **L9** | Fuzzy match via Levenshtein | active — last-resort typo correction |
 
-3. **Dash Date with Location** (line 117-120):
-   - Regex: `@"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$"`
-   - Example: "Song (1972-05-04 - Boston)" → "Song (1972-05-04)"
-   - **Action:** Already yyyy-MM-dd format, just strip venue suffix
-
-4. **Dash Date Only** (line 123-126):
-   - Regex: `@"\s*\(\d{4}-\d{2}-\d{2}\)\s*$"`
-   - Example: "Song (1972-05-04)"
-   - **Action:** Already normalized, no change needed
-
-5. **Remaster Tags in Parentheses** (line 118-121):
-   - Regex: `@"\s*\((?:\d{4}\s+)?Remastere?d?\)\s*$"`
-   - Case-insensitive
-   - Examples: "(Remaster)", "(2003 Remastered)", "(Remastered)"
-
-6. **Remaster Tags in Brackets** (line 114-118):
-   - Regex: `@"\s*\[(?:\d{4}\s+)?Remastere?d?\]\s*$"`
-   - Example: "[2003 Remaster]"
-
-7. **US Date/Venue in Brackets** (line 120-124):
-   - Regex: `@"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$"`
-   - Example: "[5/7/72, Bickershaw Festival]"
-
-8. **Artist Suffix Removal** (line 126-132):
-   - Regex: `@"\s+-\s+[^-]+_{0,2}\s*$"`
-   - Examples: " - Grateful Dead__", " - Grateful Dead", " - Artist Name"
-   - **Critical:** MUST come BEFORE "(Live at...)" removal
-   - **Critical:** Requires whitespace on BOTH sides of the dash (`\s+`) to distinguish " - Artist" from hyphenated song names like "Brown-Eyed Women" where the dash is part of the word
-   - **Rationale:** MusicBrainz titles have format "Song (Live at Venue) - Artist__" where artist suffix prevents (Live...) regex from matching end-of-string
-
-9. **Live At/In Brackets** (line 134-138):
-   - Regex: `@"\s*\[Live (?:at|in) [^\]]+\]\s*$"`
-   - Example: "[Live at Fillmore East]"
-
-10. **Live At/In Parentheses** (line 140-144):
-   - Regex: `@"\s*\(Live (?:at|in) [^)]+\)\s*$"`
-   - Example: "(Live at Winterland)"
-
-11. **Venue/Date in Brackets** (line 146-150):
-    - Regex: `@"\s*\[[^\]]*\d{1,2}/\d{1,2}/\d{2,4}\]\s*$"`
-    - Example: "[Kiel Opera House, St. Louis, MO 10/24/70]"
-
-12. **Reprise Editorial Suffix** (line 152-157):
-   - Regex: `@"\s*[\(\[]Reprise[\)\]]\s*$"`
-   - Case-insensitive
-   - Examples: "(Reprise)", "[Reprise]"
-   - **Rationale:** Editorial suffix marking song reprises, not part of canonical name
-   - **Critical:** MUST come AFTER venue pattern removal so "Song (Reprise) [Live at Venue]" processes correctly
-
-13. **Live Editorial Suffix** (line 159-164):
-   - Regex: `@"\s*[\(\[]Live[\)\]]\s*$"`
-   - Case-insensitive
-   - Examples: "(Live)", "[Live]"
-   - **Rationale:** Standalone editorial marker (NOT "Live at/in Venue" patterns)
-   - **Critical:** MUST come AFTER venue pattern removal to avoid interfering with "[Live at Venue]"
-
-14. **Segue Markers** (line 166-171):
-    - Regex: `@"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$"`
-    - Matches: `>`, `->`, `–>`, `→`, `[>]`
-    - **Critical:** MUST come AFTER suffix removal to clean up trailing ">" from "Song > (Reprise)" → "Song >"
-
-#### Stage 4: Direct Lookup (line 173-176)
-- Check `_aliasLookup` for exact match (case-insensitive)
-- **Fast path:** Most matches found here after cleaning
-
-#### Stages 5-8: Progressive Stripping (line 178-229)
-
-Each stage strips additional patterns, then checks lookup:
-
-5. **Strip Date/Venue Again** (line 178-186): `[M/D/YY, Venue` pattern
-6. **Strip Live Info Again** (line 189-197): `[Live at...]` pattern
-7. **Strip Date+Location+Segue** (line 200-213): Combined removal
-8. **Strip Date+Segue** (line 216-229): Final date/segue removal
-
-**Rationale:** Some titles have nested or repeated patterns not caught by initial cleaning.
-
-#### Stage 9: Dash Normalization (line 232-241)
-```csharp
-.Replace("–", "-")  // en-dash → hyphen
-.Replace("—", "-")  // em-dash → hyphen
-.Replace("−", "-")  // minus sign → hyphen
-.Replace("─", "-")  // box-drawing → hyphen
-```
-
-**Lookup:** Check `_aliasLookup` after normalization
-
-**Rationale:** Different sources use different dash characters (Unicode variants, box-drawing characters from ASCII art).
-
-#### Stage 10: Suffix Removal (line 244-254)
-```csharp
-.Replace(" (1)", "")
-.Replace(" (2)", "")
-.Replace(" Reprise", "")
-.Replace(" reprise", "")
-```
-
-**Lookup:** Check `_aliasLookup`
-
-**Rationale:** Handles "Song (1)", "Song (2)", "Song Reprise" variants.
-
-#### Stage 11: Normalized Dashes + Suffixes (line 257-267)
-- Combine dash normalization and suffix removal
-- **Lookup:** Final exact match attempt
-
-#### Stage 12: Fuzzy Matching (line 270-274)
-- Call `FindFuzzyMatch(cleaned)` as **last resort**
-- Uses Levenshtein distance algorithm
-- Handles typos (max 2 characters or 20% of string length)
-
-#### Stage 13: No Match (line 276)
-- Return `null` if all stages fail
-
-**Total Stages:** 14 (1-3 cleaning, 4-13 progressive matching, 14 failure)
-
-**Return:** First match found in pipeline order
+**Return:** First successful lookup or fuzzy match wins; `null` if every stage misses.
 
 ---
 
@@ -354,36 +238,43 @@ public int NormalizeAll(List<TrackInfo> tracks)
 int matched = 0;
 foreach (var track in tracks)
 {
-    // Use SongName for matching — it's already been cleaned by ParseTitleAndDate
-    // during ReadFolder (date/tour suffixes stripped, segue markers removed).
-    // Fall back to Title (RawTitle) only if SongName is empty.
-    var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
-
-    // Normalize any slash-formatted dates remaining in the title
-    // (handles cases ParseTitleAndDate didn't recognize, e.g. "(1971/07/02 Filmore West)")
-    var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize);
-    if (dateNormalizedTitle != titleToNormalize)
+    // Safety net: if ParseTitleAndDate missed the date during ReadFolder, scan the raw
+    // title for a slash date so track.TrackDate is populated before lookup. Handles
+    // bracket dates [Venue M/D/YY] and parenthetical dates (M/D/YY Venue) that the
+    // initial file read didn't recognize.
+    if (string.IsNullOrEmpty(track.TrackDate))
     {
-        titleToNormalize = dateNormalizedTitle;
+        var rawTitle = !string.IsNullOrEmpty(track.RawTitle) ? track.RawTitle : track.SongName;
+        var extractedDate = ExtractDateFromRawTitle(rawTitle, track.AlbumDate);
+        if (extractedDate != null) track.TrackDate = extractedDate;
     }
 
-    // Then normalize the song name for matching
-    var normalized = Normalize(titleToNormalize);
+    // Use SongName for matching — it's already been cleaned by ParseTitleAndDate
+    // during ReadFolder. Fall back to Title (RawTitle) only if SongName is empty.
+    var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
+
+    // As of Y2K-2d, Normalize() forwards albumDate to TitleStructureParser, which
+    // extracts and strips slash-formatted dates internally. The previous pre-pass via
+    // NormalizeDateInTitle is now redundant and is commented out in source pending
+    // deletion in the next cleanup commit.
+    var normalized = Normalize(titleToNormalize, track.AlbumDate);
     if (normalized != null)
     {
-        track.SongName = normalized;   // Set normalized song name
-        track.IsMatched = true;        // Mark as matched for UI highlighting
+        track.SongName = normalized;
+        track.IsMatched = true;
         matched++;
     }
     else
     {
-        track.IsMatched = false;       // Mark as unmatched for UI highlighting (gold color)
+        track.IsMatched = false;
     }
 }
 return matched;
 ```
 
-**Key Design Decision:** NormalizeAll uses `track.SongName` (not `track.Title`) for matching. During ReadFolder, `ParseTitleAndDate` strips date/tour suffixes from the raw title and stores the clean song name in `SongName`. The `Title` property returns `RawTitle` (the original tag value), which may still contain date+tour suffixes like "(1972-05-10 Europe '72)" that the normalization pipeline doesn't know how to strip. Using the already-cleaned `SongName` ensures these tracks match correctly.
+**Key Design Decision:** `NormalizeAll` uses `track.SongName` (not `track.Title`) for matching. During `ReadFolder`, `ParseTitleAndDate` strips date/tour suffixes from the raw title and stores the clean song name in `SongName`. The `Title` property returns `RawTitle` (the original tag value), which may still contain suffixes the structural parser would otherwise have to re-process. Using the already-cleaned `SongName` is the cheaper input.
+
+**`track.TrackDate` population is independent of the alias-lookup path.** The early `ExtractDateFromRawTitle` branch writes `TrackDate` onto the track record so downstream UI / search code can read it; the alias-lookup pipeline that follows is a separate concern that produces a canonical `SongName`. Both legacy helpers (`NormalizeDateInTitle`, `ExtractDateFromRawTitle`, `ParseSlashDate`) remain present in the service and are exercised directly by [`TitleDateParsingY2KTests`](../../DeadEditor.Tests/TitleDateParsingY2KTests.cs).
 
 **Side Effects:**
 - Modifies `track.SongName` for each successful match with the canonical song name from the database
@@ -760,22 +651,20 @@ The previous implementation used `if (year < 100) year += (year >= 70) ? 1900 : 
 
 ---
 
-### 3. Multi-Stage Cleaning Order
+### 3. Cleaning + Lookup Order
 
-**Rule:** Clean in specific order from most specific to least specific
+**Rule:** Title is structurally parsed once, then resolved against the alias table with progressive fall-throughs.
 
 **Order:**
-1. Special patterns (Filler, dates with venues)
-2. Generic dates (ISO format, US format)
-3. Remaster tags
-4. Artist suffix (MUST come before Live venue info)
-5. Live venue info
-6. Segue markers
-7. Character normalization (dashes, apostrophes)
-8. Suffix removal
-9. Fuzzy matching (last resort)
+1. **Structural parse** via [`TitleStructureParser.Parse`](../Services/TitleStructureParser.cs) — handles cosmetic prep, artist-suffix strip, paren/bracket classification, segue handling, dash normalization, whitespace collapse. Rules in [title-structure-parser-spec.md](title-structure-parser-spec.md).
+2. **L1** direct alias lookup on the parser's `SongName`.
+3. **L6** dash re-normalization (covers U+2212 minus, which the parser does not handle).
+4. **L7** strip ` (1)`, ` (2)`, bare ` Reprise` / ` reprise` suffix (parser preserves these as content / has no boundary to detect them).
+5. **L9** fuzzy match via Levenshtein.
 
-**Rationale:** Specific patterns prevent false matches (e.g., "Song (1)" could match " (1972-01-01)" if date pattern checked first).
+L2-L5 and L8 are present but redundant after Y2K-2d; they will be removed in the next cleanup commit.
+
+**Rationale:** Structural parsing replaces the old "strip in increasingly-specific regex order" approach because content-paren classification (e.g. `Caution (Do Not Stop on Tracks)` vs `(11/2/69)`) cannot be done by position alone.
 
 ---
 
@@ -865,69 +754,18 @@ LoadDatabase();   // Reload from disk, rebuild lookup
 
 ---
 
-## Regex Patterns Explained
+## Regex Patterns
 
-### Date with Location (ISO)
-```regex
-\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$
-```
-- `\s*` - Optional whitespace
-- `\(` - Literal open paren
-- `\d{4}-\d{2}-\d{2}` - yyyy-MM-dd date
-- `\s*-\s*` - Dash separator (optional spaces)
-- `[^)]+` - Anything except close paren (location info)
-- `\)` - Literal close paren
-- `\s*$` - Optional trailing whitespace, end of string
+As of Y2K-2d, the structural parsing rules (date shapes, "Live at"/"Filler:"/"Remaster"/"Reprise" markers, state codes, segue marker forms) live in [title-structure-parser-spec.md](title-structure-parser-spec.md) — see § 4 Classification rules and § 6 Segue detection. The L6 dash normalization in `Normalize` itself covers four Unicode dash variants:
 
-**Matches:** "Song (1972-05-04 - Olympia Theatre, Paris)"
-
----
-
-### US Date with Venue
-```regex
-\s*\(\d{1,2}/\d{1,2}/\d{2,4}\s+[^)]+\)\s*$
-```
-- `\d{1,2}/\d{1,2}/\d{2,4}` - M/D/YY or MM/DD/YYYY
-- `\s+` - Required space (separator from venue)
-- `[^)]+` - Venue name
-
-**Matches:** "Song (5/7/77 Barton Hall)"
-
----
-
-### Remaster Tags
-```regex
-\s*\((?:\d{4}\s+)?Remastere?d?\)\s*$
-```
-- `(?:\d{4}\s+)?` - Optional year (non-capturing group)
-- `Remastere?d?` - "Remaster", "Remastered", "Remastere" (typo tolerance)
-- Case-insensitive flag
-
-**Matches:** "(Remaster)", "(2003 Remastered)", "(Remastered)", "(2003 Remaster)"
-
----
-
-### Segue Markers
-```regex
-\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$
-```
-- `\[?>?\]?` - Optional bracketed: `>`, `[>]`, `[]`
-- `|` - OR
-- `[-–]?\s*>\s*` - Optional dash (hyphen or en-dash) + spaces + `>`
-
-**Matches:** " >", " ->", " –>", " → ", " [>]"
-
----
-
-### Dash Normalization Characters
 ```csharp
 .Replace("–", "-")  // U+2013 EN DASH
 .Replace("—", "-")  // U+2014 EM DASH
-.Replace("−", "-")  // U+2212 MINUS SIGN
+.Replace("−", "-")  // U+2212 MINUS SIGN  (parser does NOT handle this one)
 .Replace("─", "-")  // U+2500 BOX DRAWINGS LIGHT HORIZONTAL
 ```
 
-**Rationale:** Different sources use different Unicode dash characters. Normalize all to ASCII hyphen for matching.
+The parser handles the first, second, and fourth in its own dash-normalization step. L6 is retained for the U+2212 case.
 
 ---
 
@@ -998,5 +836,5 @@ LoadDatabase();   // Reload from disk, rebuild lookup
 
 ---
 
-**Last Updated:** 2026-03-01
+**Last Updated:** 2026-04-30 (commit Y2K-2d — strip stack delegated to TitleStructureParser)
 **Status:** Complete service documentation
