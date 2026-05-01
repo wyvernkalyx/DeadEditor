@@ -88,70 +88,9 @@ namespace DeadEditor.Services
                 return official;
             }
 
-            // L2: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
-            //     See documentation/title-structure-parser-spec.md.
-            // Try stripping date/venue info for matching (but don't change the actual title)
-            // Pattern: "Song [M/D/YY, Venue" or "[MM/DD/YYYY, Venue" (for bonus tracks from different dates)
-            var withoutDateVenue = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\[\d{1,2}/\d{1,2}/\d{2,4}[,\s].*$",
-                "").Trim();
-
-            if (withoutDateVenue != cleaned && _aliasLookup.TryGetValue(withoutDateVenue, out official))
-            {
-                return official;
-            }
-
-            // L3: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
-            //     See documentation/title-structure-parser-spec.md.
-            // Try stripping [Live in...] or [Live at...] patterns for matching
-            var withoutLiveInfo = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\[Live (?:at|in) [^\]]+\]\s*$",
-                "", System.Text.RegularExpressions.RegexOptions.IgnoreCase).Trim();
-
-            if (withoutLiveInfo != cleaned && _aliasLookup.TryGetValue(withoutLiveInfo, out official))
-            {
-                return official;
-            }
-
-            // L4: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
-            //     See documentation/title-structure-parser-spec.md.
-            // Try stripping (yyyy-MM-dd - Location) pattern AND segue markers for matching
-            var withoutDateLocation = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\(\d{4}-\d{2}-\d{2}\s*-\s*[^)]+\)\s*$",
-                "").Trim();
-            withoutDateLocation = System.Text.RegularExpressions.Regex.Replace(
-                withoutDateLocation,
-                @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
-                "").Trim();
-
-            if (withoutDateLocation != cleaned && _aliasLookup.TryGetValue(withoutDateLocation, out official))
-            {
-                return official;
-            }
-
-            // L5: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
-            //     See documentation/title-structure-parser-spec.md.
-            // Try stripping (yyyy-MM-dd) pattern AND segue markers for matching
-            var withoutDateOnly = System.Text.RegularExpressions.Regex.Replace(
-                cleaned,
-                @"\s*\(\d{4}-\d{2}-\d{2}\)\s*$",
-                "").Trim();
-            withoutDateOnly = System.Text.RegularExpressions.Regex.Replace(
-                withoutDateOnly,
-                @"\s*(\[?>?\]?|[-–]?\s*>\s*)\s*$",
-                "").Trim();
-
-            if (withoutDateOnly != cleaned && _aliasLookup.TryGetValue(withoutDateOnly, out official))
-            {
-                return official;
-            }
-
             // L6: dash normalization re-lookup. The parser handles en-dash, em-dash, and
-            // box-drawing horizontal in step 6, but does NOT normalize U+2212 MINUS SIGN.
-            // Kept for that gap.
+            // box-drawing horizontal in its own dash-normalization step, but does NOT
+            // normalize U+2212 MINUS SIGN. Kept for that gap.
             var normalizedDashes = cleaned
                 .Replace("–", "-")  // en-dash to hyphen
                 .Replace("—", "-")  // em-dash to hyphen
@@ -178,29 +117,8 @@ namespace DeadEditor.Services
                 return official;
             }
 
-            // L8: REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
-            //     See documentation/title-structure-parser-spec.md.
-            // Try normalized dashes without suffixes
-            var normalizedWithoutSuffix = normalizedDashes
-                .Replace(" (1)", "")
-                .Replace(" (2)", "")
-                .Replace(" Reprise", "")
-                .Replace(" reprise", "")
-                .Trim();
-
-            if (_aliasLookup.TryGetValue(normalizedWithoutSuffix, out official))
-            {
-                return official;
-            }
-
             // L9: fuzzy match (Levenshtein) as last resort for typos.
-            var fuzzyMatch = FindFuzzyMatch(cleaned);
-            if (fuzzyMatch != null)
-            {
-                return fuzzyMatch;
-            }
-
-            return null; // No match found
+            return FindFuzzyMatch(cleaned);
         }
 
         /// <summary>
@@ -295,18 +213,8 @@ namespace DeadEditor.Services
                 // Fall back to Title (RawTitle) only if SongName is empty.
                 var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
 
-                // REDUNDANT — superseded by TitleStructureParser. Slated for deletion in next cleanup commit.
-                //     See documentation/title-structure-parser-spec.md.
-                // Normalize() now forwards albumDate to the parser, which extracts and strips
-                // slash-formatted dates internally. The pre-pass below is no-op-equivalent for
-                // every input the parser handles.
-                // var dateNormalizedTitle = NormalizeDateInTitle(titleToNormalize, track.AlbumDate);
-                // if (dateNormalizedTitle != titleToNormalize)
-                // {
-                //     titleToNormalize = dateNormalizedTitle;
-                // }
-
-                // Then normalize the song name for matching
+                // Normalize forwards albumDate to TitleStructureParser, which extracts and
+                // strips slash-formatted dates internally.
                 var normalized = Normalize(titleToNormalize, track.AlbumDate);
                 if (normalized != null)
                 {
@@ -404,71 +312,6 @@ namespace DeadEditor.Services
 
             SaveDatabase();
             LoadDatabase(); // Reload to update lookup
-        }
-
-        /// <summary>
-        /// Normalize slash-formatted dates in parenthetical suffixes to yyyy-MM-dd format.
-        /// </summary>
-        /// <param name="title">Title that may contain a trailing slash-formatted date.</param>
-        /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). When provided,
-        /// two-digit years are resolved against the album's century where possible.
-        /// See <see cref="TwoDigitYearResolver"/>.</param>
-        public string NormalizeDateInTitle(string title, string? albumDate = null)
-        {
-            // Match pattern: (M/d/yy Venue) or (yyyy/MM/dd Venue) or (MM/DD/YYYY Venue)
-            var match = System.Text.RegularExpressions.Regex.Match(
-                title,
-                @"\s*\((\d{1,2}/\d{1,2}/\d{2,4})(?:\s+[^)]+)?\)\s*$");
-
-            if (!match.Success)
-                return title;  // No slash date found, return unchanged
-
-            try
-            {
-                // Extract the date string (without venue)
-                var dateString = match.Groups[1].Value;
-                var parts = dateString.Split('/');
-
-                if (parts.Length != 3)
-                    return title;  // Invalid format
-
-                int year, month, day;
-
-                // Detect format: yyyy/MM/dd vs M/d/yy
-                if (parts[0].Length == 4)
-                {
-                    // yyyy/MM/dd format
-                    year = int.Parse(parts[0]);
-                    month = int.Parse(parts[1]);
-                    day = int.Parse(parts[2]);
-                }
-                else
-                {
-                    // M/d/yy or MM/DD/YYYY format
-                    month = int.Parse(parts[0]);
-                    day = int.Parse(parts[1]);
-                    year = int.Parse(parts[2]);
-
-                    // Resolve two-digit years using album-date context (when available)
-                    // and a current-year-relative pivot. See TwoDigitYearResolver.
-                    year = TwoDigitYearResolver.ResolveTwoDigitYear(year, albumDate);
-                }
-
-                // Validate date components
-                if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100)
-                    return title;  // Invalid date, return unchanged
-
-                // Extract base title (everything before the date parentheses)
-                var baseTitle = title.Substring(0, match.Index).Trim();
-
-                // Reconstruct with normalized date
-                return $"{baseTitle} ({year:D4}-{month:D2}-{day:D2})";
-            }
-            catch
-            {
-                // Any parsing error, return original
-                return title;
-            }
         }
 
         /// <summary>

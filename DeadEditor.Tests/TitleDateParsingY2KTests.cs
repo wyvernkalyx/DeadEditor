@@ -6,22 +6,21 @@ using Xunit;
 namespace DeadEditor.Tests;
 
 /// <summary>
-/// Regression tests for the Y2K bug at the four title-parsing sites that previously used
+/// Regression tests for the Y2K bug at the title-parsing sites that previously used
 /// the fixed pivot <c>year &gt;= 70 ? 1900 : 2000</c>. Year 69 (e.g. "12/31/69") used to
 /// resolve to 2069; it now resolves to 1969 — both via album-date context and via the
 /// current-year-anchored pivot fallback.
 ///
 /// Sites covered:
-///   1. <see cref="NormalizationService.NormalizeDateInTitle"/>
-///   2. <see cref="NormalizationService"/> NormalizeAll → ExtractDateFromRawTitle → ParseSlashDate
-///   3. <see cref="MetadataService.ParseTitleAndDate"/> PATTERN 1C (square bracket venue + slash date)
-///   4. <see cref="MetadataService.ParseTitleAndDate"/> PATTERN 1D (parenthetical with slash date and venue)
+///   1. <see cref="NormalizationService"/> NormalizeAll → ExtractDateFromRawTitle → ParseSlashDate
+///   2. <see cref="MetadataService.ParseTitleAndDate"/> via <see cref="TitleStructureParser"/>
 ///
-/// See documentation/12-normalization-service.md § Two-Digit Year Resolution.
+/// See documentation/12-normalization-service.md § Two-Digit Year Resolution and
+/// DeadEditor.Tests/TitleStructureParserTests.cs § Y2K resolution via parser.
 /// </summary>
 public class TitleDateParsingY2KTests
 {
-    // ---------- Site 3: ParseTitleAndDate PATTERN 1C ----------
+    // ---------- ParseTitleAndDate: bracketed slash date with venue ----------
 
     [Fact]
     public void Pattern1C_TwoDigitYear69_NoAlbumDate_ResolvesTo1969()
@@ -47,7 +46,7 @@ public class TitleDateParsingY2KTests
         Assert.Equal("1969-12-31", date);
     }
 
-    // ---------- Site 4: ParseTitleAndDate PATTERN 1D ----------
+    // ---------- ParseTitleAndDate: parenthetical slash date with venue ----------
 
     [Fact]
     public void Pattern1D_TwoDigitYear71_NoAlbumDate_ResolvesTo1971()
@@ -65,34 +64,7 @@ public class TitleDateParsingY2KTests
         Assert.Equal("1972-01-02", date);
     }
 
-    // ---------- Site 1: NormalizeDateInTitle ----------
-
-    [Fact]
-    public void NormalizeDateInTitle_TwoDigitYear71_ResolvesTo1971()
-    {
-        var svc = new NormalizationService();
-        var result = svc.NormalizeDateInTitle("Some Song (12/9/71 Fox Theatre)");
-        Assert.Equal("Some Song (1971-12-09)", result);
-    }
-
-    [Fact]
-    public void NormalizeDateInTitle_TwoDigitYear69_ResolvesTo1969()
-    {
-        var svc = new NormalizationService();
-        // Y2K regression case: 69 used to become 2069.
-        var result = svc.NormalizeDateInTitle("Dark Star (12/31/69 Winterland)");
-        Assert.Equal("Dark Star (1969-12-31)", result);
-    }
-
-    [Fact]
-    public void NormalizeDateInTitle_FourDigitYear_LeftAsIs()
-    {
-        var svc = new NormalizationService();
-        var result = svc.NormalizeDateInTitle("Some Song (12/9/1971 Fox Theatre)");
-        Assert.Equal("Some Song (1971-12-09)", result);
-    }
-
-    // ---------- Site 2: NormalizeAll → ExtractDateFromRawTitle → ParseSlashDate ----------
+    // ---------- NormalizeAll → ExtractDateFromRawTitle → ParseSlashDate ----------
 
     [Fact]
     public void NormalizeAll_ExtractsBracketDate_TwoDigitYear69_ResolvesTo1969()

@@ -94,21 +94,18 @@ Full rules: see [`documentation/title-structure-parser-spec.md`](title-structure
 
 The parser's `TrackDate` and `Venue` fields are not used by `Normalize` — date plumbing for the `TrackInfo` record is handled separately in `NormalizeAll` via [`ExtractDateFromRawTitle`](#extractdatefromrawtitle).
 
-#### Step B — Alias-lookup stack (L1-L9)
+#### Step B — Alias-lookup stack
 
 After `cleaned = parsed.SongName`, the lookup stack runs against the alias table:
 
-| Stage | Operation | Status |
-|------|-----------|--------|
-| **L1** | Direct `_aliasLookup[cleaned]` lookup | active |
-| **L2** | Strip `[M/D/YY,…]$` then re-lookup | redundant (parser handles); kept until next cleanup commit |
-| **L3** | Strip `[Live at\|in ...]$` then re-lookup | redundant (parser handles); kept until next cleanup commit |
-| **L4** | Strip `(yyyy-MM-dd - Loc)$` + segue then re-lookup | redundant (parser handles); kept until next cleanup commit |
-| **L5** | Strip `(yyyy-MM-dd)$` + segue then re-lookup | redundant (parser handles); kept until next cleanup commit |
-| **L6** | Normalize dashes (en-dash, em-dash, minus, box-drawing) → hyphen, re-lookup | active — **covers U+2212 MINUS SIGN, which the parser does not normalize** |
-| **L7** | Strip ` (1)`, ` (2)`, ` Reprise`, ` reprise` then re-lookup | active — track-position markers are content parens to the parser, and the bare " Reprise" suffix has no paren/bracket boundary for the parser to detect |
-| **L8** | Combined L6+L7 belt-and-suspenders | redundant (covered by L6 and L7 individually); kept until next cleanup commit |
-| **L9** | Fuzzy match via Levenshtein | active — last-resort typo correction |
+| Stage | Operation | Notes |
+|------|-----------|-------|
+| **L1** | Direct `_aliasLookup[cleaned]` lookup | The fast path — most inputs land here. |
+| **L6** | Normalize dashes (en-dash, em-dash, minus, box-drawing) → hyphen, re-lookup | Covers U+2212 MINUS SIGN, which the parser does not normalize. |
+| **L7** | Strip ` (1)`, ` (2)`, ` Reprise`, ` reprise` then re-lookup | Track-position markers are content parens to the parser, and the bare " Reprise" suffix has no paren/bracket boundary for the parser to detect. |
+| **L9** | Fuzzy match via Levenshtein | Last-resort typo correction. |
+
+Stage numbers preserve the historical labels — L2-L5 and L8 were retired in commit Y2K-2e once `TitleStructureParser` made them redundant.
 
 **Return:** First successful lookup or fuzzy match wins; `null` if every stage misses.
 
@@ -253,10 +250,8 @@ foreach (var track in tracks)
     // during ReadFolder. Fall back to Title (RawTitle) only if SongName is empty.
     var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
 
-    // As of Y2K-2d, Normalize() forwards albumDate to TitleStructureParser, which
-    // extracts and strips slash-formatted dates internally. The previous pre-pass via
-    // NormalizeDateInTitle is now redundant and is commented out in source pending
-    // deletion in the next cleanup commit.
+    // Normalize forwards albumDate to TitleStructureParser, which extracts and strips
+    // slash-formatted dates internally.
     var normalized = Normalize(titleToNormalize, track.AlbumDate);
     if (normalized != null)
     {
@@ -274,7 +269,7 @@ return matched;
 
 **Key Design Decision:** `NormalizeAll` uses `track.SongName` (not `track.Title`) for matching. During `ReadFolder`, `ParseTitleAndDate` strips date/tour suffixes from the raw title and stores the clean song name in `SongName`. The `Title` property returns `RawTitle` (the original tag value), which may still contain suffixes the structural parser would otherwise have to re-process. Using the already-cleaned `SongName` is the cheaper input.
 
-**`track.TrackDate` population is independent of the alias-lookup path.** The early `ExtractDateFromRawTitle` branch writes `TrackDate` onto the track record so downstream UI / search code can read it; the alias-lookup pipeline that follows is a separate concern that produces a canonical `SongName`. Both legacy helpers (`NormalizeDateInTitle`, `ExtractDateFromRawTitle`, `ParseSlashDate`) remain present in the service and are exercised directly by [`TitleDateParsingY2KTests`](../../DeadEditor.Tests/TitleDateParsingY2KTests.cs).
+**`track.TrackDate` population is independent of the alias-lookup path.** The early `ExtractDateFromRawTitle` branch writes `TrackDate` onto the track record so downstream UI / search code can read it; the alias-lookup pipeline that follows is a separate concern that produces a canonical `SongName`. `ExtractDateFromRawTitle` and its `ParseSlashDate` helper are exercised by [`TitleDateParsingY2KTests`](../../DeadEditor.Tests/TitleDateParsingY2KTests.cs) — both helpers stay because `Normalize`'s string-returning signature cannot write `TrackDate` itself.
 
 **Side Effects:**
 - Modifies `track.SongName` for each successful match with the canonical song name from the database
@@ -515,61 +510,6 @@ public bool AddAlias(string officialTitle, string alias)
 
 ---
 
-### NormalizeDateInTitle
-
-**Signature:**
-```csharp
-public string NormalizeDateInTitle(string title, string? albumDate = null)
-```
-
-**Purpose:** Parse slash-formatted dates in parenthetical suffixes, strip venue info, convert to yyyy-MM-dd format.
-
-**Parameters:**
-- `title` (string) - Track title with potential date suffix
-- `albumDate` (string?, optional) - Album date in `yyyy-MM-dd` or `yyyy` form. When supplied, two-digit years are resolved against the album's century where consistent (within ±1 year). When null, a `currentYear+5` pivot is used. See [Two-Digit Year Resolution](#two-digit-year-resolution) below.
-
-**Return Value:** `string` - Title with normalized date or unchanged if no date found
-
-**Business Logic:**
-
-1. **Match slash date pattern** (regex):
-   ```regex
-   \s*\((\d{1,2}/\d{1,2}/\d{2,4})(?:\s+[^)]+)?\)\s*$
-   ```
-   - Captures: `(M/d/yy)`, `(MM/DD/YYYY)`, `(yyyy/MM/dd)`
-   - Optional venue info after date: `(?:\s+[^)]+)?`
-
-2. **Parse date components**:
-   - Split on `/` → 3 parts: part1, part2, part3
-   - Detect format:
-     * If part1 length == 4 → `yyyy/MM/dd` format
-     * Else → `M/d/yy` or `MM/DD/YYYY` format
-
-3. **Convert to yyyy-MM-dd**:
-   - `yyyy/MM/dd` format:
-     * year = part1, month = part2, day = part3
-   - `M/d/yy` format:
-     * month = part1, day = part2, year = part3
-     * Two-digit year resolution delegates to [`TwoDigitYearResolver.ResolveTwoDigitYear`](../Services/TwoDigitYearResolver.cs). See [Two-Digit Year Resolution](#two-digit-year-resolution) below.
-
-4. **Reconstruct title**:
-   - Extract base title (before date parentheses)
-   - Append normalized date: `{baseTitle} ({yyyy-MM-dd})`
-
-**Examples:**
-- `"Drums (1971/07/02 Filmore West)"` → `"Drums (1971-07-02)"`
-- `"Not Fade Away (5/7/77 Barton Hall)"` → `"Not Fade Away (1977-05-07)"`
-- `"Good Loving' (1971/07/02)"` → `"Good Loving' (1971-07-02)"`
-- `"Song Title"` → `"Song Title"` (no change)
-
-**Error Handling:**
-- Invalid date parsing → return original title unchanged
-- Date components out of range → return original title unchanged
-
-**Two-digit year resolution:** See [Two-Digit Year Resolution](#two-digit-year-resolution).
-
----
-
 ## Two-Digit Year Resolution
 
 **Status:** Bug fix — replaced a hard-coded `year >= 70 ? 1900 : 2000` pivot at four sites that previously misclassified pre-1970 dates as 21st-century. With no test coverage, the bug went unnoticed until an audit. This section documents the new strategy and the helper that backs it; the audit also added the first regression test coverage for these parsers.
@@ -578,10 +518,8 @@ public string NormalizeDateInTitle(string title, string? albumDate = null)
 
 | Site | Method |
 |------|--------|
-| 1 | [`NormalizationService.NormalizeDateInTitle`](../Services/NormalizationService.cs) |
-| 2 | [`NormalizationService.ParseSlashDate`](../Services/NormalizationService.cs) (private, via `ExtractDateFromRawTitle` from `NormalizeAll`) |
-| 3 | [`MetadataService.ParseTitleAndDate`](../Services/MetadataService.cs) PATTERN 1C (square bracket venue + slash date) |
-| 4 | [`MetadataService.ParseTitleAndDate`](../Services/MetadataService.cs) PATTERN 1D (parenthetical with slash date and venue) |
+| 1 | [`TitleStructureParser`](../Services/TitleStructureParser.cs) `ExtractDate` (covers all title-parsing paths since Y2K-2c/2d — `MetadataService.ParseTitleAndDate` and `NormalizationService.Normalize` both delegate to the parser) |
+| 2 | [`NormalizationService.ParseSlashDate`](../Services/NormalizationService.cs) (private, via `ExtractDateFromRawTitle` from `NormalizeAll` — populates `track.TrackDate` from raw title scan) |
 
 ### Rules
 
@@ -661,8 +599,6 @@ The previous implementation used `if (year < 100) year += (year >= 70) ? 1900 : 
 3. **L6** dash re-normalization (covers U+2212 minus, which the parser does not handle).
 4. **L7** strip ` (1)`, ` (2)`, bare ` Reprise` / ` reprise` suffix (parser preserves these as content / has no boundary to detect them).
 5. **L9** fuzzy match via Levenshtein.
-
-L2-L5 and L8 are present but redundant after Y2K-2d; they will be removed in the next cleanup commit.
 
 **Rationale:** Structural parsing replaces the old "strip in increasingly-specific regex order" approach because content-paren classification (e.g. `Caution (Do Not Stop on Tracks)` vs `(11/2/69)`) cannot be done by position alone.
 
@@ -836,5 +772,5 @@ The parser handles the first, second, and fourth in its own dash-normalization s
 
 ---
 
-**Last Updated:** 2026-04-30 (commit Y2K-2d — strip stack delegated to TitleStructureParser)
+**Last Updated:** 2026-05-01 (commit Y2K-2e — closing cleanup; redundant lookup stages and `NormalizeDateInTitle` removed)
 **Status:** Complete service documentation
