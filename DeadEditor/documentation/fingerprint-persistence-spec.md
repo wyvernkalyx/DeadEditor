@@ -59,7 +59,7 @@ The guard preserves any existing tag value when the import has nothing new to wr
 
 ### `MetadataService.WriteMetadata` (in-place)
 
-Mirror the same guarded write — but **do not trigger fingerprinting from inside `WriteMetadata`**. The pre-compute step lives only in `LibraryImportService.ImportToLibrary`. `WriteMetadata` is the in-place button path used by ImportView's "Write Metadata"; it writes whatever is in `track.AcoustIdFingerprint` and leaves files alone when the field is empty.
+Mirror the same guarded write — but **do not trigger fingerprinting from inside `WriteMetadata`**. The pre-compute step lives only in `LibraryImportService.ImportToLibrary`. `WriteMetadata` is the in-place save path used by EditMetadataView's "Save Changes"; it writes whatever is in `track.AcoustIdFingerprint` and leaves files alone when the field is empty.
 
 This keeps the parity with the MBID pattern from Commit 1.6: in-place writes don't originate new fingerprint values, but they don't drop existing ones either.
 

@@ -710,9 +710,9 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
    - Changes song titles, venues, dates, artwork, etc.
    - Normalizes songs, renumbers tracks
    - **Player remains fully interactive** - user can move/control player windows during editing
-   - **Clicks "Write to Files"** button
+   - **Clicks "Save Changes"** button
      - Metadata written to audio files IN PLACE (in library folder)
-     - Does NOT use "Import to Library" button (concert already in library)
+     - Concert already in library; no re-import occurs
    - Closes MainWindow (Cancel button or X)
 
 4. **MainWindow closes, `Closed` event fires**
@@ -729,7 +729,7 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
    - Concert view shows updated tracks
    - Playback continues uninterrupted (if music was playing)
 
-**Success Path:** Open concert → Edit Metadata → Make changes → Write to Files → Close → Library refreshed with updates
+**Success Path:** Open concert → Edit Metadata → Make changes → Save Changes → Close → Library refreshed with updates
 **Key Design:** Editing does NOT re-import, just updates files in place within library folder structure
 
 ---

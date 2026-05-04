@@ -148,11 +148,8 @@
                            Foreground="#CCCCCC" Margin="0,2,0,0"/>
             </StackPanel>
 
-            <!-- Right: Write/Import Buttons -->
+            <!-- Right: Import Button -->
             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button x:Name="WriteButton" Content="Write to Files" Height="32"
-                        Click="WriteButton_Click" Margin="0,0,6,0" FontSize="16"
-                        ToolTip="Write metadata to audio files"/>
                 <Button x:Name="ImportButton" Content="Import to Library" Height="32"
                         Style="{StaticResource PrimaryButton}"
                         Click="ImportButton_Click" Margin="0,0,6,0" FontSize="16"

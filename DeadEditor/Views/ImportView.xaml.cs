@@ -347,7 +347,6 @@ namespace DeadEditor
             MatchSetlistButton.IsEnabled = false;
             MatchSetlistButton.ToolTip = "No setlist data for this date";
             ImportButton.IsEnabled = true;
-            WriteButton.IsEnabled = true;
             ArtworkImage.Visibility = Visibility.Collapsed;
             NoArtworkText.Visibility = Visibility.Visible;
             StatusTextBlock.Text = "Ready — select a folder to begin";
@@ -1467,41 +1466,6 @@ namespace DeadEditor
             }
         }
 
-        private async void WriteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_tracks.Count == 0 || _albumInfo == null)
-            {
-                await ShowNotificationAsync("No Files", "No tracks loaded to write.");
-                return;
-            }
-
-            bool confirmed = await ShowNotificationAsync("Confirm Write",
-                $"This will write metadata to {_tracks.Count} audio files. This operation cannot be undone.\n\nContinue?",
-                showYesNo: true);
-
-            if (!confirmed) return;
-
-            try
-            {
-                StatusTextBlock.Text = "Writing metadata...";
-
-                var trackList = _tracks.Select(t => t.Track).ToList();
-                _metadataService.WriteMetadata(_albumInfo, trackList);
-
-                _albumInfo.IsModified = false;
-                foreach (var t in _tracks) t.Track.IsModified = false;
-
-                StatusTextBlock.Text = $"Successfully wrote metadata to {_tracks.Count} files";
-                await ShowNotificationAsync("Success",
-                    $"Successfully wrote metadata to {_tracks.Count} files.");
-            }
-            catch (Exception ex)
-            {
-                await ShowNotificationAsync("Error", $"Error writing metadata: {ex.Message}");
-                StatusTextBlock.Text = "Error writing metadata";
-            }
-        }
-
         private async void ImportButton_Click(object sender, RoutedEventArgs e)
         {
             if (_tracks.Count == 0 || _albumInfo == null)
@@ -1553,7 +1517,6 @@ namespace DeadEditor
             try
             {
                 ImportButton.IsEnabled = false;
-                WriteButton.IsEnabled = false;
                 StatusTextBlock.Text = "Importing to library...";
                 ProgressBar.Visibility = Visibility.Visible;
                 ProgressBar.IsIndeterminate = false;
@@ -1635,7 +1598,6 @@ namespace DeadEditor
             {
                 ProgressBar.Visibility = Visibility.Collapsed;
                 ImportButton.IsEnabled = true;
-                WriteButton.IsEnabled = true;
                 System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] IOException: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] Source: {ex.Source}");
                 System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] Stack: {ex.StackTrace}");
@@ -1649,7 +1611,6 @@ namespace DeadEditor
             {
                 ProgressBar.Visibility = Visibility.Collapsed;
                 ImportButton.IsEnabled = true;
-                WriteButton.IsEnabled = true;
                 System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] {ex.GetType().Name}: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"[IMPORT ERROR] Stack: {ex.StackTrace}");
                 await ShowNotificationAsync("Import Failed",

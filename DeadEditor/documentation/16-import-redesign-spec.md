@@ -58,7 +58,7 @@ The window is organized top-to-bottom:
 
 ## Section 2: Action Bar
 
-**Layout:** Horizontal bar with action buttons left, status center, write/import buttons right.
+**Layout:** Horizontal bar with action buttons left, status center, import button right.
 
 | Element | Type | Behavior |
 |---------|------|----------|
@@ -68,8 +68,7 @@ The window is organized top-to-bottom:
 | Renumber Tracks | Button | Renumbers tracks sequentially |
 | View Info File | Button | Opens info file viewer if .txt file exists in folder |
 | Status text | Label | Shows "Matched X of Y songs" — updates after normalize |
-| Write to Files | Button | Writes current metadata to audio file ID3 tags |
-| Import to Library | Button (primary) | Writes metadata AND imports to library |
+| Import to Library | Button (primary) | Copies files to managed library and writes metadata to the copies (source files never written) |
 | Cancel | Button | Closes window, stops any playback |
 
 **Key change:** MusicBrainz is now just a button in the action bar. When clicked:

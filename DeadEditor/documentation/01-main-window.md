@@ -18,15 +18,14 @@ MainWindow is the concert import workflow hub for DeadEditor. It loads audio fil
 **UI shown:**
 - "Select Folder..." button + folder path display (top bar)
 - "Read" button (toolbar)
-- "Write to Files" + "Import to Library" buttons (bottom right)
+- "Import to Library" button (bottom right)
 - Window title: "Dead Editor - Import"
 
 **Workflow:**
 1. User selects folder containing audio files
 2. User normalizes song titles, edits metadata as needed
-3. User clicks "Write to Files" to update ID3 tags
-4. User clicks "Import to Library" to copy files to library folder structure
-5. Window clears after successful import
+3. User clicks "Import to Library" to copy files to library folder structure (tags are written to the managed copy during this step)
+4. Window clears after successful import
 
 **Constructor:** `new MainWindow()` (parameterless)
 
@@ -66,7 +65,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 - **Edit Mode:** "Editing: [Album Name]" label
 
 **Action Bar:**
-- **Import Mode:** Read, MusicBrainz, Normalize, Renumber, Match Setlist, View Info (left) | Write to Files, Import to Library, Cancel (right)
+- **Import Mode:** Read, MusicBrainz, Normalize, Renumber, Match Setlist, View Info (left) | Import to Library, Cancel (right)
 - **Edit Mode:** MusicBrainz, Normalize, Renumber, View Info (left) | Save Changes, Cancel (right)
 
 **Main Content (Two-Column Grid):**
@@ -119,7 +118,6 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 | Normalize All Songs | Button | `NormalizeButton` | Normalizes all track titles using fuzzy matching, highlights unmatched songs in yellow/gold | `_normalizationService.NormalizeAll(_tracks)` | Working | Both modes |
 | Renumber Tracks | Button | `RenumberButton` | Renumbers tracks using disc-aware 101/201/301 convention based on current row order (use after drag-to-reorder) | Disc-aware sequential numbering (line 424-451) | Working | Both modes |
 | Match Setlist | Button | `MatchSetlistButton` | Matches imported tracks to known setlist data by song name, assigns disc/track numbers and segue flags from setlist. Enabled only when setlist data exists for the album date. Uses NormalizationService for fuzzy title matching and ShowLookupService for setlist lookup. Does not auto-apply — user reviews suggestions before import. Renumber button overrides setlist suggestions if clicked afterward. | `ShowLookupService.GetSetlist()`, `NormalizationService.Normalize()`, `ShowLookupService.GetDiscTrack()` | Working | Import mode only |
-| Write to Files | Button | `WriteButton` | Writes metadata to audio files after confirmation | `_metadataService.WriteMetadata(_albumInfo, _tracks)` | Working | Import mode only |
 | View Info File | Button | `ViewInfoButton` | Opens non-modal window showing .txt info file content | Opens new Window with TextBox (line 823-851) | Working | Both modes |
 | Import to Library | Button | `ImportButton` | Imports concert to library folder structure with progress bar | `_libraryImportService.ImportToLibrary(...)` | Working | Import mode only |
 | Save Changes | Button | `SaveChangesButton` | Writes metadata to files AND updates library record in one operation, then closes window | `_metadataService.WriteMetadata()` → `_libraryImportService.ImportToLibrary()` → `Close()` | Working | Edit mode only |
@@ -327,21 +325,7 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
      - Updates `track.Title`, `track.HasSegue`, `track.PerformanceDate`
      - `UpdateTrackPreviews()` and `TracksDataGrid.Items.Refresh()` update preview
 
-5. **User clicks "Write to Files" button**
-   - `WriteButton_Click` fires (line 756)
-   - If no tracks or album info → shows "No Files" notification, exits
-   - Shows confirmation notification: "This will write metadata to X audio files. This operation cannot be undone. Continue?"
-   - User clicks "Yes" in notification panel
-     - `_notificationResult.Task` resolves to `true` (line 764)
-   - `_metadataService.WriteMetadata(_albumInfo, _tracks)` writes ID3 tags (line 775)
-     - For each track: writes Artist, Album, Title, Track#, Date, Venue, etc.
-     - **Important:** For studio albums, does NOT append date to track titles
-     - For live recordings: may append date like "Song Title (yyyy-MM-dd)" if `PerformanceDate` set
-   - Status: "Successfully wrote metadata to X files"
-   - Shows success notification
-   - Marks `_albumInfo.IsModified = false` and `track.IsModified = false`
-
-6. **User clicks "Import to Library" button**
+5. **User clicks "Import to Library" button**
    - `ImportButton_Click` fires (line 866)
    - If no tracks or album info → shows "No Files" notification, exits
    - If `_librarySettings.LibraryRootPath` not set → shows "Library Not Set" notification, exits
@@ -368,12 +352,11 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
      - Status: "Error importing to library"
      - UI not cleared (user can retry or fix issues)
 
-**Success Path:** Folder loaded → Songs normalized → Metadata written → Imported to library → UI cleared
+**Success Path:** Folder loaded → Songs normalized → Imported to library (tags written to managed copy) → UI cleared
 **Failure Paths:**
 - No audio files → notification, stop at step 2
 - Songs not in database → highlighted in yellow, user can proceed with original titles or add songs
-- Write cancelled → stop at step 5
-- Library path not set → notification, stop at step 6
+- Library path not set → notification, stop at step 5
 - Import cancelled or failed → UI not cleared, user can retry
 
 ---
@@ -489,22 +472,18 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
    - Normalizes song titles against database
    - Highlights unmatched songs
 
-7. **User clicks "Write to Files" button**
-   - Same as Workflow 1 step 5
-   - **Important difference:** Studio album tracks do NOT get date appended (line 190-192)
-   - Preview metadata shows clean song titles: "Morning Dew", not "Morning Dew (1972-05-04)"
-
-8. **User clicks "Import to Library" button**
+7. **User clicks "Import to Library" button**
    - `ImportButton_Click` fires (line 866)
-   - Same validation checks as Workflow 1 step 6
+   - Same validation checks as Workflow 1 step 5
    - Confirmation shows: "Structure: Studio Albums\[Album Name] ([Year])\"
    - User clicks "Yes"
    - `_libraryImportService.ImportToLibrary(...)` runs
    - Copies files to `[LibraryRoot]/Studio Albums/[Album Name] ([Year])/`
+   - Tags written to managed copy. **Important:** Studio album tracks do NOT get date appended (line 190-192) — preview shows clean song titles like "Morning Dew", not "Morning Dew (1972-05-04)"
    - Success notification shows full path
    - `ClearView()` resets UI
 
-**Success Path:** Folder loaded → Studio Album selected → MusicBrainz lookup → Metadata reviewed → Written → Imported
+**Success Path:** Folder loaded → Studio Album selected → MusicBrainz lookup → Metadata reviewed → Imported (tags written to managed copy)
 **Failure Paths:**
 - fpcalc.exe missing → fingerprint lookup fails, use manual search
 - MusicBrainz API unreachable → lookup/search fails, enter manually
@@ -581,17 +560,11 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
    - Change album type if needed
    - Add/remove/change artwork
 
-4. **User clicks "Write to Files"**
-   - Same as previous workflows
-   - Overwrites existing metadata in place
+4. **User clicks "Save Changes"**
+   - Writes metadata in place to the managed-library files
+   - LibraryBrowserWindow refreshes to show updated metadata
 
-5. **User closes window (does NOT click "Import to Library")**
-   - `this.Close()` via Cancel button or X
-   - LibraryBrowserWindow detects close (line 860 in LibraryBrowserWindow.xaml.cs)
-   - Refreshes library view to show updated metadata
-   - Re-loads concert view to show changes
-
-**Success Path:** Concert loaded → Metadata edited → Written → Window closed → Library refreshed
+**Success Path:** Concert loaded → Metadata edited → Saved → Library refreshed
 **Note:** User does NOT re-import; files are edited in place within library folder
 
 ---
@@ -625,10 +598,10 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
      - Disc 1 tracks get 101, 102 in current order
      - Disc 2 tracks get 201, 202 in current order
 
-5. **User clicks "Write to Files"**
-   - Metadata written with new track numbers to audio files
+5. **User clicks "Import to Library"**
+   - Files copied to the managed library and metadata written with new track numbers to the managed copies
 
-**Success Path:** Tracks loaded → Dragged to correct order → Renumbered → Written to files
+**Success Path:** Tracks loaded → Dragged to correct order → Renumbered → Imported to library
 
 **Notes:**
 - Dragging does NOT automatically renumber - user must click Renumber button
@@ -715,7 +688,7 @@ The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspe
 - Album metadata (artist, date, venue, album name, year, edition, box set name)
 - Track edits (titles, segues, performance dates)
 - MusicBrainz search criteria (album name, artist, year)
-- Confirmation dialogs (write, import, overwrite)
+- Confirmation dialogs (import, overwrite)
 
 **External APIs:**
 - MusicBrainz API (via `_musicBrainzService`)
@@ -727,14 +700,11 @@ The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspe
 ### Outputs
 
 **Files Written:**
-- **When "Write to Files" clicked:**
-  - ID3 tags updated in original audio files (in place)
-  - Tags written: Artist, Album, Title, Track#, Year, Date, Genre, Comment, AlbumArtist
-  - Embedded artwork (APIC frame) if `_albumInfo.ArtworkData` present
-
 - **When "Import to Library" clicked:**
   - Copies all audio files to library folder structure
-  - Writes metadata to copied files (not originals)
+  - Writes metadata to copied files (source files are never written to)
+    - Tags written: Artist, Album, Title, Track#, Year, Date, Genre, Comment, AlbumArtist
+    - Embedded artwork (APIC frame) if `_albumInfo.ArtworkData` present
   - Copies artwork as `cover.jpg` in album folder
   - Copies info file (if present) to album folder
   - Creates folder structure:
@@ -864,13 +834,12 @@ The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspe
 - **Supported formats:** JPEG, PNG
 - **Storage:** In-memory as byte array in `_albumInfo.ArtworkData`
 - **MIME type:** Detected from file extension, stored in `_albumInfo.ArtworkMimeType`
-- **Embed on write:** Written to ID3 APIC frame when "Write to Files" clicked
+- **Embed on import:** Written to ID3 APIC frame on the managed copy during Import to Library
 - **Import to library:** Saved as `cover.jpg` in album folder
 - **MusicBrainz download:** Automatically downloads from Cover Art Archive if available
 
 ### Metadata Writing Rules
-- **Write target:** Original audio files when "Write to Files" clicked
-- **Import target:** Copied files in library when "Import to Library" clicked
+- **Write target:** Managed-library copies only — Import to Library writes to the copied files. Source files are never written to from Import view.
 - **Irreversible:** No undo functionality (confirmed in dialog)
 - **Tags written:**
   - Artist (from `_albumInfo.Artist`)
@@ -1080,22 +1049,6 @@ if (!isBoxSet && !string.IsNullOrEmpty(_librarySettings.LastBoxSetName) &&
 **Improvement needed:** Validate year format and show error message
 
 **Result:** Soft failure, no crash, but invalid metadata
-
----
-
-### What happens if user clicks "Write to Files" multiple times?
-**Scenario:** User clicks "Write to Files", then clicks again
-**Behavior:**
-1. First write succeeds
-2. Sets `_albumInfo.IsModified = false` and `track.IsModified = false` (line 783-787)
-3. Second click:
-   - Confirmation dialog shown (line 764-768)
-   - User clicks "Yes"
-   - `_metadataService.WriteMetadata()` writes again (line 775)
-   - Overwrites same tags with same data
-4. Status: "Successfully wrote metadata to X files" (both times)
-
-**Result:** Harmless redundancy, no data corruption
 
 ---
 
