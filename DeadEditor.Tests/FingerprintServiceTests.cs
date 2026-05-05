@@ -108,6 +108,7 @@ public class FingerprintServiceTests
     public void WriteFingerprintToTrackFile_WithFingerprint_WritesToFlacXiph()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
         try
         {
             var flacPath = Path.Combine(dir, "track1.flac");
@@ -130,6 +131,7 @@ public class FingerprintServiceTests
     public void WriteFingerprintToTrackFile_WithEmptyFingerprint_PreservesExistingTag()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
         try
         {
             var flacPath = Path.Combine(dir, "track1.flac");
@@ -153,6 +155,7 @@ public class FingerprintServiceTests
     public void WriteFingerprintToTrackFile_OverwritesExistingValue()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
         try
         {
             var flacPath = Path.Combine(dir, "track1.flac");

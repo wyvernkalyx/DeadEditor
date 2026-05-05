@@ -132,6 +132,8 @@ namespace DeadEditor.Services
             if (string.IsNullOrEmpty(track.AcoustIdFingerprint)) return;
             if (string.IsNullOrEmpty(track.FilePath) || !File.Exists(track.FilePath)) return;
 
+            PathGuard.EnsureWithinLibrary(track.FilePath, "FingerprintService.WriteFingerprintToTrackFile");
+
             try
             {
                 using var file = TagLib.File.Create(track.FilePath);

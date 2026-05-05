@@ -343,6 +343,10 @@ namespace DeadEditor.Services
         /// </summary>
         public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
         {
+            PathGuard.EnsureWithinLibrary(
+                tracks.Select(t => t.FilePath),
+                "MetadataService.WriteMetadata");
+
             foreach (var track in tracks)
             {
                 using (var file = TagLib.File.Create(track.FilePath))

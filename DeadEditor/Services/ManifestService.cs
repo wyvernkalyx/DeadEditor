@@ -35,6 +35,9 @@ namespace DeadEditor.Services
                 return;
             }
 
+            var manifestPath = Path.Combine(parentDir, folderName + ".json");
+            PathGuard.EnsureWithinLibrary(manifestPath, "ManifestService.WriteManifest");
+
             var manifest = new AlbumManifest
             {
                 Version = 1,
@@ -60,8 +63,6 @@ namespace DeadEditor.Services
                     Segue = t.Segue
                 }).ToList()
             };
-
-            var manifestPath = Path.Combine(parentDir, folderName + ".json");
 
             try
             {

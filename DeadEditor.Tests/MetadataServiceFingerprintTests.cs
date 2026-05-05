@@ -26,6 +26,7 @@ public class MetadataServiceFingerprintTests
     public void WriteMetadata_WithFingerprintSupplied_WritesFingerprintToFlacXiph()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
 
         try
         {
@@ -59,6 +60,7 @@ public class MetadataServiceFingerprintTests
     public void WriteMetadata_WithoutFingerprint_PreservesExistingFingerprintTag()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
 
         try
         {

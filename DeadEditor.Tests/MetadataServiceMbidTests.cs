@@ -26,6 +26,7 @@ public class MetadataServiceMbidTests
     public void WriteMetadata_WithMbidSupplied_WritesMbidToFlacXiph()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
 
         try
         {
@@ -60,6 +61,7 @@ public class MetadataServiceMbidTests
     public void WriteMetadata_WithoutMbid_PreservesExistingMbidTag()
     {
         var dir = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(dir);
 
         try
         {
