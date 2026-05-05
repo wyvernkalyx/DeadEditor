@@ -347,6 +347,14 @@ namespace DeadEditor.Services
                 tracks.Select(t => t.FilePath),
                 "MetadataService.WriteMetadata");
 
+            // Derive TRACKTOTAL/DISCTOTAL from the in-memory list so saved files
+            // reflect the album the user is actually working with. See Commit 1
+            // in the disc/track editing chain.
+            var trackCountByDisc = tracks
+                .GroupBy(t => t.DiscNumber)
+                .ToDictionary(g => g.Key, g => g.Count());
+            var discCount = trackCountByDisc.Count;
+
             foreach (var track in tracks)
             {
                 using (var file = TagLib.File.Create(track.FilePath))
@@ -402,6 +410,8 @@ namespace DeadEditor.Services
                     file.Tag.AlbumArtists = new[] { album.Artist };
                     file.Tag.Track = (uint)track.TrackNumber;
                     file.Tag.Disc = (uint)track.DiscNumber;
+                    file.Tag.TrackCount = (uint)trackCountByDisc[track.DiscNumber];
+                    file.Tag.DiscCount = (uint)discCount;
 
                     // Write year: prefer AlbumDate, fall back to Year field
                     if (DateTime.TryParse(album.AlbumDate, out var parsedDate))

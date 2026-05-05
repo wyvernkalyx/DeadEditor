@@ -242,6 +242,8 @@ public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
    - `file.Tag.AlbumArtists` = [album.Artist]
    - `file.Tag.Track` = track.TrackNumber (cast to uint)
    - `file.Tag.Disc` = track.DiscNumber (cast to uint)
+   - `file.Tag.TrackCount` = number of tracks in the same disc as the file (TRACKTOTAL on FLAC, TRCK denominator on ID3v2)
+   - `file.Tag.DiscCount` = number of distinct disc values across the album (DISCTOTAL on FLAC, TPOS denominator on ID3v2)
    - `file.Tag.Year` = parsed from album.AlbumDate if valid date, else from album.Year if numeric (supports Official Releases with year but no concert date)
 
 3. **Embed Artwork** (line 224-240):
@@ -271,6 +273,7 @@ public void WriteMetadata(AlbumInfo album, List<TrackInfo> tracks)
 - **Segue marker placement:** Comes BEFORE date suffix (e.g., " > (date)" not "(date) >")
 - **Single artwork only:** First picture replaces all existing pictures
 - **Artist written to both Performers and AlbumArtists** (standard practice for consistency)
+- **Totals derived, not user-edited:** TrackCount and DiscCount are computed from the in-memory track list once before the per-file loop and written per file. Per-disc TrackCount respects multi-disc albums (track on disc 2 of a 3-disc album with discs 10/12/8 gets `TrackCount = 12`). DiscCount is the number of *distinct* DiscNumber values, not the maximum disc number — non-contiguous discs (e.g., 1, 1, 5) yield `DiscCount = 2`.
 
 **Important Note:** This method is destructive - modifies audio files in-place with no undo. Caller should confirm with user before calling.
 
