@@ -21,6 +21,34 @@ Live music metadata suffers from:
 
 ---
 
+## Ground Rules
+
+These are invariants. They apply to every feature, every commit, every session. If a proposed change appears to require violating one, stop and raise it explicitly — do not work around it.
+
+### Source files are read-only
+
+DeadEditor never writes to source folders. The user's source archive — the folder they Browse to in the Import view, or any path outside `LibrarySettings.LibraryRootPath` — is treated as read-only. We copy from it, never to it.
+
+All tag writes, file renames, artwork updates, and fingerprint persistence operate exclusively on copies inside the managed library. If a feature needs to mutate audio files, the change must land on the managed copy.
+
+This is enforced two ways:
+
+1. **Structurally.** Every tag-writing entry point in the app is reachable only from a `LibraryShow` (managed-by-construction) or from the Library Import target path (computed from `LibraryRoot`). There is no UI surface that opens a non-managed folder for write.
+2. **At runtime.** `PathGuard.EnsureWithinLibrary` is called at the top of `MetadataService.WriteMetadata`, `FingerprintService.WriteFingerprintToTrackFile`, and `ManifestService.WriteManifest`. Any path outside the managed library throws `InvalidOperationException` immediately, before any file handle is opened.
+
+The single legitimate exception is the import copy step itself, which reads the source. Reads are unconstrained; writes are guarded.
+
+**If we destroy data, it is always our copy of the data — never the user's source archive.**
+
+When adding a new feature that writes to disk:
+
+- Confirm the write target is under `LibraryRoot`. Verify it, don't assume it.
+- If you add a new write service, call `PathGuard.EnsureWithinLibrary` at the top of it.
+- Do not add an `allowSourceWrite` escape hatch or any equivalent bypass. There is no legitimate source-write in DeadEditor; an escape hatch is a foot-gun.
+- If a workflow seems to require writing to source, stop and raise it. There is almost certainly a managed-side equivalent (or one we should build).
+
+---
+
 ## Documentation Handbook
 
 **RULE:** Before modifying any file, check this table and read the relevant documentation file first. **The documentation is the spec — code must match the doc.**

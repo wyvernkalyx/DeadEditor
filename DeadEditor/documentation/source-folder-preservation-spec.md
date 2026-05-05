@@ -1,5 +1,7 @@
 # Source Folder Preservation + Open Folder Buttons
 
+> See **Ground Rules → Source files are read-only** in [CLAUDE.md](../CLAUDE.md#source-files-are-read-only) for the project-wide invariant. This spec describes copy-side (read-from-source) behavior under that rule; it does not authorize any write to a source folder.
+
 ## 1. Goals
 
 - Import preserves the entire contents of a source folder (not just FLACs/MP3s) so EAC logs, text files, artwork, readmes, checksums, and other provenance travel with the recording
