@@ -279,6 +279,7 @@ namespace DeadEditor
                 FolderPathTextBox.Foreground = new SolidColorBrush(
                     (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#AAAAAA"));
                 OpenFolderButton.IsEnabled = true;
+                EmptyStatePanel.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -286,6 +287,7 @@ namespace DeadEditor
                 FolderPathTextBox.Foreground = new SolidColorBrush(
                     (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#666666"));
                 OpenFolderButton.IsEnabled = false;
+                EmptyStatePanel.Visibility = Visibility.Visible;
             }
         }
 
@@ -350,6 +352,8 @@ namespace DeadEditor
             ArtworkImage.Visibility = Visibility.Collapsed;
             NoArtworkText.Visibility = Visibility.Visible;
             StatusTextBlock.Text = "Ready — select a folder to begin";
+
+            UpdateFolderPathDisplay();
 
             _isUpdating = false;
         }

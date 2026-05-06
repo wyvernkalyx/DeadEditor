@@ -52,6 +52,43 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
+        <Style x:Key="TertiaryButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#BBBBBB"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#2D2D30"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#3E3E42"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#666666"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="DataGrid">
             <Setter Property="Background" Value="#252526"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
@@ -76,86 +113,83 @@
         </Grid.RowDefinitions>
 
         <!-- ===== SECTION 1: ACTION BAR ===== -->
-        <Grid Grid.Row="0" Margin="0,0,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="False">
 
-            <!-- Left: Action Buttons -->
-            <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <Button x:Name="ReadButton" Content="Read" Height="32"
-                        Click="ReadButton_Click" Margin="0,0,6,0" FontSize="16"
-                        ToolTip="Re-read metadata from audio files"/>
-                <Button x:Name="MusicBrainzButton" Content="🔎 MusicBrainz" Height="32"
-                        Style="{StaticResource AccentButton}"
-                        Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
-                        ToolTip="Lookup album on MusicBrainz"/>
-                <CheckBox x:Name="ReFingerprintCheckBox"
-                          Content="Re-fingerprint"
-                          Foreground="#CCCCCC"
-                          VerticalAlignment="Center"
-                          Margin="0,0,6,0"
-                          ToolTip="Ignore any existing MusicBrainz ID in source files and identify the release by audio fingerprint instead."/>
-                <Button x:Name="NormalizeButton" Content="✨ Normalize" Height="32"
-                        Style="{StaticResource AccentButton}"
-                        Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="16"
-                        ToolTip="Normalize all song titles"/>
-                <Button x:Name="RenumberButton" Content="Renumber" Height="32"
-                        Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
-                        ToolTip="Renumber tracks sequentially"/>
-                <Button x:Name="MatchSetlistButton" Content="Match Setlist" Height="32"
-                        Style="{StaticResource AccentButton}"
-                        Click="MatchSetlistButton_Click" Margin="0,0,6,0" FontSize="16"
-                        IsEnabled="False"
-                        ToolTip="No setlist data for this date"/>
-                <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
-                        Click="ViewInfoButton_Click" Margin="0,0,6,0" FontSize="16"
-                        IsEnabled="False"
-                        ToolTip="View info file"/>
-            </StackPanel>
+            <!-- Right: Terminal action -->
+            <Button x:Name="ImportButton" DockPanel.Dock="Right"
+                    Content="Import to Library" Height="32"
+                    Style="{StaticResource PrimaryButton}"
+                    Click="ImportButton_Click" FontSize="16"
+                    ToolTip="Import to library"/>
 
-            <!-- Center: Folder Path + Status Text -->
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
-                <DockPanel>
-                    <Button x:Name="OpenFolderButton" DockPanel.Dock="Right"
-                            Height="26" Click="OpenFolderButton_Click"
-                            IsEnabled="False" Margin="6,0,0,0"
-                            ToolTip="Open this folder in File Explorer"
-                            Padding="8,2" Cursor="Hand">
+            <!-- Left: Clustered action buttons -->
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+
+                <!-- Cluster 1: Source operations -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="ReadButton" Content="Read" Height="32"
+                            Style="{StaticResource AccentButton}"
+                            Click="ReadButton_Click" Margin="0,0,6,0" FontSize="16"
+                            ToolTip="Re-read metadata from audio files"/>
+                    <Button x:Name="OpenFolderButton" Content="Open Folder" Height="32"
+                            Style="{StaticResource TertiaryButton}"
+                            Click="OpenFolderButton_Click"
+                            IsEnabled="False" FontSize="16"
+                            ToolTip="Open this folder in File Explorer"/>
+                </StackPanel>
+
+                <!-- Cluster separator -->
+                <Border Width="1" Background="#3F3F46" Margin="14,4,14,4"/>
+
+                <!-- Cluster 2: Enrichment -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- MusicBrainz + Re-fingerprint visually grouped as one unit -->
+                    <Border BorderBrush="#3F3F46" BorderThickness="1"
+                            Background="#252526" CornerRadius="3"
+                            Padding="3" Margin="0,0,6,0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="13"
-                                       VerticalAlignment="Center" Margin="0,0,4,0"/>
-                            <TextBlock Text="Open Folder" FontSize="13" VerticalAlignment="Center"/>
+                            <Button x:Name="MusicBrainzButton" Content="MusicBrainz" Height="28"
+                                    Style="{StaticResource AccentButton}"
+                                    Click="MusicBrainzButton_Click" Margin="0,0,8,0" FontSize="16"
+                                    ToolTip="Lookup album on MusicBrainz"/>
+                            <CheckBox x:Name="ReFingerprintCheckBox"
+                                      Content="Re-fingerprint"
+                                      Foreground="#CCCCCC"
+                                      FontSize="13"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,6,0"
+                                      ToolTip="Ignore any existing MusicBrainz ID in source files and identify the release by audio fingerprint instead."/>
                         </StackPanel>
-                    </Button>
-                    <TextBox x:Name="FolderPathTextBox"
-                             Text="No folder loaded"
-                             IsReadOnly="True"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             Foreground="#AAAAAA"
-                             FontSize="13"
-                             Padding="0"
-                             MinHeight="0"
-                             VerticalContentAlignment="Center"
-                             TextWrapping="NoWrap"
-                             IsTabStop="False"/>
-                </DockPanel>
-                <TextBlock x:Name="StatusTextBlock"
-                           Text="Ready — select a folder to begin" FontSize="14"
-                           Foreground="#CCCCCC" Margin="0,2,0,0"/>
-            </StackPanel>
+                    </Border>
+                    <Button x:Name="NormalizeButton" Content="Normalize" Height="32"
+                            Style="{StaticResource AccentButton}"
+                            Click="NormalizeButton_Click" FontSize="16"
+                            ToolTip="Normalize all song titles"/>
+                </StackPanel>
 
-            <!-- Right: Import Button -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button x:Name="ImportButton" Content="Import to Library" Height="32"
-                        Style="{StaticResource PrimaryButton}"
-                        Click="ImportButton_Click" Margin="0,0,6,0" FontSize="16"
-                        ToolTip="Import to library"/>
+                <!-- Cluster separator -->
+                <Border Width="1" Background="#3F3F46" Margin="14,4,14,4"/>
+
+                <!-- Cluster 3: Grid operations -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="RenumberButton" Content="Renumber" Height="32"
+                            Style="{StaticResource TertiaryButton}"
+                            Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
+                            ToolTip="Renumber tracks sequentially"/>
+                    <Button x:Name="MatchSetlistButton" Content="Match Setlist" Height="32"
+                            Style="{StaticResource AccentButton}"
+                            Click="MatchSetlistButton_Click" Margin="0,0,6,0" FontSize="16"
+                            IsEnabled="False"
+                            ToolTip="No setlist data for this date"/>
+                    <Button x:Name="ViewInfoButton" Content="View Info" Height="32"
+                            Style="{StaticResource TertiaryButton}"
+                            Click="ViewInfoButton_Click" FontSize="16"
+                            IsEnabled="False"
+                            ToolTip="View info file"/>
+                </StackPanel>
+
             </StackPanel>
-        </Grid>
+        </DockPanel>
 
         <!-- ===== SECTION 2: ALBUM INFO BAR ===== -->
         <Border Grid.Row="1" BorderBrush="#555555" BorderThickness="1"
@@ -496,6 +530,27 @@
                         Visibility="Collapsed"
                         IsHitTestVisible="False"
                         Margin="5,0,5,0"/>
+
+                <!-- Empty state: shown when no folder is loaded -->
+                <Border x:Name="EmptyStatePanel"
+                        Background="#1E1E1E"
+                        BorderBrush="#555555"
+                        BorderThickness="1"
+                        IsHitTestVisible="False">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="No folder loaded"
+                                   FontSize="22"
+                                   FontWeight="SemiBold"
+                                   Foreground="#CCCCCC"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,10"/>
+                        <TextBlock FontSize="14"
+                                   Foreground="#999999"
+                                   HorizontalAlignment="Center">
+                            Click <Run FontWeight="Bold" Foreground="#CCCCCC">Read</Run> in the toolbar to select a folder.
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
             </Grid>
 
             <!-- Artwork Panel -->
@@ -568,19 +623,48 @@
         </Grid>
 
         <!-- ===== SECTION 4: STATUS BAR ===== -->
-        <Border Grid.Row="3" BorderBrush="#555555" BorderThickness="1,0,0,0"
+        <Border Grid.Row="3" BorderBrush="#555555" BorderThickness="0,1,0,0"
                 Background="#252526" Padding="8,4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="StatusTextBlock"
+                               Grid.Column="0"
+                               Text="Ready — select a folder to begin"
+                               FontSize="13"
+                               Foreground="#CCCCCC"
+                               VerticalAlignment="Center"
+                               Margin="0,0,16,0"/>
+                    <TextBox x:Name="FolderPathTextBox"
+                             Grid.Column="1"
+                             Text="No folder loaded"
+                             IsReadOnly="True"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Foreground="#666666"
+                             FontSize="12"
+                             FontFamily="Consolas"
+                             Padding="0"
+                             MinHeight="0"
+                             VerticalContentAlignment="Center"
+                             HorizontalAlignment="Right"
+                             TextWrapping="NoWrap"
+                             IsTabStop="False"/>
+                </Grid>
                 <ProgressBar Grid.Row="1" x:Name="ProgressBar"
                              Height="3" Visibility="Collapsed"
                              Minimum="0" Maximum="100"
                              Background="#1E1E1E"
                              Foreground="#0E639C"
-                             BorderThickness="0"/>
+                             BorderThickness="0"
+                             Margin="0,4,0,0"/>
             </Grid>
         </Border>
 
