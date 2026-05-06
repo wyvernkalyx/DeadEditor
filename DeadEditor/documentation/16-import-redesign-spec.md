@@ -178,10 +178,18 @@ Song Name
 | Folder Name Preview | Label (gold text) | Shows computed folder name based on album info fields and type |
 | Write Path | Label (gray text) | Shows full path where files will be written |
 
-**Album Type dropdown** replaces the radio buttons. It's tucked in the artwork panel, out of the main workflow. Auto-detect infers type from which fields are filled:
-- Album/Release Name filled → Official Release
-- Only Date + Venue filled, no album name → Audience Recording
-- User can always override manually
+**Album Type dropdown** replaces the radio buttons. It's tucked in the artwork panel, out of the main workflow.
+
+The combobox is the source of truth for `_albumInfo.Type` after load. Type is set once when the album info is first populated:
+1. If the source folder has an `ALBUMTYPE` tag (FLAC Xiph or ID3v2 TXXX) → Type comes from the tag.
+2. Otherwise → `AlbumTypeInference.Infer` runs once against the populated fields:
+   - Album/Release Name filled, no Venue → Official Release
+   - Date + Venue filled, no Album Name → Audience Recording
+   - Date + Venue + Album Name → Official Release
+   - Otherwise → Audience Recording (default)
+3. The user may then change Type via the combobox at any time.
+
+**Subsequent text edits to Album Info fields do NOT re-trigger inference.** Once the combobox shows a value (whether from tag, inference, or user selection), it persists until the user chooses something else. Prior behavior re-asserted Type on every keystroke based on `AlbumName` non-empty, silently overriding combobox selections — that auto-override has been removed.
 
 **Folder Name Preview** shows the computed folder name based on album info fields and type. **This field is editable** - user can click to override the auto-computed name. When manually edited, auto-compute stops (override state). A small reset button (↻) next to the preview reverts to auto-computed mode. Editable text field styled like the preview (gold text, #D7BA7D).
 
@@ -279,7 +287,7 @@ When reading existing metadata from older imports:
 1. User clicks **Select Folder** → selects `1977-05-08 Barton Hall, Cornell University, Ithaca, NY`
 2. **Read from Files** runs automatically
 3. Album fields auto-populate: Date=1977-05-08, Venue=Barton Hall, Cornell University, City,State=Ithaca, NY
-4. Album Type auto-detects: Audience Recording (no Album Name filled)
+4. Album Type set at load to Audience Recording (no ALBUMTYPE tag, inference matches Date+Venue+no AlbumName pattern)
 5. Track titles populate from file metadata
 6. User clicks **✨ Normalize All** → titles cleaned, matched to song database
 7. User reviews, edits any unmatched (gold) titles manually
@@ -291,7 +299,7 @@ When reading existing metadata from older imports:
 1. User selects folder `Grateful Dead - Skull and Roses (flac)`
 2. Read from Files populates track titles from tags
 3. User clicks **🔎 MusicBrainz Lookup** → finds "Skull & Roses", populates Album Name and Year
-4. Album Type auto-detects: Official Release (Album Name filled)
+4. Album Type set to Official Release by the MusicBrainz lookup itself (a MB hit is by definition an official release)
 5. Title column updates with MusicBrainz track names
 6. User clicks **✨ Normalize All** → titles matched to song database
 7. User sets bonus track dates by double-clicking Date column for disc 2 tracks
@@ -305,7 +313,7 @@ When reading existing metadata from older imports:
 2. Read from Files populates
 3. User fills in Date, Venue, City/State (live recording info)
 4. User fills in Collection Name: "Listen to the River: St. Louis '71 '72 '73"
-5. Album Type auto-detects: Official Release (Collection Name is filled)
+5. User selects "Official Release" in the Album Type combobox
 6. Folder Name Preview shows: `1971-07-02 - Fox Theatre - St. Louis, MO : Listen to the River: St. Louis '71 '72 '73`
 7. Normalize, review, import
 8. Repeat for next concert — Collection Name remembered from settings

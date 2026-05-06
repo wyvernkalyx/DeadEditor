@@ -213,7 +213,16 @@ namespace DeadEditor
                 }
 
                 // Read album info from folder / FLAC tags
-                _albumInfo = _metadataService.ReadAlbumInfo(folderPath, trackList);
+                _albumInfo = _metadataService.ReadAlbumInfo(folderPath, trackList, out var typeFromTag);
+
+                // Load-time Type fallback: if the source had no ALBUMTYPE tag,
+                // run a single inference pass against the populated fields. After
+                // this point, the combobox is the source of truth for Type — text
+                // edits no longer re-assert it.
+                if (!typeFromTag)
+                {
+                    _albumInfo.Type = InferAlbumType();
+                }
 
                 // Set album date on each track for display fallback (playlist, etc.)
                 if (!string.IsNullOrEmpty(_albumInfo.AlbumDate))
@@ -450,22 +459,6 @@ namespace DeadEditor
             _albumInfo.Year = YearTextBox.Text;
             _albumInfo.IsModified = true;
 
-            // Auto-detect album type
-            if (!string.IsNullOrWhiteSpace(_albumInfo.AlbumName))
-            {
-                _albumInfo.Type = AlbumType.OfficialRelease;
-                _isUpdating = true;
-                AlbumTypeComboBox.SelectedIndex = 2;
-                _isUpdating = false;
-            }
-            else
-            {
-                _albumInfo.Type = AlbumType.AudienceRecording;
-                _isUpdating = true;
-                AlbumTypeComboBox.SelectedIndex = 1;
-                _isUpdating = false;
-            }
-
             UpdateAlbumPreview();
             UpdateAllTrackDisplayTitles();
             UpdateAllTrackInheritedDates();
@@ -588,23 +581,7 @@ namespace DeadEditor
             UpdateAlbumPreview();
         }
 
-        private AlbumType InferAlbumType()
-        {
-            if (_albumInfo == null) return AlbumType.AudienceRecording;
-
-            bool hasDate = !string.IsNullOrEmpty(_albumInfo.AlbumDate);
-            bool hasVenue = !string.IsNullOrEmpty(_albumInfo.Venue);
-            bool hasAlbumName = !string.IsNullOrEmpty(_albumInfo.AlbumName);
-
-            if (hasAlbumName && !hasVenue)
-                return AlbumType.OfficialRelease;
-            if (hasDate && hasVenue && !hasAlbumName)
-                return AlbumType.AudienceRecording;
-            if (hasDate && hasVenue && hasAlbumName)
-                return AlbumType.OfficialRelease;
-
-            return AlbumType.AudienceRecording;
-        }
+        private AlbumType InferAlbumType() => AlbumTypeInference.Infer(_albumInfo);
 
         private void UpdateAlbumPreview()
         {
@@ -1353,6 +1330,11 @@ namespace DeadEditor
                 ArtistTextBox.Text = release.Artist;
                 AlbumNameTextBox.Text = release.Title;
                 YearTextBox.Text = release.Year.ToString();
+                // A MusicBrainz hit IS an official release by definition.
+                // Set Type explicitly here so the import flow doesn't fall
+                // through to AudienceRecording validation (which would
+                // demand a performance date the studio album doesn't have).
+                AlbumTypeComboBox.SelectedIndex = 2;
                 _isUpdating = false;
 
                 if (_albumInfo != null)
@@ -1360,6 +1342,7 @@ namespace DeadEditor
                     _albumInfo.Artist = release.Artist;
                     _albumInfo.AlbumName = release.Title;
                     _albumInfo.Year = release.Year.ToString();
+                    _albumInfo.Type = AlbumType.OfficialRelease;
                     _albumInfo.MusicBrainzReleaseId = release.ReleaseId;
                 }
 

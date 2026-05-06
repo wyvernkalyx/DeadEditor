@@ -197,6 +197,12 @@ namespace DeadEditor.Services
         /// </summary>
         public AlbumInfo ReadAlbumInfo(string folderPath, List<TrackInfo> tracks)
         {
+            return ReadAlbumInfo(folderPath, tracks, out _);
+        }
+
+        public AlbumInfo ReadAlbumInfo(string folderPath, List<TrackInfo> tracks, out bool typeFromTag)
+        {
+            typeFromTag = false;
             var albumInfo = new AlbumInfo
             {
                 FolderPath = folderPath,
@@ -256,6 +262,7 @@ namespace DeadEditor.Services
                         if (Enum.TryParse<AlbumType>(albumType, out var type))
                         {
                             albumInfo.Type = type;
+                            typeFromTag = true;
                         }
 
                         hasCustomFields = true;
@@ -268,7 +275,10 @@ namespace DeadEditor.Services
                         if (!string.IsNullOrEmpty(albumName))
                             albumInfo.AlbumName = albumName;
                         if (Enum.TryParse<AlbumType>(albumType, out var type))
+                        {
                             albumInfo.Type = type;
+                            typeFromTag = true;
+                        }
                         hasCustomFields = true;
                     }
 
