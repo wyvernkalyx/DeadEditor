@@ -655,37 +655,43 @@ once the stepper has had time in the user's hands.
 
 ### Match Setlist Workflow
 
-When the album date corresponds to a show with setlist data in shows.json (~1,800 shows), the "Match Setlist" button becomes enabled and provides automated disc/track number and segue suggestions.
+When the album date corresponds to a show with setlist data in shows.json (~1,800 shows), the "Match Setlist" button becomes enabled and decorates matched tracks with canonical song names and segue flags from the setlist.
+
+**Audio is the archive.** `shows.json` documents what songs were *performed*; the audio documents what was *recorded*. They overlap heavily but are not identical — an audience tape may include tuning passages, banter, or applause that no setlist would document. DeadEditor preserves the audio recording as the archival truth: Match Setlist decorates matched tracks with names and segues, and leaves everything else (including disc/track numbers, and unmatched tracks of any kind) untouched.
 
 **How it works:**
 1. **Button state:** Enabled only when `ShowLookupService.GetSetlist(date)` returns non-null. Tooltip shows song/set count when enabled, "No setlist data for this date" when disabled.
 2. **User clicks "Match Setlist":**
-   - Flattens the setlist across all sets into an ordered song list
-   - For each imported track, normalizes the title via `NormalizationService.Normalize()` and compares against setlist song names (case-insensitive)
-   - Matched tracks get disc/track numbers from their setlist position (Set 1 → Disc 1, Set 2 → Disc 2, Encore → Disc 3, etc.)
-   - Segue flags from the setlist are also applied to matched tracks
-3. **Duplicate handling:** If a song appears multiple times in the setlist, each import track matches the first unclaimed setlist occurrence (positional order)
-4. **Overflow disc for unmatched tracks:** Tracks that don't match any setlist song are moved to an overflow disc (one disc number higher than the highest matched disc). They are numbered sequentially (e.g., 401, 402, 403...) in their original file order. This keeps the matched tracks cleanly organized and groups unmatched tracks visibly at the end.
-5. **User reviews:** The grid updates immediately; user can manually edit any cell before import
-6. **Override:** Clicking "Renumber" after "Match Setlist" overwrites the setlist suggestions
+   - Flattens the setlist across all sets into an ordered song list, resolving each entry to its canonical title via `NormalizationService.GetOfficialTitle()`.
+   - For each imported track, normalizes the title via `NormalizationService.Normalize()` and resolves to canonical for comparison (case-insensitive).
+   - For matched tracks: sets `SongName` to the canonical setlist title, copies the segue flag, marks the track matched and modified.
+   - For unmatched tracks: leaves them entirely untouched. Original disc/track numbers, song name, and segue are preserved.
+3. **Duplicate handling:** If a song appears multiple times in the setlist, each import track matches the first unclaimed setlist occurrence (positional order).
+4. **No overflow disc, no renumbering.** A 14-track audience recording with 2 tuning passages stays as 14 tracks in their original audio sequence — the tuning tracks keep their position between the songs they actually sit between in the recording. Disc and track numbers reflect the source recording's structure, not the setlist's.
+5. **User reviews:** The grid updates immediately; user can manually edit any cell before import.
+6. **Renumber** is unaffected. Clicking it after Match Setlist re-establishes 100-format numbering based on current row order — same job as before.
 
-**Status message:** "Matched N of M tracks to setlist, K segues, X unmatched → Disc D"
+**Status message:** "Matched N of M tracks to setlist, K segues. X unmatched — right-click to match manually."
+
+The matching algorithm is implemented in `Services/SetlistMatcher.cs` as a pure static method, parameterized on a canonical-resolver callback and unit-tested without WPF. The click handler in `ImportView.xaml.cs` does only I/O (reading the date textbox, flattening the setlist, applying status text).
+
+**EditMetadataView's Match Setlist** ([feature-parity-spec.md §6](feature-parity-spec.md)) has been non-destructive since its introduction. Both views now share the same Model B framing: matched tracks get decoration; unmatched tracks are left alone.
 
 ### Right-Click "Match to Song..." (Manual Matching)
 
-After Match Setlist runs, unmatched tracks on the overflow disc can be manually matched to setlist songs via the right-click context menu:
+After Match Setlist runs, unmatched tracks can be manually matched to unclaimed setlist songs via the right-click context menu:
 
-1. **Right-click an unmatched track** (on overflow disc) → context menu shows "🎵 Match to Song..." item (below separator, after Play Now / Add to Playlist)
+1. **Right-click an unmatched track** (any track where `IsMatched != true` after Match Setlist has been run) → context menu shows "🎵 Match to Song..." item (below separator, after Play Now / Add to Playlist).
 2. **Dialog appears** showing:
    - The track's current title (in gold)
    - A list of setlist songs that have NOT yet been matched, with set labels (e.g., "Goin' Down The Road Feelin' Bad (Set 2, #9)")
 3. **User selects a song and clicks Match:**
-   - Track is assigned the correct disc/track number from the setlist position
-   - Segue flag is applied if the setlist indicates one
-   - Track's current title is automatically added as an alias in `songs.json` for the matched song's OfficialTitle (so future imports with the same variant match automatically)
-   - Remaining overflow tracks are renumbered sequentially
-   - Status message updates with new match count
-4. **Disabled when:** Track is already matched (not on overflow disc), no setlist data exists, or all setlist songs are already matched
+   - Track's `SongName` is set to the canonical setlist title.
+   - Segue flag is applied if the setlist indicates one.
+   - Track's prior title is added as an alias in `songs.json` for that canonical name (so future imports of the same variant match automatically).
+   - **Disc and track numbers are NOT changed.** The track stays where it sits in the audio sequence; only the displayed name and segue update.
+   - Status message updates with new match count.
+4. **Disabled when:** Track is already matched, no setlist data exists, Match Setlist hasn't been run yet, or all setlist songs are already matched.
 
 **Auto-alias learning:** When a track like "Goin' Down the Road Feeling Bad" is matched to "Goin' Down The Road Feelin' Bad", the variant is saved as an alias in `songs.json`. Next time any recording with that variant is imported, it matches automatically without manual intervention.
 

@@ -57,7 +57,7 @@ namespace DeadEditor
         private bool _isUpdating = false;
         private TaskCompletionSource<bool>? _notificationResult;
 
-        // ===== MATCH SETLIST STATE (for overflow disc and Match to Song) =====
+        // ===== MATCH SETLIST STATE (for Match to Song dialog) =====
 
         /// <summary>Flattened setlist songs from the last Match Setlist run.</summary>
         private List<(string Name, string Canonical, int Position, bool Segue)>? _lastSetlistSongs;
@@ -65,8 +65,6 @@ namespace DeadEditor
         private HashSet<int>? _lastClaimedPositions;
         /// <summary>The date used for the last Match Setlist run.</summary>
         private string? _lastMatchDate;
-        /// <summary>The overflow disc number assigned to unmatched tracks.</summary>
-        private int _overflowDiscNumber;
 
         /// <summary>Pre-populated concert metadata for click-to-import from Concerts view.</summary>
         private (string Date, string Venue, string CityState)? _prePopulatedConcert;
@@ -800,10 +798,9 @@ namespace DeadEditor
             };
             menu.Items.Add(trackInfoItem);
 
-            // "Match to Song..." — only for unmatched tracks on overflow disc with setlist data
+            // "Match to Song..." — for unmatched tracks after Match Setlist has run
             if (_lastSetlistSongs != null && _lastClaimedPositions != null &&
-                _lastMatchDate != null && _overflowDiscNumber > 0 &&
-                vm.Track.DiscNumber == _overflowDiscNumber)
+                _lastMatchDate != null && vm.Track.IsMatched != true)
             {
                 // Build list of unclaimed setlist songs
                 var unmatchedSongs = BuildUnmatchedSetlistSongList();
@@ -861,8 +858,11 @@ namespace DeadEditor
         }
 
         /// <summary>
-        /// Handles "Match to Song..." context menu click. Shows dialog, assigns track to setlist position,
-        /// adds alias to songs.json, and updates the grid.
+        /// Handles "Match to Song..." context menu click. Shows dialog, decorates
+        /// the track with the canonical song title and segue flag from the
+        /// chosen setlist song, and learns the track's prior title as an alias.
+        /// Disc and track numbers are NOT touched — the audio's position in the
+        /// recording is the archival truth.
         /// </summary>
         private void MatchToSong_Click(TrackInfoViewModel vm)
         {
@@ -884,89 +884,37 @@ namespace DeadEditor
             var selectedIndex = dialog.SelectedSetlistIndex;
             var selectedSong = _lastSetlistSongs[selectedIndex];
 
-            // 1. Assign disc/track from setlist position
-            var discTrack = ShowLookupService.Instance.GetDiscTrack(_lastMatchDate, selectedSong.Position);
-            if (discTrack == null) return;
-
-            vm.Track.DiscNumber = discTrack.Value.Disc;
-            vm.Track.TrackNumber = ShowLookupService.ToTrackNumber(discTrack.Value.Disc, discTrack.Value.Track);
-            vm.Track.IsModified = true;
-            vm.Track.IsMatched = true;
-
-            // Update the displayed song name to the canonical title from the setlist
+            // Model B: decorate only — set canonical SongName, segue, and matched
+            // flag. Do NOT touch DiscNumber/TrackNumber. The audio's position in
+            // the recording stays where it was.
             vm.Track.SongName = selectedSong.Canonical;
-
-            // Apply segue from setlist
+            vm.Track.IsMatched = true;
+            vm.Track.IsModified = true;
             if (selectedSong.Segue)
                 vm.Track.Segue = true;
 
             // Mark this position as claimed
             _lastClaimedPositions.Add(selectedIndex);
 
-            // 2. Auto-add alias to songs.json
-            // The canonical title from the setlist song
+            // Auto-add alias to songs.json so future imports of the same variant
+            // match automatically.
             var officialTitle = selectedSong.Canonical;
-            // The track's current title is the alias candidate
             var aliasCandidate = cleanedTitle.Trim();
-
             if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(officialTitle))
             {
                 _normalizationService.AddAlias(officialTitle, aliasCandidate);
             }
 
-            // 3. Renumber remaining overflow tracks
-            RenumberOverflowTracks();
-
-            // 4. Update status
             int matchCount = _lastClaimedPositions.Count;
             int unmatchedCount = _tracks.Count - matchCount;
-            var segueMsg = "";
             int segueCount = _tracks.Count(t => t.Track.Segue);
-            if (segueCount > 0) segueMsg = $", {segueCount} segues";
+            var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
+            var unmatchedMsg = unmatchedCount > 0
+                ? $". {unmatchedCount} unmatched — right-click to match manually."
+                : "";
+            StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
 
-            if (unmatchedCount > 0 && _overflowDiscNumber > 0)
-            {
-                StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}, {unmatchedCount} unmatched → Disc {_overflowDiscNumber}";
-            }
-            else
-            {
-                // All tracks matched — no more overflow
-                _overflowDiscNumber = 0;
-                StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}";
-            }
-
-            // Refresh and re-sort the grid so the matched track moves to its correct position
-            ICollectionView view = CollectionViewSource.GetDefaultView(TracksDataGrid.ItemsSource);
-            view.SortDescriptions.Clear();
-            view.SortDescriptions.Add(new SortDescription("DiscNumber", ListSortDirection.Ascending));
-            view.SortDescriptions.Add(new SortDescription("TrackNumber", ListSortDirection.Ascending));
             TracksDataGrid.Items.Refresh();
-        }
-
-        /// <summary>
-        /// Renumbers tracks on the overflow disc sequentially (e.g., 401, 402...).
-        /// If no tracks remain on overflow, resets _overflowDiscNumber to 0.
-        /// </summary>
-        private void RenumberOverflowTracks()
-        {
-            if (_overflowDiscNumber <= 0) return;
-
-            var overflowTracks = _tracks
-                .Where(t => t.Track.DiscNumber == _overflowDiscNumber)
-                .ToList();
-
-            if (overflowTracks.Count == 0)
-            {
-                _overflowDiscNumber = 0;
-                return;
-            }
-
-            int trackNum = 1;
-            foreach (var tw in overflowTracks)
-            {
-                tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(_overflowDiscNumber, trackNum);
-                trackNum++;
-            }
         }
 
         // ===== DRAG-TO-REORDER =====
@@ -1202,138 +1150,64 @@ namespace DeadEditor
                 return;
             }
 
-            // Flatten setlist into ordered list with global position
+            // Flatten setlist into ordered list with global position. The
+            // canonical name is what we compare against — setlist song names
+            // are run through GetOfficialTitle so aliases collapse to their
+            // canonical form before comparison.
             var setlistSongs = new List<(string Name, string Canonical, int Position, bool Segue)>();
+            var matcherSetlist = new List<SetlistMatcher.SetlistEntry>();
             int pos = 0;
             foreach (var set in setlist)
             {
                 foreach (var song in set.Songs)
                 {
-                    // Resolve setlist song name to canonical OfficialTitle
                     var canonical = _normalizationService.GetOfficialTitle(song.Name) ?? song.Name;
                     setlistSongs.Add((song.Name, canonical, pos, song.Segue));
+                    matcherSetlist.Add(new SetlistMatcher.SetlistEntry
+                    {
+                        Name = song.Name,
+                        Canonical = canonical,
+                        Position = pos,
+                        Segue = song.Segue,
+                    });
                     pos++;
                 }
             }
 
-            // Track which setlist positions have been claimed (for duplicate handling)
-            var claimedPositions = new HashSet<int>();
-            var matchedTracks = new HashSet<TrackInfoViewModel>();
-            int matchCount = 0;
-            int segueCount = 0;
-
-            // Diagnostic: snapshot SongName before matching
-            foreach (var tw in _tracks)
-                System.Diagnostics.Debug.WriteLine(
-                    $"[MatchSetlist-BEFORE] #{tw.Track.TrackNumber} SongName='{tw.Track.SongName}'");
-
-            foreach (var tw in _tracks)
-            {
-                var trackName = tw.Track.SongName;
-                if (string.IsNullOrEmpty(trackName)) continue;
-
-                // Normalize the track title using the same pipeline as Normalize button
-                var normalized = _normalizationService.Normalize(trackName);
-                var nameToMatch = normalized ?? trackName;
-
-                // Resolve to canonical OfficialTitle for comparison
-                var trackCanonical = _normalizationService.GetOfficialTitle(nameToMatch) ?? nameToMatch;
-
-                System.Diagnostics.Debug.WriteLine(
-                    $"[MatchSetlist] Track #{tw.Track.TrackNumber} '{trackName}' " +
-                    $"→ normalized '{nameToMatch}' → canonical '{trackCanonical}'");
-
-                // Find the first unclaimed setlist position that matches via canonical titles
-                int matchedIndex = -1;
-                for (int i = 0; i < setlistSongs.Count; i++)
+            // Model B: matched tracks get SongName/Segue/IsMatched decoration;
+            // unmatched tracks are left entirely untouched (DiscNumber and
+            // TrackNumber preserved). The audio's position in the recording is
+            // the archival truth.
+            var trackList = _tracks.Select(vm => vm.Track).ToList();
+            var result = SetlistMatcher.MatchAndDecorate(
+                trackList,
+                matcherSetlist,
+                trackName =>
                 {
-                    if (claimedPositions.Contains(i)) continue;
+                    var normalized = _normalizationService.Normalize(trackName) ?? trackName;
+                    return _normalizationService.GetOfficialTitle(normalized) ?? normalized;
+                });
 
-                    if (string.Equals(trackCanonical, setlistSongs[i].Canonical, StringComparison.OrdinalIgnoreCase))
-                    {
-                        matchedIndex = i;
-                        break;
-                    }
-                }
-
-                System.Diagnostics.Debug.WriteLine(
-                    $"[MatchSetlist] Track #{tw.Track.TrackNumber} matchedIndex={matchedIndex}" +
-                    (matchedIndex >= 0 ? $" → setlist[{matchedIndex}]='{setlistSongs[matchedIndex].Canonical}'" : " → UNMATCHED"));
-
-                if (matchedIndex < 0) continue;
-
-                // Assign disc/track from setlist position
-                claimedPositions.Add(matchedIndex);
-                var discTrack = ShowLookupService.Instance.GetDiscTrack(date, setlistSongs[matchedIndex].Position);
-                if (discTrack == null) continue;
-
-                tw.Track.DiscNumber = discTrack.Value.Disc;
-                tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(discTrack.Value.Disc, discTrack.Value.Track);
-                tw.Track.IsModified = true;
-                matchedTracks.Add(tw);
-                matchCount++;
-
-                // Apply segue from setlist
-                if (setlistSongs[matchedIndex].Segue)
-                {
-                    tw.Track.Segue = true;
-                    segueCount++;
-                }
-            }
-
-            // --- Overflow disc: move unmatched tracks to next disc ---
-            int unmatchedCount = _tracks.Count - matchCount;
-            int overflowDisc = 0;
-
-            if (unmatchedCount > 0 && matchCount > 0)
-            {
-                // Find the highest disc number among matched tracks
-                int maxDisc = 0;
-                foreach (var tw in _tracks)
-                {
-                    if (tw.Track.IsModified && tw.Track.DiscNumber > maxDisc)
-                        maxDisc = tw.Track.DiscNumber;
-                }
-                overflowDisc = maxDisc + 1;
-
-                int overflowTrack = 1;
-                foreach (var tw in _tracks)
-                {
-                    // Unmatched = not modified by this pass (IsModified was set above for matched tracks)
-                    // More precisely: tracks that were NOT in the matched set
-                    if (!matchedTracks.Contains(tw))
-                    {
-                        System.Diagnostics.Debug.WriteLine(
-                            $"[MatchSetlist] Track #{tw.Track.TrackNumber} '{tw.Track.SongName}' → overflow disc {overflowDisc}");
-                        tw.Track.DiscNumber = overflowDisc;
-                        tw.Track.TrackNumber = ShowLookupService.ToTrackNumber(overflowDisc, overflowTrack);
-                        overflowTrack++;
-                    }
-                }
-            }
-
-            // Diagnostic: snapshot SongName after matching
-            foreach (var tw in _tracks)
-                System.Diagnostics.Debug.WriteLine(
-                    $"[MatchSetlist-AFTER] #{tw.Track.TrackNumber} SongName='{tw.Track.SongName}' " +
-                    $"IsMatched={tw.Track.IsMatched} Disc={tw.Track.DiscNumber}");
-
-            // Store state for Match to Song feature
+            // Store state for the Match to Song manual-match dialog (right-click
+            // on unmatched tracks).
             _lastSetlistSongs = setlistSongs;
-            _lastClaimedPositions = claimedPositions;
+            _lastClaimedPositions = result.ClaimedPositions;
             _lastMatchDate = date;
-            _overflowDiscNumber = overflowDisc;
 
             TracksDataGrid.Items.Refresh();
 
+            int matchCount = result.MatchedCount;
+            int unmatchedCount = _tracks.Count - matchCount;
             if (matchCount == 0)
             {
                 StatusTextBlock.Text = $"No tracks matched the setlist ({setlistSongs.Count} songs)";
             }
             else
             {
-                var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
-                var unmatchedMsg = unmatchedCount > 0 ? $", {unmatchedCount} unmatched → Disc {overflowDisc}" : "";
+                var segueMsg = result.SegueCount > 0 ? $", {result.SegueCount} segues" : "";
+                var unmatchedMsg = unmatchedCount > 0
+                    ? $". {unmatchedCount} unmatched — right-click to match manually."
+                    : "";
                 StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
             }
 
