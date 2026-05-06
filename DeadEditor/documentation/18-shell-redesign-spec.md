@@ -184,8 +184,9 @@ This area swaps between UserControls based on navigation. Only ONE view is visib
   - Normalize button uses AccentButton style (blue, matching Import view)
   - Status text shows "Matched X of Y songs" after normalizing
   - **Title column:** Displays `RawTitle` (exact FLAC TITLE tag value). Double-click to edit directly.
-  - **Editable columns:** Title (double-click to edit RawTitle), Date (double-click), Disc (double-click), Segue (checkbox, single-click toggle)
-  - **Read-only columns:** Track # (display only), Time (computed from audio file)
+  - **Editable columns:** Title (double-click to edit RawTitle), Date (double-click), Disc (double-click), Track # (double-click; integer; clamped to ≥0 at the model setter), Segue (checkbox, single-click toggle)
+  - **Read-only columns:** Time (computed from audio file)
+- **Validation banner:** Sits above the track grid, visible only when the in-memory tracks have disc/track-number issues (duplicates within disc, zero values, or gaps — with 100-format awareness). Driven by `MetadataValidator` ([Services/MetadataValidator.cs](../Services/MetadataValidator.cs)). Informational only; does not block save. Refreshes on load, cell edits, drag-to-reorder, Renumber, Normalize, Match Setlist, Match-to-Song, and MusicBrainz title apply. Cap of 5 lines (first 4 + "and N more").
 - All fields populated from LibraryShow data (album-level) and FLAC tags (track-level)
 - Edit mode behavior: read and display as-is, no transforms
 - Normalize button: cleans raw FLAC titles via ParseTitleAndDate, runs NormalizeAll, then reconstructs RawTitle from normalized SongName + Segue + TrackDate so the grid shows the corrected result.

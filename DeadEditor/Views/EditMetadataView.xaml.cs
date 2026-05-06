@@ -34,6 +34,12 @@ namespace DeadEditor
         private bool _isUpdating = false;
         private bool _hasUnsavedChanges = false;
 
+        // Issues surfaced in the validation banner above the metadata grid.
+        // Refreshed on load, cell edits, drag-to-reorder, renumber, and any batch
+        // operation that mutates disc/track numbers or song titles.
+        private readonly ObservableCollection<string> _validationIssues = new();
+        private const int MaxBannerIssues = 5;
+
         // Artwork editing state
         private enum ArtworkState { Unchanged, Changed, Removed }
         private ArtworkState _artworkState = ArtworkState.Unchanged;
@@ -72,6 +78,7 @@ namespace DeadEditor
             _show = show;
             _metadataService = new MetadataService();
             _normalizationService = new NormalizationService();
+            ValidationIssuesItemsControl.ItemsSource = _validationIssues;
         }
 
         private void EditMetadataView_Loaded(object sender, RoutedEventArgs e)
@@ -194,6 +201,10 @@ namespace DeadEditor
 
                 // Populate album info fields
                 RefreshUI();
+
+                // Surface any pre-existing disc/track-number issues (e.g. mis-numbered
+                // box sets) immediately on open so the user sees them without editing.
+                RefreshValidation();
 
                 StatusTextBlock.Text = $"{_tracks.Count} tracks loaded";
                 _hasUnsavedChanges = false;
@@ -703,14 +714,51 @@ namespace DeadEditor
             if (e.PropertyName == nameof(TrackInfoViewModel.Segue) ||
                 e.PropertyName == nameof(TrackInfoViewModel.SongName) ||
                 e.PropertyName == nameof(TrackInfoViewModel.TrackDate) ||
-                e.PropertyName == nameof(TrackInfoViewModel.DiscNumber))
+                e.PropertyName == nameof(TrackInfoViewModel.DiscNumber) ||
+                e.PropertyName == nameof(TrackInfoViewModel.TrackNumber))
             {
                 _hasUnsavedChanges = true;
                 if (sender is TrackInfoViewModel vm)
                 {
                     vm.Track.IsModified = true;
                 }
+
+                // SongName affects "no track number" labels, disc/track changes affect
+                // duplicate/gap detection — refresh on any of them.
+                RefreshValidation();
             }
+        }
+
+        /// <summary>
+        /// Recomputes the validation banner from the current in-memory tracks.
+        /// Caps display at <see cref="MaxBannerIssues"/> entries with an "and N more"
+        /// suffix to keep the banner from dwarfing the grid. Toggles banner
+        /// visibility so the row collapses to zero height when the album is clean.
+        /// </summary>
+        private void RefreshValidation()
+        {
+            var rawIssues = MetadataValidator.Validate(_tracks.Select(vm => vm.Track));
+
+            _validationIssues.Clear();
+
+            if (rawIssues.Count == 0)
+            {
+                ValidationBanner.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            if (rawIssues.Count <= MaxBannerIssues)
+            {
+                foreach (var issue in rawIssues) _validationIssues.Add(issue);
+            }
+            else
+            {
+                for (int i = 0; i < MaxBannerIssues - 1; i++) _validationIssues.Add(rawIssues[i]);
+                int remaining = rawIssues.Count - (MaxBannerIssues - 1);
+                _validationIssues.Add($"… and {remaining} more issue{(remaining == 1 ? "" : "s")}");
+            }
+
+            ValidationBanner.Visibility = Visibility.Visible;
         }
 
         private void TracksDataGrid_BeginningEdit(object sender, System.Windows.Controls.DataGridBeginningEditEventArgs e)
@@ -731,6 +779,11 @@ namespace DeadEditor
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         vm.UpdateDisplayTitle();
+                        // Validation runs after the edit's commit cycle so the new
+                        // value is reflected in vm.Track. This catches edits to the
+                        // # column (negative-clamped to 0, then flagged as zero) that
+                        // don't go through the ViewModel proxy setter path.
+                        RefreshValidation();
                     }), System.Windows.Threading.DispatcherPriority.Background);
                 }
             }
@@ -797,6 +850,7 @@ namespace DeadEditor
                 ReconstructRawTitles();
 
                 TracksDataGrid.Items.Refresh();
+                RefreshValidation();
                 _hasUnsavedChanges = true;
 
                 int unmatched = _tracks.Count - matched;
@@ -858,6 +912,7 @@ namespace DeadEditor
 
             TracksDataGrid.Items.Refresh();
             _hasUnsavedChanges = true;
+            RefreshValidation();
             StatusTextBlock.Text = "Tracks renumbered using disc-aware 101/201/301 convention";
         }
 
@@ -1154,6 +1209,7 @@ namespace DeadEditor
             ReconstructRawTitles();
             TracksDataGrid.Items.Refresh();
             _hasUnsavedChanges = true;
+            RefreshValidation();
 
             int remaining = _lastSetlistSongs.Count - _lastClaimedPositions.Count;
             StatusTextBlock.Text = $"Matched '{aliasCandidate}' → '{selectedSong.Canonical}'. {remaining} setlist songs remaining.";
@@ -1241,6 +1297,7 @@ namespace DeadEditor
             ReconstructRawTitles();
             TracksDataGrid.Items.Refresh();
             _hasUnsavedChanges = true;
+            RefreshValidation();
 
             int unmatchedCount = _tracks.Count - matchCount;
             var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
@@ -1470,6 +1527,7 @@ namespace DeadEditor
 
                 ReconstructRawTitles();
                 TracksDataGrid.Items.Refresh();
+                RefreshValidation();
                 StatusTextBlock.Text = $"Track titles: {matchedCount} of {_tracks.Count} matched from MusicBrainz";
             }
             catch (Exception ex)
@@ -1557,6 +1615,7 @@ namespace DeadEditor
 
                         TracksDataGrid.Items.Refresh();
                         _hasUnsavedChanges = true;
+                        RefreshValidation();
                     }
                 }
             }

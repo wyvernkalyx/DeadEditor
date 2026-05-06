@@ -200,7 +200,31 @@
             <!-- Track List -->
             <Border Grid.Column="0" BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E" Margin="0,0,10,0">
                 <Grid>
-                <DataGrid x:Name="TracksDataGrid"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Validation banner: visible only when MetadataValidator surfaces issues. -->
+                <Border Grid.Row="0" x:Name="ValidationBanner"
+                        Background="#3F2D1A"
+                        BorderBrush="#7A5A2E"
+                        BorderThickness="0,0,0,1"
+                        Padding="10,6"
+                        Visibility="Collapsed">
+                    <ItemsControl x:Name="ValidationIssuesItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"
+                                           Foreground="#F0AD4E"
+                                           FontSize="13"
+                                           Margin="0,1,0,1"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <DataGrid Grid.Row="1" x:Name="TracksDataGrid"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
@@ -276,10 +300,9 @@
                     </DataGrid.RowStyle>
 
                     <DataGrid.Columns>
-                        <!-- Track # (read-only display) -->
+                        <!-- Track # (editable; integer; clamped to >=0 at the model setter) -->
                         <DataGridTextColumn Header="#" Width="Auto" MinWidth="40"
-                                            Binding="{Binding TrackNumber}"
-                                            IsReadOnly="True"/>
+                                            Binding="{Binding TrackNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                         <!-- Disc (editable) -->
                         <DataGridTextColumn Header="Disc" Width="Auto" MinWidth="40"
@@ -348,7 +371,7 @@
                 </DataGrid>
 
                 <!-- Drop indicator line for drag-to-reorder -->
-                <Border x:Name="DropIndicator"
+                <Border Grid.Row="1" x:Name="DropIndicator"
                         Background="#007ACC"
                         Height="3"
                         HorizontalAlignment="Stretch"

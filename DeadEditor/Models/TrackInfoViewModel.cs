@@ -76,6 +76,7 @@ namespace DeadEditor
             set
             {
                 Track.TrackNumber = value;
+                Track.IsModified = true;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(DisplayTrackNumber));
             }

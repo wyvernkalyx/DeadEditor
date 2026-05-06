@@ -8,21 +8,40 @@ namespace DeadEditor.Models
         private bool? _isMatched;
         private string _songName;
         private string _rawTitle;
+        private int _trackNumber;
         private int _discNumber = 1;
         private string _trackDate;
         private bool _segue;
 
         public string FilePath { get; set; }           // Full path to FLAC file
         public string FileName { get; set; }           // Just the filename
-        public int TrackNumber { get; set; }           // Track # (within disc)
+
+        // TrackNumber is hard-clamped to >= 0. WriteMetadata casts to (uint), so a
+        // negative value would silently become a huge positive; the clamp prevents
+        // that corruption. Zero values are detected and surfaced by MetadataValidator.
+        public int TrackNumber
+        {
+            get => _trackNumber;
+            set
+            {
+                var clamped = value < 0 ? 0 : value;
+                if (_trackNumber != clamped)
+                {
+                    _trackNumber = clamped;
+                    OnPropertyChanged(nameof(TrackNumber));
+                    OnPropertyChanged(nameof(DisplayTrackNumber));
+                }
+            }
+        }
         public int DiscNumber
         {
             get => _discNumber;
             set
             {
-                if (_discNumber != value)
+                var clamped = value < 0 ? 0 : value;
+                if (_discNumber != clamped)
                 {
-                    _discNumber = value;
+                    _discNumber = clamped;
                     OnPropertyChanged(nameof(DiscNumber));
                     OnPropertyChanged(nameof(DisplayTrackNumber));
                 }
