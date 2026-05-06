@@ -677,6 +677,8 @@ The matching algorithm is implemented in `Services/SetlistMatcher.cs` as a pure 
 
 **EditMetadataView's Match Setlist** ([feature-parity-spec.md §6](feature-parity-spec.md)) has been non-destructive since its introduction. Both views now share the same Model B framing: matched tracks get decoration; unmatched tracks are left alone.
 
+The audio-as-archive design framing that motivated this behavior is captured in [audio-as-archive-design-memo.md](audio-as-archive-design-memo.md).
+
 ### Right-Click "Match to Song..." (Manual Matching)
 
 After Match Setlist runs, unmatched tracks can be manually matched to unclaimed setlist songs via the right-click context menu:

@@ -2,6 +2,8 @@
 
 **Status:** Placeholder. Not implemented. Captures a design principle that emerged during Commit 1.5 of the MBID/fingerprint work. Intended to anchor the curation-layer design conversation in a future session.
 
+**See also:** [audio-as-archive-design-memo.md](audio-as-archive-design-memo.md) § 2 (Trust hierarchy as workflow) and § 4 (Structure as verification stage) for the design framing this stub doc will eventually formalize.
+
 ## The Principle
 
 Curated records (releases, concerts, songs, anything we maintain canonical truth for) carry a verification status. The minimum viable shape is two states:
