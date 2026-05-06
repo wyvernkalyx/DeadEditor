@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:DeadEditor.Controls"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1200"
              Background="#1E1E1E">
@@ -102,6 +103,8 @@
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <!-- Workflow Stepper (proof-of-concept signage; no business logic) -->
+            <RowDefinition Height="Auto"/>
             <!-- Action Bar -->
             <RowDefinition Height="Auto"/>
             <!-- Album Info Bar -->
@@ -112,8 +115,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- ===== SECTION 0: WORKFLOW STEPPER ===== -->
+        <controls:WorkflowStepper Grid.Row="0" x:Name="WorkflowStepperControl"
+                                  Margin="0,0,0,8"/>
+
         <!-- ===== SECTION 1: ACTION BAR ===== -->
-        <DockPanel Grid.Row="0" Margin="0,0,0,10" LastChildFill="False">
+        <DockPanel Grid.Row="1" Margin="0,0,0,10" LastChildFill="False">
 
             <!-- Right: Terminal action -->
             <Button x:Name="ImportButton" DockPanel.Dock="Right"
@@ -192,7 +199,7 @@
         </DockPanel>
 
         <!-- ===== SECTION 2: ALBUM INFO BAR ===== -->
-        <Border Grid.Row="1" BorderBrush="#555555" BorderThickness="1"
+        <Border Grid.Row="2" BorderBrush="#555555" BorderThickness="1"
                 Background="#2D2D30" Padding="10" Margin="0,0,0,10">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -298,7 +305,7 @@
         </Border>
 
         <!-- ===== SECTION 3: MAIN CONTENT (Track List + Artwork Panel) ===== -->
-        <Grid Grid.Row="2" Margin="0,0,0,10">
+        <Grid Grid.Row="3" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -623,7 +630,7 @@
         </Grid>
 
         <!-- ===== SECTION 4: STATUS BAR ===== -->
-        <Border Grid.Row="3" BorderBrush="#555555" BorderThickness="0,1,0,0"
+        <Border Grid.Row="4" BorderBrush="#555555" BorderThickness="0,1,0,0"
                 Background="#252526" Padding="8,4">
             <Grid>
                 <Grid.RowDefinitions>
@@ -669,7 +676,7 @@
         </Border>
 
         <!-- Notification Panel (Modal Overlay) -->
-        <Grid x:Name="NotificationPanel" Grid.RowSpan="4" Panel.ZIndex="1000" Visibility="Collapsed">
+        <Grid x:Name="NotificationPanel" Grid.RowSpan="5" Panel.ZIndex="1000" Visibility="Collapsed">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.7"/>
             </Grid.Background>
@@ -723,7 +730,7 @@
             </Border>
         </Grid>
         <!-- Conflict Panel (Modal Overlay for per-file conflict prompts) -->
-        <Grid x:Name="ConflictPanel" Grid.RowSpan="4" Panel.ZIndex="1001" Visibility="Collapsed">
+        <Grid x:Name="ConflictPanel" Grid.RowSpan="5" Panel.ZIndex="1001" Visibility="Collapsed">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.7"/>
             </Grid.Background>

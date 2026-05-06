@@ -71,6 +71,25 @@ namespace DeadEditor
         /// <summary>Pre-populated concert metadata for click-to-import from Concerts view.</summary>
         private (string Date, string Venue, string CityState)? _prePopulatedConcert;
 
+        // ===== WORKFLOW STEPPER STATE =====
+
+        /// <summary>
+        /// Cached "any source file carried an MBID at folder-load time, OR a
+        /// MusicBrainz lookup has been applied this session." Drives the Enrich
+        /// stage. Updated on folder-load (one-shot file scan) and flipped to
+        /// true after a successful MusicBrainz apply. Reset by ClearView.
+        /// </summary>
+        private bool _mbidPresentInSource;
+
+        /// <summary>
+        /// Backing collection for the workflow stepper. Recomputed by
+        /// <see cref="RefreshStepper"/> at folder-load, post-MusicBrainz,
+        /// post-Normalize, post-Match-Setlist, post-Import, and on ClearView.
+        /// Per-cell edits do not refresh — stages are too coarse-grained for
+        /// keystroke updates to matter.
+        /// </summary>
+        private readonly ObservableCollection<DeadEditor.Models.WorkflowStage> _stages = new();
+
         // ===== PLAYBACK =====
 
         // ===== CONSTRUCTOR =====
@@ -86,6 +105,8 @@ namespace DeadEditor
             _libraryImportService = new LibraryImportService(_metadataService, _musicBrainzService);
 
             TracksDataGrid.ItemsSource = _tracks;
+            WorkflowStepperControl.Stages = _stages;
+            RefreshStepper();
         }
 
         // ===== PUBLIC API =====
@@ -173,6 +194,24 @@ namespace DeadEditor
                     }
                     StatusTextBlock.Text = "No audio files found";
                     return;
+                }
+
+                // One-shot MBID scan of source files. Drives the Enrich stepper
+                // stage. Bounded to once per folder load — stays in sync with
+                // the existing read I/O cost of MetadataService.ReadFolder.
+                _mbidPresentInSource = false;
+                foreach (var t in trackList)
+                {
+                    try
+                    {
+                        var mbid = MbidModalHelper.ReadMbidFromFile(t.FilePath);
+                        if (!string.IsNullOrWhiteSpace(mbid))
+                        {
+                            _mbidPresentInSource = true;
+                            break;
+                        }
+                    }
+                    catch { /* per-file failure is non-fatal for a heuristic */ }
                 }
 
                 // Read album info from folder / FLAC tags
@@ -263,11 +302,50 @@ namespace DeadEditor
 
                 // Update folder path display
                 UpdateFolderPathDisplay();
+                RefreshStepper();
             }
             catch (Exception ex)
             {
                 await ShowNotificationAsync("Error", $"Error loading folder: {ex.Message}");
                 StatusTextBlock.Text = "Error loading folder";
+            }
+        }
+
+        /// <summary>
+        /// Recomputes the workflow stepper's stages from current Import view
+        /// state and applies the result onto <see cref="_stages"/> in place
+        /// (preserving the ObservableCollection so the stepper's INPC wiring
+        /// keeps firing). Called from each canonical workflow event hook.
+        /// </summary>
+        private void RefreshStepper()
+        {
+            var titles = _tracks.Select(vm => vm.Track.SongName ?? "").ToList();
+
+            var input = new ImportWorkflowInput
+            {
+                TrackTitles = titles,
+                MbidPresent = _mbidPresentInSource,
+                CurrentFolderPath = _currentFolderPath,
+                LibraryRootPath = _librarySettings?.LibraryRootPath,
+                IsCanonicalSongName = name =>
+                    !string.IsNullOrEmpty(name) &&
+                    _normalizationService.GetOfficialTitle(name) != null
+            };
+
+            var fresh = ImportWorkflowState.Compute(input);
+
+            // Update in place. Pad/truncate the existing collection so the
+            // stepper control's per-stage PropertyChanged subscriptions remain
+            // attached to the same WorkflowStage instances.
+            while (_stages.Count < fresh.Count) _stages.Add(new DeadEditor.Models.WorkflowStage());
+            while (_stages.Count > fresh.Count) _stages.RemoveAt(_stages.Count - 1);
+
+            for (int i = 0; i < fresh.Count; i++)
+            {
+                _stages[i].Name = fresh[i].Name;
+                _stages[i].IsCompleted = fresh[i].IsCompleted;
+                _stages[i].IsCurrent = fresh[i].IsCurrent;
+                _stages[i].IsSkipped = fresh[i].IsSkipped;
             }
         }
 
@@ -336,6 +414,7 @@ namespace DeadEditor
             _tracks.Clear();
             _albumInfo = null;
             _currentFolderPath = null;
+            _mbidPresentInSource = false;
             ArtistTextBox.Text = "";
             AlbumDateTextBox.Text = "";
             VenueTextBox.Text = "";
@@ -356,6 +435,7 @@ namespace DeadEditor
             UpdateFolderPathDisplay();
 
             _isUpdating = false;
+            RefreshStepper();
         }
 
         // ===== ALBUM INFO BAR =====
@@ -1043,6 +1123,8 @@ namespace DeadEditor
                             $"{unmatched} songs not in database (will use original titles). Unmatched songs shown in gold.");
                     }
                 }
+
+                RefreshStepper();
             }
             catch (Exception ex)
             {
@@ -1254,6 +1336,8 @@ namespace DeadEditor
                 var unmatchedMsg = unmatchedCount > 0 ? $", {unmatchedCount} unmatched → Disc {overflowDisc}" : "";
                 StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
             }
+
+            RefreshStepper();
         }
 
         private async void MusicBrainzButton_Click(object sender, RoutedEventArgs e)
@@ -1462,6 +1546,11 @@ namespace DeadEditor
 
                 TracksDataGrid.Items.Refresh();
                 UpdateAlbumPreview();
+
+                // We just applied an MBID-driven release. Mark the source as
+                // enriched and refresh the stepper so Enrich flips to Completed.
+                _mbidPresentInSource = true;
+                RefreshStepper();
             }
             catch (Exception ex)
             {

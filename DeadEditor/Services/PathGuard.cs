@@ -96,6 +96,23 @@ namespace DeadEditor.Services
         public static void EnsureWithinRoot(string? libraryRoot, string path, string serviceName)
             => EnsureWithinRoot(libraryRoot, new[] { path }, serviceName);
 
+        /// <summary>
+        /// Pure containment predicate (no exceptions). Returns true if
+        /// <paramref name="candidatePath"/> resolves under <paramref name="libraryRoot"/>
+        /// using the same trailing-separator + ordinal-ignore-case algorithm as
+        /// <see cref="EnsureWithinRoot(string, string, string)"/>. Returns false for
+        /// null/whitespace inputs and for paths that fail to resolve. Intended for
+        /// non-throwing callers (e.g. the Import view's stepper) that need to ask
+        /// "is this folder managed?" without aborting on no.
+        /// </summary>
+        public static bool IsPathUnderRoot(string? libraryRoot, string? candidatePath)
+        {
+            if (string.IsNullOrWhiteSpace(libraryRoot) || string.IsNullOrWhiteSpace(candidatePath))
+                return false;
+
+            return IsUnderRoot(NormalizeDirectory(libraryRoot), candidatePath);
+        }
+
         // Append a trailing separator so a sibling directory whose name starts with the
         // root's name (e.g. root "C:\Lib", candidate "C:\Lib2\foo") does not match.
         private static string NormalizeDirectory(string path)

@@ -95,6 +95,50 @@ The MainWindow uses a dark theme (#1E1E1E background) with a two-column layout:
 
 ## Interactive Elements
 
+### Workflow Stepper (Import mode only)
+
+A horizontal stepper above the toolbar visualizes the canonical Import flow as
+five stages: **Load → Enrich → Clean → Structure → Import**.
+
+Each stage shows one of four states:
+
+- **Completed** (green, ✓ indicator) — the stage's heuristic is satisfied
+- **Current** (blue, → indicator, semi-bold) — the next stage to do
+- **Upcoming** (muted) — a future stage
+- **Skipped** (muted with amber `!`) — a logically-past stage that wasn't
+  completed (the user moved past it without satisfying its heuristic)
+
+State is derived heuristically from the loaded track list and folder context
+by `Services/ImportWorkflowState.cs`:
+
+- **Load** — track list is non-empty
+- **Enrich** — at least one source file carried a MusicBrainz Album ID at
+  folder-load time, OR a MusicBrainz lookup has been applied this session.
+  The flag is cached on folder load (one-shot scan via `MbidModalHelper`)
+  and flipped to true after a successful MusicBrainz click.
+- **Clean** — no track title contains a comma+slash-date suffix or a
+  parenthesized venue/date string
+- **Structure** — at least 80% of track titles are exact alias-table hits in
+  `NormalizationService.GetOfficialTitle()` (i.e., canonical song names from
+  `songs.json`)
+- **Import** — the loaded folder resolves under `LibrarySettings.LibraryRootPath`,
+  using the same trailing-separator semantics as `PathGuard` (via the new
+  `PathGuard.IsPathUnderRoot` predicate)
+
+The stepper is informational only. It does not enforce step order or disable
+any toolbar action. Renumber and View Info are not stages — Renumber happens
+implicitly inside Match Setlist, and View Info is a spot-check tool; both
+remain as tertiary toolbar utilities.
+
+Refresh hooks: end of `LoadFolderAsync`, `NormalizeButton_Click`,
+`MatchSetlistButton_Click`, `ApplyMusicBrainzData`, and `ClearView`. Per-cell
+edits do not refresh — the heuristics are too coarse-grained for keystroke
+updates to matter.
+
+Proof-of-concept addition. The five stages will be revisited (possibly
+collapsed to four if Clean and Structure prove too overlapping in practice)
+once the stepper has had time in the user's hands.
+
 ### Folder Selection / Editing Header Section
 
 **Import Mode:**

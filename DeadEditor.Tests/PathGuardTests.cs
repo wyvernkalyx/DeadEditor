@@ -146,6 +146,56 @@ public class PathGuardTests
     }
 
     [Fact]
+    public void IsPathUnderRoot_PathInsideRoot_ReturnsTrue()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "lib_root");
+        var inside = Path.Combine(root, "Album", "track.flac");
+
+        Assert.True(PathGuard.IsPathUnderRoot(root, inside));
+    }
+
+    [Fact]
+    public void IsPathUnderRoot_PathOutsideRoot_ReturnsFalse()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "lib_root");
+        var outside = Path.Combine(Path.GetTempPath(), "elsewhere", "track.flac");
+
+        Assert.False(PathGuard.IsPathUnderRoot(root, outside));
+    }
+
+    [Fact]
+    public void IsPathUnderRoot_SiblingDirectoryWithRootPrefix_ReturnsFalse()
+    {
+        // Same trailing-separator semantics as EnsureWithinRoot — the sibling
+        // "lib2" must NOT match root "lib".
+        var root = Path.Combine(Path.GetTempPath(), "lib");
+        var sibling = Path.Combine(Path.GetTempPath(), "lib2", "track.flac");
+
+        Assert.False(PathGuard.IsPathUnderRoot(root, sibling));
+    }
+
+    [Theory]
+    [InlineData(null, "/some/path")]
+    [InlineData("", "/some/path")]
+    [InlineData("   ", "/some/path")]
+    [InlineData("/library", null)]
+    [InlineData("/library", "")]
+    [InlineData("/library", "   ")]
+    public void IsPathUnderRoot_NullOrWhitespaceInputs_ReturnFalse(string? root, string? candidate)
+    {
+        Assert.False(PathGuard.IsPathUnderRoot(root, candidate));
+    }
+
+    [Fact]
+    public void IsPathUnderRoot_CaseInsensitiveMatch_ReturnsTrue()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "lib_root");
+        var insideUpper = Path.Combine(root.ToUpperInvariant(), "Album", "track.flac");
+
+        Assert.True(PathGuard.IsPathUnderRoot(root, insideUpper));
+    }
+
+    [Fact]
     public void OverrideLibraryRootForTesting_RestoresPreviousValue_OnDispose()
     {
         var root1 = Path.Combine(Path.GetTempPath(), "outer_root");
