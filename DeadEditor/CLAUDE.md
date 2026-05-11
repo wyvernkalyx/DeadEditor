@@ -97,9 +97,10 @@ When adding a new feature that writes to disk:
 
 ### Future Design Documents
 
-Stubs for design conversations not yet implemented:
+Stubs and banking memos for design conversations not yet implemented:
 
 - [verification-model.md](documentation/verification-model.md) — verification status for curated records (placeholder)
+- [curation-layer-design-memo.md](documentation/curation-layer-design-memo.md) — Layer A setlist authority vs Layer B per-recording manifest, fingerprints as curation lookup key, curation layer as foundational to verification (banking memo)
 
 ### Documentation-First Development Workflow
 
