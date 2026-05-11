@@ -234,12 +234,12 @@ remain open. Adding workflow-framing context from this memo:
 
 ### Album type field audit
 
-The album-type field (`Live Recording` / `Official Release` / `Studio
-Album` / `Box Set`) has one clear use (library filtering and folder
-structure under `LibraryRoot`/`OfficialReleasesPath`) and several
-questionable ones (driving Enrich behavior, default values, hybrid
-album handling like "Studio + bonus live"). A small focused audit is
-queued to determine which uses are real and which are vestigial.
+The album-type field (now collapsed to `AudienceRecording` /
+`OfficialRelease`) has one clear use (library filtering under the
+single `LibraryRoot`) and several questionable ones (driving Enrich
+behavior, default values, hybrid album handling like "Studio +
+bonus live"). A small focused audit is queued to determine which
+uses are real and which are vestigial.
 
 ### Match Setlist's behavior on missing/extra tracks
 

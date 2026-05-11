@@ -251,22 +251,21 @@ A centered modal dialog (700x550px, resizable with 650x500 minimum) with:
 3. User clicks "Search Tracks" button
    - `TrackSearchButton_Click` validates at least one field has value (line 314)
    - Calls `SearchTracksInLibrary()` with both parameters (line 321)
-4. System searches three library locations:
-   - **Audience Recordings:** `_librarySettings.LibraryRootPath` (line 345)
-   - **Official Releases:** `_librarySettings.OfficialReleasesPath` (line 351)
-   - **Studio Albums:** `LibraryRootPath + "Studio Albums"` (line 355)
+4. System searches the single library root via [AdvancedSearchDialog.xaml.cs:344-346](AdvancedSearchDialog.xaml.cs#L344-L346):
+   - Root: `_librarySettings.LibraryRootPath`
+   - Pass: `SearchInFolder(rootPath, AlbumType.AudienceRecording, searchDate, searchVenue, results)` — the `albumType` argument seeds folder-name vs title-date matching behavior; it does not bifurcate scan roots
 5. For each album folder found:
-   - `SearchInFolder()` iterates all .flac/.mp3 files (line 372-374)
-   - `_metadataService.ReadFolder()` reads track metadata (line 379)
+   - `SearchInFolder()` iterates all .flac/.mp3 files
+   - `_metadataService.ReadFolder()` reads track metadata
    - Each track checked against criteria:
-     - **Date Match:** Folder name contains date (live albums) OR track title has `(yyyy-MM-dd)` pattern (line 390-398)
-     - **Venue Match:** Folder name OR track title contains venue (case-insensitive) (line 401-409)
-   - Matching tracks added to `TrackSearchResult` list (line 413-419)
+     - **Date Match:** Folder name contains date (live folders) OR track title has `(yyyy-MM-dd)` pattern
+     - **Venue Match:** Folder name OR track title contains venue (case-insensitive)
+   - Matching tracks added to `TrackSearchResult` list
 6. Results displayed in DataGrid:
    - **Track column:** Track title (width: *)
    - **Album column:** Folder name (width: 300)
-   - **Type column:** AlbumType (width: 100)
-   - Empty state shown if no results (line 333)
+   - **Type column:** AlbumType — `AudienceRecording` or `OfficialRelease` (width: 100)
+   - Empty state shown if no results
 7. User double-clicks result row:
    - `TrackResultsDataGrid_MouseDoubleClick` triggered (line 438)
    - Dialog closes with `DialogResult = false` (no search performed) (line 443)
@@ -283,11 +282,11 @@ A centered modal dialog (700x550px, resizable with 650x500 minimum) with:
 **Data Flow:**
 - **Input:** Date string (yyyy-MM-dd) and/or venue string (partial)
 - **Processing:**
-  - Read all album folders from three library locations
+  - Read all album folders from the single library root (universal scan)
   - For each folder, read tracks via `MetadataService.ReadFolder()`
   - Match date via folder name (live) or embedded `(date)` pattern in title
   - Match venue via case-insensitive substring search
-- **Output:** List<TrackSearchResult> with TrackTitle, AlbumTitle, AlbumType, AlbumPath
+- **Output:** List<TrackSearchResult> with TrackTitle, AlbumTitle, AlbumType, AlbumPath (where `AlbumType` is `AudienceRecording` or `OfficialRelease`)
 - **Service Calls:**
   - `_metadataService.ReadFolder(albumFolder)` - Read track metadata from audio files
   - `_libraryBrowserWindow?.NavigateToAlbumByPath(path)` - Navigate to album (on double-click)
@@ -426,16 +425,14 @@ SongSequence = _sequenceItems.Select(i => i.Song).ToList();
 
 #### Track Search
 ```csharp
-// Search across three library locations (line 343-359)
-SearchInFolder(_librarySettings.LibraryRootPath, AlbumType.Live, searchDate, searchVenue, results);
-SearchInFolder(_librarySettings.OfficialReleasesPath, AlbumType.OfficialRelease, searchDate, searchVenue, results);
-SearchInFolder(studioAlbumsPath, AlbumType.Studio, searchDate, searchVenue, results);
+// Single library root (universal scan)
+SearchInFolder(_librarySettings.LibraryRootPath, AlbumType.AudienceRecording, searchDate, searchVenue, results);
 
-// Match logic (line 387-409)
+// Match logic
 if (!string.IsNullOrEmpty(searchDate))
 {
-    // Live albums: check folder name
-    if (albumType == AlbumType.Live && folderName.Contains(searchDate))
+    // Audience-style folders: check folder name for date
+    if (albumType == AlbumType.AudienceRecording && folderName.Contains(searchDate))
         matches = true;
     // All albums: check embedded dates in track titles
     else if (TrackContainsDate(track.Title, searchDate))
@@ -523,14 +520,11 @@ if (!string.IsNullOrEmpty(searchVenue) && !matches)
 - **Warning Message:** "Please enter a date or venue to search."
 - **Implementation:** `TrackSearchButton_Click` (line 314-319)
 
-### 8. Track Search Locations
-- **Rule:** Search all three library locations for track matches
-- **Locations:**
-  1. `LibraryRootPath` (audience recordings/box sets)
-  2. `OfficialReleasesPath` (official releases)
-  3. `LibraryRootPath + "Studio Albums"` (studio albums)
-- **Rationale:** Live bonus tracks can appear in any album type
-- **Implementation:** `SearchTracksInLibrary()` (line 343-361)
+### 8. Track Search Location
+- **Rule:** Search the single library root for track matches
+- **Location:** `LibraryRootPath` (universal scan covers every album type)
+- **Rationale:** All albums live under one root; per-type bifurcation is no longer needed
+- **Implementation:** `SearchTracksInLibrary()` → `SearchInFolder(_librarySettings.LibraryRootPath, …)`
 
 ### 9. Date Matching Patterns
 - **Rule:** Date matches if:
@@ -661,18 +655,17 @@ if (!string.IsNullOrEmpty(searchVenue) && !matches)
 
 ---
 
-### 4. Library Paths Not Configured
-**Scenario:** `LibrarySettings.LibraryRootPath` or `OfficialReleasesPath` is null/empty.
+### 4. Library Path Not Configured
+**Scenario:** `LibrarySettings.LibraryRootPath` is null/empty or the directory doesn't exist.
 
 **Behavior in Track Search:**
-- `Directory.Exists()` returns false (line 343, 349)
-- That path skipped, search continues with other paths
-- If all paths missing, results list remains empty
+- `Directory.Exists()` returns false
+- The universal scan is skipped, results list remains empty
 - "No tracks found" message shown
 
-**Handling:** Graceful - only searches paths that exist.
+**Handling:** Graceful — only searches the root if it exists.
 
-**User Impact:** Track search may return incomplete results if paths not configured.
+**User Impact:** Track search returns no results until the user configures the library root in Settings.
 
 ---
 
@@ -883,7 +876,7 @@ if (!string.IsNullOrEmpty(searchVenue) && !matches)
 - **SongCheckItem** - `{ Song: string, IsChecked: bool }` (line 452-456)
 - **SequenceItem** - `{ Index: int, Song: string }` (line 458-462)
 - **TrackSearchResult** - `{ TrackTitle, AlbumTitle, AlbumType, AlbumPath }` (line 464-470)
-- **AlbumType** - Enum (Live, Studio, OfficialRelease)
+- **AlbumType** - Enum (`AudienceRecording`, `OfficialRelease`)
 
 ### External Dependencies
 - **System.IO** - Directory/file operations for track search

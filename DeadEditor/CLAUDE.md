@@ -80,14 +80,14 @@ When adding a new feature that writes to disk:
 | **Services** | | | |
 | `MetadataService.cs` | [documentation/11-metadata-service.md](documentation/11-metadata-service.md) | ~8,000 words | ID3 tags, ParseAlbumTitle regex, box set vs official release |
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
-| `LibraryImportService.cs` | [documentation/13-library-import-service.md](documentation/13-library-import-service.md) | ~5,000 words | Two-path library system, folder creation, metadata preservation |
+| `LibraryImportService.cs` | [documentation/13-library-import-service.md](documentation/13-library-import-service.md) | ~5,000 words | Universal single-path library system, folder creation, metadata preservation |
 | `MusicBrainzService.cs` | [documentation/14-musicbrainz-service.md](documentation/14-musicbrainz-service.md) | ~9,500 words | AcoustID fingerprinting, fpcalc.exe, MusicBrainz API, rate limiting |
 | `ShowLookupService.cs` | (inline — no separate doc) | - | Loads Data/shows.json, O(1) venue lookup by yyyy-MM-dd date |
 | `ReleaseLookupService.cs` | (inline — no separate doc) | - | Loads Data/releases.json, autocomplete for album/release names |
 | **Models** | | | |
 | `AlbumInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § AlbumInfo | ~11,000 words | Album metadata, type-based polymorphism, AlbumTitle format |
 | `TrackInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § TrackInfo | ~11,000 words | Track metadata, segue notation, GetFinalMetadataTitle |
-| `LibrarySettings.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § LibrarySettings | ~11,000 words | User settings, two-path system, window positions |
+| `LibrarySettings.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § LibrarySettings | ~11,000 words | User settings, single library root, window positions |
 | `SongDatabase.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § SongDatabase | ~11,000 words | Song database structure, artist-based organization |
 | **Data Files** | | | |
 | `Data/songs.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § songs.json | ~11,000 words | JSON schema, examples, 598 songs across 2 artists |
@@ -142,7 +142,7 @@ Stubs for design conversations not yet implemented:
 **By Business Logic:**
 - Album title format (box set vs official release) → [15-data-model.md](documentation/15-data-model.md) § AlbumInfo, [11-metadata-service.md](documentation/11-metadata-service.md) § ParseAlbumTitle
 - Song normalization & fuzzy matching → [12-normalization-service.md](documentation/12-normalization-service.md)
-- Folder structure & two-path system → [13-library-import-service.md](documentation/13-library-import-service.md)
+- Folder structure & universal single-path system → [13-library-import-service.md](documentation/13-library-import-service.md)
 - Segue notation → [15-data-model.md](documentation/15-data-model.md) § TrackInfo
 - Track numbering scheme → [15-data-model.md](documentation/15-data-model.md) § TrackInfo
 
@@ -181,41 +181,29 @@ Stubs for design conversations not yet implemented:
 
 ## Library Structure
 
-### Two-Path System
-DeadEditor supports two configurable library locations (can be same or separate directories):
+### Universal Single-Path System
+DeadEditor uses a single configurable library root (`LibraryRootPath`) for all albums regardless of type. The folder layout under that root is universal:
 
-1. **Library Root Path** (`LibraryRootPath`)
-   - Audience recordings (taper recordings, soundboard recordings)
-   - Box sets (multi-disc official releases treated as single collections)
-   - Structure: `[Library Root]/[Show Type]/YYYY-MM-DD [Venue], [City, State]/`
+```
+{LibraryRoot}/{Artist}/{AlbumFolder}/
+```
 
-2. **Official Releases Path** (`OfficialReleasesPath`)
-   - Studio albums (e.g., "American Beauty", "Workingman's Dead")
-   - Official live albums (e.g., "Europe '72")
-   - Structure: `[Official Releases]/[Album Type]/[Album Name] ([Year])/`
+Audience recordings, studio albums, official live releases, and box sets all live side by side under each artist folder. Album type is a metadata tag — not a folder decision. See [documentation/13-library-import-service.md](documentation/13-library-import-service.md) and [documentation/19-folder-import-and-manifests.md](documentation/19-folder-import-and-manifests.md) for the full rationale.
 
-**Note:** Users configure these paths in Settings and can point them to the same directory or keep them separate.
+### Album Types
+The `AlbumType` enum is two values (see [Models/AlbumInfo.cs](Models/AlbumInfo.cs)):
+- **AudienceRecording** - Audience/taper/soundboard recordings of a single concert
+- **OfficialRelease** - Any official release: studio albums, official live releases (Dave's Picks, Road Trips, etc.), and box sets
 
-### Show Types (in Library Root)
-Organized by performance type for audience recordings:
-- **Early Show** - First show when multiple concerts happened same night (mostly 1960s)
-- **Late Show** - Second show when multiple concerts happened same night (mostly 1960s)
-- **Matinee** - Afternoon performances
-- (Other custom types as needed)
+### AlbumFolder Naming Convention
+`LibraryImportService.BuildLibraryFolderName()` composes the folder from `AlbumInfo` fields:
+- **Live recordings** (date + venue present): `{Artist} - {Date} - {Venue} - {City}, {State} - {AlbumName}` (each segment omitted if empty)
+- **Studio-style releases** (no date or no venue): `{Artist} - {Year} - {AlbumName}`
 
-### Album Types (in Official Releases)
-- **Studio Albums** - Official studio releases (e.g., "American Beauty (1970)")
-- **Live Albums** - Official live releases (e.g., "Europe '72 (1972)")
-- **Box Sets** - Multi-disc collections
+All dates use strict **yyyy-MM-dd** format for consistent sorting.
 
 ### Hybrid Albums
-**Important Design Decision:** Studio albums increasingly include live bonus material (e.g., "Europe '72 50th Anniversary Edition" with extra live tracks from different dates). These are imported as **Studio Albums** with an `Edition` field to keep them as one cohesive unit, rather than splitting studio/live content.
-
-### Folder Naming Convention
-All folders use strict **yyyy-MM-dd** format:
-- Concert folders: `1977-05-08 Barton Hall, Cornell University, Ithaca, NY`
-- Studio albums: `American Beauty (1970)`
-- Reasoning: Ensures consistent sorting and searching across the entire collection
+**Important Design Decision:** Official releases increasingly include live bonus material (e.g., "Europe '72 50th Anniversary Edition" with extra live tracks from different dates). These remain a single `OfficialRelease` with an `Edition` field to keep them as one cohesive unit, rather than splitting studio/live content.
 
 ---
 
@@ -333,12 +321,13 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 5. Normalize to canonical song name via fuzzy matching
 6. Preserve segue markers
 
-### 4. Two-Path Library System
-**Decision:** Separate paths for audience recordings vs official releases
+### 4. Universal Single-Path Library System
+**Decision:** One library root for all album types; `AlbumType` is a metadata tag, not a folder decision
 **Reasoning:**
-- Different organizational needs (date-based vs album-based)
-- Different metadata sources (manual parsing vs MusicBrainz)
-- Different user browsing patterns
+- Folder selected for import is the atomic unit — files imported together stay together in one library folder
+- Multi-date official releases (Road Trips, etc.) no longer scatter across date folders
+- Single configuration to manage; same folder convention for every import path
+- See [documentation/19-folder-import-and-manifests.md](documentation/19-folder-import-and-manifests.md) for the full design memo
 
 ### 5. In-Memory Concert Storage
 **Decision:** No separate database file for concerts; read from file system + ID3 tags
@@ -442,7 +431,7 @@ dotnet test DeadEditor.sln
 - Primary test library: User's personal Grateful Dead taper collection
 - Add songs/aliases as unmatched tracks are encountered
 - Verify fuzzy matching against real-world typos
-- Test all three album types: Live recordings, Studio albums, Official Releases
+- Test both album types: AudienceRecording and OfficialRelease (the OfficialRelease type covers studio albums, official live releases, and box sets)
 
 ---
 
@@ -513,7 +502,7 @@ Each edition should be treated as a distinct album with its own metadata, even t
 ## Future Enhancement Ideas
 
 ### High Priority
-- Complete testing with all three album types (Live, Studio, Official Releases)
+- Complete testing with both album types (AudienceRecording, OfficialRelease)
 
 ### Low Priority
 - Batch import multiple concerts at once

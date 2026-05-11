@@ -169,7 +169,19 @@
 - ✅ documentation/02-library-browser.md - Updated for placeholder bar
 **Still Needed:**
 - Update documentation/15-data-model.md for new TrackInfo.RawTitle field
-- Update CLAUDE.md with new AlbumType enum values
+- ✅ Update CLAUDE.md with new AlbumType enum values (done in doc-drift cleanup commit)
+
+### New: MetadataService.ParseAlbumTitle comment/code mismatch
+**Priority:** Medium
+**Status:** Surfaced by 2026-05-11 doc-drift audit; not fixed in that commit (doc-only scope)
+**Description:** In `Services/MetadataService.cs:745-865`:
+- Pattern 1's comment says "Box Set format" but the code assigns `AlbumType.OfficialRelease`
+- Pattern 2's comment says "Official Release format" but the code assigns `AlbumType.AudienceRecording`
+- Pattern 5 comment says "Audience Recording" and correctly assigns `AlbumType.AudienceRecording`
+
+The colon-spacing distinction still selects between two regex parse paths, but it no longer distinguishes album types (both paths resolve into the two-value enum). The mismatch is either misleading comments at minimum, or genuinely wrong logic at worst — determining which requires understanding what each pattern was supposed to match. Audit the patterns against real-world tag formats and either fix the comments or fix the logic.
+
+**Action:** Code-side audit + fix. Out of scope for the doc-drift commit.
 
 ### 5. Editable Folder Name Preview (Spec'd but Not Implemented)
 **Priority:** Low
@@ -327,13 +339,13 @@ DeadEditor has comprehensive documentation in the `documentation/` folder:
 ### Services & Data
 - `11-metadata-service.md` - ID3 tag reading/writing
 - `12-normalization-service.md` - Song title normalization
-- `13-library-import-service.md` - Two-path library system
+- `13-library-import-service.md` - Universal single-path library system
 - `14-musicbrainz-service.md` - AcoustID fingerprinting
 - `15-data-model.md` - All model classes (needs update for RawTitle)
-- `16-import-redesign-spec.md` - **NEW** - Import screen redesign (implemented)
+- `16-import-redesign-spec.md` - Import screen redesign (implemented)
 
 ### Main Docs
-- `CLAUDE.md` - AI assistant context document (needs update for AlbumType)
+- `CLAUDE.md` - AI assistant context document
 - `TODO.md` - This file (project status and tasks)
 
 ---

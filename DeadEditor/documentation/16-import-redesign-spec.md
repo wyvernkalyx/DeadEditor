@@ -198,9 +198,8 @@ The combobox is the source of truth for `_albumInfo.Type` after load. Type is se
 - **Official Release with Date+Venue:** `YYYY-MM-DD - Venue - City, ST : Album Name` (if Collection Name: append `: Collection Name`)
 - **Official Release without Date+Venue:** `Album Name (Year)` (if Collection Name: append `: Collection Name`)
 
-**Write Path** shows the full destination path based on library settings, album type, and folder name:
-- **Audience Recording** → `LibraryRootPath/YYYY/[folder name]`
-- **Official Release** → `OfficialReleasesPath/[Album Type]/[folder name]`
+**Write Path** shows the full destination path based on library settings and folder name. All types use the universal layout:
+- `LibraryRootPath/{Artist}/[folder name]` (see [13-library-import-service.md](13-library-import-service.md) for the full naming rules)
 
 ---
 

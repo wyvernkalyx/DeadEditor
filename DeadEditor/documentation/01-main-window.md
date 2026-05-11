@@ -2,7 +2,7 @@
 
 ## Purpose
 
-MainWindow is the concert import workflow hub for DeadEditor. It loads audio files from a folder, parses metadata from filenames and ID3 tags, normalizes song titles using fuzzy matching against the song database, and writes standardized metadata back to the files. The window supports four album types (Live Recordings, Official Releases, Studio Albums, and Box Sets) and provides specialized workflows for each. After metadata preparation, concerts can be imported into the library with proper folder structure and naming conventions. The window also supports MusicBrainz integration for studio albums via audio fingerprinting or manual search.
+MainWindow is the concert import workflow hub for DeadEditor. It loads audio files from a folder, parses metadata from filenames and ID3 tags, normalizes song titles using fuzzy matching against the song database, and writes standardized metadata back to the files. The window supports two album types (`AudienceRecording` and `OfficialRelease`); `OfficialRelease` covers studio albums, official live releases, and box sets. After metadata preparation, concerts can be imported into the library with proper folder structure and naming conventions. The window also supports MusicBrainz integration via audio fingerprinting or manual search.
 
 **TWO MODES:** MainWindow operates in two distinct modes with different UI layouts and workflows:
 
@@ -182,49 +182,32 @@ once the stepper has had time in the user's hands.
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
-| Live Recording radio | RadioButton | `LiveRecordingRadio` | Sets `_albumInfo.Type = AlbumType.Live`, shows live fields | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
-| Official Release radio | RadioButton | `OfficialReleaseRadio` | Sets `_albumInfo.Type = AlbumType.OfficialRelease`, shows official release field | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
-| Studio Album radio | RadioButton | `StudioAlbumRadio` | Sets `_albumInfo.Type = AlbumType.Studio`, shows studio album fields | `AlbumType_Changed` → `UpdateFieldVisibility()` | Working |
-| Box Set radio | RadioButton | `BoxSetRadio` | Sets `_albumInfo.Type = AlbumType.BoxSet`, shows box set name field, pre-fills last used box set name | `AlbumType_Changed` → `UpdateFieldVisibility()` | Partial (auto-select logic needs testing) |
+| Album Type combobox | ComboBox | `AlbumTypeComboBox` | Sets `_albumInfo.Type` to `AudienceRecording` or `OfficialRelease` (or leaves at inferred value when Auto-detect is selected) | `AlbumTypeComboBox_SelectionChanged` → preview refresh | Working |
+
+The combobox is the single album-type control. It replaced the prior four radio buttons (`LiveRecordingRadio`, `OfficialReleaseRadio`, `StudioAlbumRadio`, `BoxSetRadio`) when the `AlbumType` enum was collapsed to two values: `Studio`, `Live`, `OfficialRelease`, and `BoxSet` all map to today's `OfficialRelease`, and the original `Live` is now `AudienceRecording`.
 
 #### Common Fields
+
+All album-info fields are always visible and editable regardless of `Type`. There is no per-type field-visibility toggle in the current UI.
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
 | Artist | TextBox | `ArtistTextBox` | Updates `_albumInfo.Artist`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+| Date | TextBox | `DateTextBox` | Updates `_albumInfo.AlbumDate` (yyyy-MM-dd format), triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+| Venue | TextBox | `VenueTextBox` | Updates `_albumInfo.Venue`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+| City, State | TextBox | `CityStateTextBox` | Updates `_albumInfo.CityState`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+| Album Name | TextBox | `AlbumNameTextBox` | Updates `_albumInfo.AlbumName`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+| Collection Name | TextBox | `CollectionNameTextBox` | Updates `_albumInfo.CollectionName` (optional; applies to either type), triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+| Year | TextBox | `YearTextBox` | Updates `_albumInfo.Year` (string), triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
 
-#### MusicBrainz Lookup (Available for all album types)
+#### MusicBrainz Lookup (Available for both album types)
 
 | Element | Type | Name | Action | API/Service Call | Status |
 |---------|------|------|--------|-----------------|--------|
 | Fingerprint Lookup | Button | `LookupAlbumButton` | Uses audio fingerprinting (AcoustID) to lookup album, shows ReleaseSelectorDialog, downloads artwork | `_musicBrainzService.LookupAllReleasesAsync(_tracks)` | Working (requires fpcalc.exe) |
 | Manual Search | Button | `ManualSearchButton` | Opens AlbumSearchDialog, searches MusicBrainz by name/artist/year, shows ReleaseSelectorDialog | `_musicBrainzService.SearchReleasesByNameAsync(...)` | Working |
 
-**Note:** MusicBrainz is a user-populated database that contains entries for all types of recordings (live concerts, studio albums, official releases, box sets). Both lookup methods are available regardless of album type selected.
-
-#### Studio Album Fields (Collapsed unless Studio Album type selected)
-
-| Element | Type | Name | Action | API/Service Call | Status |
-|---------|------|------|--------|-----------------|--------|
-| Album Name | TextBox | `AlbumNameTextBox` | Updates `_albumInfo.AlbumName`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| Release Year | TextBox | `ReleaseYearTextBox` | Parses int, updates `_albumInfo.ReleaseYear`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| Edition/Remaster | TextBox | `EditionTextBox` | Updates `_albumInfo.Edition` (optional), triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-
-#### Live Recording Fields (Collapsed for Studio Album type)
-
-| Element | Type | Name | Action | API/Service Call | Status |
-|---------|------|------|--------|-----------------|--------|
-| Date | TextBox | `DateTextBox` | Updates `_albumInfo.Date` (yyyy-MM-dd format), triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| Venue | TextBox | `VenueTextBox` | Updates `_albumInfo.Venue`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| City | TextBox | `CityTextBox` | Updates `_albumInfo.City`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| State | TextBox | `StateTextBox` | Updates `_albumInfo.State`, triggers preview refresh | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-| Official Release | TextBox | `OfficialReleaseTextBox` | Updates `_albumInfo.OfficialRelease` (optional), shown only for OfficialRelease type | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
-
-#### Box Set Fields (Collapsed unless Box Set type selected)
-
-| Element | Type | Name | Action | API/Service Call | Status |
-|---------|------|------|--------|-----------------|--------|
-| Box Set Name | TextBox | `BoxSetNameTextBox` | Updates `_albumInfo.BoxSetName`, pre-fills with `_librarySettings.LastBoxSetName` on visibility | `AlbumInfo_Changed` → `UpdateAlbumPreview()` | Working |
+**Note:** MusicBrainz is a user-populated database that contains entries for all types of recordings. Both lookup methods are available regardless of album type selected.
 
 #### Preview Display
 
@@ -412,17 +395,15 @@ once the stepper has had time in the user's hands.
 1. **User clicks "Select Folder" button**
    - Same as Workflow 1 steps 1-2
    - `LoadFolder()` reads files and parses folder name
-   - If folder name format is `[Album Name] ([Year])` → auto-detects as Studio Album
-   - Otherwise defaults to Live Recording (user must change manually)
+   - If folder name format is `[Album Name] ([Year])` → auto-detects as `OfficialRelease` (studio-style)
+   - Otherwise defaults to `AudienceRecording` (user may change via the combobox)
 
-2. **User selects "Studio Album" radio button**
-   - `AlbumType_Changed` fires (line 263)
-   - Sets `_albumInfo.Type = AlbumType.Studio` (line 278)
-   - `UpdateFieldVisibility()` shows studio fields (line 287):
-     - Shows: Album Name, Release Year, Edition, Fingerprint Lookup, Manual Search
-     - Hides: Date, Venue, City, State, Official Release
-   - `UpdateAlbumPreview()` formats title as `[Album Name] ([Year])`
-   - `UpdateTrackPreviews()` updates preview without date appended
+2. **User selects "Official Release" in the album-type combobox**
+   - `AlbumTypeComboBox_SelectionChanged` fires
+   - Sets `_albumInfo.Type = AlbumType.OfficialRelease`
+   - All album-info fields remain visible/editable (no per-type field-visibility toggle in current UI)
+   - `UpdateAlbumPreview()` formats title via `AlbumInfo.AlbumTitle` — when Date+Venue are empty, it falls back to `[AlbumName] ([Year])`
+   - `UpdateTrackPreviews()` updates preview without date appended for studio-style imports
 
 3. **User clicks "🔍 Fingerprint Lookup" button**
    - `LookupAlbumButton_Click` fires (line 296)
@@ -543,42 +524,28 @@ once the stepper has had time in the user's hands.
 1. **User clicks "Select Folder" button**
    - Same as Workflow 1 steps 1-2
    - `LoadFolder()` reads files and parses folder name
-   - Defaults to Live Recording type
+   - Defaults to `AudienceRecording` unless folder name signals otherwise
 
-2. **User selects "Box Set" radio button**
-   - `AlbumType_Changed` fires (line 263)
-   - Sets `_albumInfo.Type = AlbumType.BoxSet` (line 282)
-   - `UpdateFieldVisibility()` shows box set field (line 287)
-     - Shows: Date, Venue, City, State, Box Set Name (optional)
-     - Hides: Album Name, Release Year, Edition, MusicBrainz buttons, Official Release
-   - **Auto-fills Box Set Name** with `_librarySettings.LastBoxSetName` if set (line 239-244)
-     - Example: User previously imported from "Enjoying the Ride" box set
-     - Next import automatically suggests "Enjoying the Ride"
-     - User can keep it or change it
+2. **User selects "Official Release" in the album-type combobox**
+   - `AlbumTypeComboBox_SelectionChanged` fires
+   - Sets `_albumInfo.Type = AlbumType.OfficialRelease` (box sets no longer have a dedicated enum value; they are a flavor of `OfficialRelease` distinguished by populating `CollectionName`)
    - `UpdateAlbumPreview()` updates preview
 
 3. **User enters/edits metadata**
-   - Box Set Name: e.g., "Enjoying the Ride", "Digital Album Live"
-   - Date, Venue, City, State for this specific concert
-   - All fields work same as Live Recording
+   - Collection Name: e.g., "Enjoying the Ride", "Digital Album Live" (stored on `_albumInfo.CollectionName`)
+   - Date, Venue, City/State for this specific concert
+   - All fields are always visible/editable
 
 4. **User normalizes, writes, and imports** (same as Workflow 1 steps 3-6)
-   - Import path: `[LibraryRoot]/[Year]/[Date] - [Venue], [City, State]/`
-   - Metadata includes Box Set Name in `_albumInfo.BoxSetName` field
-   - **On successful import:**
-     - `_librarySettings.LastBoxSetName = _albumInfo.BoxSetName` (line 964)
-     - `_librarySettings.Save()` persists box set name for next import
-     - Next concert from same box set will auto-fill this name
+   - Import path: universal `{LibraryRoot}/{Artist}/{AlbumFolder}/` from `LibraryImportService.BuildLibraryFolderName()`
+   - `_librarySettings.LastBoxSetName` is updated on successful import so the next import can pre-fill the same collection name
 
 5. **User imports additional concerts from same box set**
    - Click "Select Folder", choose next concert folder
-   - Box Set radio button **should auto-select** and pre-fill box set name
-     - **Note:** Auto-select logic exists (line 246-260) but TODO.md notes it may not work reliably
-   - User confirms/edits fields
-   - Import → same box set name applied consistently across all concerts
+   - User keeps the same Collection Name (or it pre-fills from `LastBoxSetName`)
+   - Import → same collection name applied consistently across concerts
 
-**Success Path:** Folder loaded → Box Set selected → Box set name entered → Imported → Name remembered for next import
-**Partial Issue:** Auto-select Box Set radio button logic (line 246-260) needs testing and debugging
+**Success Path:** Folder loaded → `OfficialRelease` selected → Collection Name entered → Imported → Name remembered for next import
 
 ---
 
@@ -759,10 +726,10 @@ The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspe
     - Embedded artwork (APIC frame) if `_albumInfo.ArtworkData` present
   - Copies artwork as `cover.jpg` in album folder
   - Copies info file (if present) to album folder
-  - Creates folder structure:
-    - Live/Box Set: `[LibraryRoot]/[Year]/[Date] - [Venue], [City, State]/`
-    - Official Release: `[OfficialReleasesPath]/[Series]/[OfficialRelease]/`
-    - Studio Album: `[LibraryRoot]/Studio Albums/[Album Name] ([Year])/`
+  - Creates folder structure (universal layout, all types): `{LibraryRoot}/{Artist}/{AlbumFolder}/`
+    - `AlbumFolder` = `{Artist} - {Date} - {Venue} - {City}, {State} - {AlbumName}` for live recordings
+    - `AlbumFolder` = `{Artist} - {Year} - {AlbumName}` for studio-style official releases
+    - See [13-library-import-service.md](13-library-import-service.md) for the full naming rules.
 
 **Settings Updated:**
 - `%APPDATA%/DeadEditor/settings.json`:
@@ -849,32 +816,25 @@ The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspe
 
 ### Album Type-Specific Rules
 
-**Live Recordings:**
-- Fields: Date, Venue, City, State, OfficialRelease (optional)
-- Album title format: `yyyy-MM-dd - Venue, City, State`
-- Library path: `[LibraryRoot]/[Year]/[Date] - [Venue], [City, State]/`
-- Track titles: May include performance date if different from album date
+All album types share the universal library path `{LibraryRoot}/{Artist}/{AlbumFolder}/`. What varies is how `AlbumFolder` is composed (see [13-library-import-service.md](13-library-import-service.md)) and whether the track filename carries a date.
 
-**Official Releases:**
-- Fields: Date, Venue, City, State, OfficialRelease (required)
-- Album title format: `yyyy-MM-dd - OfficialRelease`
-- Library path: `[OfficialReleasesPath]/[Series]/[OfficialRelease]/`
-- Example: `Dave's Picks/Dave's Picks Vol. 53/`
+**AudienceRecording:**
+- Fields populated: AlbumDate, Venue, CityState, AlbumName (optional), CollectionName (optional)
+- Album title format: `yyyy-MM-dd - Venue - City, ST` (with optional album-name and collection-name suffixes)
+- Track filenames include the date: `01 - Song Title (1972-05-04).flac`
 
-**Studio Albums:**
-- Fields: AlbumName, ReleaseYear, Edition (optional)
-- Album title format: `AlbumName (Year)` or `AlbumName (Year) - Edition`
-- Library path: `[LibraryRoot]/Studio Albums/[AlbumName] ([Year])/`
-- **Track titles do NOT include dates** (line 190-192)
-- Hybrid albums (studio + live bonus tracks) treated as single Studio Album
-- Edition field distinguishes remasters/deluxe editions as separate albums
+**OfficialRelease — live flavor (Date + Venue present):**
+- Fields populated: AlbumDate, Venue, CityState, AlbumName, CollectionName (optional)
+- Album title format: `yyyy-MM-dd - Venue - City, ST - AlbumName` (with optional collection-name suffix)
+- Track filenames omit the date: `01 - Song Title.flac`
 
-**Box Sets:**
-- Fields: Date, Venue, City, State, BoxSetName (optional)
-- Album title format: `yyyy-MM-dd - Venue, City, State`
-- Library path: Same as Live Recordings
-- Box set name stored in metadata but not in folder structure
-- **Box set name memory:** Last used box set name auto-fills for next import (line 964-966)
+**OfficialRelease — studio-style (Date or Venue empty):**
+- Fields populated: AlbumName, Year, CollectionName (optional); Edition is preserved as a separate field
+- Album title format: `AlbumName (Year)` (year omitted if AlbumName already contains parenthesized year)
+- Track filenames omit the date
+- Hybrid albums (studio + live bonus tracks) stay as a single `OfficialRelease`
+
+**Box sets:** No longer a separate type. A box set is an `OfficialRelease` whose `CollectionName` holds the box-set name. The same naming rules above apply. `LastBoxSetName` is remembered between imports for the user's convenience.
 
 ### Segue Detection
 - **Notation:** `China Cat Sunflower > I Know You Rider`
@@ -920,35 +880,14 @@ The Track Info dialog (`TrackInfoDialog.xaml.cs`) is a diagnostic tool for inspe
 
 ## Known Issues
 
-### 1. Box Set Auto-Select Logic (Partial - Needs Testing)
-**Location:** `UpdateFieldVisibility()` lines 246-260
-**Issue:** Auto-select Box Set radio button when new import has remembered box set name may not work reliably
-**Code:**
-```csharp
-// Auto-select Box Set radio if we pre-filled a box set name for a new import
-if (!isBoxSet && !string.IsNullOrEmpty(_librarySettings.LastBoxSetName) &&
-    string.IsNullOrWhiteSpace(_albumInfo?.BoxSetName) && _albumInfo?.Type == AlbumType.Live)
-{
-    // This appears to be a new import (Live type by default) but we have a remembered box set name
-    _isUpdating = true;
-    BoxSetRadio.IsChecked = true;
-    _albumInfo.Type = AlbumType.BoxSet;
-    _isUpdating = false;
-    UpdateFieldVisibility();
-}
-```
-**Expected:** When importing a new concert after previously importing from a box set, Box Set radio should auto-select
-**Actual:** Behavior unclear, needs testing
-**Workaround:** User manually selects Box Set radio button
-
-### 2. Deprecated Settings Menu Item
+### 1. Deprecated Settings Menu Item
 **Location:** Menu bar, `SettingsMenuItem_Click()` line 797
 **Issue:** Settings menu item in MainWindow just shows a message box instead of opening settings
 **Message:** "Settings can be accessed from the main Library window."
 **Recommendation:** Remove this menu item entirely from MainWindow
 **Status:** Working as designed but should be removed for clarity
 
-### 3. Read Button Redundancy
+### 2. Read Button Redundancy
 **Location:** `ReadButton` in action bar
 **Issue:** "Read from Files" button is redundant - folder auto-loads on browse
 **Current behavior:** Re-loads current folder (useful if files changed externally)

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document provides comprehensive coverage of DeadEditor's data model layer, including all model classes, their properties, business logic, JSON schemas, and real-world examples. The data model supports three distinct album types (Live, Studio, BoxSet) with type-specific properties and computed fields.
+This document provides comprehensive coverage of DeadEditor's data model layer, including all model classes, their properties, business logic, JSON schemas, and real-world examples. The data model supports two album types (`AudienceRecording`, `OfficialRelease`) and exposes all album-info fields on a single unified shape; the `AlbumTitle` computed property adapts based on which fields are populated.
 
 ---
 
@@ -25,7 +25,7 @@ This document provides comprehensive coverage of DeadEditor's data model layer, 
 
 ### Purpose
 
-The `AlbumInfo` class represents metadata for a concert, studio album, or box set. It uses a **type-based polymorphic design** where different properties are populated based on the `Type` field. The `AlbumTitle` computed property adapts its format based on album type.
+The `AlbumInfo` class represents metadata for a concert, studio album, official release, or box set. All fields are present on every instance regardless of `Type`; field visibility in the UI is no longer type-gated. The `AlbumTitle` computed property adapts its format based on which fields are populated.
 
 ---
 
@@ -35,10 +35,8 @@ The `AlbumInfo` class represents metadata for a concert, studio album, or box se
 ```csharp
 public enum AlbumType
 {
-    Live,            // Live concert recording (audience/taper recording)
-    Studio,          // Studio album release
-    OfficialRelease, // Official live release (Dave's Picks, Road Trips, etc.)
-    BoxSet           // Box set collection (digital or physical multi-show sets)
+    AudienceRecording,  // Audience/taper recordings (was named Live)
+    OfficialRelease     // Official releases (studio albums, live albums, box sets, series)
 }
 ```
 
@@ -46,70 +44,41 @@ public enum AlbumType
 
 | Value | Description | Folder Location |
 |-------|-------------|-----------------|
-| `Live` | Audience/taper recording of single concert | `{LibraryRoot}/{Year}/{Date} - {Venue} - {City}, {State}` |
-| `Studio` | Studio album release | `{OfficialReleasesPath}/Studio Albums/{Album} ({Year})` |
-| `OfficialRelease` | Official live release (Dave's Picks, Dick's Picks, etc.) | `{OfficialReleasesPath}/{Series}/{Release Name}` |
-| `BoxSet` | Multi-show collection (digital box sets, physical box sets) | `{LibraryRoot}/{Year}/{Date} - {Venue} - {City}, {State}:{BoxSetName}` |
+| `AudienceRecording` | Audience/taper/soundboard recording of a single concert | `{LibraryRoot}/{Artist}/{AlbumFolder}/` |
+| `OfficialRelease` | Any official release — studio albums, official live releases (Dave's Picks, Road Trips, etc.), and box sets | `{LibraryRoot}/{Artist}/{AlbumFolder}/` |
 
-**Default:** `AlbumType.Live` (line 17) - For backward compatibility with legacy imports.
+All album types use the same universal folder layout — see [13-library-import-service.md](13-library-import-service.md) for how `AlbumFolder` is composed.
+
+**Default:** `AlbumType.AudienceRecording`.
 
 ---
 
 ### Properties
 
-#### Common Properties (All Types)
+All fields are present on every `AlbumInfo` instance regardless of `Type`. Whether a field is populated (vs. empty) depends on the import path and what the user enters.
 
 | Property | Type | Description | Example |
 |----------|------|-------------|---------|
-| `FolderPath` | `string` | Full path to album folder | `"D:\library\1977\1977-05-08 - Barton Hall - Ithaca, NY"` |
+| `FolderPath` | `string` | Full path to album folder | `"D:\library\Grateful Dead\Grateful Dead - 1977-05-08 - Barton Hall - Ithaca, NY"` |
 | `Artist` | `string` | Artist name | `"Grateful Dead"` |
-| `Type` | `AlbumType` | Album type (Live/Studio/OfficialRelease/BoxSet) | `AlbumType.Live` |
+| `Type` | `AlbumType` | Album type (`AudienceRecording` or `OfficialRelease`) | `AlbumType.AudienceRecording` (default) |
+| `AlbumDate` | `string` | Performance/release date (yyyy-MM-dd); may be empty for studio-style releases | `"1977-05-08"` |
+| `Venue` | `string` | Venue name; may be empty for studio-style releases | `"Barton Hall, Cornell University"` |
+| `CityState` | `string` | "City, State" combined | `"Ithaca, NY"` |
+| `AlbumName` | `string` | Album or official-release name | `"Workingman's Dead"`, `"Dave's Picks Vol. 29"` |
+| `CollectionName` | `string` | Optional collection/box-set name; applies to either type | `"Enjoying the Ride"` |
+| `Year` | `string` | Release year (string; may be empty) | `"1970"` |
+| `Edition` | `string` | Optional edition/remaster info | `"2025 Remaster"`, `"Deluxe Edition"` |
+| `FolderNameOverride` | `bool` | True when user manually edited the folder-name preview | `false` |
+| `CustomFolderName` | `string` | User's manual folder-name override (active when `FolderNameOverride` is true) | `"Custom Folder"` |
 | `IsModified` | `bool` | Has user made changes? | `false` |
 | `ArtworkData` | `byte[]?` | Album artwork image bytes | `[JPEG/PNG binary data]` |
 | `ArtworkMimeType` | `string?` | MIME type of artwork | `"image/jpeg"` or `"image/png"` |
 | `InfoFileContent` | `string?` | Content of .txt info file | `"Source: AUD Charlie Miller\nLineage: ..."` |
 | `InfoFileName` | `string?` | Name of info file | `"gd77-05-08.txt"` |
+| `MusicBrainzReleaseId` | `string?` | MBID set when the user picks a release in `ReleaseSelectorDialog` | `"abcd-1234-…"` |
 
----
-
-#### Live Recording Properties (Type = Live or BoxSet)
-
-| Property | Type | Description | Example |
-|----------|------|-------------|---------|
-| `Date` | `string` | Performance date (yyyy-MM-dd) | `"1977-05-08"` |
-| `Venue` | `string` | Venue name | `"Barton Hall, Cornell University"` |
-| `City` | `string` | City name | `"Ithaca"` |
-| `State` | `string` | State abbreviation | `"NY"` |
-| `OfficialRelease` | `string` | Optional official release name (if concert later released officially) | `"Dave's Picks Vol. 29"` |
-
-**Used For:** Live concerts, box sets
-**Not Used For:** Studio albums
-
----
-
-#### Studio Album Properties (Type = Studio)
-
-| Property | Type | Description | Example |
-|----------|------|-------------|---------|
-| `AlbumName` | `string` | Studio album title | `"Workingman's Dead"` |
-| `ReleaseYear` | `int?` | Year of release | `1970` |
-| `Edition` | `string?` | Edition/remaster info (optional) | `"2025 Remaster"`, `"Deluxe Edition"` |
-
-**Used For:** Studio albums only
-**Not Used For:** Live concerts, box sets
-
----
-
-#### Box Set Properties (Type = BoxSet)
-
-| Property | Type | Description | Example |
-|----------|------|-------------|---------|
-| `BoxSetName` | `string?` | Name of box set collection | `"Enjoying the Ride"`, `"Digital Album Live"` |
-
-**Used For:** Box sets only
-**Not Used For:** Live concerts, studio albums
-
-**Note:** Box sets also populate live recording properties (`Date`, `Venue`, `City`, `State`) for each concert in the set.
+**Compatibility aliases.** `Date`, `City`, `State`, `ReleaseYear`, `OfficialRelease`, and `BoxSetName` survive as read/write aliases on `AlbumInfo` and all map onto the unified fields above (e.g., `BoxSetName` is an alias for `AlbumName`, `Date` for `AlbumDate`, `City`/`State` parse `CityState`). New code should use the unified field names directly.
 
 ---
 
@@ -122,124 +91,88 @@ public enum AlbumType
 public string AlbumTitle { get; }
 ```
 
-**Purpose:** Returns formatted album title based on `Type`. Adapts format for Live/Studio/BoxSet albums.
+**Purpose:** Returns the formatted album title based on which fields are populated. Source of truth: [Models/AlbumInfo.cs:105-167](Models/AlbumInfo.cs#L105-L167).
 
 **Business Logic:**
 
-**1. Studio Album Format** (Type = Studio, lines 49-63):
+**1. Folder-name override (any type).** If `FolderNameOverride == true` and `CustomFolderName` is non-empty, return `CustomFolderName` verbatim.
+
+**2. `OfficialRelease` with Date + Venue (live flavor).**
 ```
-"{AlbumName} ({ReleaseYear}) [{Edition}]"
+"{AlbumDate} - {Venue} - {CityState}[ - {AlbumName}][ : {CollectionName}]"
 ```
+Examples:
+- `AlbumDate="1977-05-08"`, `Venue="Barton Hall"`, `CityState="Ithaca, NY"`, `AlbumName="Dave's Picks Vol. 29"` → `"1977-05-08 - Barton Hall - Ithaca, NY - Dave's Picks Vol. 29"`
+- Same + `CollectionName="Enjoying the Ride"` → `"1977-05-08 - Barton Hall - Ithaca, NY - Dave's Picks Vol. 29 : Enjoying the Ride"`
 
-**Examples:**
-- `AlbumName = "Workingman's Dead"`, `ReleaseYear = 1970`, `Edition = null`
-  - **Returns:** `"Workingman's Dead (1970)"`
-- `AlbumName = "American Beauty"`, `ReleaseYear = 1970`, `Edition = "2025 Remaster"`
-  - **Returns:** `"American Beauty (1970) [2025 Remaster]"`
-- `AlbumName = "Europe '72"`, `ReleaseYear = null`, `Edition = null`
-  - **Returns:** `"Europe '72"`
-- `AlbumName = null`
-  - **Returns:** `"Unknown Album"`
-
-**2. Box Set Format** (Type = BoxSet, lines 65-71):
+**3. `OfficialRelease` without Date + Venue (studio flavor).**
 ```
-"{Date} - {Venue} - {City}, {State}: {BoxSetName}"
+"{AlbumName} ({Year})[ : {CollectionName}]"
 ```
+The `(Year)` suffix is omitted when `AlbumName` already contains a parenthesized year (so `"Europe '72 (2003 Reissue)"` does not become `"Europe '72 (2003 Reissue) (1972)"`).
 
-**Note:** NO space before colon (`:`) - distinguishes box sets from official releases.
+Examples:
+- `AlbumName="Workingman's Dead"`, `Year="1970"` → `"Workingman's Dead (1970)"`
+- `AlbumName="Europe '72 (2003 Reissue)"`, `Year="1972"` → `"Europe '72 (2003 Reissue)"`
+- `AlbumName=""` → `"Unknown Release"`
 
-**Examples:**
-- `Date = "1972-05-04"`, `Venue = "Olympia Theatre"`, `City = "Paris"`, `State = "France"`, `BoxSetName = "Enjoying the Ride"`
-  - **Returns:** `"1972-05-04 - Olympia Theatre - Paris, France: Enjoying the Ride"`
-- `BoxSetName = null`
-  - **Returns:** `"1972-05-04 - Olympia Theatre - Paris, France"` (base title only)
-
-**3. Live Recording Format** (Type = Live or OfficialRelease, lines 73-80):
+**4. `AudienceRecording` with Date + Venue.**
 ```
-"{Date} - {Venue} - {City}, {State} [- {AlbumName}] [: {OfficialRelease}]"
+"{AlbumDate} - {Venue} - {CityState}[ - {AlbumName}][ : {CollectionName}]"
 ```
+Same shape as the live-flavor `OfficialRelease`. Example:
+- `AlbumDate="1977-05-08"`, `Venue="Barton Hall"`, `CityState="Ithaca, NY"` → `"1977-05-08 - Barton Hall - Ithaca, NY"`
 
-**Note:** SPACE before colon (` :`) - distinguishes official releases from box sets. Album Name is appended with dash separator (if populated). Official Release name is appended with colon separator (if populated).
+**5. `AudienceRecording` fallback (no Date, no Venue).** Falls back to the studio-flavor `"{AlbumName} ({Year})[ : {CollectionName}]"` shape. This handles folders parsed before the user assigns a meaningful `Type`.
 
-**Examples:**
-- `Date = "1977-05-08"`, `Venue = "Barton Hall"`, `City = "Ithaca"`, `State = "NY"`, `AlbumName = null`, `OfficialRelease = null`
-  - **Returns:** `"1977-05-08 - Barton Hall - Ithaca, NY"`
-- `Date = "1971-04-25"`, `Venue = "Fillmore East"`, `City = "New York"`, `State = "NY"`, `AlbumName = "Enjoying the Ride"`, `OfficialRelease = null`
-  - **Returns:** `"1971-04-25 - Fillmore East - New York, NY - Enjoying the Ride"`
-- `Date = "1977-05-08"`, `Venue = "Barton Hall"`, `City = "Ithaca"`, `State = "NY"`, `AlbumName = null`, `OfficialRelease = "Dave's Picks Vol. 29"`
-  - **Returns:** `"1977-05-08 - Barton Hall - Ithaca, NY : Dave's Picks Vol. 29"`
-
-**Critical Business Rule:** Colon spacing distinguishes box sets from official releases:
-- **Box Set:** `State:{BoxSetName}` (NO space before `:`)
-- **Official Release:** `State : {OfficialRelease}` (space before `:`)
-
-This distinction is used by `MetadataService.ParseAlbumTitle()` regex patterns (see [11-metadata-service.md](11-metadata-service.md)).
+**Colon spacing note:** The legacy " : " vs ":" colon distinction is no longer used by `AlbumTitle` to encode album type. The colon between `AlbumName` and `CollectionName` is " : " (space before colon) in every case. The legacy "no-space colon = box set" / "space-colon = official release" rule survives only inside `MetadataService.ParseAlbumTitle` as two regex parse paths; see [11-metadata-service.md](11-metadata-service.md) for details.
 
 ---
 
-#### IsStudioAlbum (Read-Only)
+#### IsOfficialRelease (Read-Only)
 
 **Property:**
 ```csharp
-public bool IsStudioAlbum => Type == AlbumType.Studio;
+public bool IsOfficialRelease => Type == AlbumType.OfficialRelease;
 ```
 
-**Purpose:** Helper property to check if album is a studio album.
+**Purpose:** Helper property to check whether this album is the `OfficialRelease` flavor.
 
-**Used For:** UI logic, import workflow branching
+**Used For:** UI logic, import-workflow branching.
 
 ---
 
-### Type-Based Property Usage Matrix
+### Type-Based Property Usage
 
-| Property | Live | Studio | OfficialRelease | BoxSet |
-|----------|------|--------|-----------------|--------|
-| `FolderPath` | ✓ | ✓ | ✓ | ✓ |
-| `Artist` | ✓ | ✓ | ✓ | ✓ |
-| `Type` | ✓ | ✓ | ✓ | ✓ |
-| `ArtworkData` | ✓ | ✓ | ✓ | ✓ |
-| `InfoFileContent` | ✓ | ✓ | ✓ | ✓ |
-| **`Date`** | ✓ | ✗ | ✓ | ✓ |
-| **`Venue`** | ✓ | ✗ | ✓ | ✓ |
-| **`City`** | ✓ | ✗ | ✓ | ✓ |
-| **`State`** | ✓ | ✗ | ✓ | ✓ |
-| **`OfficialRelease`** | ✓ | ✗ | ✓ | ✗ |
-| **`AlbumName`** | ✗ | ✓ | ✗ | ✗ |
-| **`ReleaseYear`** | ✗ | ✓ | ✗ | ✗ |
-| **`Edition`** | ✗ | ✓ | ✗ | ✗ |
-| **`BoxSetName`** | ✗ | ✗ | ✗ | ✓ |
+The current model does **not** gate property availability by `Type`. Every field listed in the Properties table above is settable and readable for both `AudienceRecording` and `OfficialRelease` instances. Different fields tend to be populated for different flavors (e.g., studio-style `OfficialRelease` instances usually have empty `Venue`/`CityState`/`AlbumDate`), but this is a data convention — not enforced by the model.
+
+(Earlier versions of the model used a four-value `AlbumType` with per-type field-visibility rules. That model was retired when the enum was collapsed to two values; see [16-import-redesign-spec.md](16-import-redesign-spec.md) for the redesign context.)
 
 ---
 
 ### Business Rules
 
-1. **Type Determines Property Population**
-   - Studio albums MUST have `AlbumName` and `ReleaseYear`
-   - Live/BoxSet albums MUST have `Date`, `Venue`, `City`, `State`
-   - Box sets SHOULD have `BoxSetName` (optional, but recommended)
+1. **Field Population by Flavor**
+   - `OfficialRelease` instances populated as live-flavor: have `AlbumDate`, `Venue`, `CityState`
+   - `OfficialRelease` instances populated as studio-flavor: have `AlbumName` and (optionally) `Year`; `AlbumDate`/`Venue` are typically empty
+   - `AudienceRecording` instances: have `AlbumDate`, `Venue`, `CityState`; `AlbumName`/`CollectionName` optional
 
 2. **Date Format Enforcement**
-   - `Date` property MUST use yyyy-MM-dd (ISO 8601) format
+   - `AlbumDate` MUST use yyyy-MM-dd (ISO 8601) format
    - No MM/dd/yyyy or dd/MM/yyyy formats allowed
    - Enforced by import workflow and metadata service
 
-3. **Colon Spacing Convention**
-   - Box sets: NO space before colon (`:`) in `AlbumTitle`
-   - Official releases: Space before colon (` :`) in `AlbumTitle`
-   - Used by regex parsing in `MetadataService.ParseAlbumTitle()`
-
-4. **Edition Field Usage**
-   - `Edition` field distinguishes different releases of same studio album
+3. **Edition Field Usage**
+   - `Edition` field distinguishes different releases of the same official album
    - Examples: `"2003 Remaster"`, `"Deluxe Edition"`, `"50th Anniversary"`, `"Expanded & Remastered"`
-   - Each edition treated as separate album in library
-   - Displayed in square brackets: `"Album (Year) [Edition]"`
+   - Each edition is treated as a separate album in the library
 
-5. **Artwork Storage**
+4. **Artwork Storage**
    - `ArtworkData` stores raw image bytes (JPEG or PNG)
    - `ArtworkMimeType` MUST be `"image/jpeg"` or `"image/png"`
    - Artwork embedded in ID3 tags via `MetadataService.WriteMetadata()`
 
-6. **Info File Storage**
+5. **Info File Storage**
    - `InfoFileContent` stores full text of `.txt` info files
    - `InfoFileName` stores filename for reference
    - Common in taper recordings (lineage, source info, taper notes)
@@ -486,17 +419,15 @@ The `LibrarySettings` class stores user preferences and configuration, including
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `LibraryRootPath` | `string` | `""` | Path to audience recordings and box sets |
-| `OfficialReleasesPath` | `string` | `""` | Path to official releases (studio albums, official live albums) |
+| `LibraryRootPath` | `string` | `""` | Single library root for all album types |
 | `FpcalcPath` | `string` | `""` | Path to fpcalc.exe (Chromaprint) for MusicBrainz fingerprinting |
 | `PrimaryArtistName` | `string` | `"Grateful Dead"` | Primary artist for MusicBrainz filtering |
-| `LastBoxSetName` | `string?` | `null` | Last used box set name (for faster imports) |
+| `LastBoxSetName` | `string?` | `null` | Last used box-set/collection name (for faster imports) |
 | `DismissedFpcalcWarning` | `bool` | `false` | User has dismissed the fpcalc.exe startup warning |
 
-**Two-Path System:**
-- `LibraryRootPath` - Audience recordings, box sets (date-based organization)
-- `OfficialReleasesPath` - Studio albums, official live releases (album-based organization)
-- **Can be same directory or separate** (user's choice)
+**Single Library Root:**
+- All albums live under `LibraryRootPath` in the universal `{Artist}/{AlbumFolder}/` layout
+- The previous separate `OfficialReleasesPath` setting was retired; see [13-library-import-service.md](13-library-import-service.md) and [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md) for the rationale
 
 **Primary Artist Usage:**
 - Used by MusicBrainz search to filter results
@@ -599,7 +530,6 @@ public static LibrarySettings Load()
 
 **Default Values:**
 - `LibraryRootPath = ""`
-- `OfficialReleasesPath = ""`
 - `PrimaryArtistName = "Grateful Dead"`
 - `LastBoxSetName = null`
 - All window positions = `null`
@@ -631,7 +561,7 @@ public void Save()
 ### Business Rules
 
 1. **Immediate Save on Path Change**
-   - When user changes `LibraryRootPath`, `OfficialReleasesPath`, or `FpcalcPath` in Settings, save immediately
+   - When user changes `LibraryRootPath` or `FpcalcPath` in Settings, save immediately
    - Ensures paths persisted even if application crashes
 
 2. **Deferred Save on Artist Change**
@@ -934,7 +864,6 @@ SongEntry
 ```json
 {
   "LibraryRootPath": "string",
-  "OfficialReleasesPath": "string",
   "FpcalcPath": "string",
   "PrimaryArtistName": "string",
   "LastBoxSetName": "string | null",
@@ -950,14 +879,15 @@ SongEntry
 }
 ```
 
+The actual `LibrarySettings` model includes additional fields not shown above (volume, player-window positions, saved playlist paths, etc.). See [Models/LibrarySettings.cs](../Models/LibrarySettings.cs) for the full schema.
+
 ---
 
 ### Property Details
 
 | Key | Type | Default | Example | Description |
 |-----|------|---------|---------|-------------|
-| `LibraryRootPath` | `string` | `""` | `"D:\\Projects\\library\\Grateful Dead\\Concerts"` | Path to audience recordings |
-| `OfficialReleasesPath` | `string` | `""` | `"D:\\Projects\\library\\Grateful Dead\\Releases"` | Path to official releases |
+| `LibraryRootPath` | `string` | `""` | `"D:\\Projects\\library"` | Single library root for all album types |
 | `FpcalcPath` | `string` | `""` | `"C:\\Tools\\fpcalc.exe"` | Path to fpcalc.exe for fingerprinting |
 | `PrimaryArtistName` | `string` | `"Grateful Dead"` | `"Grateful Dead"` | Primary artist name |
 | `LastBoxSetName` | `string?` | `null` | `"Enjoying the Ride"` | Last used box set name |
@@ -978,8 +908,7 @@ SongEntry
 **Actual `settings.json` from Development Environment:**
 ```json
 {
-  "LibraryRootPath": "D:\\Projects\\library\\Grateful Dead\\Concerts",
-  "OfficialReleasesPath": "D:\\Projects\\library\\Grateful Dead\\Releases",
+  "LibraryRootPath": "D:\\Projects\\library",
   "FpcalcPath": "C:\\Tools\\fpcalc.exe",
   "PrimaryArtistName": "Grateful Dead",
   "LastBoxSetName": null,
@@ -1003,7 +932,6 @@ SongEntry
 ```json
 {
   "LibraryRootPath": "",
-  "OfficialReleasesPath": "",
   "FpcalcPath": "",
   "PrimaryArtistName": "Grateful Dead",
   "LastBoxSetName": null,
@@ -1051,23 +979,21 @@ SongEntry
 
 ## Real-World Examples
 
-### Example 1: Live Concert (Audience Recording)
+### Example 1: Audience Recording
 
 **AlbumInfo:**
 ```csharp
 AlbumInfo {
-  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Concerts\\1977\\1977-05-08 - Barton Hall - Ithaca, NY",
+  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Grateful Dead - 1977-05-08 - Barton Hall - Ithaca, NY",
   Artist = "Grateful Dead",
-  Type = AlbumType.Live,
-  Date = "1977-05-08",
+  Type = AlbumType.AudienceRecording,
+  AlbumDate = "1977-05-08",
   Venue = "Barton Hall, Cornell University",
-  City = "Ithaca",
-  State = "NY",
-  OfficialRelease = null,
-  AlbumName = null,
-  ReleaseYear = null,
-  Edition = null,
-  BoxSetName = null,
+  CityState = "Ithaca, NY",
+  AlbumName = "",
+  CollectionName = "",
+  Year = "",
+  Edition = "",
   ArtworkData = [JPEG bytes],
   ArtworkMimeType = "image/jpeg",
   InfoFileContent = "Source: AUD Charlie Miller\nLineage: Master Reel > ...",
@@ -1127,23 +1053,21 @@ Track 9: "Fire on the Mountain (1977-05-08)"
 
 ---
 
-### Example 2: Studio Album with Edition
+### Example 2: Studio-Style Official Release with Edition
 
 **AlbumInfo:**
 ```csharp
 AlbumInfo {
-  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Releases\\Studio Albums\\Workingman's Dead (1970)",
+  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Grateful Dead - 1970 - Workingman's Dead",
   Artist = "Grateful Dead",
-  Type = AlbumType.Studio,
-  Date = null,
-  Venue = null,
-  City = null,
-  State = null,
-  OfficialRelease = null,
+  Type = AlbumType.OfficialRelease,
+  AlbumDate = "",
+  Venue = "",
+  CityState = "",
   AlbumName = "Workingman's Dead",
-  ReleaseYear = 1970,
+  CollectionName = "",
+  Year = "1970",
   Edition = "2025 Remaster",
-  BoxSetName = null,
   ArtworkData = [JPEG bytes],
   ArtworkMimeType = "image/jpeg",
   InfoFileContent = null,
@@ -1153,8 +1077,10 @@ AlbumInfo {
 
 **AlbumTitle (Computed):**
 ```
-"Workingman's Dead (1970) [2025 Remaster]"
+"Workingman's Dead (1970)"
 ```
+
+(`Edition` is preserved as metadata but is not appended to `AlbumTitle` by the current model. The UI displays edition information separately.)
 
 **TrackInfo Examples:**
 ```csharp
@@ -1191,23 +1117,21 @@ Track 8: "Morning Dew (1977-05-08)"  (bonus track with date)
 
 ---
 
-### Example 3: Box Set
+### Example 3: Box Set (OfficialRelease with CollectionName)
 
 **AlbumInfo:**
 ```csharp
 AlbumInfo {
-  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Concerts\\1972\\1972-05-04 - Olympia Theatre - Paris, France:Enjoying the Ride",
+  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Grateful Dead - 1972-05-04 - Olympia Theatre - Paris, France - Enjoying the Ride",
   Artist = "Grateful Dead",
-  Type = AlbumType.BoxSet,
-  Date = "1972-05-04",
+  Type = AlbumType.OfficialRelease,
+  AlbumDate = "1972-05-04",
   Venue = "Olympia Theatre",
-  City = "Paris",
-  State = "France",
-  OfficialRelease = null,
-  AlbumName = null,
-  ReleaseYear = null,
-  Edition = null,
-  BoxSetName = "Enjoying the Ride",
+  CityState = "Paris, France",
+  AlbumName = "",
+  CollectionName = "Enjoying the Ride",
+  Year = "",
+  Edition = "",
   ArtworkData = [JPEG bytes],
   ArtworkMimeType = "image/jpeg",
   InfoFileContent = "Digital box set download...",
@@ -1217,10 +1141,10 @@ AlbumInfo {
 
 **AlbumTitle (Computed):**
 ```
-"1972-05-04 - Olympia Theatre - Paris, France: Enjoying the Ride"
+"1972-05-04 - Olympia Theatre - Paris, France : Enjoying the Ride"
 ```
 
-**Note:** NO space before colon (`:`) - distinguishes from official releases.
+(Box sets are no longer a separate `AlbumType`; they are an `OfficialRelease` whose collection name is carried in `CollectionName`.)
 
 **TrackInfo Examples:**
 ```csharp
@@ -1239,23 +1163,21 @@ TrackInfo {
 
 ---
 
-### Example 4: Official Release (with Space Before Colon)
+### Example 4: Live-Flavor Official Release
 
 **AlbumInfo:**
 ```csharp
 AlbumInfo {
-  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Concerts\\1977\\1977-05-08 - Barton Hall - Ithaca, NY",
+  FolderPath = "D:\\Projects\\library\\Grateful Dead\\Grateful Dead - 1977-05-08 - Barton Hall - Ithaca, NY - Dave's Picks Vol. 29",
   Artist = "Grateful Dead",
-  Type = AlbumType.Live,
-  Date = "1977-05-08",
+  Type = AlbumType.OfficialRelease,
+  AlbumDate = "1977-05-08",
   Venue = "Barton Hall, Cornell University",
-  City = "Ithaca",
-  State = "NY",
-  OfficialRelease = "Dave's Picks Vol. 29",  // ← Official release
-  AlbumName = null,
-  ReleaseYear = null,
-  Edition = null,
-  BoxSetName = null,
+  CityState = "Ithaca, NY",
+  AlbumName = "Dave's Picks Vol. 29",
+  CollectionName = "",
+  Year = "",
+  Edition = "",
   ArtworkData = [JPEG bytes],
   ArtworkMimeType = "image/jpeg"
 }
@@ -1263,10 +1185,8 @@ AlbumInfo {
 
 **AlbumTitle (Computed):**
 ```
-"1977-05-08 - Barton Hall, Cornell University - Ithaca, NY : Dave's Picks Vol. 29"
+"1977-05-08 - Barton Hall, Cornell University - Ithaca, NY - Dave's Picks Vol. 29"
 ```
-
-**Note:** SPACE before colon (` :`) - distinguishes from box sets.
 
 ---
 

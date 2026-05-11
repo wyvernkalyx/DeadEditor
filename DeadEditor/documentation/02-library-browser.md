@@ -166,7 +166,7 @@ Building the "By Date" view for Official Releases requires reading track metadat
 | Venue/Album name | TextBlock | `VenueText` | Shows venue name for live, album name for studio | From `LibraryShow.Venue` or `LibraryShow.AlbumName` | Working |
 | Location/Year | TextBlock | `LocationText` | Shows "City, State" for live, "Released YYYY" for studio | From `LibraryShow.Location` or `LibraryShow.ReleaseYear` | Working |
 | Date | TextBlock | `DateText` | Shows concert date (yyyy-MM-dd), empty for studio albums | From `LibraryShow.Date` | Working |
-| Box set name | TextBlock | `BoxSetText` | Shows "Box Set: [name]" for box sets only | From `LibraryShow.OfficialRelease` when `Type == AlbumType.BoxSet` | Working |
+| Box set name | TextBlock | `BoxSetText` | Shows "Box Set: [name]" when the album belongs to a collection | From `LibraryShow.CollectionName` (or equivalent box-set-name field) when non-empty | Working |
 | Track count | TextBlock | `TrackCountText` | Shows "X tracks" | From `_currentTracks.Count` | Working |
 
 #### Track List
@@ -353,50 +353,27 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
    - Restores window position/size from settings (line 56)
    - **Calls `LoadShows()`** (line 62)
 
-2. **`LoadShows()` scans library folders** (line 143)
-   - Clears `_shows` and `_allShows` lists (line 145-146)
-   - **If `LibraryRootPath` is set:**
-     - Calls `LoadAudienceRecordings()` (line 152)
-     - Scans top-level folders in library root (line 184)
-     - **For "Studio Albums" folder:**
-       - Scans album subfolders (line 194)
-       - Parses folder name: `"Album Name (Year)"` using regex (line 209-219)
-       - Reads first audio file's `Album` tag to check for `[Edition]` suffix (line 221-242)
-       - Creates `LibraryShow` with `Type = AlbumType.Studio` (line 244-252)
-     - **For year folders (e.g., "1977", "1990"):**
-       - Scans show subfolders (line 258)
-       - Parses folder name: `"yyyy-MM-dd - Venue, City, State"` (line 267-293)
-       - Counts FLAC/MP3 files (line 295-297)
-       - Reads first audio file's `Album` tag to detect Box Set or Official Release (line 299-338)
-         - **Box Set format:** `"...: Box Set Name"` (no space before colon) (line 326-330)
-         - **Official Release format:** `"... : Release Name"` (space before colon) (line 320-324)
-       - Creates `LibraryShow` with `Type = AlbumType.Live` or `AlbumType.BoxSet` (line 340-353)
-   - **If `OfficialReleasesPath` is set:**
-     - Calls `LoadOfficialReleasesInto()` — scans Studio Albums and series folders
-     - Series folder scan **skips year-named folders** (e.g. "1971", "2024") to avoid
-       misidentifying audience recordings when `LibraryRootPath == OfficialReleasesPath`
-     - For each release folder:
-       - Counts audio files for `TrackCount` (directory listing only, NO TagLib reads)
-       - Reads ONE file per album via `ReadCustomFieldsIntoShow()` for venue/city/year/albumtype/albumname tags
-         - `AlbumName` priority: custom `ALBUMNAME` Xiph/TXXX field first; if empty, falls back to standard `ALBUM` tag (skipping DeadEditor-computed "yyyy-MM-dd - Venue" format values)
-       - Creates `LibraryShow` with `Type = AlbumType.OfficialRelease`
-       - **TrackTitles and ContainsDates are lazy-loaded** — NOT read at startup.
-         They load on first access (triggered by search or By Date mode).
-         This avoids the ~50s penalty of opening every audio file with TagLib at startup.
-   - **Deduplication:** After both loading methods complete, shows are deduplicated by `FolderPath`.
-     When the same folder appears in both scans (overlapping paths), the entry whose `Type` was
-     set from the `ALBUMTYPE` FLAC/ID3v2 tag is preferred; otherwise the first entry (audience) wins.
-   - If no shows found → Status: "No library paths set or no shows found..." (line 166)
-   - Sorts shows: by Type first (Live/Official/Studio), then by Date desc or AlbumName desc (line 171-174)
-   - Calls `ApplySearchFilter()` to display (line 177)
+2. **`LoadShowsAsync()` scans the library** (see [LibraryGridView.xaml.cs:89](Views/LibraryGridView.xaml.cs#L89))
+   - Captures `_settings.LibraryRootPath` (single library root — no separate audience/officials paths)
+   - **If `LibraryRootPath` is set and exists:**
+     - Calls `LoadAlbumsInto(result, libraryRoot)` ([LibraryGridView.xaml.cs:880](Views/LibraryGridView.xaml.cs#L880)) — universal scan over `{LibraryRoot}/{Artist}/{AlbumFolder}/`
+     - For each artist folder, iterates each album subfolder:
+       - Counts FLAC/MP3 files; skips folders with zero audio files
+       - Parses folder name segments split by `" - "`:
+         - If the second segment matches `yyyy-MM-dd` → live recording form (`{Artist} - {Date} - {Venue} - {City}, {State} [- {AlbumName}]`)
+         - Else if the second segment matches `yyyy` (4-digit year) → studio-style form (`{Artist} - {Year} - {AlbumName}`)
+       - Reads one file per album via `ReadCustomFieldsIntoShow()` for `ALBUMNAME` / `ALBUMTYPE` / `VENUE` / `CITYSTATE` / `ALBUMDATE` custom tags
+         - `AlbumName` priority: custom `ALBUMNAME` Xiph/TXXX field first; falls back to standard `ALBUM` tag (skipping DeadEditor-computed "yyyy-MM-dd - Venue" format values)
+         - The `ALBUMTYPE` tag (if present) overrides folder-based inference — it is the source of truth for `Type`
+       - **TrackTitles and ContainsDates are lazy-loaded** — NOT read at startup. They load on first access (triggered by search or By Date mode). This avoids the ~50s penalty of opening every audio file with TagLib at startup.
+     - After the universal scan, `MergeOfficialReleasesByAlbumName()` merges album entries that share the same `ALBUMNAME` (e.g., a box set whose tracks live across multiple folders becomes a single grid row). _Naming note:_ despite the method name, the merge keys on shared album name and applies to any merge candidate, not just `OfficialRelease`-typed rows.
+   - Sorts shows by Date descending (newest first)
+   - On the UI thread, applies the active filter (type/year/search) and binds `_shows` to `ShowsDataGrid.ItemsSource`
+   - Fires `LibraryLoaded` so the shell can update cross-references (e.g., Concerts view ownership)
 
 3. **Shows displayed in grid**
-   - `_shows` list bound to `ShowsDataGrid.ItemsSource` (line 1106)
-   - Each row displays adaptive columns based on `LibraryShow.Type`:
-     - **Live:** Icon=🎸, PrimaryInfo=Date, SecondaryInfo=Venue, TertiaryInfo=Location, OfficialRelease=Box Set Name
-     - **Official Release:** Icon=📀, PrimaryInfo=OfficialRelease, SecondaryInfo=Dates, TertiaryInfo=Venues
-     - **Studio:** Icon=💿, PrimaryInfo=AlbumName, SecondaryInfo=Year, TertiaryInfo=Edition
-   - Status: "X concerts in library" (line 1125)
+   - `_shows` list bound to `ShowsDataGrid.ItemsSource`
+   - The column set is uniform across types (Date / Album Name / Venue / City, State / Tracks); `LibraryShow.Type` only affects filtering, sorting tie-breaks, and badges (e.g., heady-version icon)
 
 4. **User double-clicks a concert row**
    - `ShowsDataGrid_MouseDoubleClick` fires (line 468)
@@ -490,11 +467,10 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
 
 2. **`ApplySearchFilter()` filters shows** (line 1013)
    - Starts with `_allShows` as base (line 1030)
-   - **Applies type filter** from dropdown (line 1032-1044):
+   - **Applies type filter** from dropdown:
      - If "All" selected → no type filtering
-     - If "Live" selected → filters to `AlbumType.Live`
-     - If "OfficialRelease" selected → filters to `AlbumType.OfficialRelease`
-     - If "Studio" selected → filters to `AlbumType.Studio`
+     - If "Audience Recordings" selected → filters to `AlbumType.AudienceRecording`
+     - If "Official Releases" selected → filters to `AlbumType.OfficialRelease`
    - **Applies quick search filter** (line 1047-1063):
      - Converts search text to lowercase (line 1049)
      - Searches across ALL these fields (case-insensitive contains):
@@ -771,29 +747,25 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
 
 **Configuration Files:**
 - `%APPDATA%/DeadEditor/settings.json` - Library settings loaded at startup
-  - `LibraryRootPath` - Path to audience recordings library
-  - `OfficialReleasesPath` - Path to official releases library
+  - `LibraryRootPath` - Single library root for all albums
   - `LibraryWindowLeft`, `LibraryWindowTop`, `LibraryWindowWidth`, `LibraryWindowHeight` - Window position
 
 **Library Folders:**
-- Scans recursively for concert folders based on structure:
-  - **Audience recordings:** `[LibraryRoot]/[Year]/[yyyy-MM-dd - Venue, City, State]/`
-  - **Studio albums:** `[LibraryRoot]/Studio Albums/[Album Name (Year)]/`
-  - **Official releases:** `[OfficialReleasesPath]/[Series]/[Release Name]/`
+- Universal layout under one root: `{LibraryRoot}/{Artist}/{AlbumFolder}/`
+- See [13-library-import-service.md](13-library-import-service.md) for `AlbumFolder` naming rules.
 - Audio files (FLAC/MP3) in each folder
 - Artwork files (`cover.jpg`, `folder.jpg`)
 - Embedded artwork in audio file APIC tags
 
-**Audio File Metadata (ID3 Tags):**
-- `Album` tag - Used to detect Box Set vs Official Release format:
-  - Box Set: `"yyyy-MM-dd - Venue, City, State: Box Set Name"` (no space before `:`)
-  - Official Release: `"yyyy-MM-dd - Venue, City, State : Release Name"` (space before `:`)
-- `Album` tag for studio albums - May contain `[Edition]` suffix
-- `Title` tag - Used to extract dates/venues from official release tracks
+**Audio File Metadata (custom Xiph/ID3 tags):**
+- `ALBUMTYPE` - Source of truth for `Type` (`AudienceRecording` or `OfficialRelease`)
+- `ALBUMNAME` - Source of truth for the album/release name (falls back to standard `Album` tag if absent)
+- `ALBUMDATE`, `VENUE`, `CITYSTATE` - Source of truth for live-recording metadata
+- `Title` tag - Used to extract per-track dates for `ContainsDates` (lazy-loaded)
 - `Pictures[0]` - Embedded artwork (fallback if no file)
 
 **User Input:**
-- Type filter selection (All/Live/Official/Studio)
+- Type filter selection (All / Audience Recordings / Official Releases)
 - Quick search text
 - Advanced search criteria (from AdvancedSearchDialog)
 - Double-clicks on grid rows and track rows
@@ -883,38 +855,22 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
 
 **Folder Naming Conventions:**
 
-1. **Audience Recordings:**
-   - Root: `[LibraryRootPath]/[Year]/`
-   - Folder: `yyyy-MM-dd - Venue, City, State`
-   - Alternative: `yyyy-MM-dd - Venue - City, State` (both supported)
-   - Year extracted from date (e.g., "1977-05-08" goes in `1977/` folder)
+All albums live under the universal layout `{LibraryRootPath}/{Artist}/{AlbumFolder}/`. The `AlbumFolder` segment varies by flavor:
 
-2. **Studio Albums:**
-   - Root: `[LibraryRootPath]/Studio Albums/`
-   - Folder: `Album Name (Year)` or just `Album Name`
-   - Regex pattern: `^(.+?)\s*\((\d{4})\)\s*$` (line 209-210)
-   - Edition stored in ID3 `Album` tag with `[Edition]` suffix (line 230-234)
+1. **Live recordings** (audience or official with a date+venue): `{Artist} - {yyyy-MM-dd} - {Venue} - {City}, {State} [- {AlbumName}]`
+2. **Studio-style official releases** (no date or no venue): `{Artist} - {Year} - {AlbumName}`
 
-3. **Official Releases:**
-   - Root: `[OfficialReleasesPath]/[Series]/`
-   - Series folders: Dave's Picks, Dick's Picks, Road Trips, Download Series, etc.
-   - Folder name can be anything (parsed from ID3 tags, not folder name)
+See [13-library-import-service.md](13-library-import-service.md) for the full naming rules.
 
 ### Album Type Detection
 
-**Box Set vs Official Release (Colon Format):**
+The `Type` field is sourced in this priority order:
 
-- **Box Set:** Album tag format `"...: Box Set Name"` (no space before colon) (line 326-330)
-  - Example: `"1977-05-08 - Barton Hall, Ithaca, NY: Enjoying the Ride"`
-  - Creates `AlbumType.BoxSet`
-  - `OfficialRelease` property stores box set name
-- **Official Release:** Album tag format `"... : Release Name"` (space before colon) (line 320-324)
-  - Example: `"1977-05-08 - Barton Hall, Ithaca, NY : Cornell '77"`
-  - Creates `AlbumType.Live` (not OfficialRelease type)
-  - `OfficialRelease` property stores release name
-- **Live Recording:** No colon in Album tag
-  - Creates `AlbumType.Live`
-  - `OfficialRelease` property empty
+1. **`ALBUMTYPE` custom tag on the audio file** — values `AudienceRecording` or `OfficialRelease`. When present, this overrides everything else.
+2. **Folder-name inference** — if the second `" - "` segment matches `yyyy-MM-dd`, the album is treated as a live recording; if it matches `yyyy` (4-digit year), it's treated as a studio-style official release.
+3. **Default** — `AlbumType.AudienceRecording` for legacy folders that don't match either pattern.
+
+The legacy "colon-spacing" rule (`":"` vs `" : "` distinguishing box sets from official releases) is no longer used by `LibraryGridView` to choose a `Type` — both regex paths in [MetadataService.ParseAlbumTitle](../Services/MetadataService.cs) now resolve into the two-value enum, with the colon spacing only affecting which capture group becomes `AlbumName`.
 
 **Regex Patterns Used:**
 
@@ -1060,13 +1016,12 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
 ### What happens if library paths not configured?
 **Scenario:** User starts app for first time, no paths set in settings
 **Behavior:**
-1. `LoadShows()` runs (line 143)
-2. Checks `LibraryRootPath` and `OfficialReleasesPath` (line 149-160)
-3. Both empty or non-existent directories
-4. `_allShows` list stays empty (line 163)
-5. Status: "No library paths set or no shows found. Go to File > Settings to configure." (line 166)
-6. Grid shows empty
-7. User can click File > Settings to configure paths
+1. `LoadShowsAsync()` runs
+2. Checks `LibraryRootPath` — single library root
+3. Empty or non-existent directory → universal scan is skipped
+4. `_shows` list stays empty
+5. Grid shows empty
+6. User can open Settings to configure the path
 
 **Result:** Safe startup with helpful message directing user to settings
 
@@ -1075,34 +1030,25 @@ private TrackInfo? GetTrackFromDataGridSelection(object? item)
 ### What happens if a concert folder has no audio files?
 **Scenario:** Folder exists in library structure but contains only text files, images, etc.
 **Behavior:**
-1. `LoadAudienceRecordings()` or `LoadOfficialReleases()` scans folder (line 295-297 or 373-377)
-2. `Directory.GetFiles(folder, "*.flac").Concat(Directory.GetFiles(folder, "*.mp3"))` returns empty array
-3. **For audience recordings:** `TrackCount = 0`, show still added to grid (line 295-353)
-4. **For official releases:** `if (audioFiles.Length == 0) continue` skips folder entirely (line 377)
-5. Empty concert appears in grid with "0 tracks"
-6. Double-clicking empty concert:
-   - Loads folder, reads 0 tracks (line 572)
-   - Track list empty
-   - Play button disabled (line 592-595)
-   - No crash
+1. `LoadAlbumsInto()` scans the album folder
+2. `Directory.GetFiles(folder, "*.flac")` + `*.mp3` returns empty (zero total)
+3. The folder is **skipped entirely** ([LibraryGridView.xaml.cs:889](Views/LibraryGridView.xaml.cs#L889) — `if (flacCount + mp3Count == 0) continue;`)
+4. No `LibraryShow` is created, no grid row appears for that folder
 
-**Result:** Audience recordings with 0 tracks shown but unplayable; official releases with 0 tracks skipped
+**Result:** Empty folders never show up in the grid, regardless of album type.
 
 ---
 
 ### What happens if audio file ID3 tags are completely empty?
 **Scenario:** Concert folder has FLAC files with no metadata tags
 **Behavior:**
-1. `LoadAudienceRecordings()` reads files (line 199-201)
-2. `TagLib.File.Create()` reads tag (line 226)
-3. `Album` tag is null or empty (line 228)
-4. Regex matches fail (line 313-331)
-5. Concert created with:
-   - `AlbumType.Live` (default) (line 302)
-   - `OfficialRelease = ""` (empty) (line 300)
-   - No box set detection
-6. Concert appears in grid with folder-parsed date/venue
-7. Opening concert:
+1. `LoadAlbumsInto()` reads one file via `ReadCustomFieldsIntoShow()`
+2. All custom Xiph/ID3 fields are missing/empty; the standard `Album` tag may also be empty
+3. Concert created with:
+   - `AlbumType.AudienceRecording` (default) — unless the folder-name's second segment matches `yyyy` (year), in which case it's inferred as `OfficialRelease`
+   - `AlbumName = ""` (empty)
+4. Concert appears in grid using folder-parsed date/venue
+5. Opening concert:
    - `_metadataService.ReadFolder()` reads files, may have blank titles
    - Track list shows tracks with empty or filename-based titles
    - Playback still works (NAudio doesn't require tags)

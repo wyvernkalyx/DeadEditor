@@ -16,7 +16,7 @@ The **MetadataService** is the core business logic layer for reading and writing
 ### Models
 - **TrackInfo** - Track-level metadata (FilePath, Title, TrackNumber, DiscNumber, Duration, HasSegue, PerformanceDate, NormalizedTitle, IsModified)
 - **AlbumInfo** - Album-level metadata (Date, Venue, City, State, OfficialRelease, BoxSetName, Type, Artist, AlbumTitle, ArtworkData, InfoFileContent)
-- **AlbumType** enum - Live, Studio, OfficialRelease, BoxSet
+- **AlbumType** enum - `AudienceRecording`, `OfficialRelease`
 
 ### File System Access
 - Reads: `.flac`, `.mp3` (audio files), `.txt` (info files)
@@ -711,7 +711,7 @@ private void ParseAlbumTitle(string album, AlbumInfo info)
 
 ---
 
-#### Pattern 1: Box Set Format (line 448-462)
+#### Pattern 1: No-Space Colon Format
 
 **Regex:**
 ```regex
@@ -727,61 +727,63 @@ private void ParseAlbumTitle(string album, AlbumInfo info)
 - Group 2: `[^-]+` - Venue (everything up to next dash)
 - Group 3: `[^,]+` - City (everything up to comma)
 - Group 4: `[^:\s]+` - State (everything up to colon, no space allowed before colon)
-- `(?<!\s):` - Colon with NO space before it (critical distinction)
-- Group 5: `.+` - Box set name (everything after colon)
+- `(?<!\s):` - Colon with NO space before it
+- Group 5: `.+` - Trailing name (everything after colon)
 
 **Sets:**
-- `info.Date`, `info.Venue`, `info.City`, `info.State`, `info.BoxSetName`
-- `info.Type = AlbumType.BoxSet`
+- `info.AlbumDate`, `info.Venue`, `info.CityState`, `info.AlbumName`
+- `info.Type = AlbumType.OfficialRelease`
 
 **Returns:** Early return (pattern match successful)
 
 ---
 
-#### Pattern 2: Official Release Format (line 466-480)
+#### Pattern 2: Space-Colon Format
 
 **Regex:**
 ```regex
 ^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([^:]+?)\s:\s*(.+)$
 ```
 
-**Key Feature:** `\s:` - Space BEFORE colon (distinguishes from box set)
+**Key Feature:** `\s:` - Space BEFORE colon
 
 **Matches:** "1972-09-15 - Boston Music Hall - Boston, MA : Dave's Picks Vol. 1"
 
 **Breakdown:**
 - Groups 1-4: Same as Pattern 1 (Date, Venue, City, State)
-- `\s:` - Space before colon (official release marker)
-- Group 5: `.+` - Official release name
+- `\s:` - Space before colon
+- Group 5: `.+` - Trailing name
 
 **Sets:**
-- `info.Date`, `info.Venue`, `info.City`, `info.State`, `info.OfficialRelease`
-- `info.Type = AlbumType.Live`
+- `info.AlbumDate`, `info.Venue`, `info.CityState`, `info.AlbumName`
+- `info.Type = AlbumType.AudienceRecording`
 
 **Returns:** Early return
 
 ---
 
-#### Pattern 3: Basic Live Recording (line 484-496)
+#### Pattern 3: Dash-Separated Album Name
 
 **Regex:**
 ```regex
-^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*(.+)$
+^(\d{4}-\d{2}-\d{2})\s*-\s*([^-]+)\s*-\s*([^,]+),\s*([A-Z]{2})(?:\s*-\s*(.+))?$
 ```
 
-**No Colon:** Plain live recording format
-
-**Matches:** "1972-09-15 - Boston Music Hall - Boston, MA"
+**Matches:**
+- `"1972-09-15 - Boston Music Hall - Boston, MA"` (no album name)
+- `"1978-02-01 - Uptown Theatre - Chicago, IL - Dave's Picks Vol. 57"` (with album name)
 
 **Breakdown:**
 - Group 1: Date
 - Group 2: Venue
 - Group 3: City
-- Group 4: State (everything after comma)
+- Group 4: State (2-letter uppercase)
+- Group 5: Optional album name after `" - "` separator
 
 **Sets:**
-- `info.Date`, `info.Venue`, `info.City`, `info.State`
-- `info.Type = AlbumType.Live`
+- `info.AlbumDate`, `info.Venue`, `info.CityState`
+- If group 5 non-empty: `info.AlbumName` + `info.Type = AlbumType.OfficialRelease`
+- Else: `info.Type = AlbumType.AudienceRecording`
 
 **Returns:** Early return
 
@@ -849,25 +851,21 @@ private void ParseAlbumTitle(string album, AlbumInfo info)
 
 ## Critical Business Rules
 
-### 1. Box Set vs Official Release Colon Format
+### 1. Colon Spacing Distinguishes Parse Paths
 
-**Rule:** Colon spacing distinguishes album types
+**Rule:** Colon spacing in the legacy album tag selects between two regex parse paths in `ParseAlbumTitle`.
 
-**Box Set:**
-- Format: `{Date} - {Venue} - {City}, {State}:{BoxSetName}`
-- **NO space before colon:** "MA:Enjoying the Ride"
-- Sets `Type = AlbumType.BoxSet`
-- Stores name in `BoxSetName` property
+**No-space colon:** `{Date} - {Venue} - {City}, {State}:{TrailingName}` (e.g., "MA:Enjoying the Ride") — Pattern 1 matches.
 
-**Official Release:**
-- Format: `{Date} - {Venue} - {City}, {State} : {ReleaseName}`
-- **Space before colon:** "MA : Dave's Picks Vol. 1"
-- Sets `Type = AlbumType.Live` (official releases are a subtype of live)
-- Stores name in `OfficialRelease` property
+**Space-colon:** `{Date} - {Venue} - {City}, {State} : {TrailingName}` (e.g., "MA : Dave's Picks Vol. 1") — Pattern 2 matches.
 
-**Rationale:** Single-character distinction enables dual use of colon separator without ambiguity. User must format album tags carefully.
+**Important:** When the `AlbumType` enum collapsed from four values to two (`AudienceRecording` / `OfficialRelease`), this colon-spacing rule **no longer distinguishes album types**. Both paths today resolve into the two-value enum:
+- Pattern 1 (no-space) → `OfficialRelease`
+- Pattern 2 (space) → `AudienceRecording`
 
-**Implementation:** Negative lookbehind `(?<!\s):` vs explicit `\s:` in regex patterns (line 450 vs 468)
+The trailing name lands in `info.AlbumName` for both paths; the legacy `BoxSetName`/`OfficialRelease` properties survive only as compatibility aliases that route to the same `AlbumName` field. The two parse paths still exist and still do useful work (each handles a different real-world tag format), but the assignment of `Type` is somewhat arbitrary and the comments in the source code do not match — see the follow-up TODO in [TODO.md](../TODO.md).
+
+**Implementation:** Negative lookbehind `(?<!\s):` vs explicit `\s:` in regex patterns in `MetadataService.ParseAlbumTitle`.
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The **Settings Window** is the central configuration hub for DeadEditor, providing access to library path settings, primary artist configuration, song database management, and data reset operations. Users configure the two-path library system (audience recordings vs official releases), launch song management dialogs, and can perform destructive operations like resetting all data. This window serves as the gateway to AddSongDialog and ManageSongsDialog, maintaining the separation between configuration (Settings) and viewing (Library Browser).
+The **Settings Window** is the central configuration hub for DeadEditor, providing access to library path settings, primary artist configuration, song database management, and data reset operations. Users configure the single library root, launch song management dialogs, and can perform destructive operations like resetting all data. This window serves as the gateway to AddSongDialog and ManageSongsDialog, maintaining the separation between configuration (Settings) and viewing (Library Browser).
 
 ## How It's Opened
 
@@ -33,12 +33,10 @@ private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
 A centered modal dialog (650x400px, resizable with minimum 500x350) with vertically-stacked sections:
 
 **1. Library Settings Section**
-- **Library Root Path (Audience Recordings):**
+- **Library Root Path:**
   - Read-only TextBox showing current path
   - "Browse..." button to select folder
-- **Official Releases Path (Dave's Picks, Road Trips, etc.):**
-  - Read-only TextBox showing current path
-  - "Browse..." button to select folder
+  - All album types (audience recordings and official releases) live under this single root
 - **fpcalc.exe Path (MusicBrainz Fingerprinting):**
   - Read-only TextBox showing current path to fpcalc.exe
   - "Browse..." button to select .exe file
@@ -80,8 +78,6 @@ A centered modal dialog (650x400px, resizable with minimum 500x350) with vertica
 |---------|------|--------|---------------|------------------|--------|
 | LibraryRootTextBox | TextBox (read-only) | Display library root path | None | None | WORKING |
 | BrowseLibraryButton | Button | Open folder browser for library root | `BrowseLibraryButton_Click` | `FolderBrowserDialog`, `_librarySettings.Save()`, `_libraryWindow.UpdateLibraryRootDisplay()` | WORKING |
-| OfficialReleasesTextBox | TextBox (read-only) | Display official releases path | None | None | WORKING |
-| BrowseOfficialReleasesButton | Button | Open folder browser for official releases | `BrowseOfficialReleasesButton_Click` | `FolderBrowserDialog`, `_librarySettings.Save()`, `_libraryWindow.UpdateLibraryRootDisplay()` | WORKING |
 | FpcalcPathTextBox | TextBox (read-only) | Display fpcalc.exe path | None | None | WORKING |
 | BrowseFpcalcButton | Button | Open file browser for fpcalc.exe | `BrowseFpcalcButton_Click` | `OpenFileDialog` (filter: .exe), `_librarySettings.Save()` | WORKING |
 | PrimaryArtistTextBox | TextBox | Enter primary artist name (optional) | None (input only) | None (saved on close) | WORKING |
@@ -90,38 +86,37 @@ A centered modal dialog (650x400px, resizable with minimum 500x350) with vertica
 | ResetDataButton | Button | Delete all library files and settings | `ResetDataButton_Click` | `Directory.GetDirectories/GetFiles()`, `FileSystem.DeleteDirectory/DeleteFile()` (recycle bin), `_librarySettings.Save()`, `_libraryWindow.ClearCurrentView()` | WORKING |
 | CloseButton | Button | Save primary artist setting and close | `CloseButton_Click` | `_librarySettings.Save()` | WORKING |
 
-**Total Interactive Elements:** 11
+**Total Interactive Elements:** 9
 
 ---
 
 ## User Workflows
 
-### Workflow 1: Configure Library Paths
+### Workflow 1: Configure Library Path
 
-**Goal:** Set up two-path library system for audience recordings and official releases.
+**Goal:** Set the single library root that holds every album.
 
 **Steps:**
 1. User clicks "Settings" from Library Browser menu
-2. Dialog opens showing current paths (may be empty on first run)
+2. Dialog opens showing current path (may be empty on first run)
 3. User clicks "Browse..." next to "Library Root Path" field
-4. `BrowseLibraryButton_Click` handler executes (line 28):
-   - `FolderBrowserDialog` shown with description: "Select Library Root Folder (Audience Recordings)"
-   - Dialog initializes with current path as `SelectedPath` (line 33)
-5. User navigates to folder (e.g., `D:\Music\Grateful Dead\Live Recordings`)
+4. `BrowseLibraryButton_Click` handler executes:
+   - `FolderBrowserDialog` shown with a description for the library root
+   - Dialog initializes with current path as `SelectedPath`
+5. User navigates to folder (e.g., `D:\Music\Library`)
 6. User clicks OK in folder browser
-7. Path saved immediately (line 38-40):
+7. Path saved immediately:
    ```csharp
    _librarySettings.LibraryRootPath = folderDialog.SelectedPath;
    _librarySettings.Save();
    LibraryRootTextBox.Text = _librarySettings.LibraryRootPath;
    ```
-8. Library Browser updated: `_libraryWindow.UpdateLibraryRootDisplay(path)` (line 43)
-9. User repeats for Official Releases path
-10. User clicks "Close"
+8. Library Browser updated: `_libraryWindow.UpdateLibraryRootDisplay(path)`
+9. User clicks "Close"
 
-**Success Path:** Paths saved to `%APPDATA%/DeadEditor/settings.json`, Library Browser refreshes to show new library content.
+**Success Path:** Path saved to `%APPDATA%/DeadEditor/settings.json`, Library Browser refreshes to show new library content.
 
-**Side Effect:** Library Browser calls `LoadShows()` in response to `UpdateLibraryRootDisplay()`, rebuilding concert grid.
+**Side Effect:** Library Browser calls `LoadShowsAsync()` in response to `UpdateLibraryRootDisplay()`, rebuilding the concert grid.
 
 ---
 
@@ -243,23 +238,21 @@ A centered modal dialog (650x400px, resizable with minimum 500x350) with vertica
    - MessageBoxButton.YesNo with Warning icon
    - Default button: No (safer default)
 4. User clicks "Yes" to confirm
-5. Deletion process executes (line 85-143):
+5. Deletion process executes:
    - **Library Root Path contents:**
-     - `Directory.GetDirectories()` gets all subdirectories (line 93)
-     - `Directory.GetFiles()` gets all files in root (line 94)
-     - Each directory: `FileSystem.DeleteDirectory()` with `SendToRecycleBin` (line 99-103)
-     - Each file: `FileSystem.DeleteFile()` with `SendToRecycleBin` (line 109-113)
+     - `Directory.GetDirectories()` gets all subdirectories
+     - `Directory.GetFiles()` gets all files in root
+     - Each directory: `FileSystem.DeleteDirectory()` with `SendToRecycleBin`
+     - Each file: `FileSystem.DeleteFile()` with `SendToRecycleBin`
      - Counter incremented for each deleted item
-   - **Official Releases Path contents:** (same process, line 118-143)
-   - **Library Browser cleared:** `_libraryWindow.ClearCurrentView()` (line 146)
-   - **Settings reset:** (line 149-153)
+   - **Library Browser cleared:** `_libraryWindow.ClearCurrentView()`
+   - **Settings reset:**
      ```csharp
      _librarySettings.LibraryRootPath = "";
-     _librarySettings.OfficialReleasesPath = "";
      _librarySettings.Save();
      ```
-   - **UI updated:** TextBoxes cleared to empty strings (line 152-153)
-   - **Library Browser updated:** `UpdateLibraryRootDisplay("")` (line 156)
+   - **UI updated:** TextBox cleared to empty string
+   - **Library Browser updated:** `UpdateLibraryRootDisplay("")`
 6. Success message shown (line 158-165):
    ```
    Successfully reset all data!
@@ -306,7 +299,7 @@ A centered modal dialog (650x400px, resizable with minimum 500x350) with vertica
 ```csharp
 var folderDialog = new System.Windows.Forms.FolderBrowserDialog
 {
-    Description = "Select Library Root Folder (Audience Recordings)",
+    Description = "Select Library Root Folder",
     SelectedPath = _librarySettings.LibraryRootPath
 };
 
@@ -321,14 +314,11 @@ if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 
 **Key Pattern:** Settings saved immediately on change (no "Apply" button required).
 
-**Official Releases Path:** Same logic (line 47-63), note that callback calls same method (`UpdateLibraryRootDisplay`) for both paths (line 62).
+#### Reset Data Logic
 
-#### Reset Data Logic (line 66-179)
-
-**Three-stage deletion:**
-1. **Library Root:** Delete directories, then files (line 89-115)
-2. **Official Releases:** Delete directories, then files (line 117-143)
-3. **Settings:** Clear paths, save empty state (line 149-153)
+**Two-stage deletion:**
+1. **Library Root:** Delete directories, then files
+2. **Settings:** Clear path, save empty state
 
 **Recycle Bin API:**
 ```csharp
@@ -358,18 +348,15 @@ Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(
 
 **Persistent State:**
 - `LibrarySettings.LibraryRootPath`
-- `LibrarySettings.OfficialReleasesPath`
 - `LibrarySettings.PrimaryArtistName`
 
 ---
 
 ## Business Rules
 
-### 1. Two-Path System
-- **Rule:** Two separate configurable paths (Library Root and Official Releases)
-- **Can Be Same:** User can point both to same directory
-- **Can Be Different:** User can separate audience recordings from official releases
-- **Rationale:** Organizational flexibility for different library structures
+### 1. Single Library Root
+- **Rule:** One configurable library root path; all album types live under it
+- **Rationale:** See [13-library-import-service.md](13-library-import-service.md) and [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md) for the design rationale (folder = atomic unit of import; album type is metadata, not a folder decision)
 
 ### 2. Immediate Path Persistence
 - **Rule:** Path changes saved immediately when user clicks OK in folder browser
@@ -430,27 +417,7 @@ Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(
 
 ## Known Issues
 
-### 1. Both Paths Call Same Refresh Method
-**Problem:** Changing Official Releases path calls `UpdateLibraryRootDisplay(LibraryRootPath)` instead of separate method (line 62).
-
-**Code:**
-```csharp
-// BrowseOfficialReleasesButton_Click
-_librarySettings.OfficialReleasesPath = folderDialog.SelectedPath;
-_librarySettings.Save();
-OfficialReleasesTextBox.Text = _librarySettings.OfficialReleasesPath;
-
-// Update library window to reload with new path
-_libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚Üê Passes LibraryRootPath, not OfficialReleasesPath
-```
-
-**Impact:** Library Browser refresh works correctly (reads both paths from settings), but parameter is misleading.
-
-**Status:** WORKING (functionally correct but confusing code).
-
----
-
-### 2. No Path Validation
+### 1. No Path Validation
 **Problem:** Dialog accepts invalid paths (e.g., `C:\NonexistentFolder`).
 
 **Impact:** Invalid path saved to settings. Library Browser handles gracefully (`Directory.Exists` checks), but user may not realize path is wrong.
@@ -461,7 +428,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 3. Reset Doesn't Delete songs.json
+### 2. Reset Doesn't Delete songs.json
 **Problem:** "Reset all library data and settings" warning (line 66-72) says "Reset the songs database", but code does NOT delete `Data/songs.json`.
 
 **Actual Behavior:**
@@ -475,7 +442,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 4. No Undo for Path Changes
+### 3. No Undo for Path Changes
 **Problem:** Path changes saved immediately with no "Cancel" or "Revert" option.
 
 **Impact:** User cannot experiment with paths without committing changes.
@@ -486,7 +453,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 5. Reset Progress Not Shown
+### 4. Reset Progress Not Shown
 **Problem:** Deleting large library may take minutes, but no progress indicator shown.
 
 **Behavior:** UI appears frozen during deletion (line 97-142 runs on UI thread).
@@ -499,7 +466,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 6. Primary Artist Not Saved on Path Changes
+### 5. Primary Artist Not Saved on Path Changes
 **Problem:** If user types primary artist name, then changes path without closing dialog, primary artist NOT saved.
 
 **Example:**
@@ -517,35 +484,20 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ## Edge Cases
 
-### 1. Empty Library Paths on First Run
-**Scenario:** User opens Settings on first run with no configured paths.
+### 1. Empty Library Path on First Run
+**Scenario:** User opens Settings on first run with no configured library root.
 
 **Behavior:**
-- `LibraryRootTextBox.Text` is empty (line 23)
-- `OfficialReleasesTextBox.Text` is empty (line 24)
-- Folder browser opens with empty `SelectedPath` (line 33, 52)
+- `LibraryRootTextBox.Text` is empty
+- Folder browser opens with empty `SelectedPath`
 
-**Handling:** Works correctly - user can select folders normally.
+**Handling:** Works correctly - user can select the folder normally.
 
 **User Impact:** No issues, expected first-run behavior.
 
 ---
 
-### 2. Same Path for Both Library Root and Official Releases
-**Scenario:** User sets both paths to same folder (e.g., `D:\Music`).
-
-**Behavior:**
-- Both settings saved with identical path
-- Library Browser reads same folder twice (once for audience recordings, once for official releases)
-- Same albums may appear multiple times in grid
-
-**Handling:** No validation preventing identical paths.
-
-**User Impact:** Confusing duplicate entries in library, but functionally harmless.
-
----
-
-### 3. Path to Empty Folder
+### 2. Path to Empty Folder
 **Scenario:** User selects folder with no subfolders or audio files.
 
 **Behavior:**
@@ -560,18 +512,18 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 4. Reset with No Configured Paths
-**Scenario:** User clicks "Reset All Data" when both paths are empty.
+### 3. Reset with No Configured Path
+**Scenario:** User clicks "Reset All Data" when the library root is empty.
 
 **Behavior:**
 - Confirmation dialog shown normally
 - User clicks "Yes"
-- Path existence checks fail (line 90-92, 118-120):
+- Path existence check fails:
   ```csharp
   if (!string.IsNullOrEmpty(_librarySettings.LibraryRootPath) &&
       Directory.Exists(_librarySettings.LibraryRootPath))
   ```
-- Both deletion sections skipped
+- Deletion section skipped
 - `deletedItems` remains 0
 - Success message: "0 items moved to Recycle Bin"
 
@@ -581,7 +533,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 5. Reset Interrupted (IOException)
+### 4. Reset Interrupted (IOException)
 **Scenario:** File locked by another process during deletion.
 
 **Behavior:**
@@ -597,7 +549,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 6. Reset Canceled in Confirmation Dialog
+### 5. Reset Canceled in Confirmation Dialog
 **Scenario:** User clicks "Reset All Data", then "No" in confirmation.
 
 **Behavior:**
@@ -612,7 +564,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 7. Primary Artist with Leading/Trailing Spaces
+### 6. Primary Artist with Leading/Trailing Spaces
 **Scenario:** User types "  Grateful Dead  " with extra spaces.
 
 **Behavior:**
@@ -628,7 +580,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 8. Very Long Primary Artist Name
+### 7. Very Long Primary Artist Name
 **Scenario:** User pastes 500-character string into Primary Artist field.
 
 **Behavior:**
@@ -642,7 +594,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 9. AddSongDialog Opened, Then Settings Window Closed
+### 8. AddSongDialog Opened, Then Settings Window Closed
 **Scenario:** User clicks "Add Song...", AddSongDialog opens, user tries to close Settings Window.
 
 **Behavior:**
@@ -656,7 +608,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 10. Library Browser Closed While Settings Window Open
+### 9. Library Browser Closed While Settings Window Open
 **Scenario:** User opens Settings, then closes Library Browser (parent window).
 
 **Behavior:**
@@ -671,7 +623,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 11. Path with Special Characters
+### 10. Path with Special Characters
 **Scenario:** User selects path with special characters: `D:\Music\#1 Hits (2003)`
 
 **Behavior:**
@@ -685,7 +637,7 @@ _libraryWindow.UpdateLibraryRootDisplay(_librarySettings.LibraryRootPath);  // ‚
 
 ---
 
-### 12. Recycle Bin Full During Reset
+### 11. Recycle Bin Full During Reset
 **Scenario:** Recycle Bin full, cannot accept more files.
 
 **Behavior:**
