@@ -9,7 +9,7 @@ namespace DeadEditor.Models
     /// </summary>
     public class AlbumManifest
     {
-        public int Version { get; set; } = 1;
+        public int Version { get; set; } = 2;
         public string FolderName { get; set; } = "";
         public string AlbumName { get; set; } = "";
         public string AlbumType { get; set; } = "";
@@ -20,7 +20,9 @@ namespace DeadEditor.Models
         public string State { get; set; } = "";
         public string Edition { get; set; } = "";
         public string OfficialRelease { get; set; } = "";
-        public DateTime VerifiedAt { get; set; }
+        public bool Verified { get; set; }
+        public string ArchivistNote { get; set; } = "";
+        public DateTime ManifestSavedAt { get; set; }
         public List<ManifestTrack> Tracks { get; set; } = new();
     }
 
@@ -33,5 +35,6 @@ namespace DeadEditor.Models
         public string SongName { get; set; } = "";
         public string TrackDate { get; set; } = "";
         public bool Segue { get; set; }
+        public string AcoustIdFingerprint { get; set; } = "";
     }
 }

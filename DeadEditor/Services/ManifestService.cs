@@ -1,5 +1,7 @@
 using DeadEditor.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +19,8 @@ namespace DeadEditor.Services
         private static readonly JsonSerializerSettings _jsonSettings = new()
         {
             Formatting = Formatting.Indented,
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace DeadEditor.Services
 
             var manifest = new AlbumManifest
             {
-                Version = 1,
+                Version = 2,
                 FolderName = folderName,
                 AlbumName = albumInfo.AlbumName ?? "",
                 AlbumType = albumInfo.Type.ToString(),
@@ -51,7 +54,9 @@ namespace DeadEditor.Services
                 State = albumInfo.State ?? "",
                 Edition = albumInfo.Edition ?? "",
                 OfficialRelease = albumInfo.OfficialRelease ?? "",
-                VerifiedAt = DateTime.UtcNow,
+                Verified = false,
+                ArchivistNote = "",
+                ManifestSavedAt = DateTime.UtcNow,
                 Tracks = tracks.Select(t => new ManifestTrack
                 {
                     Filename = Path.GetFileName(t.FilePath),
@@ -60,7 +65,8 @@ namespace DeadEditor.Services
                     Title = t.DisplayTitle ?? t.Title ?? "",
                     SongName = t.SongName ?? "",
                     TrackDate = t.TrackDate ?? "",
-                    Segue = t.Segue
+                    Segue = t.Segue,
+                    AcoustIdFingerprint = t.AcoustIdFingerprint ?? ""
                 }).ToList()
             };
 
@@ -115,12 +121,51 @@ namespace DeadEditor.Services
             try
             {
                 var json = File.ReadAllText(manifestPath);
-                return JsonConvert.DeserializeObject<AlbumManifest>(json);
+                var jObject = JObject.Parse(json);
+                MigrateLegacyFields(jObject);
+                return jObject.ToObject<AlbumManifest>(JsonSerializer.Create(_jsonSettings));
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[MANIFEST] Error reading {manifestPath}: {ex.Message}");
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Maps legacy v1 fields onto the v2 schema in-place. Newtonsoft is
+        /// case-insensitive on key lookup during deserialization, so PascalCase
+        /// v1 keys (e.g. "VerifiedAt") and camelCase v1 keys (e.g. "verifiedAt")
+        /// are both recognized. Defaults for new v2 fields fall out of the C#
+        /// property initializers when the JSON omits them.
+        /// </summary>
+        private static void MigrateLegacyFields(JObject jObject)
+        {
+            JToken? FindKey(string camelCase)
+            {
+                foreach (var prop in jObject.Properties())
+                {
+                    if (string.Equals(prop.Name, camelCase, StringComparison.OrdinalIgnoreCase))
+                        return prop.Value;
+                }
+                return null;
+            }
+
+            void RemoveKey(string camelCase)
+            {
+                var match = jObject.Properties()
+                    .FirstOrDefault(p => string.Equals(p.Name, camelCase, StringComparison.OrdinalIgnoreCase));
+                match?.Remove();
+            }
+
+            if (FindKey("manifestSavedAt") == null)
+            {
+                var legacy = FindKey("verifiedAt");
+                if (legacy != null)
+                {
+                    RemoveKey("verifiedAt");
+                    jObject["manifestSavedAt"] = legacy;
+                }
             }
         }
     }
