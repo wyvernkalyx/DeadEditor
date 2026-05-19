@@ -25,9 +25,20 @@ namespace DeadEditor.Services
 
         /// <summary>
         /// Generates a manifest from album info and tracks, writes it as a sidecar JSON file
-        /// adjacent to the album folder (e.g., "1971-02-19 - Capitol Theatre - Port Chester, NY.json").
+        /// adjacent to the album folder. Defaults <c>verified</c> to false and
+        /// <c>archivistNote</c> to empty — for callers (e.g. fresh imports) that have no
+        /// verification surface.
         /// </summary>
         public void WriteManifest(string albumFolderPath, AlbumInfo albumInfo, List<TrackInfo> tracks)
+        {
+            WriteManifest(albumFolderPath, albumInfo, tracks, verified: false, archivistNote: "");
+        }
+
+        /// <summary>
+        /// Generates a manifest from album info and tracks with explicit verification state.
+        /// </summary>
+        public void WriteManifest(string albumFolderPath, AlbumInfo albumInfo, List<TrackInfo> tracks,
+            bool verified, string archivistNote)
         {
             var folderName = Path.GetFileName(albumFolderPath);
             var parentDir = Path.GetDirectoryName(albumFolderPath);
@@ -54,8 +65,8 @@ namespace DeadEditor.Services
                 State = albumInfo.State ?? "",
                 Edition = albumInfo.Edition ?? "",
                 OfficialRelease = albumInfo.OfficialRelease ?? "",
-                Verified = false,
-                ArchivistNote = "",
+                Verified = verified,
+                ArchivistNote = archivistNote ?? "",
                 ManifestSavedAt = DateTime.UtcNow,
                 Tracks = tracks.Select(t => new ManifestTrack
                 {
@@ -74,7 +85,7 @@ namespace DeadEditor.Services
             {
                 var json = JsonConvert.SerializeObject(manifest, _jsonSettings);
                 File.WriteAllText(manifestPath, json);
-                Debug.WriteLine($"[MANIFEST] Written: {manifestPath} ({manifest.Tracks.Count} tracks)");
+                Debug.WriteLine($"[MANIFEST] Written: {manifestPath} ({manifest.Tracks.Count} tracks, verified={verified})");
             }
             catch (Exception ex)
             {

@@ -104,6 +104,64 @@ public class ManifestServiceTests
     }
 
     [Fact]
+    public void WriteManifest_VerifiedOverload_RoundTripsVerifiedAndNote()
+    {
+        var libraryRoot = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(libraryRoot);
+
+        try
+        {
+            var albumFolderPath = Path.Combine(libraryRoot, "Artist", "Album");
+            Directory.CreateDirectory(albumFolderPath);
+
+            const string note = "Sources: archive.org/12345\nOpen questions: venue uncertain";
+            var service = new ManifestService();
+            service.WriteManifest(
+                albumFolderPath,
+                BuildTestAlbumInfo(),
+                new List<TrackInfo> { BuildTestTrack(albumFolderPath) },
+                verified: true,
+                archivistNote: note);
+
+            var roundTripped = service.ReadManifest(albumFolderPath);
+            Assert.NotNull(roundTripped);
+            Assert.True(roundTripped!.Verified);
+            Assert.Equal(note, roundTripped.ArchivistNote);
+        }
+        finally
+        {
+            SafeDeleteDirectory(libraryRoot);
+        }
+    }
+
+    [Fact]
+    public void WriteManifest_DefaultOverload_WritesUnverifiedAndEmptyNote()
+    {
+        var libraryRoot = CreateTempDir();
+        using var _ = PathGuard.OverrideLibraryRootForTesting(libraryRoot);
+
+        try
+        {
+            var albumFolderPath = Path.Combine(libraryRoot, "Artist", "Album");
+            Directory.CreateDirectory(albumFolderPath);
+
+            new ManifestService().WriteManifest(
+                albumFolderPath,
+                BuildTestAlbumInfo(),
+                new List<TrackInfo> { BuildTestTrack(albumFolderPath) });
+
+            var roundTripped = new ManifestService().ReadManifest(albumFolderPath);
+            Assert.NotNull(roundTripped);
+            Assert.False(roundTripped!.Verified);
+            Assert.Equal("", roundTripped.ArchivistNote);
+        }
+        finally
+        {
+            SafeDeleteDirectory(libraryRoot);
+        }
+    }
+
+    [Fact]
     public void WriteManifest_WritesCamelCaseV2Json()
     {
         var libraryRoot = CreateTempDir();

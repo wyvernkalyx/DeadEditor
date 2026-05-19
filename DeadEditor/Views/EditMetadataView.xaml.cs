@@ -28,6 +28,7 @@ namespace DeadEditor
         private readonly LibraryShow _show;
         private readonly MetadataService _metadataService;
         private readonly NormalizationService _normalizationService;
+        private readonly ManifestService _manifestService;
 
         private AlbumInfo? _albumInfo;
         private ObservableCollection<TrackInfoViewModel> _tracks = new();
@@ -106,6 +107,7 @@ namespace DeadEditor
             _show = show;
             _metadataService = new MetadataService();
             _normalizationService = new NormalizationService();
+            _manifestService = new ManifestService();
             ValidationIssuesItemsControl.ItemsSource = _validationIssues;
         }
 
@@ -187,6 +189,11 @@ namespace DeadEditor
                     if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
                         track.TrackDate = date;
                 }
+
+                // Manifest read: if a sidecar manifest exists, its values override the
+                // tag-derived defaults for the fields the manifest stores. This is the
+                // curation overlay (memo § 7).
+                ApplyManifestOverrides(rawTracks);
 
                 // Sort raw tracks BEFORE wrapping in ViewModels (matching ImportView pattern)
                 var distinctDates = rawTracks.Where(t => !string.IsNullOrEmpty(t.TrackDate))
@@ -347,6 +354,126 @@ namespace DeadEditor
                 VerificationBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3C, 0x3C, 0x3C));
                 VerificationBadgeText.Text = "Unverified";
                 VerificationBadgeText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+            }
+
+            if (VerifyButton != null)
+            {
+                VerifyButton.Content = _isVerified ? "Unverify" : "Verify";
+                VerifyButton.ToolTip = _isVerified
+                    ? "Clear the verified flag on this album"
+                    : "Mark this album as verified (Date and Artist required)";
+            }
+        }
+
+        /// <summary>
+        /// Writes the manifest for the current album folder, carrying the in-memory
+        /// IsVerified flag and ArchivistNote. Called by SaveChangesAsync after tag
+        /// writes succeed, and by VerifyButton_Click when the user toggles state.
+        /// User-visible error on failure; tag writes are not unwound.
+        /// </summary>
+        private void WriteManifestForCurrentAlbum()
+        {
+            if (_albumInfo == null) return;
+            var folder = GetPrimaryAlbumFolder();
+            if (string.IsNullOrEmpty(folder)) return;
+
+            try
+            {
+                var saveTrackList = _tracks.Select(t => t.Track).ToList();
+                _manifestService.WriteManifest(folder, _albumInfo, saveTrackList, IsVerified, ArchivistNote);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MANIFEST] Write failed for {folder}: {ex}");
+                System.Windows.MessageBox.Show(
+                    $"Tag changes were saved, but the manifest sidecar could not be written:\n\n{ex.Message}\n\nSave again to retry the manifest write.",
+                    "Manifest write failed",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Returns the primary album folder for manifest read/write. Multi-folder box
+        /// sets only get a manifest on their first folder in MVP — replication across
+        /// folders is a known follow-up (memo § Deferred).
+        /// </summary>
+        private string? GetPrimaryAlbumFolder()
+        {
+            if (_show.FolderPaths != null && _show.FolderPaths.Count > 1)
+            {
+                Debug.WriteLine($"[MANIFEST] Multi-folder album ({_show.FolderPaths.Count} folders); writing manifest only for first folder: {_show.FolderPaths[0]}");
+                return _show.FolderPaths[0];
+            }
+            if (_show.FolderPaths != null && _show.FolderPaths.Count == 1)
+                return _show.FolderPaths[0];
+            return string.IsNullOrEmpty(_show.FolderPath) ? null : _show.FolderPath;
+        }
+
+        /// <summary>
+        /// Reads the manifest for the primary album folder and overlays its values onto
+        /// _albumInfo (album-level fields) and the raw tracks (track-level fields matched
+        /// by filename). No-op if no manifest exists or read fails.
+        /// </summary>
+        private void ApplyManifestOverrides(List<TrackInfo> rawTracks)
+        {
+            if (_albumInfo == null) return;
+
+            var folder = GetPrimaryAlbumFolder();
+            if (string.IsNullOrEmpty(folder)) return;
+
+            AlbumManifest? manifest;
+            try
+            {
+                manifest = _manifestService.ReadManifest(folder);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[MANIFEST] Read failed for {folder}: {ex.Message}");
+                return;
+            }
+            if (manifest == null) return;
+
+            // Album-level overrides
+            if (!string.IsNullOrEmpty(manifest.AlbumName)) _albumInfo.AlbumName = manifest.AlbumName;
+            if (!string.IsNullOrEmpty(manifest.Artist)) _albumInfo.Artist = manifest.Artist;
+            if (!string.IsNullOrEmpty(manifest.Date)) _albumInfo.AlbumDate = manifest.Date;
+            if (!string.IsNullOrEmpty(manifest.Venue)) _albumInfo.Venue = manifest.Venue;
+            if (!string.IsNullOrEmpty(manifest.Edition)) _albumInfo.Edition = manifest.Edition;
+
+            // City/State are derived from CityState on AlbumInfo. Compose if the manifest carries either.
+            if (!string.IsNullOrEmpty(manifest.City) || !string.IsNullOrEmpty(manifest.State))
+            {
+                _albumInfo.CityState = (!string.IsNullOrEmpty(manifest.City) && !string.IsNullOrEmpty(manifest.State))
+                    ? $"{manifest.City}, {manifest.State}"
+                    : (manifest.City ?? manifest.State ?? "");
+            }
+
+            if (Enum.TryParse<AlbumType>(manifest.AlbumType, out var parsedType))
+                _albumInfo.Type = parsedType;
+
+            // Verification state + curator note
+            IsVerified = manifest.Verified;
+            ArchivistNote = manifest.ArchivistNote ?? "";
+
+            // Track-level overrides matched by filename
+            var byName = manifest.Tracks
+                .Where(mt => !string.IsNullOrEmpty(mt.Filename))
+                .ToDictionary(mt => mt.Filename, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var track in rawTracks)
+            {
+                var filename = Path.GetFileName(track.FilePath);
+                if (string.IsNullOrEmpty(filename)) continue;
+                if (!byName.TryGetValue(filename, out var mt)) continue;
+
+                track.SongName = mt.SongName ?? "";
+                track.TrackDate = mt.TrackDate ?? "";
+                track.Segue = mt.Segue;
+                if (!string.IsNullOrEmpty(mt.AcoustIdFingerprint))
+                    track.AcoustIdFingerprint = mt.AcoustIdFingerprint;
+                if (!string.IsNullOrEmpty(mt.Title))
+                    track.RawTitle = mt.Title;
             }
         }
 
@@ -692,6 +819,12 @@ namespace DeadEditor
                     .Select(t => t.Track.SongName!)
                     .ToList();
 
+                // Manifest write: overlay the in-memory verified flag + archivist note
+                // onto a fresh manifest sidecar. Tag writes already succeeded above; a
+                // manifest write failure surfaces as a user-visible error but does not
+                // unwind the tag changes.
+                WriteManifestForCurrentAlbum();
+
                 ProgressBar.Visibility = Visibility.Collapsed;
                 StatusTextBlock.Text = $"Saved {_tracks.Count} files";
                 _hasUnsavedChanges = false;
@@ -1008,6 +1141,45 @@ namespace DeadEditor
                 MatchSetlistButton.IsEnabled = false;
                 MatchSetlistButton.ToolTip = "No setlist data for this date";
             }
+        }
+
+        // ===== VERIFY BUTTON =====
+
+        private async void VerifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_albumInfo == null) return;
+
+            // Unverify path: no validation, just flip and save.
+            if (IsVerified)
+            {
+                IsVerified = false;
+                await SaveChangesAsync();
+                return;
+            }
+
+            // Verify path: enforce required fields per memo § 3.
+            var missing = new List<string>();
+            if (string.IsNullOrWhiteSpace(_albumInfo.Artist))
+                missing.Add("Artist");
+
+            var date = _albumInfo.AlbumDate?.Trim() ?? "";
+            if (!DateTime.TryParseExact(date, "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out _))
+                missing.Add("Date (yyyy-MM-dd)");
+
+            if (missing.Count > 0)
+            {
+                System.Windows.MessageBox.Show(
+                    $"Cannot verify — the following fields are required:\n\n• {string.Join("\n• ", missing)}",
+                    "Required fields missing",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            IsVerified = true;
+            await SaveChangesAsync();
         }
 
         // ===== MBID DISPLAY =====

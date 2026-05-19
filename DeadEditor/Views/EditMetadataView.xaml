@@ -429,6 +429,17 @@
                                FontWeight="SemiBold"/>
                 </Border>
 
+                <!-- Verify / Unverify action -->
+                <Button x:Name="VerifyButton"
+                        Content="Verify"
+                        Width="170" Height="24" Margin="0,6,0,0"
+                        FontSize="12"
+                        Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                        Padding="6,2" Cursor="Hand"
+                        HorizontalAlignment="Center"
+                        Click="VerifyButton_Click"
+                        ToolTip="Mark this album as verified (Date and Artist required)"/>
+
                 <!-- Archivist Note -->
                 <Label Content="ARCHIVIST NOTE" Foreground="#999999" FontSize="11"
                        Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
