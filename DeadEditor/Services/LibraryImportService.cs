@@ -41,6 +41,7 @@ namespace DeadEditor.Services
     {
         private readonly MetadataService _metadataService;
         private readonly MusicBrainzService _musicBrainzService;
+        private readonly ManifestService _manifestService = new();
 
         public LibraryImportService(MetadataService metadataService, MusicBrainzService musicBrainzService)
         {
@@ -99,6 +100,41 @@ namespace DeadEditor.Services
             {
                 CopyNonAudioFiles(sourceFolderPath, targetFolder, progress, onConflict);
             }
+
+            // Phase 3: Write manifest sidecar with verified:false and empty archivistNote.
+            // ImportTracksToFolder restores track.FilePath to source paths after the tag
+            // write, so mutate-to-library / restore-after-write here mirrors that pattern.
+            // Without the mutation, Path.GetFileName(t.FilePath) inside ManifestService
+            // would emit source filenames and the EditMetadataView read-back would silently
+            // fail to apply track-level overrides.
+            WriteManifestAfterImport(targetFolder, albumInfo, tracks);
+        }
+
+        private void WriteManifestAfterImport(string targetFolder, AlbumInfo albumInfo, List<TrackInfo> tracks)
+        {
+            var isOfficialRelease = albumInfo.Type == AlbumType.OfficialRelease;
+            var originalPaths = tracks.Select(t => t.FilePath).ToList();
+            try
+            {
+                for (int i = 0; i < tracks.Count; i++)
+                {
+                    var fileName = ComputeLibraryFilename(tracks[i], albumInfo, isOfficialRelease, dateForTitle: null);
+                    tracks[i].FilePath = Path.Combine(targetFolder, fileName);
+                }
+
+                _manifestService.WriteManifest(targetFolder, albumInfo, tracks);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[IMPORT] Manifest write failed for {targetFolder}: {ex.Message}");
+            }
+            finally
+            {
+                for (int i = 0; i < tracks.Count; i++)
+                {
+                    tracks[i].FilePath = originalPaths[i];
+                }
+            }
         }
 
         /// <summary>
@@ -138,30 +174,7 @@ namespace DeadEditor.Services
                 processedTracks++;
                 progress?.Report((processedTracks, totalTracks, $"Importing track {processedTracks} of {totalTracks}: {track.SongName ?? track.Title}"));
 
-                // Generate new filename
-                var trackTitle = track.SongName ?? track.Title;
-                if (track.HasSegue)
-                {
-                    trackTitle += " >";
-                }
-
-                // Get the original file extension (e.g., .flac or .mp3)
-                var extension = Path.GetExtension(track.FilePath);
-
-                string newFileName;
-                if (isOfficialRelease)
-                {
-                    // Official release (studio or live): "01 - Song Name.flac" — no date in filename
-                    newFileName = $"{track.TrackNumber:D2} - {trackTitle}{extension}";
-                }
-                else
-                {
-                    // Audience recording: "01 - Song Name (1971-04-25).flac"
-                    var date = dateForTitle ?? track.PerformanceDate ?? albumInfo.Date;
-                    newFileName = $"{track.TrackNumber:D2} - {trackTitle} ({date}){extension}";
-                }
-
-                newFileName = SanitizeFileName(newFileName);
+                var newFileName = ComputeLibraryFilename(track, albumInfo, isOfficialRelease, dateForTitle);
                 var targetPath = Path.Combine(targetFolder, newFileName);
 
                 Debug.WriteLine($"[IMPORT] Copying: {track.FilePath} → {targetPath}");
@@ -466,6 +479,39 @@ namespace DeadEditor.Services
             name = name.Trim('.', ' ');
 
             return string.IsNullOrWhiteSpace(name) ? "Unknown" : name;
+        }
+
+        /// <summary>
+        /// Computes the library-side filename for an imported track. Called from
+        /// <see cref="ImportTracksToFolder"/> for the actual copy/write step and from
+        /// <see cref="ImportToLibrary"/>'s manifest-write epilogue, where the manifest
+        /// needs the post-rename filename even though <c>track.FilePath</c> has been
+        /// restored to the source path.
+        /// </summary>
+        private string ComputeLibraryFilename(TrackInfo track, AlbumInfo albumInfo, bool isOfficialRelease, string? dateForTitle)
+        {
+            var trackTitle = track.SongName ?? track.Title;
+            if (track.HasSegue)
+            {
+                trackTitle += " >";
+            }
+
+            var extension = Path.GetExtension(track.FilePath);
+
+            string newFileName;
+            if (isOfficialRelease)
+            {
+                // Official release (studio or live): "01 - Song Name.flac" — no date in filename
+                newFileName = $"{track.TrackNumber:D2} - {trackTitle}{extension}";
+            }
+            else
+            {
+                // Audience recording: "01 - Song Name (1971-04-25).flac"
+                var date = dateForTitle ?? track.PerformanceDate ?? albumInfo.Date;
+                newFileName = $"{track.TrackNumber:D2} - {trackTitle} ({date}){extension}";
+            }
+
+            return SanitizeFileName(newFileName);
         }
 
         private string SanitizeFileName(string name)
