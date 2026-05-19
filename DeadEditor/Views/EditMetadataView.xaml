@@ -415,6 +415,35 @@
                             ToolTip="Remove album artwork"/>
                 </StackPanel>
 
+                <!-- Verification badge -->
+                <Border x:Name="VerificationBadge"
+                        HorizontalAlignment="Center"
+                        Margin="0,12,0,0"
+                        Padding="12,4"
+                        CornerRadius="3"
+                        Background="#3C3C3C">
+                    <TextBlock x:Name="VerificationBadgeText"
+                               Text="Unverified"
+                               Foreground="#888888"
+                               FontSize="12"
+                               FontWeight="SemiBold"/>
+                </Border>
+
+                <!-- Archivist Note -->
+                <Label Content="ARCHIVIST NOTE" Foreground="#999999" FontSize="11"
+                       Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
+                <TextBox x:Name="ArchivistNoteTextBox"
+                         Width="170" Height="90"
+                         HorizontalAlignment="Center"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         VerticalContentAlignment="Top"
+                         FontSize="12"
+                         Padding="6,4"
+                         MinHeight="0"
+                         ToolTip="Curator notes, sources, open questions about this recording"/>
+
                 <!-- Album Type -->
                 <Label Content="TYPE" Foreground="#999999" FontSize="11"
                        Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>

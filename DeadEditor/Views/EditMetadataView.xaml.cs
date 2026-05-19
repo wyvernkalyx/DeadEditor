@@ -56,6 +56,8 @@ namespace DeadEditor
         private TrackInfoViewModel? _draggedItem;
         private bool _isDragging;
 
+        private bool _isVerified;
+
         /// <summary>
         /// The album name for the header bar back button text.
         /// </summary>
@@ -65,6 +67,32 @@ namespace DeadEditor
         /// Whether there are unsaved changes (for confirmation dialog on cancel/back).
         /// </summary>
         public bool HasUnsavedChanges => _hasUnsavedChanges;
+
+        /// <summary>
+        /// Page-level verification flag, surfaced as the sidebar badge. Default false.
+        /// </summary>
+        public bool IsVerified
+        {
+            get => _isVerified;
+            set
+            {
+                _isVerified = value;
+                UpdateVerificationBadge();
+            }
+        }
+
+        /// <summary>
+        /// Free-text curator context, surfaced as the sidebar textbox. Default "".
+        /// </summary>
+        public string ArchivistNote
+        {
+            get => ArchivistNoteTextBox?.Text ?? "";
+            set
+            {
+                if (ArchivistNoteTextBox != null)
+                    ArchivistNoteTextBox.Text = value ?? "";
+            }
+        }
 
         /// <summary>
         /// Fired when save completes successfully, so the shell can refresh the album detail view.
@@ -295,6 +323,30 @@ namespace DeadEditor
             {
                 FingerprintSummaryText.Text = $"{fingerprinted} / {totalTracks} tracks fingerprinted";
                 FingerprintSummaryText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
+            }
+        }
+
+        /// <summary>
+        /// Flips the verification badge's text and background to match _isVerified.
+        /// Called from the IsVerified setter; safe to call before InitializeComponent
+        /// finishes (no-ops if elements are null).
+        /// </summary>
+        private void UpdateVerificationBadge()
+        {
+            if (VerificationBadge == null || VerificationBadgeText == null)
+                return;
+
+            if (_isVerified)
+            {
+                VerificationBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x0E, 0x7A, 0x0D));
+                VerificationBadgeText.Text = "✓ Verified";
+                VerificationBadgeText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0xFF, 0xFF));
+            }
+            else
+            {
+                VerificationBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3C, 0x3C, 0x3C));
+                VerificationBadgeText.Text = "Unverified";
+                VerificationBadgeText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
             }
         }
 
