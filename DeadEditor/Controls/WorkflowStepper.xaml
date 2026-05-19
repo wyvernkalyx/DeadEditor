@@ -6,20 +6,6 @@
              mc:Ignorable="d"
              d:DesignHeight="34" d:DesignWidth="600">
 
-    <UserControl.Resources>
-        <!-- Reuse existing palette tones from ImportView / EditMetadataView. No new colors. -->
-        <SolidColorBrush x:Key="PillCompletedBg"      Color="#0E7A0D"/>
-        <SolidColorBrush x:Key="PillCurrentBg"        Color="#0E639C"/>
-        <SolidColorBrush x:Key="PillUpcomingBg"       Color="#2D2D30"/>
-        <SolidColorBrush x:Key="PillCompletedFg"      Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="PillCurrentFg"        Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="PillUpcomingFg"       Color="#888888"/>
-        <SolidColorBrush x:Key="PillSkippedFg"        Color="#888888"/>
-        <SolidColorBrush x:Key="PillSkippedAccent"    Color="#F0AD4E"/>
-        <SolidColorBrush x:Key="ConnectorCompletedBg" Color="#0E7A0D"/>
-        <SolidColorBrush x:Key="ConnectorDimBg"       Color="#3F3F46"/>
-    </UserControl.Resources>
-
     <StackPanel x:Name="StepperPanel"
                 Orientation="Horizontal"
                 VerticalAlignment="Center"

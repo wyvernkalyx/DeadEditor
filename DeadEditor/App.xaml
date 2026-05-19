@@ -3,6 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DeadEditor">
     <Application.Resources>
+        <!-- Workflow stepper palette (consumed by Controls/WorkflowStepper.xaml.cs) -->
+        <SolidColorBrush x:Key="PillCompletedBg"      Color="#0E7A0D"/>
+        <SolidColorBrush x:Key="PillCurrentBg"        Color="#0E639C"/>
+        <SolidColorBrush x:Key="PillUpcomingBg"       Color="#2D2D30"/>
+        <SolidColorBrush x:Key="PillCompletedFg"      Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PillCurrentFg"        Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PillUpcomingFg"       Color="#888888"/>
+        <SolidColorBrush x:Key="PillSkippedFg"        Color="#888888"/>
+        <SolidColorBrush x:Key="PillSkippedAccent"    Color="#F0AD4E"/>
+        <SolidColorBrush x:Key="ConnectorCompletedBg" Color="#0E7A0D"/>
+        <SolidColorBrush x:Key="ConnectorDimBg"       Color="#3F3F46"/>
+
+        <!-- Verification badge palette (consumed by EditMetadataView.UpdateVerificationBadge) -->
+        <SolidColorBrush x:Key="BadgeVerifiedBg"      Color="#0E7A0D"/>
+        <SolidColorBrush x:Key="BadgeVerifiedFg"      Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="BadgeUnverifiedBg"    Color="#3C3C3C"/>
+        <SolidColorBrush x:Key="BadgeUnverifiedFg"    Color="#888888"/>
+
+        <!-- Edit markers (reserved for prompt 6's amber left-edge marker on changed cells/inputs) -->
+        <SolidColorBrush x:Key="MarkerAmberAccent"    Color="#F0AD4E"/>
+
         <!-- Dark Theme ComboBox Style (supports both editable and non-editable modes) -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#3C3C3C"/>

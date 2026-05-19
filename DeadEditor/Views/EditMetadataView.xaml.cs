@@ -345,15 +345,15 @@ namespace DeadEditor
 
             if (_isVerified)
             {
-                VerificationBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x0E, 0x7A, 0x0D));
+                VerificationBadge.Background = (SolidColorBrush)FindResource("BadgeVerifiedBg");
                 VerificationBadgeText.Text = "✓ Verified";
-                VerificationBadgeText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0xFF, 0xFF));
+                VerificationBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeVerifiedFg");
             }
             else
             {
-                VerificationBadge.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3C, 0x3C, 0x3C));
+                VerificationBadge.Background = (SolidColorBrush)FindResource("BadgeUnverifiedBg");
                 VerificationBadgeText.Text = "Unverified";
-                VerificationBadgeText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x88, 0x88, 0x88));
+                VerificationBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeUnverifiedFg");
             }
 
             if (VerifyButton != null)

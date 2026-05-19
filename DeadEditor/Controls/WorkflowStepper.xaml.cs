@@ -121,25 +121,25 @@ namespace DeadEditor.Controls
 
             if (stage.IsCompleted)
             {
-                border.Background = (WpfBrush)Resources["PillCompletedBg"];
+                border.Background = (WpfBrush)FindResource("PillCompletedBg");
                 content.Children.Add(MakeRun("✓ ", "PillCompletedFg", FontWeights.Normal));
                 content.Children.Add(MakeRun(stage.Name, "PillCompletedFg", FontWeights.Normal));
             }
             else if (stage.IsCurrent)
             {
-                border.Background = (WpfBrush)Resources["PillCurrentBg"];
+                border.Background = (WpfBrush)FindResource("PillCurrentBg");
                 content.Children.Add(MakeRun(stage.Name, "PillCurrentFg", FontWeights.SemiBold));
                 content.Children.Add(MakeRun(" →", "PillCurrentFg", FontWeights.SemiBold));
             }
             else if (stage.IsSkipped)
             {
-                border.Background = (WpfBrush)Resources["PillUpcomingBg"];
+                border.Background = (WpfBrush)FindResource("PillUpcomingBg");
                 content.Children.Add(MakeRun("! ", "PillSkippedAccent", FontWeights.Bold));
                 content.Children.Add(MakeRun(stage.Name, "PillSkippedFg", FontWeights.Normal));
             }
             else // Upcoming
             {
-                border.Background = (WpfBrush)Resources["PillUpcomingBg"];
+                border.Background = (WpfBrush)FindResource("PillUpcomingBg");
                 content.Children.Add(MakeRun(stage.Name, "PillUpcomingFg", FontWeights.Normal));
             }
 
@@ -152,7 +152,7 @@ namespace DeadEditor.Controls
             return new TextBlock
             {
                 Text = text,
-                Foreground = (WpfBrush)Resources[brushKey],
+                Foreground = (WpfBrush)FindResource(brushKey),
                 FontSize = 13,
                 FontWeight = weight,
                 VerticalAlignment = VerticalAlignment.Center
@@ -165,7 +165,7 @@ namespace DeadEditor.Controls
             {
                 Width = 14,
                 Height = 2,
-                Fill = (WpfBrush)Resources[leftPillCompleted ? "ConnectorCompletedBg" : "ConnectorDimBg"],
+                Fill = (WpfBrush)FindResource(leftPillCompleted ? "ConnectorCompletedBg" : "ConnectorDimBg"),
                 Margin = new Thickness(2, 0, 2, 0),
                 VerticalAlignment = VerticalAlignment.Center
             };
