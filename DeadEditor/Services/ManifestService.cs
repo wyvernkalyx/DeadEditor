@@ -65,6 +65,7 @@ namespace DeadEditor.Services
                 State = albumInfo.State ?? "",
                 Edition = albumInfo.Edition ?? "",
                 OfficialRelease = albumInfo.OfficialRelease ?? "",
+                Year = albumInfo.Year ?? "",
                 Verified = verified,
                 ArchivistNote = archivistNote ?? "",
                 ManifestSavedAt = DateTime.UtcNow,

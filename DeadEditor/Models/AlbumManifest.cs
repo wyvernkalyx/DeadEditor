@@ -20,6 +20,7 @@ namespace DeadEditor.Models
         public string State { get; set; } = "";
         public string Edition { get; set; } = "";
         public string OfficialRelease { get; set; } = "";
+        public string Year { get; set; } = "";
         public bool Verified { get; set; }
         public string ArchivistNote { get; set; } = "";
         public DateTime ManifestSavedAt { get; set; }

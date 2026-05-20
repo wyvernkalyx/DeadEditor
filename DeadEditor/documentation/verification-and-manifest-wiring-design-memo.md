@@ -134,6 +134,7 @@ Version bumps from 1 to 2. The amended schema:
   "state": "...",
   "edition": "",
   "officialRelease": "",
+  "year": "",
   "verified": false,
   "archivistNote": "",
   "manifestSavedAt": "2026-05-12T12:00:00Z",
@@ -179,6 +180,18 @@ Decision notes:
   `AlbumManifest` that are not in the spec's example JSON
   (19-folder-import-and-manifests.md). The amended schema keeps these
   as-is.
+- **`year: string` added (prompt 6, 2026-05-20).** Phase A of the
+  prompt-6 audit surfaced that `EditMetadataView` exposes a `Year`
+  TextBox which writes to FLAC tags and `LibraryShow.ReleaseYear`,
+  but the v2 schema as originally drafted here omitted it. That
+  asymmetry meant Year edits on a verified album could not be
+  consistently treated under the unverify-on-edit rule (§ 5) — the
+  rule speaks of "manifest-tracked fields," and Year was editable
+  but not tracked. The field is added as a string (matching the
+  TextBox surface and `AlbumInfo.Year`), defaults to empty, and
+  round-trips through `ManifestService` like any other album-level
+  field. No version bump — older v2 manifests deserialize cleanly
+  with Year defaulting to `""`.
 - The spec's existing manifest format is not contradicted — the
   additions are additive and the rename is mechanical. Reading a
   version-1 manifest should be handled gracefully (default `verified` to

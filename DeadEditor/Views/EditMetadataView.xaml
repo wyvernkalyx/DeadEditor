@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:markers="clr-namespace:DeadEditor.Helpers"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1200"
              Background="#1E1E1E"
@@ -16,11 +17,19 @@
             <Setter Property="Background" Value="#3C3C3C"/>
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CaretBrush" Value="#FFFFFF"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="MinHeight" Value="34"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Style.Triggers>
+                <!-- Amber left-edge marker (prompt 6 / memo § 6 Scenario A) -->
+                <Trigger Property="markers:EditMarkers.IsDirty" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource MarkerAmberAccent}"/>
+                    <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="Label">
             <Setter Property="Foreground" Value="#999999"/>
@@ -453,21 +462,32 @@
                          FontSize="12"
                          Padding="6,4"
                          MinHeight="0"
+                         TextChanged="ArchivistNoteTextBox_TextChanged"
                          ToolTip="Curator notes, sources, open questions about this recording"/>
 
                 <!-- Album Type -->
                 <Label Content="TYPE" Foreground="#999999" FontSize="11"
                        Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
-                <ComboBox x:Name="AlbumTypeComboBox"
-                          Width="170" Height="28" FontSize="13"
-                          Padding="6,4"
-                          VerticalContentAlignment="Center"
-                          Background="#3C3C3C" Foreground="#FFFFFF"
-                          BorderBrush="#555555"
-                          SelectionChanged="AlbumTypeComboBox_SelectionChanged">
-                    <ComboBoxItem Content="Audience Recording"/>
-                    <ComboBoxItem Content="Official Release"/>
-                </ComboBox>
+                <!-- Overlay grid: marker rectangle sits on top of the combobox left edge
+                     so toggling visibility doesn't shift the combobox layout. -->
+                <Grid HorizontalAlignment="Center" Width="170" Height="28">
+                    <ComboBox x:Name="AlbumTypeComboBox"
+                              Width="170" Height="28" FontSize="13"
+                              Padding="6,4"
+                              VerticalContentAlignment="Center"
+                              Background="#3C3C3C" Foreground="#FFFFFF"
+                              BorderBrush="#555555"
+                              SelectionChanged="AlbumTypeComboBox_SelectionChanged">
+                        <ComboBoxItem Content="Audience Recording"/>
+                        <ComboBoxItem Content="Official Release"/>
+                    </ComboBox>
+                    <Border x:Name="AlbumTypeMarkerBorder"
+                            Width="3"
+                            HorizontalAlignment="Left"
+                            Background="{StaticResource MarkerAmberAccent}"
+                            Visibility="Collapsed"
+                            IsHitTestVisible="False"/>
+                </Grid>
 
                 <!-- MBID display -->
                 <Label Content="MBID" Foreground="#999999" FontSize="11"

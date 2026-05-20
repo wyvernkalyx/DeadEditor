@@ -81,6 +81,7 @@ public class ManifestServiceTests
             Assert.Equal("Port Chester", roundTripped.City);
             Assert.Equal("NY", roundTripped.State);
             Assert.Equal("", roundTripped.Edition);
+            Assert.Equal("1971", roundTripped.Year);
             Assert.False(roundTripped.Verified);
             Assert.Equal("", roundTripped.ArchivistNote);
 

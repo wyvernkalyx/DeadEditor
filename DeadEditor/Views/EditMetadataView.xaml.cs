@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using DeadEditor.Views;
@@ -58,6 +59,13 @@ namespace DeadEditor
         private bool _isDragging;
 
         private bool _isVerified;
+
+        // Snapshot of every tracked album-level field's value at load time (and
+        // re-captured after a successful save). Drives the amber left-edge
+        // marker via EditUnverifyRule.IsDirty(baseline, current). Strict diff
+        // — reverting a typo back to the baseline clears the marker.
+        // Keys: Artist, Date, Venue, CityState, AlbumName, Year, AlbumType, ArchivistNote.
+        private readonly Dictionary<string, string> _baselineValues = new();
 
         /// <summary>
         /// The album name for the header bar back button text.
@@ -244,6 +252,13 @@ namespace DeadEditor
                 StatusTextBlock.Text = $"{_tracks.Count} tracks loaded";
                 _hasUnsavedChanges = false;
 
+                // Baseline snapshot: capture current control values so subsequent
+                // user edits can be diffed against the loaded state. Must run
+                // after RefreshUI so the textboxes reflect _albumInfo +
+                // ApplyManifestOverrides.
+                CaptureBaseline();
+                RecomputeAllMarkers();
+
                 // Display managed folder path
                 var displayPath = _show.FolderPaths.Any() ? _show.FolderPaths.First() : _show.FolderPath;
                 FolderPathTextBox.Text = !string.IsNullOrEmpty(displayPath) ? displayPath : "(unknown)";
@@ -365,6 +380,72 @@ namespace DeadEditor
             }
         }
 
+        // ===== BASELINE / MARKER / UNVERIFY-ON-EDIT (prompt 6) =====
+
+        /// <summary>
+        /// Snapshots the current value of every tracked album-level control into
+        /// <see cref="_baselineValues"/>. Called after LoadData populates the form
+        /// and after a successful save, so subsequent edits diff against the
+        /// load-time (or last-saved) state. See memo § 6 Scenario A.
+        /// </summary>
+        private void CaptureBaseline()
+        {
+            _baselineValues["Artist"] = ArtistTextBox.Text ?? "";
+            _baselineValues["Date"] = AlbumDateTextBox.Text ?? "";
+            _baselineValues["Venue"] = VenueTextBox.Text ?? "";
+            _baselineValues["CityState"] = CityStateTextBox.Text ?? "";
+            _baselineValues["AlbumName"] = AlbumNameTextBox.Text ?? "";
+            _baselineValues["Year"] = YearTextBox.Text ?? "";
+            _baselineValues["AlbumType"] = (_albumInfo?.Type.ToString()) ?? "";
+            _baselineValues["ArchivistNote"] = ArchivistNoteTextBox.Text ?? "";
+        }
+
+        /// <summary>
+        /// Recomputes the dirty-marker visibility for every tracked album-level
+        /// control by comparing its current value to the captured baseline.
+        /// Cheap (eight comparisons); called from every tracked edit handler.
+        /// No-op until the baseline has been captured.
+        /// </summary>
+        private void RecomputeAllMarkers()
+        {
+            if (_baselineValues.Count == 0) return;
+
+            SetTextBoxMarker(ArtistTextBox, "Artist");
+            SetTextBoxMarker(AlbumDateTextBox, "Date");
+            SetTextBoxMarker(VenueTextBox, "Venue");
+            SetTextBoxMarker(CityStateTextBox, "CityState");
+            SetTextBoxMarker(AlbumNameTextBox, "AlbumName");
+            SetTextBoxMarker(YearTextBox, "Year");
+            SetTextBoxMarker(ArchivistNoteTextBox, "ArchivistNote");
+
+            var typeBaseline = _baselineValues.TryGetValue("AlbumType", out var tb) ? tb : "";
+            var typeCurrent = _albumInfo?.Type.ToString() ?? "";
+            AlbumTypeMarkerBorder.Visibility = EditUnverifyRule.IsDirty(typeBaseline, typeCurrent)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
+        private void SetTextBoxMarker(System.Windows.Controls.TextBox tb, string fieldName)
+        {
+            var baseline = _baselineValues.TryGetValue(fieldName, out var b) ? b : "";
+            EditMarkers.SetIsDirty(tb, EditUnverifyRule.IsDirty(baseline, tb.Text ?? ""));
+        }
+
+        /// <summary>
+        /// If the album is currently verified and the caller represents an edit
+        /// to a manifest-tracked field (anything other than the Archivist Note),
+        /// drops the verified flag and writes the status-line message. Once
+        /// IsVerified is false, subsequent calls are a no-op — so the "first
+        /// edit only" message dedupe falls out naturally.
+        /// Memo § 5 (unverify-on-edit) + § 6 Scenario A (status-line message).
+        /// </summary>
+        private void MaybeUnverifyAlbumEdit()
+        {
+            if (!IsVerified) return;
+            IsVerified = false;
+            StatusTextBlock.Text = "Verification cleared by edit";
+        }
+
         /// <summary>
         /// Writes the manifest for the current album folder, carrying the in-memory
         /// IsVerified flag and ArchivistNote. Called by SaveChangesAsync after tag
@@ -440,6 +521,7 @@ namespace DeadEditor
             if (!string.IsNullOrEmpty(manifest.Date)) _albumInfo.AlbumDate = manifest.Date;
             if (!string.IsNullOrEmpty(manifest.Venue)) _albumInfo.Venue = manifest.Venue;
             if (!string.IsNullOrEmpty(manifest.Edition)) _albumInfo.Edition = manifest.Edition;
+            if (!string.IsNullOrEmpty(manifest.Year)) _albumInfo.Year = manifest.Year;
 
             // City/State are derived from CityState on AlbumInfo. Compose if the manifest carries either.
             if (!string.IsNullOrEmpty(manifest.City) || !string.IsNullOrEmpty(manifest.State))
@@ -452,9 +534,19 @@ namespace DeadEditor
             if (Enum.TryParse<AlbumType>(manifest.AlbumType, out var parsedType))
                 _albumInfo.Type = parsedType;
 
-            // Verification state + curator note
+            // Verification state + curator note. The ArchivistNote assignment
+            // sets the TextBox's Text and would fire ArchivistNoteTextBox_TextChanged;
+            // _isUpdating guards against that.
             IsVerified = manifest.Verified;
-            ArchivistNote = manifest.ArchivistNote ?? "";
+            _isUpdating = true;
+            try
+            {
+                ArchivistNote = manifest.ArchivistNote ?? "";
+            }
+            finally
+            {
+                _isUpdating = false;
+            }
 
             // Track-level overrides matched by filename
             var byName = manifest.Tracks
@@ -549,6 +641,12 @@ namespace DeadEditor
 
             _hasUnsavedChanges = true;
 
+            // Prompt 6: amber marker on the edited field + unverify-on-edit if
+            // the album was verified. All six album-info fields are manifest-
+            // tracked, so any of them flipping triggers unverify.
+            RecomputeAllMarkers();
+            MaybeUnverifyAlbumEdit();
+
             // Show autocomplete suggestions when Album Name field changes
             if (sender == AlbumNameTextBox && !_isSelectingSuggestion)
             {
@@ -565,6 +663,25 @@ namespace DeadEditor
                 : AlbumType.AudienceRecording;
             _albumInfo.IsModified = true;
             _hasUnsavedChanges = true;
+
+            RecomputeAllMarkers();
+            MaybeUnverifyAlbumEdit();
+        }
+
+        /// <summary>
+        /// TextChanged on the Archivist Note. The note is manifest-tracked and
+        /// gets the amber marker like other fields, but per memo § 2 / § 5 its
+        /// edits do NOT trigger unverify — the note carries curator context
+        /// about the recording, not the recording's metadata. Also closes the
+        /// pre-prompt-6 gap where edits to this field didn't set
+        /// _hasUnsavedChanges (so cancel-confirm would have lost them silently).
+        /// </summary>
+        private void ArchivistNoteTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (_isUpdating) return;
+
+            _hasUnsavedChanges = true;
+            RecomputeAllMarkers();
         }
 
         // ===== ALBUM NAME AUTOCOMPLETE =====
@@ -829,6 +946,15 @@ namespace DeadEditor
                 StatusTextBlock.Text = $"Saved {_tracks.Count} files";
                 _hasUnsavedChanges = false;
 
+                // Prompt 6: recapture baseline so any post-save edit diffs
+                // against the just-saved values. RecomputeAllMarkers clears
+                // every marker since current == baseline. SaveChangesAsync
+                // navigates back below so the user typically doesn't see the
+                // cleared state, but the recapture matters if the navigation
+                // is suppressed in any future flow.
+                CaptureBaseline();
+                RecomputeAllMarkers();
+
                 // Notify that save completed (so library can refresh)
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
 
@@ -911,6 +1037,10 @@ namespace DeadEditor
                 // SongName affects "no track number" labels, disc/track changes affect
                 // duplicate/gap detection — refresh on any of them.
                 RefreshValidation();
+
+                // Prompt 6: track-level edits unverify a verified album (no cell
+                // marker per design — only album-level controls get markers).
+                MaybeUnverifyAlbumEdit();
             }
         }
 
@@ -971,6 +1101,10 @@ namespace DeadEditor
                         RefreshValidation();
                     }), System.Windows.Threading.DispatcherPriority.Background);
                 }
+
+                // Prompt 6: track-level edits unverify a verified album (no
+                // cell marker per design).
+                MaybeUnverifyAlbumEdit();
             }
         }
 
@@ -1707,6 +1841,17 @@ namespace DeadEditor
 
                 _hasUnsavedChanges = true;
                 StatusTextBlock.Text = $"MusicBrainz data applied (MBID: {applyResult.Mbid.Substring(0, 8)}\u2026). Save to commit.";
+
+                // Prompt 6: MusicBrainz Apply writes album-level fields directly
+                // to _albumInfo and uses _isUpdating to bypass the TextChanged
+                // handlers. Without these calls a verified album would silently
+                // retain its Verified flag, and the amber markers on the
+                // changed fields wouldn't appear until the user's next edit.
+                // (On a verified album, MaybeUnverifyAlbumEdit overwrites the
+                // "data applied" status with "Verification cleared by edit";
+                // the MBID itself remains visible in the sidebar.)
+                RecomputeAllMarkers();
+                MaybeUnverifyAlbumEdit();
             }
             else
             {
