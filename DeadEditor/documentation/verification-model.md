@@ -1,6 +1,8 @@
 # Verification Model (Stub — Future Design)
 
-**Status:** Placeholder. Not implemented. Captures a design principle that emerged during Commit 1.5 of the MBID/fingerprint work. Intended to anchor the curation-layer design conversation in a future session.
+**Status:** Partially formalized. The page-level verification model and its manifest storage shipped in the MVP wiring chain (commits `2415bfb` through `0d56b90`, 2026-05-18 through 2026-05-20). This stub retains the open architectural questions that the MVP did not resolve.
+
+**Authoritative reference:** [verification-and-manifest-wiring-design-memo.md](verification-and-manifest-wiring-design-memo.md) banks the resolved decisions. Read it for the page-level decision, the unverify-on-edit rule, the manifest-as-storage decision, and the diff-via-preview pattern for external-data interactions.
 
 **See also:** [audio-as-archive-design-memo.md](audio-as-archive-design-memo.md) § 2 (Trust hierarchy as workflow) and § 4 (Structure as verification stage) for the design framing this stub doc will eventually formalize.
 
@@ -33,22 +35,46 @@ Example for a concert/release record: a date is required, and must parse as a va
 
 These are not answered yet. Listing them so the future design conversation has a starting point.
 
-1. **Granularity.** Single record-level `Verified` flag, or per-field provenance/verification? (Initial lean: record-level for v1.)
-2. **State machine.** Are there intermediate states (`In Progress`, `Needs Review`)? (Initial lean: no — keep it binary for v1.)
-3. **Required-fields enforcement.** Where does the validation live? On the record? On a per-record-type schema?
-4. **Unlock UX.** Is unlocking destructive (clears `Verified`), or reversible (re-lock without re-confirming)? (Initial lean: unlocking clears `Verified`; user must re-confirm to re-verify.)
-5. **External data interaction.** When MB/AcoustID/gdshowsdb has new data for a verified record, does the app surface a "suggested change" affordance, or stay silent? (Initial lean: silent for v1; "suggested changes" is a v2 feature.)
-6. **Storage.** Where does the `Verified` flag live for each record type? (Concerts in `concerts/*.json`, releases in `release-details/*.json`, songs in `songs.json`, etc.)
-7. **Track-title overwrite case (MBID re-match).** Today the MBID-driven 🔎 path overwrites local track titles via `ApplyMusicBrainzData`. Once the verification model exists, this becomes "verified records don't get auto-overwritten." Until then, this is a known papercut flagged in the Commit 1.5 conversation.
+1. **Granularity.** ✅ Resolved. MVP shipped page-level verification (single boolean per album manifest). The initial lean toward record-level for v1 became the settled position; per-field provenance is not modeled. See wiring memo § 1.
+
+2. **State machine.** ❌ Still open. MVP shipped binary `verified: true | false`. Whether v2 should add intermediate states (e.g. `In Progress`, `Needs Review`) is undecided — the v1 binary is settled, the v2 question is not.
+
+3. **Required-fields enforcement.** 🟡 Partial. MVP listed three required fields — Date (parseable), Artist (non-empty), and Album Type (already enforced by ComboBox) — and validates them inline in the verify button handler (`EditMetadataView.VerifyButton_Click`). See wiring memo § 3. The architectural question — central validation framework? per-record-type schema? declarative vs. imperative? — was not addressed. Per-button inline validation is the MVP shape; whether that scales beyond the verify action is open.
+
+4. **Unlock UX.** ✅ Resolved. MVP shipped unverify-on-edit (wiring memo § 5; commit `0d56b90`): any edit to a manifest-tracked field drops the `verified` flag. There is no separate unlock step. Re-verifying requires an explicit click of the Verify button. Implicitly destructive — but the new state is just "unverified," not "data discarded," so the destruction is bounded. The Archivist Note is the one carve-out (editing it does not unverify).
+
+5. **External data interaction.** 🟡 Partial. Wiring memo § 6 settled "diff via preview" as the chosen approach for both Match Setlist and MusicBrainz Enrich paths. MVP shipped the **post-apply** side: amber left-edge markers on changed cells (commit `0d56b90`) plus unverify-on-Enrich-apply (same commit). MVP did **not** ship the **pre-apply** side: the diff-preview dialogs that gate changes before they are written. Those are deferred per memo § Deferred ("Enrich preview dialogs").
+
+6. **Storage.** ✅ Resolved. The album manifest (Layer B, per-album JSON in each album folder) is the storage home for `verified`. See wiring memo § 4 and § 7. The earlier stub's enumeration of candidate stores (`concerts/*.json`, `release-details/*.json`, `songs.json`) is superseded — the manifest replaces all of them for the album-verification case.
+
+7. **Track-title overwrite case (MBID re-match).** ✅ Resolved by Q5's resolution. Verified records' track titles cannot change silently in MVP — unverify fires on direct edits and on Enrich apply (both manual and MusicBrainz paths, commit `0d56b90`). The "verified records don't get auto-overwritten" guarantee is enforced for the apply-side. Full pre-apply preview dialogs (which would let the user see and reject specific track-title overwrites before they happen) are post-MVP per Q5.
 
 ## Relationship to Other Future Work
 
-- **Curation layer (per-release JSON files in `Data/release-details/`)** — verification status is a field on each release record
-- **Fingerprint persistence (Commit 2 of the MBID chain)** — fingerprints attached to a verified release are the highest-trust identity signal in the system; this shapes how Commit 2's persistence layer is designed
-- **GD-hardcoding cleanup** — unrelated; mentioned only because it's another deferred design item
+- **Curation layer** — now exists as the Layer B per-album manifest. See wiring memo § 4 (Two layers). The stub's original phrasing ("per-release JSON files in `Data/release-details/`") was superseded; the curation layer landed as `AlbumManifest` written to each album folder, not as a separate release-details tree.
+- **Fingerprint persistence** — shipped per [fingerprint-persistence-spec.md](fingerprint-persistence-spec.md). `AcoustIdFingerprint` is now persisted per-track in `ManifestTrack` (wiring memo § 5) and is the substrate for the deferred fingerprint-keyed lookup at folder load (memo § 8).
+- **GD-hardcoding cleanup** — unchanged. Still unrelated, still open.
 
-## Do Not
+## Do not (post-MVP)
 
-- Implement this without a focused design session
-- Add a `Verified` field to any record type ahead of that session
-- Reference this stub as if it were a spec
+- Treat this stub as a spec. The wiring memo and the implementation commits are authoritative; this stub documents the still-open architectural questions for future design conversations.
+- Add intermediate verification states without a focused design session resolving Q2.
+- Centralize required-fields enforcement without a focused design session resolving Q3.
+
+## See also
+
+- [verification-and-manifest-wiring-design-memo.md](verification-and-manifest-wiring-design-memo.md) — authoritative reference for the resolved decisions (page-level verification, manifest-as-storage, unverify-on-edit, diff-via-preview)
+- [curation-layer-design-memo.md](curation-layer-design-memo.md) — parent memo (Layer A setlist authority vs Layer B per-recording manifest; fingerprints as curation lookup key)
+- [audio-as-archive-design-memo.md](audio-as-archive-design-memo.md) — upstream framing (trust hierarchy as workflow; Structure as verification stage)
+- [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md) — manifest spec being extended; reconciliation deferred per wiring memo § Deferred
+- [fingerprint-persistence-spec.md](fingerprint-persistence-spec.md) — substrate for the curation lookup key
+
+Implementation chain (2026-05-18 → 2026-05-20):
+
+- `2415bfb` — docs: add verification and manifest wiring design memo
+- `4827b89` — feat: AlbumManifest schema v2 (verified, archivistNote, per-track fingerprint)
+- `9e09a2f` — feat: verification badge + Archivist Note UI in EditMetadataView sidebar
+- `50615e6` — feat: wire ManifestService — read on load, write on save, verify action
+- `5f4cd73` — feat: write manifest at end of LibraryImportService.ImportToLibrary
+- `22ca76e` — chore: promote stepper brushes to App.xaml, add badge + marker names
+- `0d56b90` — feat: unverify-on-edit + amber left-edge markers in EditMetadataView
