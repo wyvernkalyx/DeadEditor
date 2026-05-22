@@ -1,7 +1,7 @@
 # Title Structure Parser — Specification
 
 **Service:** `DeadEditor.Services.TitleStructureParser`
-**Status:** Implemented — standalone, not yet integrated (Y2K-2c/2d/2e cover integration).
+**Status:** Implemented and integrated. Y2K-2c (0b9fa77), Y2K-2d (5f65376), and Y2K-2e (d53c6f7) shipped on origin/main.
 **Last updated:** 2026-04-29 (commit Y2K-2b)
 
 ---
@@ -15,7 +15,7 @@ Track titles arriving from tags, MusicBrainz, taper sources, and file-name fallb
 
 `TitleStructureParser` replaces the position-based strip with a **content-based classifier**. Each `(...)` or `[...]` group is examined for metadata signals (date pattern, US/Canadian state code, "Live at"/"Filler:"/"Remaster"/etc.) and only stripped if at least one signal fires. Canonical parens have no signal and survive unchanged. Venue-first metadata parens are recognized by their date or state code regardless of where the venue text sits within the group.
 
-This commit (Y2K-2b) introduces the parser as a **standalone service**. No production code calls it yet. Y2K-2c will route `MetadataService.ParseTitleAndDate` through it; Y2K-2d will route `NormalizationService.Normalize` through it; Y2K-2e will retire dead code.
+Commit Y2K-2b introduced the parser as a **standalone service**. It is now wired into production: `MetadataService.ParseTitleAndDate` (Y2K-2c) and `NormalizationService.Normalize` (Y2K-2d) both delegate to it, and the legacy dead code was retired (Y2K-2e).
 
 ---
 
@@ -208,10 +208,10 @@ See `documentation/12-normalization-service.md` § Two-Digit Year Resolution for
 
 ## 10. Migration plan (high-level)
 
-Three subsequent commits will integrate the parser:
+Three subsequent commits integrated the parser:
 
-- **Y2K-2c** — `MetadataService.ParseTitleAndDate` is rewritten to delegate to `TitleStructureParser.Parse`. PATTERNS 1A through 3 retire. The existing `(songName, hasSegue, date)` tuple shape is preserved at the call site; the new `Venue` and `RawMetadataFragments` fields are not yet plumbed through.
-- **Y2K-2d** — `NormalizationService.Normalize`'s strip stack (S1–S13) is replaced by a call into the parser. Pre-lookup transforms (cosmetic, dash normalization) move into the parser path or stay in Normalize as appropriate.
-- **Y2K-2e** — Dead code removal (PATTERN 1A–3, S1–S13 helpers), call-site tidying, and any documentation cleanup.
+- **Y2K-2c** (`0b9fa77`) — `MetadataService.ParseTitleAndDate` was rewritten to delegate to `TitleStructureParser.Parse`. PATTERNS 1A through 3 retired. The existing `(songName, hasSegue, date)` tuple shape is preserved at the call site; the new `Venue` and `RawMetadataFragments` fields are not yet plumbed through.
+- **Y2K-2d** (`5f65376`) — `NormalizationService.Normalize`'s strip stack (S1–S13) was replaced by a call into the parser. Pre-lookup transforms (cosmetic, dash normalization) moved into the parser path or stayed in Normalize as appropriate.
+- **Y2K-2e** (`d53c6f7`) — Dead code removed (PATTERN 1A–3, S1–S13 helpers), call-site tidying, and documentation cleanup.
 
 Each commit is independently testable. The parser's standalone status (this commit) means we can verify its correctness with the test suite alone before any caller changes.

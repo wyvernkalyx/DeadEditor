@@ -1,5 +1,7 @@
 # Concerts View: Owned/Missing Indicators + Click-to-Import
 
+**Status:** Shipped in 451a0d7 (owned/missing row coloring, All/Owned/Missing filter, right-click "Import recording for this date…", ownership refresh at startup and after every import).
+
 ## 1. Goals
 
 - **Visual indication** of which concerts in the 2,292-show list the user owns media for
@@ -22,7 +24,7 @@ A concert date is "owned" if the user's library contains **any** recording (audi
 
 ### Implementation
 
-- **Source of truth:** `_libraryDates` HashSet in [ConcertDatabaseView.xaml.cs:18](Views/ConcertDatabaseView.xaml.cs#L18) — already declared as `HashSet<string>`, already has a `SetLibraryDates()` method (line 47), but **never called from anywhere** currently.
+- **Source of truth:** `_libraryDates` HashSet in [ConcertDatabaseView.xaml.cs](Views/ConcertDatabaseView.xaml.cs) — populated via `SetLibraryShows()`, which `ShellWindow.xaml.cs` invokes at startup (after library load) and after every import. `ConcertDatabaseView` consumes the companion `_libraryShowsByDate` for row coloring and the ownership filter.
 - **Population:** ShellWindow must call `_concertsView.SetLibraryShows(showsByDate)` after library loads, passing dates and grouped shows extracted from `_shows` in LibraryGridView (same pattern used by `BuildMissingShowRows()` at [LibraryGridView.xaml.cs:540-554](Views/LibraryGridView.xaml.cs#L540-L554)).
 - **Matching:** Exact string match on normalized `yyyy-MM-dd` format. No fuzzy/near-miss date matching.
 - **Refresh timing:** Refresh `_libraryDates` at startup (after library load) AND after every successful import completion.
@@ -120,6 +122,8 @@ public ConcertDetailView(ShellWindow shell, ConcertReference concert, List<Libra
 8. **Import completes** → ShellWindow fires `ImportCompleted` → refreshes library → re-calls `SetLibraryShows()` to update ownership indicators
 
 ### File Changes
+
+**All changes below shipped in `451a0d7`.** The "Status" column reflects the pre-implementation plan.
 
 | File | Status | Change |
 |------|--------|--------|

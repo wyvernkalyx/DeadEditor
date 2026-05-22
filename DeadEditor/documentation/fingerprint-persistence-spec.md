@@ -1,5 +1,7 @@
 # Fingerprint Persistence — Commit 2a Spec
 
+**Status:** Shipped. FingerprintService.WriteFingerprintToTrackFile is PathGuard-guarded and covered by tests; per-track ACOUSTID_FINGERPRINT read/write, import pre-compute with onTrackComplete callback, and copy-full-fingerprint UI all in production.
+
 ## 1. Goal
 
 Make the Chromaprint fingerprint a first-class, persistent property of every imported track. Today the fingerprint is computed inside `MusicBrainzService.LookupAllReleasesAsync` (4 tracks per album, transient, discarded after the AcoustID lookup). After this commit, every track imported via "Import to Library" carries `ACOUSTID_FINGERPRINT` in its tags, and existing fingerprint tags are read back into memory at folder load.

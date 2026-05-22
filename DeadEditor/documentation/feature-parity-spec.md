@@ -1,5 +1,7 @@
 # Edit Metadata Feature Parity Spec (Phase 1 + Phase 2)
 
+**Status:** Shipped, except §3.7 amber/yellow left-edge border + tooltip on unmatched track rows (the MarkerAmberAccent brush exists but is wired only to edited-field markers, not to an unmatched-row trigger). All other features in this spec are in production.
+
 ## 1. Goals
 
 - Edit Metadata becomes a superset of Import's capabilities for already-imported albums
