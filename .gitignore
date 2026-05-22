@@ -94,3 +94,6 @@ DeadEditor/bin/Debug/net8.0-windows/DeadEditor/settings.json
 # Claude Code local IDE state
 .claude/
 **/.claude/
+
+# Local data-processing artifacts (gdshowsdb merge / songs cleanup output)
+output/
