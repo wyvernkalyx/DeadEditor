@@ -1,5 +1,7 @@
 # MBID Foundation Phase 1: Read Path + Migration Tool
 
+**Status:** Shipped. Phase 1 (read path + migration tool) complete. Scope expanded during implementation to include the import-time MBID write path (originally a Phase 2 non-goal); see §2 note and §12. Commits: 419c012 (read path), MbidMigrationView/Service shipped, 88a557c and c577943 (import-time write path).
+
 ## 1. Goals
 
 - Library scanner reads MBID from audio file tags and exposes it on `LibraryShow`
@@ -9,12 +11,13 @@
 
 ## 2. Non-Goals (Phase 2+ work)
 
-- Import-time write path (automatic MBID tagging during new imports)
 - Releases owned/missing UI (depends on Phase 1 landing first)
 - MusicBrainz release metadata beyond the ID itself (title, date, labels, etc.)
 - Track-level MBIDs (recording MBID, track MBID)
 - Enriching `releases.json` with MBIDs (separate future effort)
 - MBID edit field in Edit Metadata view
+
+Note: An earlier draft of this section listed the import-time write path as a non-goal. During implementation, the write path proved natural to include alongside the read path and shipped as part of this phase (commits 88a557c / c577943). §12 records the actual completed work.
 
 ## 3. Fixed Design Decisions
 
@@ -27,7 +30,7 @@
 | 5 | Multi-disc | Write MBID to every track in every disc folder for the album. Same MBID across all tracks. |
 | 6 | Already-tagged albums | Read path picks up existing MBIDs unchanged. Migration tool detects and skips already-tagged albums. Final summary reports "X need migration, Y already tagged, Z failed." |
 | 7 | Rate limits | 350ms delay between AcoustID calls (conservative margin under 3/sec limit). 1100ms delay between MusicBrainz API calls (conservative margin under 1/sec limit). |
-| 8 | Phase scope | Phase 1 = read path + migration tool. Import-time write path is **out of scope** (Phase 2). |
+| 8 | Phase scope | Phase 1 = read path + migration tool, plus import-time write path. The write path was originally scoped to Phase 2 but was folded into Phase 1 during implementation; see §2 note and §12. |
 | 9 | Multi-band | Migration tool uses `LibrarySettings.PrimaryArtistName` ([LibrarySettings.cs:10](Models/LibrarySettings.cs#L10)) for MB artist filtering. Do not hardcode "Grateful Dead". |
 | 10 | Migration resumability | State file persisted atomically (temp + rename pattern). Location: `%APPDATA%/DeadEditor/mbid-migration-state.json` (per existing user-data conventions — same directory as `settings.json`). |
 | 11 | Dry-run | Toggle at start of run. When enabled, no tag writes happen; UI shows what would have been written. |
