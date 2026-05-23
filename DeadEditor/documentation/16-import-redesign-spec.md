@@ -1,5 +1,7 @@
 # 16 — Import Screen Redesign Spec
 
+**Status:** Mostly shipped. Core redesign is live in Views/ImportView.xaml (the file replaced the original MainWindow plan). Date auto-append rule revised in this commit; code consolidation onto the new rule is the next commit. Remaining outstanding: editable Folder Name Preview + reset (↻) button + FolderNameOverride/CustomFolderName — not yet built.
+
 ## Overview
 
 Complete redesign of MainWindow (the import/metadata editor screen) to replace the current side-panel layout with a streamlined, dBpowerAmp-inspired interface. The goal is a single-screen workflow where what you see is what gets written to files.
@@ -11,7 +13,7 @@ Complete redesign of MainWindow (the import/metadata editor screen) to replace t
 - MusicBrainz is a populate action, not a separate workflow
 - Inline editing everywhere — double-click to edit titles and dates
 - Date inheritance — tracks inherit album date unless overridden
-- Date auto-appends to title when track date differs from album date
+- Date auto-appends to title — every track carries its most-specific available date (TrackDate → AlbumDate → Year)
 
 ---
 
@@ -132,23 +134,34 @@ The window is organized top-to-bottom:
 
 ### Date-Title Auto-Append Rule
 
-When the **effective track date** (override or inherited) differs from the **album date**, the date is automatically appended to the title in parentheses:
+Every track title carries the most-specific available date as a suffix. The suffix is absent only when no date information of any kind is available.
 
-```
-Song Name (yyyy-MM-dd)
-```
+The effective date is selected by the following preference order:
 
-When the effective track date equals the album date (or both are empty), no date is appended:
+1. Track-specific `TrackDate`, if set and non-empty
+2. Album `AlbumDate`, if set and non-empty
+3. Album `Year`, if set and non-empty (typically studio albums where no `yyyy-MM-dd` exists)
+4. None — suffix is omitted
 
-```
-Song Name
-```
+Format: `Song Name (yyyy-MM-dd)` or `Song Name (yyyy)` for the year fallback. Segue marker, when present, comes before the date: `Song Name > (yyyy-MM-dd)`.
 
-**Examples:**
-- Album date: empty, Track date: "1971-07-02" → Title: `Good Lovin' (1971-07-02)`
-- Album date: "1971-07-02", Track date: empty → Title: `Good Lovin'` (inherits, same as album)
-- Album date: "1971-04-28", Track date: "1971-07-02" → Title: `Good Lovin' (1971-07-02)` (different, appended)
-- Album date: "1971-07-02", Track date: "1971-07-02" → Title: `Good Lovin'` (same, not appended)
+#### Examples
+
+| Album date | Track date | Year | Segue | Title |
+|---|---|---|---|---|
+| empty | `1971-07-02` | — | no | `Good Lovin' (1971-07-02)` |
+| `1971-07-02` | empty | — | no | `Good Lovin' (1971-07-02)` |
+| `1971-04-28` | `1971-07-02` | — | no | `Good Lovin' (1971-07-02)` |
+| `1971-07-02` | `1971-07-02` | — | no | `Good Lovin' (1971-07-02)` |
+| `1971-07-02` | empty | — | yes | `Good Lovin' > (1971-07-02)` |
+| empty | empty | `1973` | no | `Eyes of the World (1973)` |
+| empty | empty | empty | no | `Eyes of the World` |
+
+#### Rationale
+
+Self-describing titles travel with the file. A track exported to a car stereo, a phone, or a playlist app shows when it was recorded regardless of whether the listening device displays the album context. The minor visual redundancy in the import grid (where the album date is already visible) is acceptable in exchange for tag completeness on the device.
+
+This rule supersedes an earlier draft that suppressed the suffix when the effective track date equaled the album date. The suppression rule prioritized grid cleanliness over tag completeness; the trade is now in the opposite direction.
 
 ### Row Selection
 
