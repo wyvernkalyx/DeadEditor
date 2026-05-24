@@ -285,6 +285,69 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
+        /// Releases the NAudio file handle around an action when the currently-loaded
+        /// file would otherwise block a writer. Captures position and play/paused state;
+        /// restores the previous player state after the action completes (or throws).
+        /// No-ops when the loaded file is not among the supplied paths.
+        /// </summary>
+        /// <param name="paths">Files the action intends to write. If the currently
+        /// loaded file is among them, the player is stopped before the action runs and
+        /// reloaded afterward; otherwise playback is left untouched.</param>
+        /// <param name="action">The write operation needing exclusive file access.</param>
+        public void WithFileReleased(System.Collections.Generic.IEnumerable<string> paths, Action action)
+        {
+            // Windows paths — case-insensitive. Materialize the (possibly one-shot)
+            // enumerable so we can test membership.
+            var pathSet = new System.Collections.Generic.HashSet<string>(
+                paths ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
+
+            // Nothing loaded, or the loaded file isn't a write target: run the action
+            // untouched so unrelated saves never interrupt playback.
+            if (_currentFilePath == null || !pathSet.Contains(_currentFilePath))
+            {
+                action();
+                return;
+            }
+
+            // The loaded file is about to be written — capture state (position must be
+            // read before Stop() disposes the reader), then release the handle.
+            var capturedTrack = _currentTrack;
+            var capturedPosition = CurrentPosition;
+            var capturedState = _playbackState;
+
+            Stop();  // disposes AudioFileReader/WaveOutEvent and nulls _currentFilePath
+
+            try
+            {
+                action();
+            }
+            finally
+            {
+                // Restore the player even if the action threw, so a failed write does
+                // not leave playback dead. (capturedTrack/Stopped are defensive: when
+                // _currentFilePath was non-null the state is Playing or Paused.)
+                if (capturedTrack != null)
+                {
+                    if (capturedState == PlaybackState.Playing)
+                    {
+                        Play(capturedTrack);
+                        Seek(capturedPosition);
+                    }
+                    else if (capturedState == PlaybackState.Paused)
+                    {
+                        // No load-without-play primitive exists, so reload via Play()
+                        // then re-pause at the captured position. The reader starts
+                        // briefly before Pause(), producing a short audible blip —
+                        // accepted trade-off until a true paused-load is added.
+                        Play(capturedTrack);
+                        Seek(capturedPosition);
+                        Pause();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Loads a new playlist (replaces current playlist).
         /// </summary>
         public void LoadPlaylist(System.Collections.Generic.IEnumerable<TrackInfo> tracks)
