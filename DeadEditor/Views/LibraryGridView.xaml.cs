@@ -18,6 +18,7 @@ namespace DeadEditor
     {
         private readonly ShellWindow _shell;
         private readonly LibrarySettings _settings;
+        private readonly ManifestService _manifestService;
         private List<LibraryShow> _shows = new();
         private List<LibraryShow> _filteredShows = new();
 
@@ -66,6 +67,7 @@ namespace DeadEditor
             InitializeComponent();
             _shell = shell;
             _settings = LibrarySettings.Load();
+            _manifestService = new ManifestService();
         }
 
         private async void LibraryGridView_Loaded(object sender, RoutedEventArgs e)
@@ -111,6 +113,20 @@ namespace DeadEditor
                     // (e.g., box sets split across multiple folders)
                     MergeOfficialReleasesByAlbumName(result, 0);
                     Debug.WriteLine($"[STARTUP] After merge: {sw.ElapsedMilliseconds}ms ({result.Count} shows)");
+
+                    // Eagerly read each finalized row's manifest(s) to compute verification
+                    // state. Runs after the merge so merged rows have their final FolderPaths.
+                    // Timing logged to confirm eager loading is acceptable.
+                    var verifySw = Stopwatch.StartNew();
+                    int verifyRowCount = 0;
+                    foreach (var show in result)
+                    {
+                        PopulateVerificationState(show);
+                        verifyRowCount++;
+                    }
+                    verifySw.Stop();
+                    Debug.WriteLine(
+                        $"[LibraryGridView] Populated verification state for {verifyRowCount} rows in {verifySw.ElapsedMilliseconds} ms");
                 }
 
                 // Sort by date descending (newest first)
@@ -1042,6 +1058,44 @@ namespace DeadEditor
                 if (primary._containsDatesLoaded && primary._containsDates != null)
                     primary._containsDates.Sort();
             }
+        }
+
+        // ===== VERIFICATION STATE =====
+
+        /// <summary>
+        /// Populates <see cref="LibraryShow.VerificationState"/> and
+        /// <see cref="LibraryShow.VerifiedFolderCount"/> by reading each underlying
+        /// folder's manifest. Defaults to <see cref="VerificationState.Unverified"/>
+        /// on read failures so the grid can always populate.
+        /// </summary>
+        private void PopulateVerificationState(LibraryShow show)
+        {
+            if (show.FolderPaths == null || show.FolderPaths.Count == 0)
+                return; // leave defaults: Unverified / 0
+
+            int verifiedCount = 0;
+            foreach (var folderPath in show.FolderPaths)
+            {
+                try
+                {
+                    var manifest = _manifestService.ReadManifest(folderPath);
+                    if (manifest?.Verified == true)
+                        verifiedCount++;
+                }
+                catch (Exception ex)
+                {
+                    // Defensive: ReadManifest swallows its own errors, but if one
+                    // escapes (filesystem error, unhandled malformed JSON) treat the
+                    // folder as not-verified so the grid still populates.
+                    Debug.WriteLine($"[LibraryGridView] Manifest read failed for {folderPath}: {ex.Message}");
+                }
+            }
+
+            show.VerifiedFolderCount = verifiedCount;
+            show.VerificationState =
+                verifiedCount == 0 ? VerificationState.Unverified
+                : verifiedCount == show.FolderPaths.Count ? VerificationState.Verified
+                : VerificationState.Partial;
         }
 
         // ===== INLINE EDITING (By Date mode) =====
