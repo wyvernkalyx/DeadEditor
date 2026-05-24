@@ -42,7 +42,7 @@ public class VerificationStateToBrushConverter : IValueConverter
         {
             return state switch
             {
-                VerificationState.Verified => System.Windows.Application.Current.FindResource("BadgeVerifiedBg"),
+                VerificationState.Verified => System.Windows.Application.Current.FindResource("BadgeVerifiedGlyph"),
                 VerificationState.Partial => System.Windows.Application.Current.FindResource("MarkerAmberAccent"),
                 _ => System.Windows.Media.Brushes.Transparent
             };

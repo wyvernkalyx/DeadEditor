@@ -20,6 +20,10 @@
         <SolidColorBrush x:Key="BadgeVerifiedFg"      Color="#FFFFFF"/>
         <SolidColorBrush x:Key="BadgeUnverifiedBg"    Color="#3C3C3C"/>
         <SolidColorBrush x:Key="BadgeUnverifiedFg"    Color="#888888"/>
+        <!-- Brighter green for the verified glyph used as a FOREGROUND on dark grid rows
+             (Library verification column). Distinct from BadgeVerifiedBg, which is a badge
+             background in EditMetadataView and reads too dark when used as a foreground. -->
+        <SolidColorBrush x:Key="BadgeVerifiedGlyph"   Color="#4EAA3F"/>
 
         <!-- Edit markers (reserved for prompt 6's amber left-edge marker on changed cells/inputs) -->
         <SolidColorBrush x:Key="MarkerAmberAccent"    Color="#F0AD4E"/>

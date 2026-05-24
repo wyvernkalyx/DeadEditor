@@ -227,20 +227,31 @@ namespace DeadEditor
             // Bind the whole row (LibraryShow) so the tooltip can use VerifiedFolderCount/FolderPaths.
             factory.SetBinding(System.Windows.Controls.TextBlock.ToolTipProperty,
                 new WpfBinding { Converter = new LibraryShowToVerificationTooltipConverter() });
-            factory.SetValue(System.Windows.Controls.TextBlock.FontSizeProperty, 14.0);
+            factory.SetValue(System.Windows.Controls.TextBlock.FontSizeProperty, 18.0);
             factory.SetValue(System.Windows.Controls.TextBlock.FontWeightProperty, System.Windows.FontWeights.Bold);
+            factory.SetValue(System.Windows.Controls.TextBlock.TextAlignmentProperty, System.Windows.TextAlignment.Center);
             factory.SetValue(System.Windows.FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
             factory.SetValue(System.Windows.FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
 
             var template = new DataTemplate { VisualTree = factory };
 
+            // The grid's shared DataGridCell template applies 12px horizontal padding and
+            // doesn't honor content alignment, pulling the glyph off-center. A column-specific
+            // CellStyle with zero padding + centered content alignment overrides that here only.
+            var cellStyle = new Style(typeof(System.Windows.Controls.DataGridCell));
+            cellStyle.Setters.Add(new Setter(System.Windows.Controls.Control.HorizontalContentAlignmentProperty, System.Windows.HorizontalAlignment.Center));
+            cellStyle.Setters.Add(new Setter(System.Windows.Controls.Control.VerticalContentAlignmentProperty, System.Windows.VerticalAlignment.Center));
+            cellStyle.Setters.Add(new Setter(System.Windows.Controls.Control.PaddingProperty, new Thickness(0)));
+            cellStyle.Setters.Add(new Setter(System.Windows.Controls.Control.BorderThicknessProperty, new Thickness(0)));
+
             return new DataGridTemplateColumn
             {
                 Header = "",
                 CellTemplate = template,
-                Width = new DataGridLength(28),
-                MinWidth = 28,
-                MaxWidth = 28,
+                CellStyle = cellStyle,
+                Width = new DataGridLength(36),
+                MinWidth = 36,
+                MaxWidth = 36,
                 IsReadOnly = true
             };
         }
