@@ -25,6 +25,33 @@ The app's existence-test is "faster and more accurate than a spreadsheet for mai
 
 Without an explicit verification model, the app cannot tell the difference between "this data is correct because the user confirmed it" and "this data is correct because MusicBrainz said so the last time we asked."
 
+## Library Grid Surface (shipped 2026-05-24)
+
+The first user-facing surface for verification state outside the Edit Metadata view. A narrow leading icon column in the Library grid shows each row's verification at a glance.
+
+**Data model (shipped, unchanged).** Verification is a single boolean `Verified` on `AlbumManifest` — page-level and binary per album folder. No per-field, no per-track verification. (Resolved Q1 / Q6 below.)
+
+**Row-level summarization for the grid.** A Library row (`LibraryShow`) can represent one folder or — for box sets / multi-folder official releases collapsed by `MergeOfficialReleasesByAlbumName` — several. The grid summarizes the underlying manifest booleans into a tri-state `VerificationState` (`Unverified` / `Partial` / `Verified`):
+
+- Single-folder rows are binary: `Verified` iff the manifest's `Verified` is true, else `Unverified`.
+- Merged multi-folder rows are `Verified` when all underlying folders are verified, `Unverified` when none are, and `Partial` when some but not all are.
+
+The summarization runs at grid-population time in `LibraryGridView.PopulateVerificationState` (eager manifest reads, parallelized). `LibraryShow.VerifiedFolderCount` carries the underlying verified count so tooltips can say "N of M folders verified" without re-reading manifests.
+
+**Visual vocabulary.** Leading column, glyph-only, reusing the existing App.xaml brushes:
+
+- `Verified` → ✓ in the verified-badge green (`BadgeVerifiedBg`, `#0E7A0D`)
+- `Partial` → ◐ in amber (`MarkerAmberAccent`, `#F0AD4E`)
+- `Unverified` → empty cell (absence is the indicator)
+
+The column is present only in the album (Library) view; it is absent in "Shows I Don't Have" mode (no owned manifest) and By-Date mode (rows are `DateRow`, not `LibraryShow`), where verification is not meaningful.
+
+**Still open.**
+
+- The Album Detail view badge is a separate follow-up (not shipped here).
+- A Library filter by verification state (All / Verified / Partial / Unverified) is the next step.
+- The tri-state summarization rule (none/some/all → Unverified/Partial/Verified) is settled for the grid; whether `Partial` should surface anywhere beyond a derived row summary is a v2 question, related to Q2's state-machine discussion.
+
 ## Required Fields (Concept)
 
 A record cannot be marked verified unless certain required fields are populated and valid. The exact set is per-record-type, but the principle is that **verified means something specific** rather than being a sticker the user can apply arbitrarily.

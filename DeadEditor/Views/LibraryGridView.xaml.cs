@@ -1,3 +1,4 @@
+using DeadEditor.Converters;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
@@ -178,6 +179,7 @@ namespace DeadEditor
         private void SetAlbumColumns()
         {
             ShowsDataGrid.Columns.Clear();
+            ShowsDataGrid.Columns.Add(MakeVerificationColumn());
             ShowsDataGrid.Columns.Add(MakeHeadyColumn());
             ShowsDataGrid.Columns.Add(MakeColumn("Date", "Date", 100));
             ShowsDataGrid.Columns.Add(MakeColumn("Album Name", "AlbumName", 150));
@@ -208,6 +210,39 @@ namespace DeadEditor
             ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 200));
             ShowsDataGrid.Columns.Add(MakeColumn("City, State", "CityState", 150));
             ShowsDataGrid.IsReadOnly = true;
+        }
+
+        /// <summary>
+        /// Creates a narrow leading column that surfaces each row's verification state as a
+        /// glyph: ✓ (green) for Verified, ◐ (amber) for Partial, empty for Unverified.
+        /// Tooltip describes the state and includes folder counts for merged rows.
+        /// </summary>
+        private static DataGridTemplateColumn MakeVerificationColumn()
+        {
+            var factory = new System.Windows.FrameworkElementFactory(typeof(System.Windows.Controls.TextBlock));
+            factory.SetBinding(System.Windows.Controls.TextBlock.TextProperty,
+                new WpfBinding("VerificationState") { Converter = new VerificationStateToGlyphConverter() });
+            factory.SetBinding(System.Windows.Controls.TextBlock.ForegroundProperty,
+                new WpfBinding("VerificationState") { Converter = new VerificationStateToBrushConverter() });
+            // Bind the whole row (LibraryShow) so the tooltip can use VerifiedFolderCount/FolderPaths.
+            factory.SetBinding(System.Windows.Controls.TextBlock.ToolTipProperty,
+                new WpfBinding { Converter = new LibraryShowToVerificationTooltipConverter() });
+            factory.SetValue(System.Windows.Controls.TextBlock.FontSizeProperty, 14.0);
+            factory.SetValue(System.Windows.Controls.TextBlock.FontWeightProperty, System.Windows.FontWeights.Bold);
+            factory.SetValue(System.Windows.FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
+            factory.SetValue(System.Windows.FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
+
+            var template = new DataTemplate { VisualTree = factory };
+
+            return new DataGridTemplateColumn
+            {
+                Header = "",
+                CellTemplate = template,
+                Width = new DataGridLength(28),
+                MinWidth = 28,
+                MaxWidth = 28,
+                IsReadOnly = true
+            };
         }
 
         /// <summary>
