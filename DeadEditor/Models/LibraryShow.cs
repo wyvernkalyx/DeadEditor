@@ -64,6 +64,22 @@ namespace DeadEditor.Models
         public int TrackCount { get; set; }
         public List<string> FolderPaths { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Aggregate verification state computed from the manifest(s) of this row's
+        /// folder path(s). Populated during grid population in <c>LibraryGridView</c>.
+        /// Default <see cref="VerificationState.Unverified"/> until a manifest read completes.
+        /// </summary>
+        public VerificationState VerificationState { get; set; } = VerificationState.Unverified;
+
+        /// <summary>
+        /// Number of underlying folder manifests with <c>Verified == true</c>. Equal to
+        /// <see cref="FolderPaths"/>.Count when <see cref="VerificationState"/> is
+        /// <see cref="VerificationState.Verified"/>. Zero when <see cref="VerificationState.Unverified"/>.
+        /// Between 1 and <see cref="FolderPaths"/>.Count - 1 when <see cref="VerificationState.Partial"/>.
+        /// Useful for tooltips showing "3 of 12 folders verified" without recomputing.
+        /// </summary>
+        public int VerifiedFolderCount { get; set; }
+
         // Track titles — lazy-loaded on first access (reads TagLib tags from audio files).
         // NOT loaded at startup to avoid the 50+ second penalty of opening every audio file.
         private List<string>? _trackTitles;
