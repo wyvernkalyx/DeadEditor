@@ -846,10 +846,20 @@ namespace DeadEditor
                 var saveTrackList = _tracks.Select(t => t.Track).ToList();
                 await Task.Run(() =>
                 {
-                    _metadataService.WriteMetadata(_albumInfo, saveTrackList);
+                    // Release the NAudio handle if the loaded track is among the files being
+                    // written, so TagLib can take exclusive write access. One release window
+                    // covers BOTH passes (tag write + MBID write): the MBID pass re-opens the
+                    // same files and would silently fail if the player reloaded between passes.
+                    // No-ops when none of the edited files is currently loaded.
+                    App.PlaybackService.WithFileReleased(
+                        saveTrackList.Select(t => t.FilePath),
+                        () =>
+                        {
+                            _metadataService.WriteMetadata(_albumInfo, saveTrackList);
 
-                    // Write MBID to all tracks if set
-                    WriteMbidToTracks();
+                            // Write MBID to all tracks if set
+                            WriteMbidToTracks();
+                        });
 
                     // Handle cover.jpg file alongside FLAC tag artwork
                     foreach (var folder in folders)
@@ -1366,7 +1376,14 @@ namespace DeadEditor
                 var result = await Task.Run(() => fingerprintService.PrecomputeFingerprintsAsync(
                     trackList,
                     progress,
-                    onTrackComplete: t => Task.Run(() => FingerprintService.WriteFingerprintToTrackFile(t))));
+                    // Release the NAudio handle around each per-track fingerprint write so the
+                    // loaded track doesn't block TagLib's exclusive write. Per-track (not one
+                    // batch-wide window): only the write needs the lock — fpcalc's read can
+                    // share the handle — and only the one loaded track ever matches, so every
+                    // other track's write no-ops.
+                    onTrackComplete: t => Task.Run(() => App.PlaybackService.WithFileReleased(
+                        new[] { t.FilePath },
+                        () => FingerprintService.WriteFingerprintToTrackFile(t)))));
 
                 var attempted = trackList.Count - result.SkippedExisting;
                 string finalStatus;
