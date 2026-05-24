@@ -118,15 +118,10 @@ namespace DeadEditor
                     // state. Runs after the merge so merged rows have their final FolderPaths.
                     // Timing logged to confirm eager loading is acceptable.
                     var verifySw = Stopwatch.StartNew();
-                    int verifyRowCount = 0;
-                    foreach (var show in result)
-                    {
-                        PopulateVerificationState(show);
-                        verifyRowCount++;
-                    }
+                    Parallel.ForEach(result, show => PopulateVerificationState(show));
                     verifySw.Stop();
                     Debug.WriteLine(
-                        $"[LibraryGridView] Populated verification state for {verifyRowCount} rows in {verifySw.ElapsedMilliseconds} ms");
+                        $"[LibraryGridView] Populated verification state for {result.Count} rows in {verifySw.ElapsedMilliseconds} ms (parallel)");
                 }
 
                 // Sort by date descending (newest first)
