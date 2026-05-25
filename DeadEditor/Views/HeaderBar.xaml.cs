@@ -114,6 +114,7 @@ namespace DeadEditor
             ImportHeader.Visibility = Visibility.Collapsed;
             EditMetadataHeader.Visibility = Visibility.Collapsed;
             ConcertsHeader.Visibility = Visibility.Collapsed;
+            BoxSetsHeader.Visibility = Visibility.Collapsed;
             ConcertDetailHeader.Visibility = Visibility.Collapsed;
             EditSetlistHeader.Visibility = Visibility.Collapsed;
             PlaceholderHeader.Visibility = Visibility.Collapsed;
@@ -180,6 +181,13 @@ namespace DeadEditor
             HideAllHeaders();
             ConcertsHeader.Visibility = Visibility.Visible;
             UpdateConcertsCount(concertsView.FilteredCount, concertsView.TotalCount);
+        }
+
+        public void ShowBoxSetsHeader()
+        {
+            HideAllHeaders();
+            BoxSetsHeader.Visibility = Visibility.Visible;
+            // Count is a "0 box sets" placeholder until the list view wires it in the next commit.
         }
 
         public void ShowConcertDetailHeader(ConcertDetailView detailView)

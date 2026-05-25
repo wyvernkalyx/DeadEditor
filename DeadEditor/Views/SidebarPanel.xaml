@@ -48,6 +48,7 @@
             <RowDefinition Height="Auto"/>  <!-- Songs icon -->
             <RowDefinition Height="Auto"/>  <!-- Releases icon -->
             <RowDefinition Height="Auto"/>  <!-- Concerts icon -->
+            <RowDefinition Height="Auto"/>  <!-- Box Sets icon -->
             <RowDefinition Height="*"/>     <!-- Spacer -->
             <RowDefinition Height="Auto"/>  <!-- Settings icon -->
         </Grid.RowDefinitions>
@@ -97,8 +98,17 @@
             <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
         </Button>
 
+        <!-- Box Sets Icon (stack / grouped items) -->
+        <Button Grid.Row="5"
+                x:Name="BoxSetsButton"
+                Click="BoxSetsButton_Click"
+                Style="{StaticResource SidebarButtonStyle}"
+                ToolTip="Box Sets">
+            <TextBlock Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="24"/>
+        </Button>
+
         <!-- Settings Icon -->
-        <Button Grid.Row="6"
+        <Button Grid.Row="7"
                 x:Name="SettingsButton"
                 Click="SettingsButton_Click"
                 Style="{StaticResource SidebarButtonStyle}"

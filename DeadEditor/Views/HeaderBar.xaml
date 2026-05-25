@@ -663,6 +663,24 @@
             </StackPanel>
         </Grid>
 
+        <!-- Box Sets Header: "Box Sets   N box sets" (actions arrive in next commit) -->
+        <Grid x:Name="BoxSetsHeader" Height="50" Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <TextBlock Text="Box Sets"
+                           Foreground="#E0E0E0"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock x:Name="BoxSetsCountText"
+                           Text="0 box sets"
+                           Foreground="#888888"
+                           FontSize="16"
+                           VerticalAlignment="Center"
+                           Margin="16,0,0,0"/>
+            </StackPanel>
+        </Grid>
+
         <!-- Concert Detail Header: "[← Concerts]  {date}  [Edit Setlist]  [Delete]" -->
         <Grid x:Name="ConcertDetailHeader" Height="50" Visibility="Collapsed">
             <Grid.ColumnDefinitions>

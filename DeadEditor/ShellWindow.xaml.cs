@@ -28,6 +28,7 @@ namespace DeadEditor
         private SongsView? _songsView;
         private ReleasesView? _releasesView;
         private ConcertDatabaseView? _concertsView;
+        private BoxSetsView? _boxSetsView;
         private System.Windows.Controls.UserControl? _settingsView;
 
         // Public property for child views to access navigation
@@ -243,6 +244,10 @@ namespace DeadEditor
             {
                 HeaderBar.ShowConcertsHeader(concertsView);
             }
+            else if (view is BoxSetsView)
+            {
+                HeaderBar.ShowBoxSetsHeader();
+            }
             else if (view is MbidMigrationView)
             {
                 HeaderBar.ShowSettingsHeader();
@@ -427,6 +432,9 @@ namespace DeadEditor
                 case "Concerts":
                     NavigateToConcerts();
                     break;
+                case "BoxSets":
+                    NavigateToBoxSets();
+                    break;
                 case "Settings":
                     NavigateToSettings();
                     break;
@@ -526,6 +534,18 @@ namespace DeadEditor
             RefreshConcertsLibraryDates();
 
             _navigationService.NavigateToRoot(_concertsView);
+        }
+
+        private void NavigateToBoxSets()
+        {
+            if (_boxSetsView == null)
+            {
+                _boxSetsView = new BoxSetsView();
+            }
+
+            // No data to load yet — the list view and BoxSetService.List() arrive
+            // in the next commit. This navigates to the placeholder.
+            _navigationService.NavigateToRoot(_boxSetsView);
         }
 
         private void HeaderBar_ConcertsSearchChanged(object? sender, string searchText)
