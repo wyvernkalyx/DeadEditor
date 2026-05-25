@@ -71,6 +71,17 @@ namespace DeadEditor
             }
         }
 
+        /// <summary>Gets the current verification filter selection (All / Verified / Partial / Unverified).</summary>
+        public string SelectedVerification
+        {
+            get
+            {
+                if (VerificationFilter?.SelectedItem is ComboBoxItem item)
+                    return item.Content?.ToString() ?? "All";
+                return "All";
+            }
+        }
+
         /// <summary>Focus the search box (for Ctrl+F shortcut).</summary>
         public void FocusSearch()
         {
@@ -305,6 +316,15 @@ namespace DeadEditor
             if (isMissingShows && YearFilter.SelectedIndex != 0)
                 YearFilter.SelectedIndex = 0;
 
+            // Show the verification filter only in Album mode (All / Official / Audience),
+            // not in "By Date" or "Shows I Don't Have" where verification isn't meaningful.
+            // Reset it to "All" when hidden so a stale selection isn't silently applied.
+            bool isAlbumMode = !isMissingShows && TypeFilter != "By Date";
+            VerificationLabel.Visibility = isAlbumMode ? Visibility.Visible : Visibility.Collapsed;
+            VerificationFilter.Visibility = isAlbumMode ? Visibility.Visible : Visibility.Collapsed;
+            if (!isAlbumMode && VerificationFilter.SelectedIndex != 0)
+                VerificationFilter.SelectedIndex = 0;
+
             RaiseFilterChanged();
 
             // Show/hide Edit Dates button based on mode
@@ -319,6 +339,13 @@ namespace DeadEditor
         private void YearFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (SearchBox == null || _isPopulatingYears) return;
+            RaiseFilterChanged();
+        }
+
+        private void VerificationFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Guard: this fires during InitializeComponent before other controls exist
+            if (SearchBox == null) return;
             RaiseFilterChanged();
         }
 
@@ -445,7 +472,7 @@ namespace DeadEditor
 
         private void RaiseFilterChanged()
         {
-            LibraryFilterChanged?.Invoke(this, new LibraryFilterEventArgs(SearchText, TypeFilter, SelectedYear));
+            LibraryFilterChanged?.Invoke(this, new LibraryFilterEventArgs(SearchText, TypeFilter, SelectedYear, SelectedVerification));
         }
 
         /// <summary>
@@ -480,12 +507,14 @@ namespace DeadEditor
         public string SearchText { get; }
         public string TypeFilter { get; }
         public string YearFilter { get; }
+        public string VerificationFilter { get; }
 
-        public LibraryFilterEventArgs(string searchText, string typeFilter, string yearFilter = "All Years")
+        public LibraryFilterEventArgs(string searchText, string typeFilter, string yearFilter = "All Years", string verificationFilter = "All")
         {
             SearchText = searchText;
             TypeFilter = typeFilter;
             YearFilter = yearFilter;
+            VerificationFilter = verificationFilter;
         }
     }
 }

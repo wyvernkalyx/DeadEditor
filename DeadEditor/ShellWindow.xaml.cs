@@ -257,7 +257,7 @@ namespace DeadEditor
         {
             if (_libraryView != null)
             {
-                _libraryView.ApplyFilter(e.SearchText, e.TypeFilter, e.YearFilter);
+                _libraryView.ApplyFilter(e.SearchText, e.TypeFilter, e.YearFilter, e.VerificationFilter);
                 HeaderBar.UpdateConcertCount(
                     _libraryView.FilteredCount, _libraryView.ConcertCount,
                     _libraryView.IsByDateMode, _libraryView.IsMissingShowsMode,

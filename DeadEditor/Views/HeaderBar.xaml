@@ -176,6 +176,24 @@
                     <ComboBoxItem Content="Shows I Don't Have"/>
                 </ComboBox>
 
+                <!-- Verification Filter (Album mode only) -->
+                <TextBlock x:Name="VerificationLabel"
+                           Text="Verified:"
+                           Foreground="#999999"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           Margin="16,0,6,0"/>
+                <ComboBox x:Name="VerificationFilter"
+                          Width="120"
+                          VerticalAlignment="Center"
+                          SelectionChanged="VerificationFilter_SelectionChanged"
+                          Style="{StaticResource DarkComboBoxStyle}">
+                    <ComboBoxItem Content="All" IsSelected="True"/>
+                    <ComboBoxItem Content="Verified"/>
+                    <ComboBoxItem Content="Partial"/>
+                    <ComboBoxItem Content="Unverified"/>
+                </ComboBox>
+
                 <!-- Year Filter (Shows I Don't Have mode only) -->
                 <TextBlock x:Name="YearLabel"
                            Text="Year:"

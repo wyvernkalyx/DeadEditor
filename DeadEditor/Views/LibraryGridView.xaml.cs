@@ -42,6 +42,7 @@ namespace DeadEditor
         private string _lastSearchText = "";
         private string _lastTypeFilter = "All";
         private string _lastYearFilter = "All Years";
+        private string _lastVerificationFilter = "All";
 
         public int ConcertCount => _shows.Count;
 
@@ -163,9 +164,9 @@ namespace DeadEditor
             LoadingIndicator.Visibility = Visibility.Collapsed;
 
             // Re-apply last filter if one was active (covers ReloadLibrary after import/settings)
-            if (_lastTypeFilter != "All" || !string.IsNullOrEmpty(_lastSearchText))
+            if (_lastTypeFilter != "All" || !string.IsNullOrEmpty(_lastSearchText) || _lastVerificationFilter != "All")
             {
-                ApplyFilter(_lastSearchText, _lastTypeFilter, _lastYearFilter);
+                ApplyFilter(_lastSearchText, _lastTypeFilter, _lastYearFilter, _lastVerificationFilter);
             }
 
             Debug.WriteLine($"[STARTUP] Grid populated, window visible: {sw.ElapsedMilliseconds}ms");
@@ -408,12 +409,13 @@ namespace DeadEditor
         /// Applies search text and type filter to the library grid.
         /// Called by ShellWindow when HeaderBar filter changes.
         /// </summary>
-        public void ApplyFilter(string searchText, string typeFilter, string yearFilter = "All Years")
+        public void ApplyFilter(string searchText, string typeFilter, string yearFilter = "All Years", string verificationFilter = "All")
         {
             // Remember filter state for re-apply after ReloadLibrary
             _lastSearchText = searchText;
             _lastTypeFilter = typeFilter;
             _lastYearFilter = yearFilter;
+            _lastVerificationFilter = verificationFilter;
 
             // Handle "Shows I Don't Have" mode
             if (typeFilter == "Shows I Don't Have")
@@ -496,6 +498,21 @@ namespace DeadEditor
             else if (typeFilter == "Audience Recordings")
             {
                 results = results.Where(s => s.Type == AlbumType.AudienceRecording);
+            }
+
+            // Verification filter (ANDs with the type and search filters). Only meaningful
+            // in album mode, where rows are LibraryShow with a populated VerificationState.
+            if (verificationFilter == "Verified")
+            {
+                results = results.Where(s => s.VerificationState == VerificationState.Verified);
+            }
+            else if (verificationFilter == "Partial")
+            {
+                results = results.Where(s => s.VerificationState == VerificationState.Partial);
+            }
+            else if (verificationFilter == "Unverified")
+            {
+                results = results.Where(s => s.VerificationState == VerificationState.Unverified);
             }
 
             if (!string.IsNullOrWhiteSpace(searchText))
