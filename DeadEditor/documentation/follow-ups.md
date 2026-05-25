@@ -23,3 +23,13 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Symptom:** After resetting the database via Settings, the Library view continues to show stale state until the app is closed and reopened.
 - **Workaround:** Close and reopen the app.
 - **Impact:** Confusing UX; users may assume the reset failed.
+
+### Autocomplete control duplicated; no song-name autocomplete
+- **What:** `AlbumNameSuggestions` (the TextBox + Popup + ListBox pattern) is duplicated between `EditMetadataView.xaml` and `ImportView.xaml`. Song names have no autocomplete at all — the setlist editor uses a type-then-Normalize pattern instead.
+- **Proposed fix:** Extract the album-name pattern into a reusable `AutocompleteTextBox` user control, add a song-name autocomplete variant scoped by `LibrarySettings.PrimaryArtistName`, and adopt it across `EditMetadataView`, `ImportView`, and the box-set wizard.
+- **Surfaced:** Phase A audit for box-set MVP.
+
+### Atomic-write temp-and-rename pattern duplicated across call sites
+- **What:** The temp-write-and-rename idiom is duplicated at 6+ call sites: `EditSetlistView.xaml.cs:270-284`, `MbidMigrationService.cs:405-408`, `NormalizationService.cs:414-418`, `ReleaseLookupService.cs:388-390`, `ShowLookupService.cs:292-294`, `SongsView.xaml.cs:391-393` (plus the box-set MVP's new copy).
+- **Proposed fix:** Extract a shared `Json.WriteAtomic(path, obj)` helper. `ManifestService.WriteManifest` notably uses a non-atomic `File.WriteAllText` and would benefit from the same helper.
+- **Surfaced:** Phase A audit for box-set MVP.
