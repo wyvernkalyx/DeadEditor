@@ -430,12 +430,129 @@
                 </StackPanel>
             </Grid>
 
-            <!-- ===== STEP 4 — Review (placeholder; real content in commit 4c) ===== -->
-            <TextBlock x:Name="Step4Content" Visibility="Collapsed"
-                       Text="Step 4 — Review (coming next commit). Clicking Save will write the definition with the step-1 fields and empty concerts/discs."
-                       Foreground="#888888" FontSize="16"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       TextWrapping="Wrap" MaxWidth="500" TextAlignment="Center"/>
+            <!-- ===== STEP 4 — Review ===== -->
+            <ScrollViewer x:Name="Step4Content" Visibility="Collapsed"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="0,4,0,16">
+
+                    <!-- Summary card -->
+                    <Border Background="#252526" BorderBrush="#3F3F46" BorderThickness="1"
+                            CornerRadius="4" Padding="16" Margin="0,0,0,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                       x:Name="SummaryNameText"
+                                       FontSize="20" FontWeight="SemiBold" Foreground="#E0E0E0"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Release Date · Label · Catalog"
+                                       Foreground="#888" FontSize="12" Margin="0,0,12,2"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="SummaryReleaseInfoText"
+                                       Foreground="#CCCCCC" FontSize="13"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Concerts"
+                                       Foreground="#888" FontSize="12" Margin="0,0,12,2"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="SummaryConcertsText"
+                                       Foreground="#CCCCCC" FontSize="13"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Discs · Tracks"
+                                       Foreground="#888" FontSize="12" Margin="0,0,12,2"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="SummaryDiscsText"
+                                       Foreground="#CCCCCC" FontSize="13"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Validation panel. BorderBrush + header text set imperatively by
+                         BuildValidation() based on overall severity. -->
+                    <Border x:Name="ValidationPanel"
+                            BorderBrush="#3F3F46" BorderThickness="1"
+                            CornerRadius="4" Padding="16" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock x:Name="ValidationHeaderText"
+                                       FontWeight="SemiBold" FontSize="14"
+                                       Foreground="#E0E0E0" Margin="0,0,0,8"/>
+                            <ItemsControl x:Name="ValidationItemsControl">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                            <TextBlock Text="●" Foreground="{Binding SeverityBrush}"
+                                                       FontSize="14" Margin="0,0,8,0"
+                                                       VerticalAlignment="Top"/>
+                                            <TextBlock Text="{Binding Message}"
+                                                       Foreground="#CCCCCC" FontSize="13"
+                                                       TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Color-coded track list. Outer ItemsControl renders per-disc;
+                         inner ItemsControl renders per-track. All read-only. -->
+                    <Border Background="#1E1E1E" BorderBrush="#3F3F46" BorderThickness="1"
+                            CornerRadius="4" Padding="0">
+                        <ItemsControl x:Name="ReviewDiscsItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,4">
+                                        <!-- Disc header -->
+                                        <Border Background="#2A2A2D" Padding="12,6">
+                                            <TextBlock Text="{Binding DiscHeaderText}"
+                                                       Foreground="#E0E0E0" FontWeight="SemiBold" FontSize="14"/>
+                                        </Border>
+                                        <!-- Track rows -->
+                                        <ItemsControl ItemsSource="{Binding TrackRows}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="12,4">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="20"/>
+                                                            <ColumnDefinition Width="60"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="180"/>
+                                                            <ColumnDefinition Width="160"/>
+                                                            <ColumnDefinition Width="40"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="●"
+                                                                   Foreground="{Binding StatusBrush}"
+                                                                   FontSize="14"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding TrackNumberDisplay}"
+                                                                   Foreground="#CCCCCC" FontSize="13"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding TitleDisplay}"
+                                                                   Foreground="#E0E0E0" FontSize="13"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Grid.Column="3" Text="{Binding ConcertLabelDisplay}"
+                                                                   Foreground="#CCCCCC" FontSize="12"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Grid.Column="4" Text="{Binding SongNameDisplay}"
+                                                                   Foreground="#CCCCCC" FontSize="13"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Grid.Column="5" Text="{Binding SegueDisplay}"
+                                                                   Foreground="#888" FontSize="14"
+                                                                   HorizontalAlignment="Center"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>
