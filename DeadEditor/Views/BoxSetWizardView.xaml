@@ -47,17 +47,21 @@
                           VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <StackPanel MaxWidth="600" HorizontalAlignment="Left">
                     <TextBlock Text="NAME *" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="NameTextBox" Style="{StaticResource FieldStyle}" Margin="0,0,0,16"/>
+                    <TextBox x:Name="NameTextBox" Style="{StaticResource FieldStyle}"
+                             Width="400" HorizontalAlignment="Left" Margin="0,0,0,16"/>
 
                     <TextBlock Text="RELEASE DATE *" Style="{StaticResource LabelStyle}"/>
                     <TextBox x:Name="ReleaseDateTextBox" Style="{StaticResource FieldStyle}"
+                             Width="160" HorizontalAlignment="Left"
                              Margin="0,0,0,16" ToolTip="yyyy-MM-dd"/>
 
                     <TextBlock Text="LABEL" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="LabelTextBox" Style="{StaticResource FieldStyle}" Margin="0,0,0,16"/>
+                    <TextBox x:Name="LabelTextBox" Style="{StaticResource FieldStyle}"
+                             Width="320" HorizontalAlignment="Left" Margin="0,0,0,16"/>
 
                     <TextBlock Text="CATALOG NUMBER" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="CatalogNumberTextBox" Style="{StaticResource FieldStyle}" Margin="0,0,0,16"/>
+                    <TextBox x:Name="CatalogNumberTextBox" Style="{StaticResource FieldStyle}"
+                             Width="200" HorizontalAlignment="Left" Margin="0,0,0,16"/>
 
                     <TextBlock Text="NOTES" Style="{StaticResource LabelStyle}"/>
                     <!-- FieldStyle hard-sets Height=34 which clips multi-line. Inline the
@@ -67,6 +71,7 @@
                              CaretBrush="#FFFFFF" Padding="8,6" FontSize="15"
                              AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80"
                              VerticalScrollBarVisibility="Auto"
+                             Width="500" HorizontalAlignment="Left"
                              Margin="0,0,0,16"/>
 
                     <TextBlock Text="DISC COUNT *" Style="{StaticResource LabelStyle}"/>
