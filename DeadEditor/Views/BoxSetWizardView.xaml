@@ -339,6 +339,21 @@
                           HorizontalGridLinesBrush="#3F3F46"
                           BorderBrush="#3F3F46" BorderThickness="1"
                           Margin="0,8,0,0">
+                    <DataGrid.Resources>
+                        <!-- Column header style cloned from ConcertDatabaseView.xaml:12-21
+                             (same colors and weight) but sized down for the wizard's denser
+                             editing surface (6 narrow columns vs ConcertDatabase's 4 wide). -->
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#2A2D3E"/>
+                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="13"/>
+                            <Setter Property="Padding" Value="8,8"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="#3E3E42"/>
+                            <Setter Property="MinHeight" Value="32"/>
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#"
                                             Binding="{Binding TrackNumber, UpdateSourceTrigger=LostFocus}"
@@ -394,12 +409,24 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!-- Footer: + Add Track -->
+                <!-- Empty-state overlay in the same Grid.Row as the DataGrid. Visibility
+                     toggled from UpdateTrackEmptyState() in code-behind. IsHitTestVisible=
+                     False lets clicks fall through to the (empty) grid below. -->
+                <TextBlock Grid.Row="1" x:Name="TrackEmptyState"
+                           Text="No tracks on this disc yet. Click '+ Add Track' below to start."
+                           Foreground="#888888" FontSize="14"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           Visibility="Collapsed"/>
+
+                <!-- Footer: + Add Track. Green primary palette (matches NewBoxSetButton /
+                     SaveSetlistButton) so it pops as the obvious next action when the
+                     grid is empty. -->
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
                     <Button x:Name="AddTrackButton" Content="+ Add Track"
                             Click="AddTrackButton_Click"
-                            Padding="10,6" Cursor="Hand"
-                            Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB"/>
+                            Padding="12,8" Cursor="Hand" FontWeight="SemiBold"
+                            Background="#0E7A0D" Foreground="#FFFFFF" BorderBrush="#13A10E"/>
                 </StackPanel>
             </Grid>
 
