@@ -33,12 +33,64 @@ namespace DeadEditor.Services
     /// </summary>
     public class BoxSetService
     {
-        /// <summary>The bundled box-sets directory inside the running app's base directory.
-        /// Maps to <c>{repo}/DeadEditor/Data/box-sets/</c> via the csproj's
-        /// <c>CopyToOutputDirectory</c> rule. Source of truth in dev mode; first-run seed
-        /// for distributed users.</summary>
-        public static string BundledBoxSetsPath { get; } = Path.Combine(
+        // Build-output bundled path: bin/<config>/<tfm>/Data/box-sets/. In distributed
+        // mode this is the first-run seed for AppData. In dev mode, it's the fallback
+        // when no repo root can be found by walking up.
+        private static readonly string _buildOutputBoxSetsPath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, "Data", "box-sets");
+
+        // Lazy so the repo-walk only fires once and only when BundledBoxSetsPath is first
+        // accessed. In dev mode the lookup walks the filesystem (cheap); in distributed
+        // mode it short-circuits to the build-output path.
+        private static readonly Lazy<string> _bundledBoxSetsPath = new(() =>
+        {
+            if (IsDevMode)
+            {
+                var repoSourcePath = TryResolveRepoSourceDataPath();
+                if (repoSourcePath != null) return repoSourcePath;
+            }
+            return _buildOutputBoxSetsPath;
+        });
+
+        /// <summary>
+        /// The bundled box-set definitions location. In distributed mode (the default),
+        /// this is the read-only directory next to the running exe used as the first-run
+        /// seed for AppData. In dev mode (<c>DEADEDITOR_DEV=1</c>), this resolves to the
+        /// repo-source <c>DeadEditor/Data/box-sets/</c> directory if running from a
+        /// checkout, so wizard writes land directly in the repo and are immediately visible
+        /// to <c>git status</c>. Falls back to the build-output path if no repo root can
+        /// be located.
+        /// </summary>
+        public static string BundledBoxSetsPath => _bundledBoxSetsPath.Value;
+
+        /// <summary>
+        /// In dev mode, resolves the repo-source <c>Data/box-sets/</c> directory by walking
+        /// up from the running exe's <see cref="AppDomain.CurrentDomain.BaseDirectory"/>
+        /// looking for a repository marker (a directory containing a <c>.sln</c> file).
+        /// Returns null if no such root can be found, in which case the caller should fall
+        /// back to the build-output path. Only called in dev mode; in distributed mode the
+        /// AppData path is used and this is irrelevant.
+        /// </summary>
+        private static string? TryResolveRepoSourceDataPath()
+        {
+            var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            while (dir != null)
+            {
+                if (dir.GetFiles("*.sln").Length > 0)
+                {
+                    var candidate = Path.Combine(dir.FullName, "DeadEditor", "Data", "box-sets");
+                    if (Directory.Exists(candidate))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[BoxSetService] Dev mode resolved to repo source: {candidate}");
+                        return candidate;
+                    }
+                    // sln found but the expected project layout isn't there — fail closed.
+                    return null;
+                }
+                dir = dir.Parent;
+            }
+            return null;
+        }
 
         /// <summary>The user-runtime box-sets directory. Populated from the bundle on first
         /// launch; persists user-created definitions across upgrades and reinstalls.
