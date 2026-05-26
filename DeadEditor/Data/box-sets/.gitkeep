@@ -1,0 +1,9 @@
+# Bundled box-set definitions ship from this directory.
+#
+# See BoxSetService.BundledBoxSetsPath. The csproj copies *.json from here to
+# bin/<config>/<tfm>/Data/box-sets/ on build; from there the distributed app
+# seeds %APPDATA%/DeadEditor/box-sets/ on first launch.
+#
+# This .gitkeep exists so the directory is checked in even when empty. Once
+# the first definition lands here, this file can be removed (or left; both
+# are fine).

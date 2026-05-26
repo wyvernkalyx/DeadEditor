@@ -13,18 +13,47 @@ namespace DeadEditor.Services
 {
     /// <summary>
     /// Reads, writes, lists, and deletes <see cref="BoxSetDefinition"/> curation files.
-    /// One JSON file per box set under %APPDATA%/DeadEditor/box-sets/, following the
-    /// live-write convention concerts use (the directory is created on first save, not
-    /// on read). JSON uses the camelCase conventions from <c>ManifestService</c>; writes
-    /// use the atomic temp-and-rename pattern from <c>EditSetlistView</c>.
+    ///
+    /// Two locations are involved (mirroring the concerts model — see
+    /// <c>ConcertLookupService</c>):
+    /// <list type="bullet">
+    ///   <item><c>Data/box-sets/</c> (project-relative) — the bundled location shipped
+    ///   with the app, copied to the build output via the csproj.</item>
+    ///   <item><c>%APPDATA%/DeadEditor/box-sets/</c> — the user-runtime location. On
+    ///   first launch, bundled files are copied here; all subsequent reads and writes
+    ///   target this location.</item>
+    /// </list>
+    /// When the <c>DEADEDITOR_DEV</c> environment variable is set to <c>"1"</c>, AppData
+    /// is bypassed entirely: reads and writes go straight to <c>Data/box-sets/</c>. This
+    /// lets the maintainer's wizard write definitions that are immediately ready to commit.
+    /// Distributed users never set this variable.
+    ///
+    /// JSON uses the camelCase conventions from <c>ManifestService</c>; writes use the
+    /// atomic temp-and-rename pattern from <c>EditSetlistView</c>.
     /// </summary>
     public class BoxSetService
     {
-        /// <summary>The AppData box-sets directory. User-created definitions live here so
-        /// they survive upgrades and reinstalls.</summary>
+        /// <summary>The bundled box-sets directory inside the running app's base directory.
+        /// Maps to <c>{repo}/DeadEditor/Data/box-sets/</c> via the csproj's
+        /// <c>CopyToOutputDirectory</c> rule. Source of truth in dev mode; first-run seed
+        /// for distributed users.</summary>
+        public static string BundledBoxSetsPath { get; } = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory, "Data", "box-sets");
+
+        /// <summary>The user-runtime box-sets directory. Populated from the bundle on first
+        /// launch; persists user-created definitions across upgrades and reinstalls.
+        /// Bypassed entirely when <see cref="IsDevMode"/> is true.</summary>
         public static string AppDataBoxSetsPath { get; } = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "DeadEditor", "box-sets");
+
+        /// <summary>True when the <c>DEADEDITOR_DEV</c> environment variable is set to <c>"1"</c>.
+        /// Read on every access, so toggling between runs takes effect on next launch.</summary>
+        private static bool IsDevMode =>
+            string.Equals(Environment.GetEnvironmentVariable("DEADEDITOR_DEV"), "1", StringComparison.Ordinal);
+
+        /// <summary>The directory all reads and writes target in the current mode.</summary>
+        private static string ActiveBoxSetsPath => IsDevMode ? BundledBoxSetsPath : AppDataBoxSetsPath;
 
         private static readonly JsonSerializerSettings _jsonSettings = new()
         {
@@ -33,13 +62,82 @@ namespace DeadEditor.Services
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
+        private static bool _initialized;
+        private static readonly object _initLock = new();
+
+        /// <summary>
+        /// In distributed mode, copies bundled definitions to AppData on first call if
+        /// AppData has no definitions yet (matches the file-count check in
+        /// <c>ConcertLookupService:46-54</c>). Idempotent; no-op in dev mode and after the
+        /// first successful run.
+        /// </summary>
+        private static void EnsureInitialized()
+        {
+            if (IsDevMode) return;
+            if (_initialized) return;
+
+            lock (_initLock)
+            {
+                if (_initialized) return;
+
+                try
+                {
+                    bool appDataHasFiles = Directory.Exists(AppDataBoxSetsPath) &&
+                                           Directory.GetFiles(AppDataBoxSetsPath, "*.json").Length > 0;
+                    bool bundledHasFiles = Directory.Exists(BundledBoxSetsPath) &&
+                                           Directory.GetFiles(BundledBoxSetsPath, "*.json").Length > 0;
+
+                    if (!appDataHasFiles && bundledHasFiles)
+                    {
+                        CopyBundledToAppData(BundledBoxSetsPath, AppDataBoxSetsPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[BOXSET] Initialization error: {ex.Message}");
+                }
+
+                _initialized = true;
+            }
+        }
+
+        /// <summary>
+        /// Mirrors <c>ConcertLookupService.CopyBundledToAppData</c> (lines 77-95). Creates
+        /// the destination directory, copies every <c>*.json</c> from the source, and
+        /// never overwrites an existing destination file.
+        /// </summary>
+        private static void CopyBundledToAppData(string sourceDir, string destDir)
+        {
+            try
+            {
+                Directory.CreateDirectory(destDir);
+                var files = Directory.GetFiles(sourceDir, "*.json");
+                Debug.WriteLine($"[BOXSET] First run: copying {files.Length} box-set files to {destDir}");
+
+                foreach (var file in files)
+                {
+                    var destFile = Path.Combine(destDir, Path.GetFileName(file));
+                    if (!File.Exists(destFile))
+                    {
+                        File.Copy(file, destFile);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[BOXSET] Error copying bundled box sets: {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Reads the definition for the given slug, or returns null if the file does not
         /// exist or cannot be parsed (logged, not thrown).
         /// </summary>
         public BoxSetDefinition? Read(string slug)
         {
-            var path = Path.Combine(AppDataBoxSetsPath, slug + ".json");
+            EnsureInitialized();
+
+            var path = Path.Combine(ActiveBoxSetsPath, slug + ".json");
 
             if (!File.Exists(path))
                 return null;
@@ -58,18 +156,20 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Enumerates every <c>*.json</c> in the box-sets directory and returns the ones
-        /// that parse successfully. Returns an empty list if the directory does not exist;
-        /// does not create it (reads never create the directory — only writes do).
+        /// Enumerates every <c>*.json</c> in the active box-sets directory and returns the
+        /// ones that parse successfully. Returns an empty list if the directory does not
+        /// exist; does not create it (reads never create the directory — only writes do).
         /// </summary>
         public IReadOnlyList<BoxSetDefinition> List()
         {
+            EnsureInitialized();
+
             var result = new List<BoxSetDefinition>();
 
-            if (!Directory.Exists(AppDataBoxSetsPath))
+            if (!Directory.Exists(ActiveBoxSetsPath))
                 return result;
 
-            var files = Directory.GetFiles(AppDataBoxSetsPath, "*.json");
+            var files = Directory.GetFiles(ActiveBoxSetsPath, "*.json");
             foreach (var file in files)
             {
                 try
@@ -90,17 +190,20 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Writes the definition to <c>&lt;slug&gt;.json</c> in the box-sets directory.
-        /// Creates the directory if absent (idempotent) and writes atomically via a temp
-        /// file + rename. The slug is supplied by the caller so the filename is the
-        /// caller's choice (see <see cref="DeriveSlug"/>). Synchronous — callers wrap in
-        /// Task.Run if off-UI behavior is needed.
+        /// Writes the definition to <c>&lt;slug&gt;.json</c> in the active box-sets directory
+        /// (Data/box-sets/ in dev mode, %APPDATA%/DeadEditor/box-sets/ otherwise). Creates
+        /// the directory if absent (idempotent) and writes atomically via a temp file +
+        /// rename. The slug is supplied by the caller so the filename is the caller's choice
+        /// (see <see cref="DeriveSlug"/>). Synchronous — callers wrap in Task.Run if off-UI
+        /// behavior is needed.
         /// </summary>
         public void Write(BoxSetDefinition definition, string slug)
         {
-            Directory.CreateDirectory(AppDataBoxSetsPath);
+            EnsureInitialized();
 
-            var targetPath = Path.Combine(AppDataBoxSetsPath, slug + ".json");
+            Directory.CreateDirectory(ActiveBoxSetsPath);
+
+            var targetPath = Path.Combine(ActiveBoxSetsPath, slug + ".json");
             var tempPath = targetPath + ".tmp";
 
             var json = JsonConvert.SerializeObject(definition, _jsonSettings);
@@ -119,7 +222,9 @@ namespace DeadEditor.Services
         /// </summary>
         public bool Delete(string slug)
         {
-            var path = Path.Combine(AppDataBoxSetsPath, slug + ".json");
+            EnsureInitialized();
+
+            var path = Path.Combine(ActiveBoxSetsPath, slug + ".json");
 
             try
             {

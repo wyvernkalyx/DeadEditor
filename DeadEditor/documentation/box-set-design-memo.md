@@ -29,7 +29,7 @@ The right abstraction is to keep **disc** and **concert** as orthogonal axes, li
 
 3. **`BoxSetDefinition` is a curation artifact, not derived from audio.** It exists independently of having the audio files. The wizard builds it from authoritative sources (Wikipedia, dead.net, liner notes) with manual validation. Once defined, the definition is reusable forever — the next person who imports the same box set picks from the validated list rather than re-defining it.
 
-4. **Curation precedes audio.** The MVP workflow is curate-then-import: define the box set in the wizard, then on import check "this is a box set" and pick from the validated list. The opposite direction (import-then-curate) is not in MVP.
+4. **Curation precedes audio, and curation is bundled with the app.** Box-set definitions are a deliverable: they ship with DeadEditor in `Data/box-sets/`, validated by the maintainer. End users install the app and inherit the full set of canonical definitions without doing research themselves. The wizard exists for two purposes: (a) the maintainer uses it to author bundled definitions; (b) end users can create their own definitions for box sets the bundle doesn't yet cover. User-created definitions live in their AppData only and do not propagate. The MVP workflow is still curate-then-import: pick a definition (bundled or user-authored), then on import check "this is a box set" and pick from the validated list. The opposite direction (import-then-curate) is not in MVP.
 
 5. **Date normalization is mandatory and the wizard's job.** Box-set sources will give dates in many formats ("Dec. 9, 1971", "12/9/71", "9 December 1971"). The wizard enforces `yyyy-MM-dd`. Whatever the source format was, that format does not survive into DeadEditor's data.
 
@@ -87,7 +87,16 @@ Auto-update writes require the `WithFileReleased` plumbing built for the file-lo
 
 ### `BoxSetDefinition`
 
-One file per box set, in `%APPDATA%/DeadEditor/box-sets/<slug>.json`. This follows the live-write convention concerts already use: the directory is created on first save if it doesn't exist, and user-created definitions live in AppData so they survive upgrades and reinstalls. (A bundled seed under `Data/box-sets/` — the way concerts ship their first-run seed — may be added later; not in MVP.) The slug is derived from the box-set name (algorithm TBD; see open questions).
+One file per box set. Two locations are involved:
+
+- **`Data/box-sets/<slug>.json`** (project-relative, in the repo) — the bundled location. Shipped with the app. The maintainer's wizard writes here when running in dev mode.
+- **`%APPDATA%/DeadEditor/box-sets/<slug>.json`** — the user-runtime location. On first launch, bundled files are copied here. The end-user wizard writes here. All reads happen from here in production.
+
+Dev mode (the `DEADEDITOR_DEV=1` environment variable) collapses both into the project-relative path: dev-mode reads and writes go straight to `Data/box-sets/`, bypassing AppData entirely. This means definitions authored by the maintainer in dev mode are immediately ready to commit, and the dev-mode running app sees those changes without any sync step.
+
+Both paths use the same camelCase JSON shape (`ContractResolver = new CamelCasePropertyNamesContractResolver()`) and the same atomic temp-and-rename write pattern.
+
+The slug is derived from the box-set name (algorithm TBD; see open questions).
 
 Conceptual shape (final field names settled during implementation):
 
@@ -232,7 +241,7 @@ Measure as we go. The 60-disc case is the stress test; the typical 3-6 disc case
 1. **Data model.** `BoxSetDefinition` C# class + serialization. The `Data/box-sets/` directory convention. JSON read/write with atomic temp-and-rename.
 2. **Box Sets view in the sidebar.** A new top-level view, navigable from the existing sidebar pattern. Lists existing definitions (read from disk). "+ New Box Set" button.
 3. **Wizard for creating and editing.** Multi-step form per the spec above, with per-disc paging to handle large box sets. Saves to disk on completion. Validates date format. Surfaces unassigned tracks before save. Shows the color-coded track list in the review step (initially all dimmed; no audio yet).
-4. **Persistence.** Atomic write per the existing file conventions. The write uses the inline temp-and-rename pattern that already appears at six call sites in the project (canonical example: `EditSetlistView.xaml.cs:270-284`). Extracting it to a shared `Json.WriteAtomic(path, obj)` helper is deferred to its own commit chain (tracked in `follow-ups.md`).
+4. **Persistence.** Atomic write per the existing file conventions. The write uses the inline temp-and-rename pattern that already appears at six call sites in the project (canonical example: `EditSetlistView.xaml.cs:270-284`). Extracting it to a shared `Json.WriteAtomic(path, obj)` helper is deferred to its own commit chain (tracked in `follow-ups.md`). The target path is `%APPDATA%/DeadEditor/box-sets/` in distributed builds and `Data/box-sets/` when `DEADEDITOR_DEV=1` is set; both share the same write code path.
 5. **Verification flag.** The `verified` boolean on the definition is settable from the Box Sets view (or wizard review step). Unverified by default.
 
 That is the whole MVP. It is sized to one commit chain (probably 4-6 surgical commits).
@@ -267,6 +276,8 @@ These do not need answers to ship MVP.
 5. **Two performances on the same date.** Concert `id` becomes `1971-12-09-early` / `1971-12-09-late` (or similar). Confirm the format when we hit a real case.
 
 6. **Versioning of `BoxSetDefinition`.** The shape will evolve. `version: 1` is a forward marker. When (not if) the shape changes, we need a migration path. Mirror the `AlbumManifest` v1→v2 pattern when it comes.
+
+7. **Update model for shipped definitions.** When the app ships an update that changes a previously-shipped definition (typo fix, song-name correction, added concert), what happens to the user's existing AppData copy? Possibilities: (i) silently overwritten on first run after update; (ii) merged with the user's version, preserving user edits; (iii) prompts the user; (iv) only overwritten if the user hasn't marked the definition `Verified`. This needs a decision before the first real update ships, but is not on the MVP critical path.
 
 ---
 
