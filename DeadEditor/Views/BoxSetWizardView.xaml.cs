@@ -38,6 +38,18 @@ namespace DeadEditor
         private readonly ObservableCollection<BoxSetConcertVm> _concertVms = new();
         private BoxSetConcertVm? _selectedConcertVm;
 
+        // Step-3 state: disc shells are pre-created from _definition.DiscCount the first
+        // time step 3 is entered. Re-entries extend (option (c) in the brief) but never
+        // shrink, so the user's disc data is preserved if step-1 DiscCount is later reduced.
+        private readonly ObservableCollection<BoxSetDiscVm> _discVms = new();
+        private int _selectedDiscIndex;
+
+        /// <summary>Concert options for the step-3 track grid's Concert dropdown. Bound from
+        /// the ComboBox via <c>{RelativeSource AncestorType=UserControl}</c> so the per-row
+        /// VM doesn't need a reference to the wizard. Rebuilt on each step-3 entry from the
+        /// current <see cref="_concertVms"/>.</summary>
+        public ObservableCollection<ConcertOption> ConcertOptions { get; } = new();
+
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
         private static readonly Regex DateRegex = new(@"^\d{4}-\d{2}-\d{2}$", RegexOptions.Compiled);
 
@@ -108,9 +120,8 @@ namespace DeadEditor
                 return;
             }
 
-            // Rebuild _definition.Concerts from the step-2 VMs. Steps 3/4 will add
-            // disc/track sync here in subsequent commits.
-            SyncConcertsToDefinition();
+            // Rebuild _definition.Concerts + _definition.Discs from the step-2/3 VMs.
+            SyncWizardToDefinition();
 
             try
             {
@@ -145,6 +156,8 @@ namespace DeadEditor
             Step2Content.Visibility = step == 2 ? Visibility.Visible : Visibility.Collapsed;
             Step3Content.Visibility = step == 3 ? Visibility.Visible : Visibility.Collapsed;
             Step4Content.Visibility = step == 4 ? Visibility.Visible : Visibility.Collapsed;
+
+            if (step == 3) InitializeStep3();
 
             StepIndicatorText.Text = step switch
             {
@@ -340,16 +353,176 @@ namespace DeadEditor
         }
 
         /// <summary>
-        /// Rebuilds <see cref="_definition"/>.<c>Concerts</c> from <see cref="_concertVms"/>
-        /// just before <see cref="BoxSetService.Write"/>. Step-1 fields have already been
-        /// synced by <see cref="ValidateStep1"/>. The model itself stays plain (no INPC,
-        /// no ObservableCollection); the wizard's UI lives entirely in VMs.
+        /// Rebuilds <see cref="_definition"/>.<c>Concerts</c> and <c>Discs</c> from
+        /// <see cref="_concertVms"/> and <see cref="_discVms"/> just before
+        /// <see cref="BoxSetService.Write"/>. Step-1 fields are already synced by
+        /// <see cref="ValidateStep1"/>. The model stays plain (no INPC, no ObservableCollection);
+        /// the wizard's UI lives entirely in VMs.
         /// </summary>
-        private void SyncConcertsToDefinition()
+        private void SyncWizardToDefinition()
         {
             _definition.Concerts.Clear();
             foreach (var vm in _concertVms)
                 _definition.Concerts.Add(vm.ToModel());
+
+            _definition.Discs.Clear();
+            foreach (var vm in _discVms)
+                _definition.Discs.Add(vm.ToModel());
+        }
+
+        // ===== STEP 3 — DISCS =====
+
+        /// <summary>
+        /// Called from <see cref="ShowStep"/> whenever step 3 becomes visible. Always
+        /// rebuilds the concert dropdown options (step 2 may have changed). Extends the
+        /// disc shells per the brief's option (c): grows to match <c>_definition.DiscCount</c>
+        /// but never shrinks, so user-entered disc data survives a step-1 DiscCount decrease.
+        /// </summary>
+        private void InitializeStep3()
+        {
+            // Rebuild concert dropdown options from the current step-2 state. The Id is the
+            // concert's Date (matching BoxSetConcertVm.ToModel() which writes Id = Date).
+            ConcertOptions.Clear();
+            foreach (var c in _concertVms)
+            {
+                var label = string.IsNullOrEmpty(c.Date) && string.IsNullOrEmpty(c.Venue)
+                    ? "(unconfigured concert)"
+                    : $"{(string.IsNullOrEmpty(c.Date) ? "(no date)" : c.Date)} — {(string.IsNullOrEmpty(c.Venue) ? "(no venue)" : c.Venue)}";
+                ConcertOptions.Add(new ConcertOption { Id = c.Date, DisplayLabel = label });
+            }
+
+            // Pre-create or extend disc shells. Append-only — never shrink.
+            while (_discVms.Count < _definition.DiscCount)
+            {
+                _discVms.Add(new BoxSetDiscVm { DiscNumber = _discVms.Count + 1 });
+            }
+
+            // Clamp the selected index in case the list shrank in a previous session
+            // (defensive — we don't currently shrink).
+            if (_selectedDiscIndex >= _discVms.Count)
+                _selectedDiscIndex = Math.Max(0, _discVms.Count - 1);
+
+            UpdateDiscSelector();
+        }
+
+        /// <summary>
+        /// Refreshes the disc-selector indicator, button enable states, and the per-disc
+        /// bindings (<see cref="DiscNameTextBox"/>'s DataContext and the
+        /// <see cref="TrackGrid"/>'s ItemsSource).
+        /// </summary>
+        private void UpdateDiscSelector()
+        {
+            var count = _discVms.Count;
+            var hasDiscs = count > 0;
+
+            if (hasDiscs)
+            {
+                if (_selectedDiscIndex < 0) _selectedDiscIndex = 0;
+                if (_selectedDiscIndex >= count) _selectedDiscIndex = count - 1;
+                var current = _discVms[_selectedDiscIndex];
+
+                DiscSelectorText.Text = $"Disc {_selectedDiscIndex + 1} of {count}";
+                DiscNameTextBox.DataContext = current;
+                TrackGrid.ItemsSource = current.Tracks;
+            }
+            else
+            {
+                DiscSelectorText.Text = "No discs";
+                DiscNameTextBox.DataContext = null;
+                TrackGrid.ItemsSource = null;
+            }
+
+            PrevDiscButton.IsEnabled = hasDiscs && _selectedDiscIndex > 0;
+            NextDiscButton.IsEnabled = hasDiscs && _selectedDiscIndex < count - 1;
+            RemoveDiscButton.IsEnabled = hasDiscs;
+            DiscNameTextBox.IsEnabled = hasDiscs;
+            AddTrackButton.IsEnabled = hasDiscs;
+        }
+
+        private void PrevDiscButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedDiscIndex > 0)
+            {
+                _selectedDiscIndex--;
+                UpdateDiscSelector();
+            }
+        }
+
+        private void NextDiscButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedDiscIndex < _discVms.Count - 1)
+            {
+                _selectedDiscIndex++;
+                UpdateDiscSelector();
+            }
+        }
+
+        private void AddDiscButton_Click(object sender, RoutedEventArgs e)
+        {
+            var newDisc = new BoxSetDiscVm { DiscNumber = _discVms.Count + 1 };
+            _discVms.Add(newDisc);
+            _selectedDiscIndex = _discVms.Count - 1;
+            UpdateDiscSelector();
+        }
+
+        private void RemoveDiscButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_discVms.Count == 0) return;
+            var current = _discVms[_selectedDiscIndex];
+            var trackCountNote = current.Tracks.Count > 0 ? $" and its {current.Tracks.Count} track(s)" : "";
+            var result = MessageBox.Show($"Remove Disc {current.DiscNumber}{trackCountNote}?",
+                "Remove Disc", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result != MessageBoxResult.Yes) return;
+            _discVms.RemoveAt(_selectedDiscIndex);
+            UpdateDiscSelector();
+        }
+
+        /// <summary>
+        /// Appends a new track to the currently-selected disc. TrackNumber auto-fills:
+        /// last-track + 1 if the disc has tracks, otherwise <c>DiscNumber * 100 + 1</c>
+        /// (Disc 1 → 101, Disc 5 → 501, Disc 20 → 2001 — matches the disc-prefixed
+        /// encoding from the design memo).
+        /// </summary>
+        private void AddTrackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_discVms.Count == 0) return;
+            var disc = _discVms[_selectedDiscIndex];
+
+            int nextNumber = disc.Tracks.Count == 0
+                ? disc.DiscNumber * 100 + 1
+                : disc.Tracks[disc.Tracks.Count - 1].TrackNumber + 1;
+
+            disc.Tracks.Add(new BoxSetDiscTrackVm { TrackNumber = nextNumber });
+        }
+
+        private void MoveTrackUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetDiscTrackVm trackVm && _discVms.Count > 0)
+            {
+                var disc = _discVms[_selectedDiscIndex];
+                var idx = disc.Tracks.IndexOf(trackVm);
+                if (idx > 0) disc.Tracks.Move(idx, idx - 1);
+            }
+        }
+
+        private void MoveTrackDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetDiscTrackVm trackVm && _discVms.Count > 0)
+            {
+                var disc = _discVms[_selectedDiscIndex];
+                var idx = disc.Tracks.IndexOf(trackVm);
+                if (idx >= 0 && idx < disc.Tracks.Count - 1) disc.Tracks.Move(idx, idx + 1);
+            }
+        }
+
+        private void RemoveTrackButton_Click(object sender, RoutedEventArgs e)
+        {
+            // No confirm — single-track removal is low-stakes and the ✕ button is
+            // intentional. Matches the song-row remove behavior in step 2.
+            if (sender is Button btn && btn.Tag is BoxSetDiscTrackVm trackVm && _discVms.Count > 0)
+            {
+                _discVms[_selectedDiscIndex].Tracks.Remove(trackVm);
+            }
         }
     }
 
@@ -455,5 +628,106 @@ namespace DeadEditor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
 
         public BoxSetSetSong ToModel() => new() { Name = Name, SegueOut = SegueOut };
+    }
+
+    /// <summary>Wraps <see cref="BoxSetDisc"/>. <c>DiscNumber</c> is set on creation and
+    /// not user-editable from the wizard's UI (it's positional). <c>DiscName</c> is
+    /// optional; null/empty values are skipped on save by <c>NullValueHandling.Ignore</c>
+    /// in the JSON resolver.</summary>
+    public class BoxSetDiscVm : INotifyPropertyChanged
+    {
+        private int _discNumber;
+        private string? _discName;
+
+        public int DiscNumber
+        {
+            get => _discNumber;
+            set { if (_discNumber != value) { _discNumber = value; OnPropertyChanged(); } }
+        }
+
+        public string? DiscName
+        {
+            get => _discName;
+            set { if (_discName != value) { _discName = value; OnPropertyChanged(); } }
+        }
+
+        public ObservableCollection<BoxSetDiscTrackVm> Tracks { get; } = new();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
+
+        public BoxSetDisc ToModel() => new()
+        {
+            DiscNumber = DiscNumber,
+            DiscName = string.IsNullOrEmpty(DiscName) ? null : DiscName,
+            Tracks = Tracks.Select(t => t.ToModel()).ToList(),
+        };
+    }
+
+    /// <summary>Wraps <see cref="BoxSetDiscTrack"/>. <c>ConcertId</c> is the date string of
+    /// the selected concert (matching <see cref="BoxSetConcertVm.ToModel"/>); the ComboBox
+    /// in the wizard's track grid binds via the wizard's <c>ConcertOptions</c> collection.
+    /// <c>Fingerprint</c> is not exposed in the wizard — it's populated during import.</summary>
+    public class BoxSetDiscTrackVm : INotifyPropertyChanged
+    {
+        private int _trackNumber;
+        private string _title = "";
+        private string _concertId = "";
+        private string _songName = "";
+        private bool _segueOut;
+
+        public int TrackNumber
+        {
+            get => _trackNumber;
+            set { if (_trackNumber != value) { _trackNumber = value; OnPropertyChanged(); } }
+        }
+
+        public string Title
+        {
+            get => _title;
+            set { if (_title != value) { _title = value; OnPropertyChanged(); } }
+        }
+
+        public string ConcertId
+        {
+            get => _concertId;
+            set { if (_concertId != value) { _concertId = value; OnPropertyChanged(); } }
+        }
+
+        public string SongName
+        {
+            get => _songName;
+            set { if (_songName != value) { _songName = value; OnPropertyChanged(); } }
+        }
+
+        public bool SegueOut
+        {
+            get => _segueOut;
+            set { if (_segueOut != value) { _segueOut = value; OnPropertyChanged(); } }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
+
+        public BoxSetDiscTrack ToModel() => new()
+        {
+            TrackNumber = TrackNumber,
+            Title = Title,
+            ConcertId = ConcertId,
+            SongName = SongName,
+            SegueOut = SegueOut,
+            // Duration and Fingerprint are import-time fields, not authored in the wizard.
+        };
+    }
+
+    /// <summary>Item type for the wizard's concert dropdown in step 3. <c>Id</c> matches
+    /// the concert's <see cref="BoxSetConcert.Id"/>; <c>DisplayLabel</c> is what the user
+    /// sees ("yyyy-MM-dd — Venue"). Rebuilt on each step-3 entry.</summary>
+    public class ConcertOption
+    {
+        public string Id { get; set; } = "";
+        public string DisplayLabel { get; set; } = "";
     }
 }

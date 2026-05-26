@@ -278,11 +278,130 @@
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
-            <!-- ===== STEP 3 — Discs (placeholder; real content in commit 4b) ===== -->
-            <TextBlock x:Name="Step3Content" Visibility="Collapsed"
-                       Text="Step 3 — Discs (coming next commit)"
-                       Foreground="#888888" FontSize="16"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <!-- ===== STEP 3 — Discs ===== -->
+            <Grid x:Name="Step3Content" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- Disc selector strip -->
+                    <RowDefinition Height="*"/>      <!-- Track table for selected disc -->
+                    <RowDefinition Height="Auto"/>  <!-- Track footer (+ Add Track) -->
+                </Grid.RowDefinitions>
+
+                <!-- Disc selector strip -->
+                <Border Grid.Row="0" Background="#252526" Padding="12,8"
+                        BorderBrush="#3F3F46" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="PrevDiscButton" Content="◀ Prev Disc"
+                                Click="PrevDiscButton_Click"
+                                Padding="8,4" Cursor="Hand"
+                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
+
+                        <TextBlock x:Name="DiscSelectorText" Text="Disc 1 of 1"
+                                   VerticalAlignment="Center" Margin="16,0"
+                                   Foreground="#CCCCCC" FontWeight="SemiBold" FontSize="14"/>
+
+                        <Button x:Name="NextDiscButton" Content="Next Disc ▶"
+                                Click="NextDiscButton_Click"
+                                Padding="8,4" Cursor="Hand"
+                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
+
+                        <Separator Width="1" Background="#3F3F46" Margin="16,4"/>
+
+                        <Button x:Name="AddDiscButton" Content="+ Add Disc"
+                                Click="AddDiscButton_Click"
+                                Padding="8,4" Cursor="Hand" Margin="0,0,8,0"
+                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
+                        <Button x:Name="RemoveDiscButton" Content="− Remove Disc"
+                                Click="RemoveDiscButton_Click"
+                                Padding="8,4" Cursor="Hand"
+                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
+
+                        <Separator Width="1" Background="#3F3F46" Margin="16,4"/>
+
+                        <TextBlock Text="DISC NAME:" Style="{StaticResource LabelStyle}"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="DiscNameTextBox" Width="200" Padding="6,4"
+                                 Background="#3C3C3C" Foreground="#FFFFFF"
+                                 CaretBrush="#FFFFFF" BorderBrush="#555555"
+                                 Text="{Binding DiscName, UpdateSourceTrigger=LostFocus, TargetNullValue=''}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Track grid (binds to selected disc's Tracks via UpdateDiscSelector) -->
+                <DataGrid Grid.Row="1" x:Name="TrackGrid"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False"
+                          CanUserReorderColumns="False" CanUserSortColumns="False"
+                          SelectionMode="Single"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          Background="#1E1E1E" Foreground="#E0E0E0"
+                          RowBackground="#252526" AlternatingRowBackground="#2A2A2D"
+                          HorizontalGridLinesBrush="#3F3F46"
+                          BorderBrush="#3F3F46" BorderThickness="1"
+                          Margin="0,8,0,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#"
+                                            Binding="{Binding TrackNumber, UpdateSourceTrigger=LostFocus}"
+                                            Width="70"/>
+
+                        <DataGridTextColumn Header="Title"
+                                            Binding="{Binding Title, UpdateSourceTrigger=LostFocus}"
+                                            Width="*" MinWidth="220"/>
+
+                        <!-- Concert dropdown: SelectedValue=ConcertId, ItemsSource=wizard.ConcertOptions
+                             via RelativeSource. Avoids putting ConcertOptions on the row VM. -->
+                        <DataGridTemplateColumn Header="Concert" Width="220">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox SelectedValue="{Binding ConcertId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                              SelectedValuePath="Id"
+                                              DisplayMemberPath="DisplayLabel"
+                                              ItemsSource="{Binding ConcertOptions, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Song"
+                                            Binding="{Binding SongName, UpdateSourceTrigger=LostFocus}"
+                                            Width="200"/>
+
+                        <DataGridCheckBoxColumn Header="Segue"
+                                                Binding="{Binding SegueOut, UpdateSourceTrigger=PropertyChanged}"
+                                                Width="60"/>
+
+                        <!-- Row actions: up / down / remove. Tag={Binding} so click handlers
+                             see the row VM. -->
+                        <DataGridTemplateColumn Header="" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="▲" Tag="{Binding}" Click="MoveTrackUpButton_Click"
+                                                Width="24" Height="22" Padding="0" Margin="2,0,0,0"
+                                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                                                ToolTip="Move up"/>
+                                        <Button Content="▼" Tag="{Binding}" Click="MoveTrackDownButton_Click"
+                                                Width="24" Height="22" Padding="0" Margin="2,0,0,0"
+                                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"
+                                                ToolTip="Move down"/>
+                                        <Button Content="✕" Tag="{Binding}" Click="RemoveTrackButton_Click"
+                                                Width="24" Height="22" Padding="0" Margin="2,0,0,0"
+                                                Background="#3E3E42" Foreground="#CC6666" BorderBrush="#663333"
+                                                ToolTip="Remove"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Footer: + Add Track -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button x:Name="AddTrackButton" Content="+ Add Track"
+                            Click="AddTrackButton_Click"
+                            Padding="10,6" Cursor="Hand"
+                            Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB"/>
+                </StackPanel>
+            </Grid>
 
             <!-- ===== STEP 4 — Review (placeholder; real content in commit 4c) ===== -->
             <TextBlock x:Name="Step4Content" Visibility="Collapsed"
