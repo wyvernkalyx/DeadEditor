@@ -57,6 +57,7 @@ namespace DeadEditor
             HeaderBar.ConcertsOwnershipFilterChanged += HeaderBar_ConcertsOwnershipFilterChanged;
             HeaderBar.EditSetlistRequested += HeaderBar_EditSetlistRequested;
             HeaderBar.DeleteConcertRequested += HeaderBar_DeleteConcertRequested;
+            HeaderBar.NewBoxSetRequested += HeaderBar_NewBoxSetRequested;
 
             // Set data context for binding
             DataContext = this;
@@ -244,9 +245,9 @@ namespace DeadEditor
             {
                 HeaderBar.ShowConcertsHeader(concertsView);
             }
-            else if (view is BoxSetsView)
+            else if (view is BoxSetsView boxSetsView)
             {
-                HeaderBar.ShowBoxSetsHeader();
+                HeaderBar.ShowBoxSetsHeader(boxSetsView);
             }
             else if (view is MbidMigrationView)
             {
@@ -543,9 +544,16 @@ namespace DeadEditor
                 _boxSetsView = new BoxSetsView();
             }
 
-            // No data to load yet — the list view and BoxSetService.List() arrive
-            // in the next commit. This navigates to the placeholder.
+            // Re-read from disk on every navigation (cheap — dozens of files at most,
+            // per Phase A R3). Mirrors NavigateToConcerts's LoadConcerts call.
+            _boxSetsView.LoadBoxSets();
+
             _navigationService.NavigateToRoot(_boxSetsView);
+        }
+
+        private void HeaderBar_NewBoxSetRequested(object? sender, EventArgs e)
+        {
+            // TODO: open wizard (commit 4)
         }
 
         private void HeaderBar_ConcertsSearchChanged(object? sender, string searchText)

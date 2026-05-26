@@ -183,11 +183,33 @@ namespace DeadEditor
             UpdateConcertsCount(concertsView.FilteredCount, concertsView.TotalCount);
         }
 
-        public void ShowBoxSetsHeader()
+        /// <summary>Fired when the "+ New Box Set" button in the Box Sets header is clicked.</summary>
+        public event EventHandler? NewBoxSetRequested;
+
+        public void ShowBoxSetsHeader(BoxSetsView view)
         {
             HideAllHeaders();
             BoxSetsHeader.Visibility = Visibility.Visible;
-            // Count is a "0 box sets" placeholder until the list view wires it in the next commit.
+            UpdateBoxSetsCount(view.FilteredCount, view.TotalCount);
+        }
+
+        /// <summary>
+        /// Updates the BoxSets count text. Uses singular/plural ("1 box set" / "N box sets"),
+        /// diverging from <see cref="UpdateConcertsCount"/>'s always-plural "shows" because
+        /// the singular form reads naturally for the typical "I just created one" case.
+        /// </summary>
+        public void UpdateBoxSetsCount(int filtered, int total)
+        {
+            var noun = total == 1 ? "box set" : "box sets";
+            if (filtered == total)
+                BoxSetsCountText.Text = $"{total:N0} {noun}";
+            else
+                BoxSetsCountText.Text = $"{filtered:N0} of {total:N0} {noun}";
+        }
+
+        private void NewBoxSetButton_Click(object sender, RoutedEventArgs e)
+        {
+            NewBoxSetRequested?.Invoke(this, EventArgs.Empty);
         }
 
         public void ShowConcertDetailHeader(ConcertDetailView detailView)
