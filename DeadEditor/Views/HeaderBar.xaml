@@ -897,6 +897,123 @@
             </StackPanel>
         </Grid>
 
+        <!-- Box Set Wizard Header: "[← Box Sets]  New Box Set  [Back] [Next/Save] [Cancel]" -->
+        <Grid x:Name="BoxSetWizardHeader" Height="50" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Button x:Name="BoxSetWizardCancelLink"
+                        Content="← Box Sets"
+                        Click="BoxSetWizardCancelLink_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        Margin="0,0,20,0"/>
+
+                <TextBlock Text="New Box Set"
+                           Foreground="#E0E0E0"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                <!-- Back: subtle/secondary; disabled on step 1 via UpdateBoxSetWizardStep -->
+                <Button x:Name="BoxSetWizardBackButton"
+                        Content="Back"
+                        Click="BoxSetWizardBackButton_Click"
+                        Style="{StaticResource BackButtonStyle}"
+                        FontSize="16"
+                        Margin="0,0,8,0"/>
+
+                <!-- Next/Save: green primary, content toggles to "Save" on step 4 via
+                     UpdateBoxSetWizardStep. Style cloned from SaveSetlistButton (lines
+                     824-870 of this file). -->
+                <Button x:Name="BoxSetWizardNextSaveButton"
+                        Content="Next"
+                        Click="BoxSetWizardNextSaveButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        MinHeight="36"
+                        Margin="0,0,10,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#0E7A0D"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Setter Property="BorderBrush" Value="#13A10E"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#13A10E"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Background" Value="#444"/>
+                                                <Setter Property="Foreground" Value="#888"/>
+                                                <Setter Property="BorderBrush" Value="#555"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Cancel: subtle/secondary. Same affordance as the "← Box Sets" link on
+                     the left — both raise BoxSetWizardCancelClicked. -->
+                <Button x:Name="BoxSetWizardCancelButton"
+                        Content="Cancel"
+                        Click="BoxSetWizardCancelButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="16"
+                        MinHeight="36">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#3E3E42"/>
+                            <Setter Property="Foreground" Value="#CCCCCC"/>
+                            <Setter Property="BorderBrush" Value="#555555"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#555555"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+
         <!-- Placeholder Header -->
         <Grid x:Name="PlaceholderHeader" Height="50" Visibility="Visible">
             <TextBlock x:Name="PlaceholderText"

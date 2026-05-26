@@ -73,7 +73,7 @@ namespace DeadEditor
                 SetActiveButton(ReleasesButton);
             else if (view is ConcertDatabaseView or ConcertDetailView or EditSetlistView)
                 SetActiveButton(ConcertsButton);
-            else if (view is BoxSetsView)
+            else if (view is BoxSetsView or BoxSetWizardView)
                 SetActiveButton(BoxSetsButton);
             else if (view is SettingsView)
                 SetActiveButton(SettingsButton);

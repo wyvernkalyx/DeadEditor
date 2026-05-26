@@ -115,6 +115,7 @@ namespace DeadEditor
             EditMetadataHeader.Visibility = Visibility.Collapsed;
             ConcertsHeader.Visibility = Visibility.Collapsed;
             BoxSetsHeader.Visibility = Visibility.Collapsed;
+            BoxSetWizardHeader.Visibility = Visibility.Collapsed;
             ConcertDetailHeader.Visibility = Visibility.Collapsed;
             EditSetlistHeader.Visibility = Visibility.Collapsed;
             PlaceholderHeader.Visibility = Visibility.Collapsed;
@@ -210,6 +211,66 @@ namespace DeadEditor
         private void NewBoxSetButton_Click(object sender, RoutedEventArgs e)
         {
             NewBoxSetRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        // ===== BOX SET WIZARD HEADER =====
+
+        /// <summary>Fired when the wizard's Back button is clicked.</summary>
+        public event EventHandler? BoxSetWizardBackClicked;
+
+        /// <summary>Fired when the wizard's Next button (steps 1-3) is clicked.</summary>
+        public event EventHandler? BoxSetWizardNextClicked;
+
+        /// <summary>Fired when the wizard's Save button (step 4) is clicked.</summary>
+        public event EventHandler? BoxSetWizardSaveClicked;
+
+        /// <summary>Fired when the wizard's Cancel button or "← Box Sets" link is clicked.</summary>
+        public event EventHandler? BoxSetWizardCancelClicked;
+
+        // Tracks the wizard's current step so the Next/Save shared button can raise the
+        // right event. Set by UpdateBoxSetWizardStep, never read by ShellWindow directly.
+        private int _wizardCurrentStep = 1;
+
+        public void ShowBoxSetWizardHeader(BoxSetWizardView wizard)
+        {
+            HideAllHeaders();
+            BoxSetWizardHeader.Visibility = Visibility.Visible;
+            UpdateBoxSetWizardStep(wizard.CurrentStep);
+        }
+
+        /// <summary>
+        /// Updates the wizard header's Back enable-state and the Next/Save button's content
+        /// to match the current step. Back is disabled on step 1; the Next/Save button
+        /// reads "Save" on step 4 and "Next" otherwise.
+        /// </summary>
+        public void UpdateBoxSetWizardStep(int step)
+        {
+            _wizardCurrentStep = step;
+            BoxSetWizardBackButton.IsEnabled = step > 1;
+            BoxSetWizardNextSaveButton.Content = step == 4 ? "Save" : "Next";
+        }
+
+        private void BoxSetWizardBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            BoxSetWizardBackClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void BoxSetWizardNextSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_wizardCurrentStep == 4)
+                BoxSetWizardSaveClicked?.Invoke(this, EventArgs.Empty);
+            else
+                BoxSetWizardNextClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void BoxSetWizardCancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            BoxSetWizardCancelClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void BoxSetWizardCancelLink_Click(object sender, RoutedEventArgs e)
+        {
+            BoxSetWizardCancelClicked?.Invoke(this, EventArgs.Empty);
         }
 
         public void ShowConcertDetailHeader(ConcertDetailView detailView)

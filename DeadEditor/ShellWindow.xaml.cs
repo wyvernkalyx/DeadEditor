@@ -58,6 +58,10 @@ namespace DeadEditor
             HeaderBar.EditSetlistRequested += HeaderBar_EditSetlistRequested;
             HeaderBar.DeleteConcertRequested += HeaderBar_DeleteConcertRequested;
             HeaderBar.NewBoxSetRequested += HeaderBar_NewBoxSetRequested;
+            HeaderBar.BoxSetWizardBackClicked += HeaderBar_BoxSetWizardBackClicked;
+            HeaderBar.BoxSetWizardNextClicked += HeaderBar_BoxSetWizardNextClicked;
+            HeaderBar.BoxSetWizardSaveClicked += HeaderBar_BoxSetWizardSaveClicked;
+            HeaderBar.BoxSetWizardCancelClicked += HeaderBar_BoxSetWizardCancelClicked;
 
             // Set data context for binding
             DataContext = this;
@@ -248,6 +252,10 @@ namespace DeadEditor
             else if (view is BoxSetsView boxSetsView)
             {
                 HeaderBar.ShowBoxSetsHeader(boxSetsView);
+            }
+            else if (view is BoxSetWizardView wizardView)
+            {
+                HeaderBar.ShowBoxSetWizardHeader(wizardView);
             }
             else if (view is MbidMigrationView)
             {
@@ -553,7 +561,49 @@ namespace DeadEditor
 
         private void HeaderBar_NewBoxSetRequested(object? sender, EventArgs e)
         {
-            // TODO: open wizard (commit 4)
+            // Fresh wizard instance per click — no caching (the brief explicitly avoids
+            // stale state between sessions). BoxSetService has only static initialization
+            // state, so constructing a new instance is cheap and shares the singleton init.
+            var wizard = new BoxSetWizardView(new Services.BoxSetService());
+
+            // On wizard Save success or Cancel, return to the list view. NavigateToBoxSets
+            // calls LoadBoxSets internally, so a newly-written definition shows up
+            // immediately without any explicit refresh.
+            wizard.Completed += (s, a) => NavigateToBoxSets();
+
+            // Wizard step changes drive the HeaderBar's Back/Next/Save button state.
+            wizard.StepChanged += (s, step) => HeaderBar.UpdateBoxSetWizardStep(step);
+
+            _navigationService.NavigateToRoot(wizard);
+        }
+
+        // ===== WIZARD HEADER ROUTING =====
+        // ShellWindow plumbs HeaderBar wizard-button events to the active wizard's methods.
+        // The wizard owns its own state; ShellWindow doesn't track it beyond
+        // _navigationService.CurrentView.
+
+        private void HeaderBar_BoxSetWizardBackClicked(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentView is BoxSetWizardView wizard)
+                wizard.GoBack();
+        }
+
+        private void HeaderBar_BoxSetWizardNextClicked(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentView is BoxSetWizardView wizard)
+                wizard.GoNext();
+        }
+
+        private void HeaderBar_BoxSetWizardSaveClicked(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentView is BoxSetWizardView wizard)
+                wizard.Save();
+        }
+
+        private void HeaderBar_BoxSetWizardCancelClicked(object? sender, EventArgs e)
+        {
+            if (_navigationService.CurrentView is BoxSetWizardView wizard)
+                wizard.Cancel();
         }
 
         private void HeaderBar_ConcertsSearchChanged(object? sender, string searchText)
