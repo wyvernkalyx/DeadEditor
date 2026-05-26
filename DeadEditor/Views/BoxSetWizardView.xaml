@@ -86,11 +86,197 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- ===== STEP 2 — Concerts (placeholder; real content in commit 4a) ===== -->
-            <TextBlock x:Name="Step2Content" Visibility="Collapsed"
-                       Text="Step 2 — Concerts (coming next commit)"
-                       Foreground="#888888" FontSize="16"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <!-- ===== STEP 2 — Concerts ===== -->
+            <Grid x:Name="Step2Content" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left pane: concert list + add/remove -->
+                <DockPanel Grid.Column="0" Margin="0,0,16,0">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="CONCERTS" Style="{StaticResource LabelStyle}"
+                                   VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <Button x:Name="AddConcertButton" Content="+ Add"
+                                Click="AddConcertButton_Click"
+                                Padding="8,4" Cursor="Hand"
+                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
+                        <Button x:Name="RemoveConcertButton" Content="− Remove"
+                                Click="RemoveConcertButton_Click"
+                                Padding="8,4" Cursor="Hand" Margin="8,0,0,0"
+                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
+                    </StackPanel>
+
+                    <ListBox x:Name="ConcertListBox"
+                             SelectionChanged="ConcertListBox_SelectionChanged"
+                             Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="1"
+                             Foreground="#E0E0E0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayLabel}"
+                                           FontSize="14" Padding="4,4"
+                                           Foreground="#E0E0E0"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+
+                <!-- Right pane: detail form (shown when a concert is selected) -->
+                <ScrollViewer Grid.Column="1" x:Name="ConcertDetailScroller"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Visibility="Collapsed">
+                    <StackPanel x:Name="ConcertDetailPanel">
+                        <TextBlock Text="DATE *" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Date, UpdateSourceTrigger=LostFocus}"
+                                 Style="{StaticResource FieldStyle}"
+                                 Width="160" HorizontalAlignment="Left" Margin="0,0,0,12"
+                                 ToolTip="yyyy-MM-dd"/>
+
+                        <TextBlock Text="VENUE" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Venue, UpdateSourceTrigger=LostFocus}"
+                                 Style="{StaticResource FieldStyle}"
+                                 Width="400" HorizontalAlignment="Left" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="CITY" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding City, UpdateSourceTrigger=LostFocus}"
+                                 Style="{StaticResource FieldStyle}"
+                                 Width="240" HorizontalAlignment="Left" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="STATE" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding State, UpdateSourceTrigger=LostFocus}"
+                                 Style="{StaticResource FieldStyle}"
+                                 Width="120" HorizontalAlignment="Left" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="COUNTRY" Style="{StaticResource LabelStyle}"/>
+                        <TextBox Text="{Binding Country, UpdateSourceTrigger=LostFocus}"
+                                 Style="{StaticResource FieldStyle}"
+                                 Width="200" HorizontalAlignment="Left" Margin="0,0,0,16"/>
+
+                        <Separator Margin="0,8,0,12" Background="#3F3F46"/>
+
+                        <TextBlock Text="SETLIST" Style="{StaticResource LabelStyle}"/>
+
+                        <!-- Setlist: ItemsControl over BoxSetSetVm; each item renders as a
+                             bordered group containing a song ItemsControl + per-set actions. -->
+                        <ItemsControl ItemsSource="{Binding Setlist}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#2A2A2D" BorderBrush="#3F3F46"
+                                            BorderThickness="1" CornerRadius="4"
+                                            Padding="12" Margin="0,0,0,8">
+                                        <StackPanel>
+                                            <!-- Set header: "Set <name>" + Normalize + Remove -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Set" VerticalAlignment="Center"
+                                                               Margin="0,0,8,0"
+                                                               Foreground="#AAAAAA" FontWeight="SemiBold"/>
+                                                    <TextBox Text="{Binding Set, UpdateSourceTrigger=LostFocus}"
+                                                             Width="120"
+                                                             Background="#3C3C3C" Foreground="#FFFFFF"
+                                                             CaretBrush="#FFFFFF" BorderBrush="#555555"
+                                                             Padding="6,3"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <Button Content="Normalize" Tag="{Binding}"
+                                                            Click="NormalizeSetButton_Click"
+                                                            Padding="8,4" Margin="0,0,8,0" Cursor="Hand"
+                                                            Background="#3E3E42" Foreground="#CCCCCC"
+                                                            BorderBrush="#555555"
+                                                            ToolTip="Run fuzzy match against songs.json for every song in this set"/>
+                                                    <Button Content="− Remove Set" Tag="{Binding}"
+                                                            Click="RemoveSetButton_Click"
+                                                            Padding="8,4" Cursor="Hand"
+                                                            Background="#3E3E42" Foreground="#CCCCCC"
+                                                            BorderBrush="#555555"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Song rows: ItemsControl (not DataGrid) for always-
+                                                 editable TextBoxes without the click-to-edit dance. -->
+                                            <ItemsControl ItemsSource="{Binding Songs}" Margin="0,8,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0,2">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="36"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBox Grid.Column="0"
+                                                                     Text="{Binding Name, UpdateSourceTrigger=LostFocus}"
+                                                                     Background="#3C3C3C" Foreground="#FFFFFF"
+                                                                     CaretBrush="#FFFFFF" BorderBrush="#555555"
+                                                                     Padding="6,4"/>
+
+                                                            <CheckBox Grid.Column="1"
+                                                                      IsChecked="{Binding SegueOut, UpdateSourceTrigger=PropertyChanged}"
+                                                                      HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"
+                                                                      ToolTip="Segue out"/>
+
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                                        Margin="6,0,0,0">
+                                                                <Button Content="▲" Tag="{Binding}"
+                                                                        Click="MoveSongUpButton_Click"
+                                                                        Width="22" Height="22" Padding="0"
+                                                                        Margin="2,0,0,0" Cursor="Hand"
+                                                                        Background="#3E3E42" Foreground="#CCCCCC"
+                                                                        BorderBrush="#555555"
+                                                                        ToolTip="Move up"/>
+                                                                <Button Content="▼" Tag="{Binding}"
+                                                                        Click="MoveSongDownButton_Click"
+                                                                        Width="22" Height="22" Padding="0"
+                                                                        Margin="2,0,0,0" Cursor="Hand"
+                                                                        Background="#3E3E42" Foreground="#CCCCCC"
+                                                                        BorderBrush="#555555"
+                                                                        ToolTip="Move down"/>
+                                                                <Button Content="✕" Tag="{Binding}"
+                                                                        Click="RemoveSongButton_Click"
+                                                                        Width="22" Height="22" Padding="0"
+                                                                        Margin="2,0,0,0" Cursor="Hand"
+                                                                        Background="#3E3E42" Foreground="#CC6666"
+                                                                        BorderBrush="#663333"
+                                                                        ToolTip="Remove"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <Button Content="+ Add Song" Tag="{Binding}"
+                                                    Click="AddSongButton_Click"
+                                                    HorizontalAlignment="Left" Margin="0,8,0,0"
+                                                    Padding="8,4" Cursor="Hand"
+                                                    Background="#3E3E42" Foreground="#CCCCCC"
+                                                    BorderBrush="#555555"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button x:Name="AddSetButton" Content="+ Add Set"
+                                Click="AddSetButton_Click"
+                                HorizontalAlignment="Left" Margin="0,12,0,0"
+                                Padding="10,6" Cursor="Hand"
+                                Background="#0E639C" Foreground="#FFFFFF" BorderBrush="#1177BB"/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Empty-state: shown when no concert is selected -->
+                <TextBlock Grid.Column="1" x:Name="NoConcertSelectedText"
+                           Text="Select a concert from the list, or click + Add to create one"
+                           Foreground="#888888" FontSize="14"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
 
             <!-- ===== STEP 3 — Discs (placeholder; real content in commit 4b) ===== -->
             <TextBlock x:Name="Step3Content" Visibility="Collapsed"

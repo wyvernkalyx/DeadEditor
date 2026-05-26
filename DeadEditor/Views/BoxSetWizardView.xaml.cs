@@ -1,9 +1,15 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using MessageBox = System.Windows.MessageBox;
+using Button = System.Windows.Controls.Button;
 
 namespace DeadEditor
 {
@@ -20,8 +26,17 @@ namespace DeadEditor
     public partial class BoxSetWizardView : System.Windows.Controls.UserControl
     {
         private readonly BoxSetService _boxSetService;
+        private readonly NormalizationService _normalizationService = new();
         private readonly BoxSetDefinition _definition = new();
         private int _currentStep = 1;
+
+        // Step-2 state: editing VMs (separate from the underlying model).
+        // _definition.Concerts is rebuilt from these in SyncConcertsToDefinition() at
+        // Save time, matching EditSetlistView's "build models from EditableTracks" idiom
+        // (EditSetlistView.xaml.cs:222-262). Keeps the data models plain (no INPC per
+        // commit 1's directive) while still getting INPC-driven list refresh in the UI.
+        private readonly ObservableCollection<BoxSetConcertVm> _concertVms = new();
+        private BoxSetConcertVm? _selectedConcertVm;
 
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
         private static readonly Regex DateRegex = new(@"^\d{4}-\d{2}-\d{2}$", RegexOptions.Compiled);
@@ -41,6 +56,7 @@ namespace DeadEditor
         {
             InitializeComponent();
             _boxSetService = boxSetService;
+            ConcertListBox.ItemsSource = _concertVms;
             ShowStep(1);
         }
 
@@ -91,6 +107,10 @@ namespace DeadEditor
                 if (_currentStep != 1) ShowStep(1);
                 return;
             }
+
+            // Rebuild _definition.Concerts from the step-2 VMs. Steps 3/4 will add
+            // disc/track sync here in subsequent commits.
+            SyncConcertsToDefinition();
 
             try
             {
@@ -188,5 +208,252 @@ namespace DeadEditor
             _ = int.TryParse(DiscCountTextBox.Text?.Trim(), out var dc);
             _definition.DiscCount = dc;
         }
+
+        // ===== STEP 2 — CONCERTS =====
+
+        private void AddConcertButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Country default matches the existing concert-data convention. User-overridable;
+            // not a hardcoded artist locale.
+            var vm = new BoxSetConcertVm { Country = "USA" };
+            _concertVms.Add(vm);
+            ConcertListBox.SelectedItem = vm;
+        }
+
+        private void RemoveConcertButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedConcertVm == null) return;
+            var label = string.IsNullOrEmpty(_selectedConcertVm.Date) ? "(unsaved)" : _selectedConcertVm.Date;
+            var result = MessageBox.Show($"Remove concert {label}?", "Remove Concert",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result != MessageBoxResult.Yes) return;
+            _concertVms.Remove(_selectedConcertVm);
+        }
+
+        private void ConcertListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedConcertVm = ConcertListBox.SelectedItem as BoxSetConcertVm;
+            if (_selectedConcertVm == null)
+            {
+                ConcertDetailScroller.Visibility = Visibility.Collapsed;
+                NoConcertSelectedText.Visibility = Visibility.Visible;
+                ConcertDetailPanel.DataContext = null;
+            }
+            else
+            {
+                ConcertDetailPanel.DataContext = _selectedConcertVm;
+                ConcertDetailScroller.Visibility = Visibility.Visible;
+                NoConcertSelectedText.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void AddSetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedConcertVm == null) return;
+            // Default label: next sequential integer ("1", "2", "3", ...). User can rename.
+            var nextIndex = _selectedConcertVm.Setlist.Count + 1;
+            _selectedConcertVm.Setlist.Add(new BoxSetSetVm { Set = nextIndex.ToString() });
+        }
+
+        private void RemoveSetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetSetVm setVm && _selectedConcertVm != null)
+            {
+                var label = string.IsNullOrEmpty(setVm.Set) ? "(unnamed)" : setVm.Set;
+                var result = MessageBox.Show($"Remove set \"{label}\" and all its songs?", "Remove Set",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes) return;
+                _selectedConcertVm.Setlist.Remove(setVm);
+            }
+        }
+
+        /// <summary>
+        /// Per-set Normalize. Walks every song in the set and replaces its name with the
+        /// canonical form returned by NormalizationService, matching the iteration pattern
+        /// in EditSetlistView.xaml.cs:163-184 (NormalizeButton_Click).
+        /// </summary>
+        private void NormalizeSetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetSetVm setVm)
+            {
+                foreach (var songVm in setVm.Songs)
+                {
+                    if (string.IsNullOrWhiteSpace(songVm.Name)) continue;
+                    var normalized = _normalizationService.Normalize(songVm.Name);
+                    if (!string.IsNullOrEmpty(normalized) && normalized != songVm.Name)
+                    {
+                        songVm.Name = normalized;
+                    }
+                }
+            }
+        }
+
+        private void AddSongButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetSetVm setVm)
+            {
+                setVm.Songs.Add(new BoxSetSetSongVm());
+            }
+        }
+
+        private void RemoveSongButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetSetSongVm song && _selectedConcertVm != null)
+            {
+                foreach (var setVm in _selectedConcertVm.Setlist)
+                {
+                    if (setVm.Songs.Remove(song)) return;
+                }
+            }
+        }
+
+        private void MoveSongUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetSetSongVm song && _selectedConcertVm != null)
+            {
+                foreach (var setVm in _selectedConcertVm.Setlist)
+                {
+                    var idx = setVm.Songs.IndexOf(song);
+                    if (idx >= 0)
+                    {
+                        if (idx > 0) setVm.Songs.Move(idx, idx - 1);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void MoveSongDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is BoxSetSetSongVm song && _selectedConcertVm != null)
+            {
+                foreach (var setVm in _selectedConcertVm.Setlist)
+                {
+                    var idx = setVm.Songs.IndexOf(song);
+                    if (idx >= 0)
+                    {
+                        if (idx < setVm.Songs.Count - 1) setVm.Songs.Move(idx, idx + 1);
+                        return;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rebuilds <see cref="_definition"/>.<c>Concerts</c> from <see cref="_concertVms"/>
+        /// just before <see cref="BoxSetService.Write"/>. Step-1 fields have already been
+        /// synced by <see cref="ValidateStep1"/>. The model itself stays plain (no INPC,
+        /// no ObservableCollection); the wizard's UI lives entirely in VMs.
+        /// </summary>
+        private void SyncConcertsToDefinition()
+        {
+            _definition.Concerts.Clear();
+            foreach (var vm in _concertVms)
+                _definition.Concerts.Add(vm.ToModel());
+        }
+    }
+
+    // ===== STEP-2 VIEW MODELS =====
+    // Mirrors EditSetlistView.xaml.cs's EditableTrack (lines 341-395): tiny INPC wrappers
+    // around the underlying data shapes so the wizard's UI can bind two-way and refresh
+    // dependent labels (the ListBox's DisplayLabel updates when Date/Venue change).
+    // ToModel() / FromModel() handle the conversion at save and load time.
+
+    /// <summary>Wraps <see cref="BoxSetConcert"/> for two-way binding in the wizard's
+    /// step-2 right pane and the ListBox row template's <c>DisplayLabel</c>.</summary>
+    public class BoxSetConcertVm : INotifyPropertyChanged
+    {
+        private string _date = "";
+        private string _venue = "";
+        private string _city = "";
+        private string _state = "";
+        private string _country = "";
+
+        public string Date
+        {
+            get => _date;
+            set { if (_date != value) { _date = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayLabel)); } }
+        }
+
+        public string Venue
+        {
+            get => _venue;
+            set { if (_venue != value) { _venue = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayLabel)); } }
+        }
+
+        public string City  { get => _city;  set { if (_city  != value) { _city  = value; OnPropertyChanged(); } } }
+        public string State { get => _state; set { if (_state != value) { _state = value; OnPropertyChanged(); } } }
+        public string Country { get => _country; set { if (_country != value) { _country = value; OnPropertyChanged(); } } }
+
+        public ObservableCollection<BoxSetSetVm> Setlist { get; } = new();
+
+        /// <summary>Composite label shown in the concert ListBox. Refreshes when
+        /// Date or Venue change because their setters raise PropertyChanged on this.</summary>
+        public string DisplayLabel
+        {
+            get
+            {
+                var d = string.IsNullOrEmpty(Date) ? "(no date)" : Date;
+                var v = string.IsNullOrEmpty(Venue) ? "(no venue)" : Venue;
+                return d == "(no date)" && v == "(no venue)"
+                    ? "(new concert)"
+                    : $"{d} — {v}";
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
+
+        /// <summary>Builds a <see cref="BoxSetConcert"/> from this VM. <c>Id</c> defaults
+        /// to <c>Date</c> per the memo ("Using the date as the ID works for a band that
+        /// played at most once a day").</summary>
+        public BoxSetConcert ToModel() => new()
+        {
+            Id = Date,
+            Date = Date,
+            Venue = Venue,
+            City = City,
+            State = State,
+            Country = Country,
+            Setlist = Setlist.Select(s => s.ToModel()).ToList(),
+        };
+    }
+
+    /// <summary>Wraps <see cref="BoxSetSet"/>. <c>Set</c> is a free string (the memo's
+    /// Position 4 lets the wizard recommend a vocabulary but the model accepts anything).</summary>
+    public class BoxSetSetVm : INotifyPropertyChanged
+    {
+        private string _set = "";
+        public string Set { get => _set; set { if (_set != value) { _set = value; OnPropertyChanged(); } } }
+
+        public ObservableCollection<BoxSetSetSongVm> Songs { get; } = new();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
+
+        public BoxSetSet ToModel() => new()
+        {
+            Set = Set,
+            Songs = Songs.Select(s => s.ToModel()).ToList(),
+        };
+    }
+
+    /// <summary>Wraps <see cref="BoxSetSetSong"/>. <c>SegueOut=true</c> means this song
+    /// segues into the next one in the same set.</summary>
+    public class BoxSetSetSongVm : INotifyPropertyChanged
+    {
+        private string _name = "";
+        private bool _segueOut;
+
+        public string Name { get => _name; set { if (_name != value) { _name = value; OnPropertyChanged(); } } }
+        public bool SegueOut { get => _segueOut; set { if (_segueOut != value) { _segueOut = value; OnPropertyChanged(); } } }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
+
+        public BoxSetSetSong ToModel() => new() { Name = Name, SegueOut = SegueOut };
     }
 }
