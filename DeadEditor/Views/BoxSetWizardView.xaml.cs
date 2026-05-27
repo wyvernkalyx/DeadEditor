@@ -184,12 +184,6 @@ namespace DeadEditor
                 return false;
             }
 
-            if (_definition.DiscCount < 1 || _definition.DiscCount > 99)
-            {
-                ValidationMessage.Text = "Disc Count must be between 1 and 99.";
-                return false;
-            }
-
             return true;
         }
 
@@ -202,11 +196,6 @@ namespace DeadEditor
             _definition.Label = LabelTextBox.Text?.Trim() ?? "";
             _definition.CatalogNumber = CatalogNumberTextBox.Text?.Trim() ?? "";
             _definition.Notes = NotesTextBox.Text?.Trim() ?? "";
-
-            // int.TryParse leaves the out value at 0 on failure, which is intentionally
-            // out-of-range so validation catches it as "must be between 1 and 99."
-            _ = int.TryParse(DiscCountTextBox.Text?.Trim(), out var dc);
-            _definition.DiscCount = dc;
         }
 
         // ===== STEP 2 — CONCERTS =====

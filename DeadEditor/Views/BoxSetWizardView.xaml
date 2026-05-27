@@ -74,11 +74,6 @@
                              Width="500" HorizontalAlignment="Left"
                              Margin="0,0,0,16"/>
 
-                    <TextBlock Text="DISC COUNT *" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="DiscCountTextBox" Style="{StaticResource FieldStyle}"
-                             Width="80" HorizontalAlignment="Left" Margin="0,0,0,16"
-                             ToolTip="1-99"/>
-
                     <TextBlock x:Name="ValidationMessage"
                                Foreground="#E74C3C" FontSize="14"
                                Margin="0,8,0,0"
