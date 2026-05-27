@@ -437,27 +437,6 @@ namespace DeadEditor
             RemoveDiscButton.IsEnabled = hasDiscs;
             DiscNameTextBox.IsEnabled = hasDiscs;
             AddTrackButton.IsEnabled = hasDiscs;
-
-            UpdateTrackEmptyState();
-        }
-
-        /// <summary>
-        /// Shows the empty-state TextBlock overlaying the track grid when the current disc
-        /// has zero tracks; hides it when tracks exist or when there are no discs at all
-        /// (in the latter case the disc selector itself reads "No discs", so a second
-        /// message is redundant).
-        /// </summary>
-        private void UpdateTrackEmptyState()
-        {
-            if (_discVms.Count == 0)
-            {
-                TrackEmptyState.Visibility = Visibility.Collapsed;
-                return;
-            }
-            var current = _discVms[_selectedDiscIndex];
-            TrackEmptyState.Visibility = current.Tracks.Count == 0
-                ? Visibility.Visible
-                : Visibility.Collapsed;
         }
 
         private void PrevDiscButton_Click(object sender, RoutedEventArgs e)
@@ -514,7 +493,6 @@ namespace DeadEditor
                 : disc.Tracks[disc.Tracks.Count - 1].TrackNumber + 1;
 
             disc.Tracks.Add(new BoxSetDiscTrackVm { TrackNumber = nextNumber });
-            UpdateTrackEmptyState();
         }
 
         private void MoveTrackUpButton_Click(object sender, RoutedEventArgs e)
@@ -544,7 +522,6 @@ namespace DeadEditor
             if (sender is Button btn && btn.Tag is BoxSetDiscTrackVm trackVm && _discVms.Count > 0)
             {
                 _discVms[_selectedDiscIndex].Tracks.Remove(trackVm);
-                UpdateTrackEmptyState();
             }
         }
     }
