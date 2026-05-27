@@ -33,8 +33,3 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **What:** The temp-write-and-rename idiom is duplicated at 6+ call sites: `EditSetlistView.xaml.cs:270-284`, `MbidMigrationService.cs:405-408`, `NormalizationService.cs:414-418`, `ReleaseLookupService.cs:388-390`, `ShowLookupService.cs:292-294`, `SongsView.xaml.cs:391-393` (plus the box-set MVP's new copy).
 - **Proposed fix:** Extract a shared `Json.WriteAtomic(path, obj)` helper. `ManifestService.WriteManifest` notably uses a non-atomic `File.WriteAllText` and would benefit from the same helper.
 - **Surfaced:** Phase A audit for box-set MVP.
-
-### Box-set wizard review step: click-to-jump
-- **What:** In `BoxSetWizardView`'s step-4 review surface, individual track rows and disc headers in the color-coded list are not clickable. A user inspecting a red (dangling) or amber (incomplete) track has to navigate manually back to step 2 or 3 and find the offender.
-- **Proposed fix:** Wire `MouseLeftButtonUp` on track row Borders to call `ShowStep(3)` plus set `_selectedDiscIndex` to the matching disc and scroll the `TrackGrid` to bring the row into view. Same idea for clicking a disc header. For concert references, jump to step 2 with `ConcertListBox.SelectedItem` set.
-- **Surfaced:** Phase B commit 4c (stretch goal in the brief, banked here per the brief's "if more than ~30 minutes, skip" guidance).

@@ -3,17 +3,13 @@ using DeadEditor.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
-using Brush = System.Windows.Media.Brush;
-using Brushes = System.Windows.Media.Brushes;
 
 namespace DeadEditor
 {
@@ -54,17 +50,6 @@ namespace DeadEditor
         /// current <see cref="_concertVms"/>.</summary>
         public ObservableCollection<ConcertOption> ConcertOptions { get; } = new();
 
-        // Step-4 state: review/validation surface. Rebuilt fresh on every step-4 entry.
-        private readonly ObservableCollection<ValidationIssue> _validationIssues = new();
-        private readonly ObservableCollection<ReviewDiscRow> _reviewDiscs = new();
-        private bool _hasBlockingIssues;
-
-        /// <summary>True when step-4 validation found at least one hard-block issue.
-        /// Read by ShellWindow on <see cref="StepChanged"/> to disable the header's Save
-        /// button. Default false — only meaningful after <see cref="InitializeStep4"/> has
-        /// run, but the Save button is only visible (content="Save") on step 4 anyway.</summary>
-        public bool IsSaveBlocked => _hasBlockingIssues;
-
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
         private static readonly Regex DateRegex = new(@"^\d{4}-\d{2}-\d{2}$", RegexOptions.Compiled);
 
@@ -84,8 +69,6 @@ namespace DeadEditor
             InitializeComponent();
             _boxSetService = boxSetService;
             ConcertListBox.ItemsSource = _concertVms;
-            ValidationItemsControl.ItemsSource = _validationIssues;
-            ReviewDiscsItemsControl.ItemsSource = _reviewDiscs;
             ShowStep(1);
         }
 
@@ -119,11 +102,6 @@ namespace DeadEditor
         /// </summary>
         public void Save()
         {
-            // Defensive: the header Save button is disabled when _hasBlockingIssues is true
-            // (see HeaderBar.UpdateBoxSetWizardSaveEnabled), but guard anyway in case the
-            // method is reached programmatically.
-            if (_hasBlockingIssues) return;
-
             if (!ValidateStep1())
             {
                 if (_currentStep != 1) ShowStep(1);
@@ -140,21 +118,6 @@ namespace DeadEditor
                 ValidationMessage.Text = "A box set with this name already exists. Please use a different name.";
                 if (_currentStep != 1) ShowStep(1);
                 return;
-            }
-
-            // Soft-warning confirmation: step 4's amber-state validation issues (incomplete
-            // tracks, disc-count mismatch, concerts missing date/venue) are non-blocking
-            // but worth confirming before write.
-            var warnings = _validationIssues
-                .Where(i => i.Severity == ValidationSeverity.Warning)
-                .ToList();
-            if (warnings.Count > 0)
-            {
-                var summary = string.Join("\n", warnings.Select(w => "• " + w.Message));
-                var result = MessageBox.Show(
-                    $"There are validation warnings:\n\n{summary}\n\nSave anyway?",
-                    "Save with warnings", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result != MessageBoxResult.Yes) return;
             }
 
             // Rebuild _definition.Concerts + _definition.Discs from the step-2/3 VMs.
@@ -195,7 +158,6 @@ namespace DeadEditor
             Step4Content.Visibility = step == 4 ? Visibility.Visible : Visibility.Collapsed;
 
             if (step == 3) InitializeStep3();
-            if (step == 4) InitializeStep4();
 
             StepIndicatorText.Text = step switch
             {
@@ -585,245 +547,6 @@ namespace DeadEditor
                 UpdateTrackEmptyState();
             }
         }
-
-        // ===== STEP 4 — REVIEW =====
-
-        /// <summary>
-        /// Called from <see cref="ShowStep"/> whenever step 4 becomes visible. Re-runs
-        /// every entry (Back-and-Next traversals could have changed data). Builds the
-        /// summary card, runs validation, and rebuilds the color-coded track list.
-        /// </summary>
-        private void InitializeStep4()
-        {
-            BuildSummary();
-            BuildValidation();
-            BuildReviewDiscs();
-        }
-
-        private void BuildSummary()
-        {
-            SummaryNameText.Text = string.IsNullOrEmpty(_definition.Name)
-                ? "(unnamed box set)"
-                : _definition.Name;
-
-            var releaseParts = new List<string>();
-            if (!string.IsNullOrEmpty(_definition.ReleaseDate)) releaseParts.Add(_definition.ReleaseDate);
-            if (!string.IsNullOrEmpty(_definition.Label)) releaseParts.Add(_definition.Label);
-            if (!string.IsNullOrEmpty(_definition.CatalogNumber)) releaseParts.Add(_definition.CatalogNumber);
-            SummaryReleaseInfoText.Text = releaseParts.Count == 0
-                ? "(no release info)"
-                : string.Join(" · ", releaseParts);
-
-            var concertCount = _concertVms.Count;
-            SummaryConcertsText.Text = concertCount == 0
-                ? "0 concerts — none added"
-                : $"{concertCount} concert{(concertCount == 1 ? "" : "s")}";
-
-            var discCount = _discVms.Count;
-            var trackCount = _discVms.Sum(d => d.Tracks.Count);
-            var discsInfo = _definition.DiscCount == discCount
-                ? $"{discCount} disc{(discCount == 1 ? "" : "s")}"
-                : $"{_definition.DiscCount} declared, {discCount} entered";
-            SummaryDiscsText.Text = $"{discsInfo} · {trackCount} track{(trackCount == 1 ? "" : "s")}";
-        }
-
-        /// <summary>
-        /// Runs the three-state validation rules, populates <see cref="_validationIssues"/>,
-        /// sets <see cref="_hasBlockingIssues"/>, and styles the panel header + border by
-        /// overall severity. Brushes resolved fresh per call from App.xaml.
-        /// </summary>
-        private void BuildValidation()
-        {
-            _validationIssues.Clear();
-
-            var greenBrush = (Brush)FindResource("BadgeVerifiedGlyph");
-            var amberBrush = (Brush)FindResource("MarkerAmberAccent");
-            var redBrush = (Brush)FindResource("BadgeErrorGlyph");
-
-            // Concert ids that actually exist (used to detect dangling track references).
-            // Concerts with an empty Date have no usable Id; they don't contribute.
-            var validIds = new HashSet<string>(
-                _concertVms.Where(c => !string.IsNullOrEmpty(c.Date)).Select(c => c.Date));
-
-            // ===== Hard blocks =====
-            if (_concertVms.Count == 0)
-            {
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = "No concerts. Add at least one concert in step 2.",
-                    SeverityBrush = redBrush,
-                    Severity = ValidationSeverity.Block,
-                });
-            }
-
-            if (_discVms.Count == 0)
-            {
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = "No discs. Add at least one disc with tracks in step 3.",
-                    SeverityBrush = redBrush,
-                    Severity = ValidationSeverity.Block,
-                });
-            }
-
-            var danglingTrackNumbers = new List<string>();
-            foreach (var disc in _discVms)
-            {
-                foreach (var track in disc.Tracks)
-                {
-                    if (!string.IsNullOrEmpty(track.ConcertId) && !validIds.Contains(track.ConcertId))
-                        danglingTrackNumbers.Add(track.TrackNumber.ToString());
-                }
-            }
-            if (danglingTrackNumbers.Count > 0)
-            {
-                var listing = string.Join(", ", danglingTrackNumbers.Take(8));
-                if (danglingTrackNumbers.Count > 8)
-                    listing += $" (+{danglingTrackNumbers.Count - 8} more)";
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = $"Tracks {listing} reference concerts that no longer exist. Fix in step 3 or restore the concert in step 2.",
-                    SeverityBrush = redBrush,
-                    Severity = ValidationSeverity.Block,
-                });
-            }
-
-            // ===== Soft warnings =====
-            // Amber-state tracks: missing required fields, but ConcertId (if set) is valid.
-            var amberCount = 0;
-            foreach (var disc in _discVms)
-            {
-                foreach (var track in disc.Tracks)
-                {
-                    // Skip tracks already counted as dangling.
-                    if (!string.IsNullOrEmpty(track.ConcertId) && !validIds.Contains(track.ConcertId))
-                        continue;
-
-                    var missing = track.TrackNumber <= 0
-                               || string.IsNullOrWhiteSpace(track.Title)
-                               || string.IsNullOrWhiteSpace(track.ConcertId)
-                               || string.IsNullOrWhiteSpace(track.SongName);
-                    if (missing) amberCount++;
-                }
-            }
-            if (amberCount > 0)
-            {
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = $"{amberCount} track{(amberCount == 1 ? "" : "s")} {(amberCount == 1 ? "has" : "have")} missing required fields (track number, title, concert, or song name).",
-                    SeverityBrush = amberBrush,
-                    Severity = ValidationSeverity.Warning,
-                });
-            }
-
-            if (_definition.DiscCount != _discVms.Count)
-            {
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = $"Disc count mismatch: step 1 says {_definition.DiscCount}, but step 3 has {_discVms.Count} disc{(_discVms.Count == 1 ? "" : "s")}.",
-                    SeverityBrush = amberBrush,
-                    Severity = ValidationSeverity.Warning,
-                });
-            }
-
-            var concertsWithIssues = _concertVms.Count(c =>
-                string.IsNullOrWhiteSpace(c.Date) || string.IsNullOrWhiteSpace(c.Venue));
-            if (concertsWithIssues > 0)
-            {
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = $"{concertsWithIssues} concert{(concertsWithIssues == 1 ? "" : "s")} {(concertsWithIssues == 1 ? "is" : "are")} missing date or venue.",
-                    SeverityBrush = amberBrush,
-                    Severity = ValidationSeverity.Warning,
-                });
-            }
-
-            _hasBlockingIssues = _validationIssues.Any(i => i.Severity == ValidationSeverity.Block);
-
-            // Header text + panel border reflect overall state.
-            if (_validationIssues.Count == 0)
-            {
-                _validationIssues.Add(new ValidationIssue
-                {
-                    Message = "Ready to save — no issues found.",
-                    SeverityBrush = greenBrush,
-                    Severity = ValidationSeverity.Info,
-                });
-                ValidationHeaderText.Text = "Ready to save";
-                ValidationPanel.BorderBrush = greenBrush;
-            }
-            else if (_hasBlockingIssues)
-            {
-                ValidationHeaderText.Text = "Save blocked — fix these issues";
-                ValidationPanel.BorderBrush = redBrush;
-            }
-            else
-            {
-                ValidationHeaderText.Text = "Ready to save with warnings";
-                ValidationPanel.BorderBrush = amberBrush;
-            }
-        }
-
-        /// <summary>
-        /// Rebuilds the per-disc / per-track read-only display rows for the color-coded
-        /// track list. Uses the same three-state rule as <see cref="BuildValidation"/>:
-        /// red = dangling concert reference, amber = missing required field, green = OK.
-        /// </summary>
-        private void BuildReviewDiscs()
-        {
-            _reviewDiscs.Clear();
-
-            var greenBrush = (Brush)FindResource("BadgeVerifiedGlyph");
-            var amberBrush = (Brush)FindResource("MarkerAmberAccent");
-            var redBrush = (Brush)FindResource("BadgeErrorGlyph");
-
-            var validIds = new HashSet<string>(
-                _concertVms.Where(c => !string.IsNullOrEmpty(c.Date)).Select(c => c.Date));
-
-            foreach (var disc in _discVms)
-            {
-                var name = string.IsNullOrEmpty(disc.DiscName) ? "" : " — " + disc.DiscName;
-                var trackCount = disc.Tracks.Count;
-                var discRow = new ReviewDiscRow
-                {
-                    DiscHeaderText = $"Disc {disc.DiscNumber}{name} · {trackCount} track{(trackCount == 1 ? "" : "s")}",
-                };
-
-                foreach (var track in disc.Tracks)
-                {
-                    discRow.TrackRows.Add(BuildTrackRow(track, validIds, greenBrush, amberBrush, redBrush));
-                }
-
-                _reviewDiscs.Add(discRow);
-            }
-        }
-
-        private static ReviewTrackRow BuildTrackRow(
-            BoxSetDiscTrackVm track, HashSet<string> validIds,
-            Brush green, Brush amber, Brush red)
-        {
-            var dangling = !string.IsNullOrEmpty(track.ConcertId) && !validIds.Contains(track.ConcertId);
-            var missingFields = track.TrackNumber <= 0
-                             || string.IsNullOrWhiteSpace(track.Title)
-                             || string.IsNullOrWhiteSpace(track.ConcertId)
-                             || string.IsNullOrWhiteSpace(track.SongName);
-
-            Brush status = dangling ? red : (missingFields ? amber : green);
-
-            var concertLabel = string.IsNullOrEmpty(track.ConcertId)
-                ? "(unassigned)"
-                : (dangling ? $"(dangling: {track.ConcertId})" : track.ConcertId);
-
-            return new ReviewTrackRow
-            {
-                TrackNumberDisplay = track.TrackNumber > 0 ? track.TrackNumber.ToString() : "—",
-                TitleDisplay = string.IsNullOrEmpty(track.Title) ? "(untitled)" : track.Title,
-                ConcertLabelDisplay = concertLabel,
-                SongNameDisplay = string.IsNullOrEmpty(track.SongName) ? "" : track.SongName,
-                SegueDisplay = track.SegueOut ? "↪" : "",
-                StatusBrush = status,
-            };
-        }
     }
 
     // ===== STEP-2 VIEW MODELS =====
@@ -1029,40 +752,5 @@ namespace DeadEditor
     {
         public string Id { get; set; } = "";
         public string DisplayLabel { get; set; } = "";
-    }
-
-    // ===== STEP-4 REVIEW VIEW MODELS =====
-    // Plain POCOs (no INPC) — rebuilt fresh on every step-4 entry and displayed read-only.
-
-    public enum ValidationSeverity { Block, Warning, Info }
-
-    /// <summary>One line in the wizard's step-4 validation panel. <see cref="SeverityBrush"/>
-    /// drives the bullet color; <see cref="Severity"/> drives the Save-gating logic.</summary>
-    public class ValidationIssue
-    {
-        public string Message { get; set; } = "";
-        public Brush SeverityBrush { get; set; } = Brushes.Gray;
-        public ValidationSeverity Severity { get; set; }
-    }
-
-    /// <summary>A disc as rendered in the step-4 color-coded track list. Contains its own
-    /// pre-formatted header text plus the per-track display rows.</summary>
-    public class ReviewDiscRow
-    {
-        public string DiscHeaderText { get; set; } = "";
-        public ObservableCollection<ReviewTrackRow> TrackRows { get; } = new();
-    }
-
-    /// <summary>One row of the step-4 color-coded track list. <see cref="StatusBrush"/>
-    /// is the per-row color glyph (green/amber/red). All display strings are
-    /// pre-formatted to avoid converters on a read-only surface.</summary>
-    public class ReviewTrackRow
-    {
-        public string TrackNumberDisplay { get; set; } = "";
-        public string TitleDisplay { get; set; } = "";
-        public string ConcertLabelDisplay { get; set; } = "";
-        public string SongNameDisplay { get; set; } = "";
-        public string SegueDisplay { get; set; } = "";
-        public Brush StatusBrush { get; set; } = Brushes.Gray;
     }
 }

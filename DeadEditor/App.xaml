@@ -24,9 +24,6 @@
              (Library verification column). Distinct from BadgeVerifiedBg, which is a badge
              background in EditMetadataView and reads too dark when used as a foreground. -->
         <SolidColorBrush x:Key="BadgeVerifiedGlyph"   Color="#4EAA3F"/>
-        <!-- Red for error / blocking-issue glyphs and borders (e.g. the wizard step-4
-             review's dangling concert references). Foreground-tuned for dark surfaces. -->
-        <SolidColorBrush x:Key="BadgeErrorGlyph"      Color="#E74C3C"/>
 
         <!-- Edit markers (reserved for prompt 6's amber left-edge marker on changed cells/inputs) -->
         <SolidColorBrush x:Key="MarkerAmberAccent"    Color="#F0AD4E"/>

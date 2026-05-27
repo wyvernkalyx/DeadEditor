@@ -248,21 +248,6 @@ namespace DeadEditor
             _wizardCurrentStep = step;
             BoxSetWizardBackButton.IsEnabled = step > 1;
             BoxSetWizardNextSaveButton.Content = step == 4 ? "Save" : "Next";
-            // Reset the Next/Save button to enabled on every step transition. Step-4 entry
-            // may immediately re-disable via UpdateBoxSetWizardSaveEnabled if validation
-            // surfaces blocking issues; steps 1-3 always allow Next.
-            BoxSetWizardNextSaveButton.IsEnabled = true;
-        }
-
-        /// <summary>
-        /// Sets the wizard's Next/Save button enabled state. Called from ShellWindow after
-        /// the wizard transitions to step 4, reflecting <see cref="BoxSetWizardView.IsSaveBlocked"/>.
-        /// On steps 1-3 the button is always enabled (set by <see cref="UpdateBoxSetWizardStep"/>);
-        /// this method is intended only for step 4's Save gating.
-        /// </summary>
-        public void UpdateBoxSetWizardSaveEnabled(bool enabled)
-        {
-            BoxSetWizardNextSaveButton.IsEnabled = enabled;
         }
 
         private void BoxSetWizardBackButton_Click(object sender, RoutedEventArgs e)

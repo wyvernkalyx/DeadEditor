@@ -572,14 +572,7 @@ namespace DeadEditor
             wizard.Completed += (s, a) => NavigateToBoxSets();
 
             // Wizard step changes drive the HeaderBar's Back/Next/Save button state.
-            // On step 4 we additionally honor IsSaveBlocked (set by the wizard's validation)
-            // to disable the Save button when validation found blocking issues.
-            wizard.StepChanged += (s, step) =>
-            {
-                HeaderBar.UpdateBoxSetWizardStep(step);
-                if (step == 4)
-                    HeaderBar.UpdateBoxSetWizardSaveEnabled(!wizard.IsSaveBlocked);
-            };
+            wizard.StepChanged += (s, step) => HeaderBar.UpdateBoxSetWizardStep(step);
 
             _navigationService.NavigateToRoot(wizard);
         }
