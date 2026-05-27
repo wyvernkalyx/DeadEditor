@@ -236,98 +236,6 @@ namespace DeadEditor
             }
         }
 
-        private void AddSetButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_selectedConcertVm == null) return;
-            // Default label: next sequential integer ("1", "2", "3", ...). User can rename.
-            var nextIndex = _selectedConcertVm.Setlist.Count + 1;
-            _selectedConcertVm.Setlist.Add(new BoxSetSetVm { Set = nextIndex.ToString() });
-        }
-
-        private void RemoveSetButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is BoxSetSetVm setVm && _selectedConcertVm != null)
-            {
-                var label = string.IsNullOrEmpty(setVm.Set) ? "(unnamed)" : setVm.Set;
-                var result = MessageBox.Show($"Remove set \"{label}\" and all its songs?", "Remove Set",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result != MessageBoxResult.Yes) return;
-                _selectedConcertVm.Setlist.Remove(setVm);
-            }
-        }
-
-        /// <summary>
-        /// Per-set Normalize. Walks every song in the set and replaces its name with the
-        /// canonical form returned by NormalizationService, matching the iteration pattern
-        /// in EditSetlistView.xaml.cs:163-184 (NormalizeButton_Click).
-        /// </summary>
-        private void NormalizeSetButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is BoxSetSetVm setVm)
-            {
-                foreach (var songVm in setVm.Songs)
-                {
-                    if (string.IsNullOrWhiteSpace(songVm.Name)) continue;
-                    var normalized = _normalizationService.Normalize(songVm.Name);
-                    if (!string.IsNullOrEmpty(normalized) && normalized != songVm.Name)
-                    {
-                        songVm.Name = normalized;
-                    }
-                }
-            }
-        }
-
-        private void AddSongButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is BoxSetSetVm setVm)
-            {
-                setVm.Songs.Add(new BoxSetSetSongVm());
-            }
-        }
-
-        private void RemoveSongButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is BoxSetSetSongVm song && _selectedConcertVm != null)
-            {
-                foreach (var setVm in _selectedConcertVm.Setlist)
-                {
-                    if (setVm.Songs.Remove(song)) return;
-                }
-            }
-        }
-
-        private void MoveSongUpButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is BoxSetSetSongVm song && _selectedConcertVm != null)
-            {
-                foreach (var setVm in _selectedConcertVm.Setlist)
-                {
-                    var idx = setVm.Songs.IndexOf(song);
-                    if (idx >= 0)
-                    {
-                        if (idx > 0) setVm.Songs.Move(idx, idx - 1);
-                        return;
-                    }
-                }
-            }
-        }
-
-        private void MoveSongDownButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is BoxSetSetSongVm song && _selectedConcertVm != null)
-            {
-                foreach (var setVm in _selectedConcertVm.Setlist)
-                {
-                    var idx = setVm.Songs.IndexOf(song);
-                    if (idx >= 0)
-                    {
-                        if (idx < setVm.Songs.Count - 1) setVm.Songs.Move(idx, idx + 1);
-                        return;
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Rebuilds <see cref="_definition"/>.<c>Concerts</c> from <see cref="_concertVms"/>
         /// just before <see cref="BoxSetService.Write"/>. Step-1 fields have already been
@@ -374,8 +282,6 @@ namespace DeadEditor
         public string State { get => _state; set { if (_state != value) { _state = value; OnPropertyChanged(); } } }
         public string Country { get => _country; set { if (_country != value) { _country = value; OnPropertyChanged(); } } }
 
-        public ObservableCollection<BoxSetSetVm> Setlist { get; } = new();
-
         /// <summary>Composite label shown in the concert ListBox. Refreshes when
         /// Date or Venue change because their setters raise PropertyChanged on this.</summary>
         public string DisplayLabel
@@ -405,44 +311,6 @@ namespace DeadEditor
             City = City,
             State = State,
             Country = Country,
-            Setlist = Setlist.Select(s => s.ToModel()).ToList(),
         };
-    }
-
-    /// <summary>Wraps <see cref="BoxSetSet"/>. <c>Set</c> is a free string (the memo's
-    /// Position 4 lets the wizard recommend a vocabulary but the model accepts anything).</summary>
-    public class BoxSetSetVm : INotifyPropertyChanged
-    {
-        private string _set = "";
-        public string Set { get => _set; set { if (_set != value) { _set = value; OnPropertyChanged(); } } }
-
-        public ObservableCollection<BoxSetSetSongVm> Songs { get; } = new();
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
-
-        public BoxSetSet ToModel() => new()
-        {
-            Set = Set,
-            Songs = Songs.Select(s => s.ToModel()).ToList(),
-        };
-    }
-
-    /// <summary>Wraps <see cref="BoxSetSetSong"/>. <c>SegueOut=true</c> means this song
-    /// segues into the next one in the same set.</summary>
-    public class BoxSetSetSongVm : INotifyPropertyChanged
-    {
-        private string _name = "";
-        private bool _segueOut;
-
-        public string Name { get => _name; set { if (_name != value) { _name = value; OnPropertyChanged(); } } }
-        public bool SegueOut { get => _segueOut; set { if (_segueOut != value) { _segueOut = value; OnPropertyChanged(); } } }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
-
-        public BoxSetSetSong ToModel() => new() { Name = Name, SegueOut = SegueOut };
     }
 }
