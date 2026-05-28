@@ -6,7 +6,19 @@
 
 ---
 
+## Major decision: 2026-05-28 — concerts collapsed; date moves to the track
+
+A box set is, by this app's definition, a bundle of multiple distinct shows or cross-show selections. *Europe '72: The Complete Recordings* is 22 complete shows; *So Many Roads* is 42 selections, each track from a different date across thirty years. A single-date concert parent object is therefore the wrong shape for a box set — the format is multi-date by nature.
+
+The date is genuinely a property of the recording: the track. So the `BoxSetConcert` object collapses away. The model is now flat — `BoxSetDefinition → List<BoxSetTrack>` — with each `BoxSetTrack` carrying `{ TrackNumber, SongName, Date, SegueOut }`. Venue, city, and state are derivable from the date via `ShowLookupService` and are not stored; this stays derivable until real friction in use argues otherwise.
+
+This supersedes the "two levels deep: definition → concerts → tracks" framing in the 2026-05-29 (disc removal) and earlier 2026-05-27 (set removal) entries. The model is one level: definition → tracks.
+
+The "pull setlist for date" workflow (built in commit G) is the fast path: enter a date, pull that show's setlist from the show database, append tracks stamped with that date, then verify and prune. For a complete-shows box set, repeat per show date; for a cross-show compilation, dates are entered per track. The flat list serves both.
+
 ## Major decision: 2026-05-29 — disc abstraction removed
+
+*(Superseded in part — the 2026-05-28 concert collapse flattened the model to definition → tracks; the "two levels deep" framing below is historical. See the top decision entry.)*
 
 A late conversation during wizard implementation surfaced that the disc abstraction does not match DeadEditor's actual workflow. The app only ever sees audio as files in folders, not as discs. The clarifying example was *Enjoying the Ride* sold as a continuous digital download via dead.net — no discs to manage, just an ordered stream of tracks per concert.
 
@@ -15,6 +27,8 @@ The data model is now **two levels deep**: definition → concerts → tracks. T
 The rest of this memo has been edited surgically to reflect that decision. The "What a box set actually is" framing below describes the heterogeneous packaging that motivated the original design; the structural conclusions ("disc and concert as orthogonal axes") no longer apply.
 
 ## Major decision: 2026-05-27 — sets are not modeled in box-set definitions
+
+*(Superseded in part — the 2026-05-28 concert collapse flattened concerts → tracks into one flat track list; the two-level framing below is historical. Sets stay unmodeled — `SetLabel` becomes a flat field on `BoxSetTrack` if ever needed. See the top decision entry.)*
 
 The 2026-05-29 disc-removal entry collapsed sets into "no setlist sub-structure on concerts" without standalone reasoning. The standalone reasoning, captured here:
 
@@ -25,6 +39,17 @@ In practice: the curator has never used set information as a filter, a search ax
 Implication: box-set definitions are tagging templates, not curatorial records. Their job is to map (track in a box set) → (concert date, song name). Per-set structure is not part of that mapping.
 
 If a future need surfaces — a real, concrete "I'd actually use this to do X" — sets can be added back as a string property on `BoxSetTrack` (e.g. `SetLabel`) without restructuring. The two-level model (concerts → tracks) accommodates it as a flat field; no nested type needed.
+
+---
+
+## What counts as a box set (vs. an official release)
+
+The box-set feature exists to handle a shape a normal album does not. The distinction:
+
+- **Official release** — one show, or one continuous run treated as a single listening unit. Dave's Picks, Dick's Picks, and Road Trips volumes all live here. A single volume is structurally a normal live album: a tracklist whose per-track dates all happen to be the same. Series identity ("Dave's Picks Vol. 43") currently lives in the release *name* string, not in structured fields. A series being complete (Dick's Picks, Road Trips) versus in-progress (Dave's Picks) does not change the classification — series status is a publishing fact, not a structural boundary. The tell: reclassifying a volume when its series finishes would be a no-op data change.
+- **Box set** — a bundle of multiple distinct shows or cross-show selections, with its own identity as a collection. *Europe '72: The Complete Recordings*, *Pacific Northwest '73-'74*, *So Many Roads*.
+
+Both shapes share the same atom: every track maps to (a date, a song name). In a complete-shows box set, all tracks of one show share a date. In a cross-show compilation, every track carries its own date. Either way, the track is where the date lives — which is exactly why concerts collapsed (see the decision entry above).
 
 ---
 
