@@ -30,14 +30,6 @@ namespace DeadEditor
         private readonly BoxSetDefinition _definition = new();
         private int _currentStep = 1;
 
-        // Step-2 state: editing VMs (separate from the underlying model).
-        // _definition.Concerts is rebuilt from these in SyncConcertsToDefinition() at
-        // Save time, matching EditSetlistView's "build models from EditableTracks" idiom
-        // (EditSetlistView.xaml.cs:222-262). Keeps the data models plain (no INPC per
-        // commit 1's directive) while still getting INPC-driven list refresh in the UI.
-        private readonly ObservableCollection<BoxSetConcertVm> _concertVms = new();
-        private BoxSetConcertVm? _selectedConcertVm;
-
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
         private static readonly Regex DateRegex = new(@"^\d{4}-\d{2}-\d{2}$", RegexOptions.Compiled);
 
@@ -56,7 +48,6 @@ namespace DeadEditor
         {
             InitializeComponent();
             _boxSetService = boxSetService;
-            ConcertListBox.ItemsSource = _concertVms;
             ShowStep(1);
         }
 
@@ -108,10 +99,6 @@ namespace DeadEditor
                 return;
             }
 
-            // Rebuild _definition.Concerts from the step-2 VMs. Steps 3/4 will add
-            // disc/track sync here in subsequent commits.
-            SyncConcertsToDefinition();
-
             try
             {
                 _boxSetService.Write(_definition, slug);
@@ -149,7 +136,7 @@ namespace DeadEditor
             StepIndicatorText.Text = step switch
             {
                 1 => "Step 1 of 4 — Top-Level Info",
-                2 => "Step 2 of 4 — Concerts",
+                2 => "Step 2 of 4 — Concerts and Tracks",
                 3 => "Step 3 of 4 — Discs",
                 4 => "Step 4 of 4 — Review",
                 _ => $"Step {step} of 4"
@@ -197,120 +184,5 @@ namespace DeadEditor
             _definition.CatalogNumber = CatalogNumberTextBox.Text?.Trim() ?? "";
             _definition.Notes = NotesTextBox.Text?.Trim() ?? "";
         }
-
-        // ===== STEP 2 — CONCERTS =====
-
-        private void AddConcertButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Country default matches the existing concert-data convention. User-overridable;
-            // not a hardcoded artist locale.
-            var vm = new BoxSetConcertVm { Country = "USA" };
-            _concertVms.Add(vm);
-            ConcertListBox.SelectedItem = vm;
-        }
-
-        private void RemoveConcertButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_selectedConcertVm == null) return;
-            var label = string.IsNullOrEmpty(_selectedConcertVm.Date) ? "(unsaved)" : _selectedConcertVm.Date;
-            var result = MessageBox.Show($"Remove concert {label}?", "Remove Concert",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result != MessageBoxResult.Yes) return;
-            _concertVms.Remove(_selectedConcertVm);
-        }
-
-        private void ConcertListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _selectedConcertVm = ConcertListBox.SelectedItem as BoxSetConcertVm;
-            if (_selectedConcertVm == null)
-            {
-                ConcertDetailScroller.Visibility = Visibility.Collapsed;
-                NoConcertSelectedText.Visibility = Visibility.Visible;
-                ConcertDetailPanel.DataContext = null;
-            }
-            else
-            {
-                ConcertDetailPanel.DataContext = _selectedConcertVm;
-                ConcertDetailScroller.Visibility = Visibility.Visible;
-                NoConcertSelectedText.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        /// <summary>
-        /// Rebuilds <see cref="_definition"/>.<c>Concerts</c> from <see cref="_concertVms"/>
-        /// just before <see cref="BoxSetService.Write"/>. Step-1 fields have already been
-        /// synced by <see cref="ValidateStep1"/>. The model itself stays plain (no INPC,
-        /// no ObservableCollection); the wizard's UI lives entirely in VMs.
-        /// </summary>
-        private void SyncConcertsToDefinition()
-        {
-            _definition.Concerts.Clear();
-            foreach (var vm in _concertVms)
-                _definition.Concerts.Add(vm.ToModel());
-        }
-    }
-
-    // ===== STEP-2 VIEW MODELS =====
-    // Mirrors EditSetlistView.xaml.cs's EditableTrack (lines 341-395): tiny INPC wrappers
-    // around the underlying data shapes so the wizard's UI can bind two-way and refresh
-    // dependent labels (the ListBox's DisplayLabel updates when Date/Venue change).
-    // ToModel() / FromModel() handle the conversion at save and load time.
-
-    /// <summary>Wraps <see cref="BoxSetConcert"/> for two-way binding in the wizard's
-    /// step-2 right pane and the ListBox row template's <c>DisplayLabel</c>.</summary>
-    public class BoxSetConcertVm : INotifyPropertyChanged
-    {
-        private string _date = "";
-        private string _venue = "";
-        private string _city = "";
-        private string _state = "";
-        private string _country = "";
-
-        public string Date
-        {
-            get => _date;
-            set { if (_date != value) { _date = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayLabel)); } }
-        }
-
-        public string Venue
-        {
-            get => _venue;
-            set { if (_venue != value) { _venue = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayLabel)); } }
-        }
-
-        public string City  { get => _city;  set { if (_city  != value) { _city  = value; OnPropertyChanged(); } } }
-        public string State { get => _state; set { if (_state != value) { _state = value; OnPropertyChanged(); } } }
-        public string Country { get => _country; set { if (_country != value) { _country = value; OnPropertyChanged(); } } }
-
-        /// <summary>Composite label shown in the concert ListBox. Refreshes when
-        /// Date or Venue change because their setters raise PropertyChanged on this.</summary>
-        public string DisplayLabel
-        {
-            get
-            {
-                var d = string.IsNullOrEmpty(Date) ? "(no date)" : Date;
-                var v = string.IsNullOrEmpty(Venue) ? "(no venue)" : Venue;
-                return d == "(no date)" && v == "(no venue)"
-                    ? "(new concert)"
-                    : $"{d} — {v}";
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name!));
-
-        /// <summary>Builds a <see cref="BoxSetConcert"/> from this VM. <c>Id</c> defaults
-        /// to <c>Date</c> per the memo ("Using the date as the ID works for a band that
-        /// played at most once a day").</summary>
-        public BoxSetConcert ToModel() => new()
-        {
-            Id = Date,
-            Date = Date,
-            Venue = Venue,
-            City = City,
-            State = State,
-            Country = Country,
-        };
     }
 }

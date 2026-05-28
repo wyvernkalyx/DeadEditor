@@ -81,87 +81,11 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- ===== STEP 2 — Concerts ===== -->
-            <Grid x:Name="Step2Content" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Left pane: concert list + add/remove -->
-                <DockPanel Grid.Column="0" Margin="0,0,16,0">
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
-                        <TextBlock Text="CONCERTS" Style="{StaticResource LabelStyle}"
-                                   VerticalAlignment="Center" Margin="0,0,12,0"/>
-                        <Button x:Name="AddConcertButton" Content="+ Add"
-                                Click="AddConcertButton_Click"
-                                Padding="8,4" Cursor="Hand"
-                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
-                        <Button x:Name="RemoveConcertButton" Content="− Remove"
-                                Click="RemoveConcertButton_Click"
-                                Padding="8,4" Cursor="Hand" Margin="8,0,0,0"
-                                Background="#3E3E42" Foreground="#CCCCCC" BorderBrush="#555555"/>
-                    </StackPanel>
-
-                    <ListBox x:Name="ConcertListBox"
-                             SelectionChanged="ConcertListBox_SelectionChanged"
-                             Background="#2D2D30" BorderBrush="#3F3F46" BorderThickness="1"
-                             Foreground="#E0E0E0">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DisplayLabel}"
-                                           FontSize="14" Padding="4,4"
-                                           Foreground="#E0E0E0"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
-
-                <!-- Right pane: detail form (shown when a concert is selected) -->
-                <ScrollViewer Grid.Column="1" x:Name="ConcertDetailScroller"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled"
-                              Visibility="Collapsed">
-                    <StackPanel x:Name="ConcertDetailPanel">
-                        <TextBlock Text="DATE *" Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Date, UpdateSourceTrigger=LostFocus}"
-                                 Style="{StaticResource FieldStyle}"
-                                 Width="160" HorizontalAlignment="Left" Margin="0,0,0,12"
-                                 ToolTip="yyyy-MM-dd"/>
-
-                        <TextBlock Text="VENUE" Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Venue, UpdateSourceTrigger=LostFocus}"
-                                 Style="{StaticResource FieldStyle}"
-                                 Width="400" HorizontalAlignment="Left" Margin="0,0,0,12"/>
-
-                        <TextBlock Text="CITY" Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding City, UpdateSourceTrigger=LostFocus}"
-                                 Style="{StaticResource FieldStyle}"
-                                 Width="240" HorizontalAlignment="Left" Margin="0,0,0,12"/>
-
-                        <TextBlock Text="STATE" Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding State, UpdateSourceTrigger=LostFocus}"
-                                 Style="{StaticResource FieldStyle}"
-                                 Width="120" HorizontalAlignment="Left" Margin="0,0,0,12"/>
-
-                        <TextBlock Text="COUNTRY" Style="{StaticResource LabelStyle}"/>
-                        <TextBox Text="{Binding Country, UpdateSourceTrigger=LostFocus}"
-                                 Style="{StaticResource FieldStyle}"
-                                 Width="200" HorizontalAlignment="Left" Margin="0,0,0,16"/>
-
-                        <TextBlock Text="Tracks — rebuilt in commit G"
-                                   Foreground="#888888" FontSize="16"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Margin="0,40,0,0"/>
-                    </StackPanel>
-                </ScrollViewer>
-
-                <!-- Empty-state: shown when no concert is selected -->
-                <TextBlock Grid.Column="1" x:Name="NoConcertSelectedText"
-                           Text="Select a concert from the list, or click + Add to create one"
-                           Foreground="#888888" FontSize="14"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>
+            <!-- ===== STEP 2 — Concerts and Tracks (placeholder; real content in commit G) ===== -->
+            <TextBlock x:Name="Step2Content" Visibility="Collapsed"
+                       Text="Concerts and tracks — rebuilt in commit G"
+                       Foreground="#888888" FontSize="16"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
             <!-- ===== STEP 3 — Discs (placeholder; real content in commit 4b) ===== -->
             <TextBlock x:Name="Step3Content" Visibility="Collapsed"
