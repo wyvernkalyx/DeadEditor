@@ -17,9 +17,7 @@ namespace DeadEditor.Models
         public string Label { get; set; } = "";
         public string CatalogNumber { get; set; } = "";
         public string Notes { get; set; } = "";
-        public int DiscCount { get; set; }
         public bool Verified { get; set; }
         public List<BoxSetConcert> Concerts { get; set; } = new();
-        public List<BoxSetDisc> Discs { get; set; } = new();
     }
 }
