@@ -610,6 +610,8 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 
 **CRITICAL:** Follow the [Documentation-First Development Workflow](#documentation-first-development-workflow) for all new features.
 
+**Check lived demand, not abstract desire.** Before adding a feature, ask whether the user has ever used the equivalent capability in real life. "Of course I want X" is a trap when X *would* be nice in the abstract but doesn't connect to the actual goal. Skip features that fail this check; revisit if concrete need surfaces later.
+
 **Feature Design:**
 - Consider both Live and Official Release workflows
 - Test with real concert data

@@ -14,6 +14,18 @@ The data model is now **two levels deep**: definition → concerts → tracks. T
 
 The rest of this memo has been edited surgically to reflect that decision. The "What a box set actually is" framing below describes the heterogeneous packaging that motivated the original design; the structural conclusions ("disc and concert as orthogonal axes") no longer apply.
 
+## Major decision: 2026-05-27 — sets are not modeled in box-set definitions
+
+The 2026-05-29 disc-removal entry collapsed sets into "no setlist sub-structure on concerts" without standalone reasoning. The standalone reasoning, captured here:
+
+DeadEditor's job is mapping audio files to dates and song names. Set structure (Set 1 / Set 2 / encore) is a real musical concept, but other databases — gdshowsdb, setlist.fm — already record it definitively and with more research than DeadEditor will ever do. Replicating set structure here would be authoring downstream curation that adds no value to the core "songs with dates" goal.
+
+In practice: the curator has never used set information as a filter, a search axis, or a listening-choice driver. Sets are decorative for DeadEditor's purpose.
+
+Implication: box-set definitions are tagging templates, not curatorial records. Their job is to map (track in a box set) → (concert date, song name). Per-set structure is not part of that mapping.
+
+If a future need surfaces — a real, concrete "I'd actually use this to do X" — sets can be added back as a string property on `BoxSetTrack` (e.g. `SetLabel`) without restructuring. The two-level model (concerts → tracks) accommodates it as a flat field; no nested type needed.
+
 ---
 
 ## What a box set actually is
