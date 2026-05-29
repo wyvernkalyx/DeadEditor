@@ -15,9 +15,9 @@ namespace DeadEditor
 {
     /// <summary>
     /// Multi-step wizard for authoring a <see cref="BoxSetDefinition"/>. Single
-    /// UserControl; step transitions toggle <c>Visibility</c> on four content panels
+    /// UserControl; step transitions toggle <c>Visibility</c> on three content panels
     /// rather than navigating between views. Step 1 (top-level info) ships in this
-    /// commit; steps 2-4 are placeholders.
+    /// commit; steps 2-3 are placeholders.
     ///
     /// Shell-agnostic by design: raises <see cref="Completed"/> (Save success or
     /// Cancel) and <see cref="StepChanged"/> for the ShellWindow to plumb back to
@@ -61,7 +61,7 @@ namespace DeadEditor
             if (_currentStep == 1 && !ValidateStep1())
                 return;
 
-            if (_currentStep < 4)
+            if (_currentStep < 3)
                 ShowStep(_currentStep + 1);
         }
 
@@ -131,15 +131,13 @@ namespace DeadEditor
             Step1Content.Visibility = step == 1 ? Visibility.Visible : Visibility.Collapsed;
             Step2Content.Visibility = step == 2 ? Visibility.Visible : Visibility.Collapsed;
             Step3Content.Visibility = step == 3 ? Visibility.Visible : Visibility.Collapsed;
-            Step4Content.Visibility = step == 4 ? Visibility.Visible : Visibility.Collapsed;
 
             StepIndicatorText.Text = step switch
             {
-                1 => "Step 1 of 4 — Top-Level Info",
-                2 => "Step 2 of 4 — Concerts and Tracks",
-                3 => "Step 3 of 4 — Discs",
-                4 => "Step 4 of 4 — Review",
-                _ => $"Step {step} of 4"
+                1 => "Step 1 of 3 — Top-Level Info",
+                2 => "Step 2 of 3 — Concerts and Tracks",
+                3 => "Step 3 of 3 — Review",
+                _ => $"Step {step} of 3"
             };
 
             StepChanged?.Invoke(this, step);

@@ -87,15 +87,9 @@
                        Foreground="#888888" FontSize="16"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <!-- ===== STEP 3 — Discs (placeholder; real content in commit 4b) ===== -->
+            <!-- ===== STEP 3 — Review (placeholder; real content in a later commit) ===== -->
             <TextBlock x:Name="Step3Content" Visibility="Collapsed"
-                       Text="Step 3 — Discs (coming next commit)"
-                       Foreground="#888888" FontSize="16"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <!-- ===== STEP 4 — Review (placeholder; real content in commit 4c) ===== -->
-            <TextBlock x:Name="Step4Content" Visibility="Collapsed"
-                       Text="Step 4 — Review (coming next commit). Clicking Save will write the definition with the step-1 fields and empty concerts/discs."
+                       Text="Step 3 — Review (coming next commit). Clicking Save will write the definition with the step-1 fields and an empty track list."
                        Foreground="#888888" FontSize="16"
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        TextWrapping="Wrap" MaxWidth="500" TextAlignment="Center"/>
