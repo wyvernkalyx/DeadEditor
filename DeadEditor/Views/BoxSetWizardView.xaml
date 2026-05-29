@@ -81,11 +81,145 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- ===== STEP 2 — Concerts and Tracks (placeholder; real content in commit G) ===== -->
-            <TextBlock x:Name="Step2Content" Visibility="Collapsed"
-                       Text="Concerts and tracks — rebuilt in commit G"
-                       Foreground="#888888" FontSize="16"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <!-- ===== STEP 2 — Concerts and Tracks (editable flat track grid, commit G2) ===== -->
+            <Grid x:Name="Step2Content" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- Add control -->
+                    <RowDefinition Height="*"/>     <!-- Track grid -->
+                </Grid.RowDefinitions>
+
+                <!-- Row 0: Add button (Delete is via the Del key, matching EditSetlistView) -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                    <Button x:Name="AddTrackButton" Content="＋ Add Track"
+                            Click="AddTrackButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC"
+                            BorderBrush="#555555" BorderThickness="1"
+                            Padding="12,6" Cursor="Hand" FontSize="14"/>
+                </StackPanel>
+
+                <!-- Row 1: Editable track grid (cloned from EditSetlistView.xaml; simpler — no
+                     song/date adornment, no Set combo). -->
+                <Border Grid.Row="1" BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E">
+                    <DataGrid x:Name="TracksDataGrid"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeRows="False"
+                              IsReadOnly="False"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="#3F3F46"
+                              Background="#1E1E1E"
+                              RowBackground="#1E1E1E"
+                              AlternatingRowBackground="#252526"
+                              Foreground="#FFFFFF"
+                              BorderThickness="0"
+                              FontSize="16"
+                              RowHeight="28"
+                              SelectionMode="Extended"
+                              CanUserSortColumns="False"
+                              ColumnWidth="Auto"
+                              HorizontalAlignment="Left"
+                              PreviewKeyDown="TracksDataGrid_PreviewKeyDown">
+
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#2D2D30"/>
+                                <Setter Property="Foreground" Value="#CCCCCC"/>
+                                <Setter Property="BorderBrush" Value="#3F3F46"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                <Setter Property="Padding" Value="6,4"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#264F78"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#2D2D30"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#E0E0E0"/>
+
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="6,2"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="DataGridCell">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#264F78"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+
+                        <DataGrid.Columns>
+                            <!-- Track # — editable (curator renumbers to match the physical release).
+                                 Non-integer input reverts via WPF int-binding default. -->
+                            <DataGridTextColumn Header="#" Binding="{Binding TrackNumber}" Width="Auto" MinWidth="60"/>
+
+                            <!-- Song Name — plain editable text, free-form (no normalization in G2). -->
+                            <DataGridTextColumn Header="Song Name"
+                                                Binding="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
+                                                Width="Auto" MinWidth="300">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        <Setter Property="CaretBrush" Value="#FFFFFF"/>
+                                        <Setter Property="BorderBrush" Value="#007ACC"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="Padding" Value="4,2"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Date — editable; per-track yyyy-MM-dd validated on Save (empty allowed). -->
+                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="120">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        <Setter Property="CaretBrush" Value="#FFFFFF"/>
+                                        <Setter Property="BorderBrush" Value="#007ACC"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="Padding" Value="4,2"/>
+                                    </Style>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+
+                            <!-- Segue — checkbox bound to SegueOut. -->
+                            <DataGridCheckBoxColumn Header="Segue" Binding="{Binding SegueOut, UpdateSourceTrigger=PropertyChanged}" Width="Auto" MinWidth="60">
+                                <DataGridCheckBoxColumn.ElementStyle>
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="IsHitTestVisible" Value="True"/>
+                                    </Style>
+                                </DataGridCheckBoxColumn.ElementStyle>
+                                <DataGridCheckBoxColumn.EditingElementStyle>
+                                    <Style TargetType="CheckBox">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridCheckBoxColumn.EditingElementStyle>
+                            </DataGridCheckBoxColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
 
             <!-- ===== STEP 3 — Review (placeholder; real content in a later commit) ===== -->
             <TextBlock x:Name="Step3Content" Visibility="Collapsed"

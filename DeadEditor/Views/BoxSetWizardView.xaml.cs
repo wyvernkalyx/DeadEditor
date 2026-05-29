@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
 
@@ -48,6 +49,14 @@ namespace DeadEditor
         {
             InitializeComponent();
             _boxSetService = boxSetService;
+
+            // Bind the step-2 grid directly to the long-lived definition's track list.
+            // Edits flow live into _definition.Tracks (approach (a), INPC on BoxSetTrack),
+            // so Save() needs no separate step-2 sync. Safe for the new-box-set flow: a
+            // fresh _definition per wizard, discarded on Cancel. Edit-mode entry (banked)
+            // will revisit with a load-a-copy / discard-on-cancel approach.
+            TracksDataGrid.ItemsSource = _definition.Tracks;
+
             ShowStep(1);
         }
 
@@ -81,6 +90,26 @@ namespace DeadEditor
         /// </summary>
         public void Save()
         {
+            // Flush any in-progress cell edit so a half-typed value (the Date cell
+            // especially) isn't dropped before validation/write.
+            TracksDataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+
+            // Per-track Date validation: empty is allowed (date may not be known yet);
+            // any non-empty malformed date blocks Save, naming the offending row(s).
+            // Mirrors the step-1 date-block pattern.
+            var badTracks = _definition.Tracks
+                .Where(t => !string.IsNullOrEmpty(t.Date) && !DateRegex.IsMatch(t.Date))
+                .ToList();
+            if (badTracks.Count > 0)
+            {
+                var rows = string.Join(", ", badTracks.Select(t => $"#{t.TrackNumber}"));
+                MessageBox.Show(
+                    $"Track date(s) must be in yyyy-MM-dd format (leave blank if unknown).\n\nFix track(s): {rows}",
+                    "Invalid Track Date", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (_currentStep != 2) ShowStep(2);
+                return;
+            }
+
             if (!ValidateStep1())
             {
                 if (_currentStep != 1) ShowStep(1);
@@ -181,6 +210,56 @@ namespace DeadEditor
             _definition.Label = LabelTextBox.Text?.Trim() ?? "";
             _definition.CatalogNumber = CatalogNumberTextBox.Text?.Trim() ?? "";
             _definition.Notes = NotesTextBox.Text?.Trim() ?? "";
+        }
+
+        // ===== STEP 2 — TRACK GRID (add / delete) =====
+
+        /// <summary>Appends a blank track. TrackNumber defaults to the next sequential value
+        /// (max existing + 1; 1 for the first row). Date is left blank — it is the
+        /// performance date, not the release date, and is unknown until the curator enters
+        /// it. The new row is selected and scrolled into view for immediate entry.</summary>
+        private void AddTrackButton_Click(object sender, RoutedEventArgs e)
+        {
+            var nextNumber = _definition.Tracks.Count == 0
+                ? 1
+                : _definition.Tracks.Max(t => t.TrackNumber) + 1;
+
+            var track = new BoxSetTrack
+            {
+                TrackNumber = nextNumber,
+                SongName = "",
+                Date = "",
+                SegueOut = false
+            };
+            _definition.Tracks.Add(track);
+
+            // Rebind — List<T> raises no collection-changed notification (house style; see
+            // EditSetlistView). Cell edits still flow live via BoxSetTrack's INPC.
+            TracksDataGrid.ItemsSource = null;
+            TracksDataGrid.ItemsSource = _definition.Tracks;
+
+            TracksDataGrid.UpdateLayout();
+            TracksDataGrid.SelectedItem = track;
+            TracksDataGrid.ScrollIntoView(track);
+        }
+
+        /// <summary>Del removes the selected rows when the grid is not mid-edit (so Delete
+        /// inside a cell edit doesn't nuke the row). TrackNumbers are NOT renumbered — they
+        /// are curator data matching the physical release, not a display ordinal.</summary>
+        private void TracksDataGrid_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete && !TracksDataGrid.IsEditing())
+            {
+                var selected = TracksDataGrid.SelectedItems.OfType<BoxSetTrack>().ToList();
+                if (selected.Count == 0) return;
+
+                foreach (var track in selected)
+                    _definition.Tracks.Remove(track);
+
+                TracksDataGrid.ItemsSource = null;
+                TracksDataGrid.ItemsSource = _definition.Tracks;
+                e.Handled = true;
+            }
         }
     }
 }

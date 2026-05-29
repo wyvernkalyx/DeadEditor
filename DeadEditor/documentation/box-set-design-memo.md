@@ -204,7 +204,7 @@ A new top-level **Box Sets** view in the sidebar, sibling to Library / Import / 
 The wizard has three steps:
 
 1. **Top-Level Info** — name, release date, label, catalog number, notes.
-2. **Concerts and Tracks** — a list of concerts on the left; selecting a concert reveals its metadata (`yyyy-MM-dd` enforced for date, plus venue, city, state, country) and a unified track grid where the curator enters tracks (track number, song name, segue) in order. Song-name entry follows the existing `EditSetlistView` pattern: the user types names freely, then a Normalize action fuzzy-matches against `songs.json` (scoped by `LibrarySettings.PrimaryArtistName`) to canonicalize them. Live autocomplete does not exist in the project today; it is a future enhancement (tracked in `follow-ups.md`).
+2. **Concerts and Tracks** — a flat, editable track grid bound to `BoxSetDefinition.Tracks`. Columns: **TrackNumber** (editable int; Add defaults to the next sequential — max existing + 1, first row 1), **SongName** (free text), **Date** (`yyyy-MM-dd`, validated per track; empty permitted for not-yet-known dates), **SegueOut** (checkbox). Add appends a row; Delete (Del key, when not mid-edit) removes selected rows without renumbering. Edits flow into `BoxSetDefinition.Tracks` and persist on Save. Song-name normalization against `songs.json` is a deferred follow-up, not part of this grid.
 3. **Review** — read-only summary of the definition with validation, color-coded track display (initially all dimmed since no audio is matched yet), and the Save action.
 
 The wizard can also be entered in edit mode for an existing definition.
