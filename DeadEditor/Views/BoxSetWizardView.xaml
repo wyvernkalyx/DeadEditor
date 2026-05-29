@@ -88,10 +88,28 @@
                     <RowDefinition Height="*"/>     <!-- Track grid -->
                 </Grid.RowDefinitions>
 
-                <!-- Row 0: Add button (Delete is via the Del key, matching EditSetlistView) -->
+                <!-- Row 0: bulk-entry actions. Add (Delete is via the Del key, matching
+                     EditSetlistView); and a "pull setlist for date" action that appends one
+                     track per song from the gdshowsdb reference setlist (commit G3). -->
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
                     <Button x:Name="AddTrackButton" Content="＋ Add Track"
                             Click="AddTrackButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC"
+                            BorderBrush="#555555" BorderThickness="1"
+                            Padding="12,6" Cursor="Hand" FontSize="14"/>
+
+                    <!-- Separator + pull control, distinct from Add as a second bulk action. -->
+                    <Border Width="1" Background="#555555" Margin="16,2,16,2"/>
+
+                    <TextBlock Text="Pull setlist:" Foreground="#999999" FontSize="14"
+                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox x:Name="PullDateTextBox"
+                             Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
+                             CaretBrush="#FFFFFF" Padding="6,4" FontSize="14"
+                             Width="120" VerticalContentAlignment="Center"
+                             ToolTip="yyyy-MM-dd" Margin="0,0,8,0"/>
+                    <Button x:Name="PullSetlistButton" Content="Pull"
+                            Click="PullSetlistButton_Click"
                             Background="#3E3E42" Foreground="#CCCCCC"
                             BorderBrush="#555555" BorderThickness="1"
                             Padding="12,6" Cursor="Hand" FontSize="14"/>

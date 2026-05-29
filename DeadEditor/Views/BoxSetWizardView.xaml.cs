@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
@@ -241,6 +242,50 @@ namespace DeadEditor
             TracksDataGrid.UpdateLayout();
             TracksDataGrid.SelectedItem = track;
             TracksDataGrid.ScrollIntoView(track);
+        }
+
+        /// <summary>Reads the gdshowsdb reference setlist for the entered date and appends
+        /// one track per song to <see cref="_definition"/>'s track list. Append-only and
+        /// non-destructive: no dedup, existing rows never cleared or renumbered. Silent on
+        /// success (the appended rows are the feedback); messages only on an invalid date or
+        /// when no setlist exists for the date.</summary>
+        private void PullSetlistButton_Click(object sender, RoutedEventArgs e)
+        {
+            var date = PullDateTextBox.Text.Trim();
+
+            if (!DateRegex.IsMatch(date))
+            {
+                MessageBox.Show("Enter a date as yyyy-MM-dd.", "Invalid Date",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var sets = ShowLookupService.Instance.GetSetlist(date);
+            if (sets == null)
+            {
+                MessageBox.Show($"No setlist found for {date}.", "No Setlist",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            int startNumber = _definition.Tracks.Count == 0
+                ? 1
+                : _definition.Tracks.Max(t => t.TrackNumber) + 1;
+
+            var newTracks = SetlistTrackBuilder.BuildTracksFromSetlist(sets, date, startNumber);
+            _definition.Tracks.AddRange(newTracks);
+
+            // Rebind once after the batch (List<T> raises no collection-changed notification).
+            TracksDataGrid.ItemsSource = null;
+            TracksDataGrid.ItemsSource = _definition.Tracks;
+
+            TracksDataGrid.UpdateLayout();
+            var first = newTracks.FirstOrDefault();
+            if (first != null)
+            {
+                TracksDataGrid.SelectedItem = first;
+                TracksDataGrid.ScrollIntoView(first);
+            }
         }
 
         /// <summary>Del removes the selected rows when the grid is not mid-edit (so Delete
