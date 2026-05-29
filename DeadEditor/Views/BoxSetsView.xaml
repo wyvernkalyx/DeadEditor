@@ -115,7 +115,6 @@
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="Auto" MinWidth="300"/>
                 <DataGridTextColumn Header="Release Date" Binding="{Binding ReleaseDate}" Width="Auto" MinWidth="100"/>
                 <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="Auto" MinWidth="120"/>
-                <DataGridTextColumn Header="Concerts" Binding="{Binding Concerts.Count}" Width="Auto" MinWidth="80"/>
             </DataGrid.Columns>
         </DataGrid>
 
