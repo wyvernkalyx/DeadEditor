@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
@@ -30,6 +31,7 @@ namespace DeadEditor
         private readonly BoxSetService _boxSetService;
         private readonly NormalizationService _normalizationService = new();
         private readonly BoxSetDefinition _definition = new();
+        private readonly ListCollectionView _tracksView;
         private int _currentStep = 1;
 
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
@@ -57,6 +59,19 @@ namespace DeadEditor
             // fresh _definition per wizard, discarded on Cancel. Edit-mode entry (banked)
             // will revisit with a load-a-copy / discard-on-cancel approach.
             TracksDataGrid.ItemsSource = _definition.Tracks;
+
+            // Group the grid by Date with a deterministic within-group order. Configure the
+            // view ONCE and keep it: structural mutations (Add/Pull/Delete) call
+            // _tracksView.Refresh() rather than reassigning ItemsSource — reassigning would
+            // rebuild the view and discard this group/sort config. IsLiveGrouping moves a row
+            // to its date group when its Date commits (BoxSetTrack raises PropertyChanged on
+            // Date; the Date column commits on edit-end, so the row regroups after the edit,
+            // not mid-keystroke). No IsLiveSorting: TrackNumber re-sorts only on Refresh.
+            _tracksView = (ListCollectionView)CollectionViewSource.GetDefaultView(_definition.Tracks);
+            _tracksView.SortDescriptions.Add(new SortDescription(nameof(BoxSetTrack.TrackNumber), ListSortDirection.Ascending));
+            _tracksView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(BoxSetTrack.Date)));
+            _tracksView.IsLiveGrouping = true;
+            _tracksView.LiveGroupingProperties.Add(nameof(BoxSetTrack.Date));
 
             ShowStep(1);
         }
@@ -234,14 +249,13 @@ namespace DeadEditor
             };
             _definition.Tracks.Add(track);
 
-            // Rebind — List<T> raises no collection-changed notification (house style; see
-            // EditSetlistView). Cell edits still flow live via BoxSetTrack's INPC.
-            TracksDataGrid.ItemsSource = null;
-            TracksDataGrid.ItemsSource = _definition.Tracks;
+            // Refresh the grouped view after mutating the backing List (List<T> raises no
+            // collection-changed notification; reassigning ItemsSource would drop the
+            // group/sort config — see ctor).
+            _tracksView.Refresh();
 
             TracksDataGrid.UpdateLayout();
-            TracksDataGrid.SelectedItem = track;
-            TracksDataGrid.ScrollIntoView(track);
+            SelectAndRevealAppended(track);
         }
 
         /// <summary>Reads the gdshowsdb reference setlist for the entered date and appends
@@ -275,17 +289,14 @@ namespace DeadEditor
             var newTracks = SetlistTrackBuilder.BuildTracksFromSetlist(sets, date, startNumber);
             _definition.Tracks.AddRange(newTracks);
 
-            // Rebind once after the batch (List<T> raises no collection-changed notification).
-            TracksDataGrid.ItemsSource = null;
-            TracksDataGrid.ItemsSource = _definition.Tracks;
+            // Refresh the grouped view once after the batch (see ctor: Refresh replaces the
+            // old null-rebind so the group/sort config survives).
+            _tracksView.Refresh();
 
             TracksDataGrid.UpdateLayout();
             var first = newTracks.FirstOrDefault();
             if (first != null)
-            {
-                TracksDataGrid.SelectedItem = first;
-                TracksDataGrid.ScrollIntoView(first);
-            }
+                SelectAndRevealAppended(first);
         }
 
         /// <summary>Del removes the selected rows when the grid is not mid-edit (so Delete
@@ -301,10 +312,39 @@ namespace DeadEditor
                 foreach (var track in selected)
                     _definition.Tracks.Remove(track);
 
-                TracksDataGrid.ItemsSource = null;
-                TracksDataGrid.ItemsSource = _definition.Tracks;
+                _tracksView.Refresh();
                 e.Handled = true;
             }
+        }
+
+        /// <summary>Toggles date grouping on the shared view. Grouped (checked) adds the Date
+        /// <see cref="PropertyGroupDescription"/>; flat (unchecked) clears it. The TrackNumber
+        /// <see cref="SortDescription"/> stays in both modes, so the flat list is still
+        /// TrackNumber-ordered.</summary>
+        private void GroupByDateCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            // Fires during InitializeComponent (IsChecked="True" in XAML) before the ctor
+            // configures the view — ignore until the view exists; the ctor sets up grouping.
+            if (_tracksView == null) return;
+
+            _tracksView.GroupDescriptions.Clear();
+            if (GroupByDateCheckBox.IsChecked == true)
+                _tracksView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(BoxSetTrack.Date)));
+
+            _tracksView.Refresh();
+        }
+
+        /// <summary>Selects a freshly appended row and, in flat mode, scrolls it into view.
+        /// In grouped mode the row may sit inside a collapsed group, which
+        /// <see cref="DataGrid.ScrollIntoView"/> cannot reach — H keeps groups collapsed and
+        /// does not auto-expand (that is H2), so the new collapsed group header (with its
+        /// track count) is the feedback. Selection is still set so the row is current when
+        /// its group is later expanded.</summary>
+        private void SelectAndRevealAppended(BoxSetTrack track)
+        {
+            TracksDataGrid.SelectedItem = track;
+            if (_tracksView.GroupDescriptions.Count == 0)
+                TracksDataGrid.ScrollIntoView(track);
         }
     }
 }

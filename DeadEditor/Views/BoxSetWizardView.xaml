@@ -3,11 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:DeadEditor.Converters"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="900"
              Background="#1E1E1E">
 
     <UserControl.Resources>
+        <!-- Date-group header text (date + derived venue + track count), commit H. -->
+        <conv:GroupHeaderConverter x:Key="GroupHeaderConverter"/>
+
         <!-- Local styles cloned from EditSetlistView.xaml:11-26 so the wizard's form
              matches the setlist editor's look without introducing a shared dictionary. -->
         <Style TargetType="TextBlock" x:Key="LabelStyle">
@@ -113,6 +117,15 @@
                             Background="#3E3E42" Foreground="#CCCCCC"
                             BorderBrush="#555555" BorderThickness="1"
                             Padding="12,6" Cursor="Hand" FontSize="14"/>
+
+                    <!-- Group/flat toggle (commit H); default grouped. -->
+                    <Border Width="1" Background="#555555" Margin="16,2,16,2"/>
+                    <CheckBox x:Name="GroupByDateCheckBox" Content="Group by date"
+                              IsChecked="True"
+                              Checked="GroupByDateCheckBox_Changed"
+                              Unchecked="GroupByDateCheckBox_Changed"
+                              Foreground="#CCCCCC" FontSize="14"
+                              VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Row 1: Editable track grid (cloned from EditSetlistView.xaml; simpler — no
@@ -182,6 +195,36 @@
                                 </Style.Triggers>
                             </Style>
                         </DataGrid.Resources>
+
+                        <!-- Date grouping (commit H): collapsible per-date headers. The
+                             Expander defaults collapsed (all groups closed; auto-expanding
+                             the most-recent group is H2). Header = date + venue + count via
+                             GroupHeaderConverter. First grouped grid in the app. -->
+                        <DataGrid.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.ContainerStyle>
+                                    <Style TargetType="{x:Type GroupItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                    <Expander IsExpanded="False"
+                                                              Background="#252526"
+                                                              BorderBrush="#3F3F46" BorderThickness="0,0,0,1"
+                                                              Foreground="#CCCCCC" Margin="0,2,0,0">
+                                                        <Expander.Header>
+                                                            <TextBlock Text="{Binding Converter={StaticResource GroupHeaderConverter}}"
+                                                                       Foreground="#CCCCCC" FontWeight="SemiBold"
+                                                                       FontSize="14" VerticalAlignment="Center"/>
+                                                        </Expander.Header>
+                                                        <ItemsPresenter/>
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupStyle.ContainerStyle>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
 
                         <DataGrid.Columns>
                             <!-- Track # — editable (curator renumbers to match the physical release).
