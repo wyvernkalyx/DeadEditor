@@ -48,6 +48,29 @@ namespace DeadEditor
         /// step to <c>HeaderBar.UpdateBoxSetWizardStep</c> so Back/Next/Save buttons update.</summary>
         public event EventHandler<int>? StepChanged;
 
+        /// <summary>
+        /// The single date group that is currently expanded — the wizard's accordion (commit
+        /// H2). Bound into each group <c>Expander</c>'s <c>IsExpanded</c> via
+        /// <c>GroupActiveConverter</c>. A <c>DependencyProperty</c> (not INPC) so the
+        /// MultiBinding re-evaluates automatically when it changes.
+        /// <para>
+        /// <c>null</c> = nothing expanded (a fresh box is all-collapsed); a deliberate empty
+        /// string matches the no-date group (set by Add). The null-vs-empty rule itself lives
+        /// in <see cref="Helpers.BoxSetGroupHeader.IsActiveGroup"/>. Set this BEFORE each
+        /// <c>_tracksView.Refresh()</c> so regenerated group containers realize already in the
+        /// right state (no open-then-collapse flash). Transient UI state — never serialized.
+        /// </para>
+        /// </summary>
+        public static readonly DependencyProperty ActiveGroupDateProperty =
+            DependencyProperty.Register(nameof(ActiveGroupDate), typeof(string),
+                typeof(BoxSetWizardView), new PropertyMetadata(null));
+
+        public string? ActiveGroupDate
+        {
+            get => (string?)GetValue(ActiveGroupDateProperty);
+            set => SetValue(ActiveGroupDateProperty, value);
+        }
+
         public BoxSetWizardView(BoxSetService boxSetService)
         {
             InitializeComponent();
@@ -249,6 +272,12 @@ namespace DeadEditor
             };
             _definition.Tracks.Add(track);
 
+            // Make the new row's group active so it auto-expands (commit H2). The blank-date
+            // row lands in the "(no date)" group, whose key is "" — a deliberate empty string,
+            // distinct from null (see ActiveGroupDate). Set before Refresh so the container
+            // realizes expanded.
+            ActiveGroupDate = track.Date;
+
             // Refresh the grouped view after mutating the backing List (List<T> raises no
             // collection-changed notification; reassigning ItemsSource would drop the
             // group/sort config — see ctor).
@@ -289,6 +318,10 @@ namespace DeadEditor
             var newTracks = SetlistTrackBuilder.BuildTracksFromSetlist(sets, date, startNumber);
             _definition.Tracks.AddRange(newTracks);
 
+            // Make the pulled date the active group so it auto-expands (commit H2). Set before
+            // Refresh so the (possibly new) container realizes expanded.
+            ActiveGroupDate = date;
+
             // Refresh the grouped view once after the batch (see ctor: Refresh replaces the
             // old null-rebind so the group/sort config survives).
             _tracksView.Refresh();
@@ -308,6 +341,12 @@ namespace DeadEditor
             {
                 var selected = TracksDataGrid.SelectedItems.OfType<BoxSetTrack>().ToList();
                 if (selected.Count == 0) return;
+
+                // Keep the group being worked in expanded after the delete (commit H2 — the
+                // original rough edge: Refresh used to re-collapse it). Anchor on the last
+                // selected row's date; a multi-row delete that spans dates keeps the last
+                // row's group open (one group is active at a time by design).
+                ActiveGroupDate = selected[selected.Count - 1].Date;
 
                 foreach (var track in selected)
                     _definition.Tracks.Remove(track);
@@ -334,17 +373,38 @@ namespace DeadEditor
             _tracksView.Refresh();
         }
 
-        /// <summary>Selects a freshly appended row and, in flat mode, scrolls it into view.
-        /// In grouped mode the row may sit inside a collapsed group, which
-        /// <see cref="DataGrid.ScrollIntoView"/> cannot reach — H keeps groups collapsed and
-        /// does not auto-expand (that is H2), so the new collapsed group header (with its
-        /// track count) is the feedback. Selection is still set so the row is current when
-        /// its group is later expanded.</summary>
+        /// <summary>Selects a freshly appended row and scrolls it into view. The row's group is
+        /// now auto-expanded (the caller sets <see cref="ActiveGroupDate"/> before Refresh), so
+        /// in grouped mode the row is reachable too — H2 lifts H's flat-only restriction. The
+        /// scroll is deferred to <c>Background</c> priority because
+        /// <see cref="DataGrid.ScrollIntoView"/> into a just-expanded, virtualized group is
+        /// unreliable synchronously (the group's rows may not be realized yet); in flat mode the
+        /// deferral is harmless.</summary>
         private void SelectAndRevealAppended(BoxSetTrack track)
         {
             TracksDataGrid.SelectedItem = track;
-            if (_tracksView.GroupDescriptions.Count == 0)
+            Dispatcher.BeginInvoke(new Action(() => TracksDataGrid.ScrollIntoView(track)),
+                System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        /// <summary>When a Date cell commits, make the row's (post-regroup) date the active
+        /// group so it stays expanded and visible after the live-regroup (commit H2). Hooked
+        /// via <c>CellEditEnding</c> rather than per-track <c>PropertyChanged</c> — no
+        /// subscription lifecycle to manage on the plain backing <c>List</c>. The work is
+        /// deferred to <c>Background</c> priority because at <c>CellEditEnding</c> the edited
+        /// text has not yet been pushed to <see cref="BoxSetTrack.Date"/> (nor has live-grouping
+        /// moved the row); reading <c>track.Date</c> after commit is reliable.</summary>
+        private void TracksDataGrid_CellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction != DataGridEditAction.Commit) return;
+            if (e.Column != DateColumn) return;
+            if (e.Row.Item is not BoxSetTrack track) return;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ActiveGroupDate = track.Date;
                 TracksDataGrid.ScrollIntoView(track);
+            }), System.Windows.Threading.DispatcherPriority.Background);
         }
     }
 }

@@ -12,6 +12,9 @@
         <!-- Date-group header text (date + derived venue + track count), commit H. -->
         <conv:GroupHeaderConverter x:Key="GroupHeaderConverter"/>
 
+        <!-- Accordion: drives each group Expander's IsExpanded from ActiveGroupDate (commit H2). -->
+        <conv:GroupActiveConverter x:Key="GroupActiveConverter"/>
+
         <!-- Local styles cloned from EditSetlistView.xaml:11-26 so the wizard's form
              matches the setlist editor's look without introducing a shared dictionary. -->
         <Style TargetType="TextBlock" x:Key="LabelStyle">
@@ -152,7 +155,8 @@
                               CanUserSortColumns="False"
                               ColumnWidth="Auto"
                               HorizontalAlignment="Left"
-                              PreviewKeyDown="TracksDataGrid_PreviewKeyDown">
+                              PreviewKeyDown="TracksDataGrid_PreviewKeyDown"
+                              CellEditEnding="TracksDataGrid_CellEditEnding">
 
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
@@ -207,10 +211,23 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                    <Expander IsExpanded="False"
-                                                              Background="#252526"
+                                                    <!-- Accordion (commit H2): IsExpanded is true only for the
+                                                         single active group. MultiBinding over [group date key,
+                                                         ActiveGroupDate]; Mode=OneWay is REQUIRED because
+                                                         Expander.IsExpanded BindsTwoWayByDefault — a two-way bind
+                                                         would invoke the converter's (throwing) ConvertBack on a
+                                                         user header-click. ActiveGroupDate reached via the
+                                                         UserControl ancestor. -->
+                                                    <Expander Background="#252526"
                                                               BorderBrush="#3F3F46" BorderThickness="0,0,0,1"
                                                               Foreground="#CCCCCC" Margin="0,2,0,0">
+                                                        <Expander.IsExpanded>
+                                                            <MultiBinding Converter="{StaticResource GroupActiveConverter}" Mode="OneWay">
+                                                                <Binding Path="Name"/>
+                                                                <Binding Path="ActiveGroupDate"
+                                                                         RelativeSource="{RelativeSource AncestorType={x:Type UserControl}}"/>
+                                                            </MultiBinding>
+                                                        </Expander.IsExpanded>
                                                         <Expander.Header>
                                                             <TextBlock Text="{Binding Converter={StaticResource GroupHeaderConverter}}"
                                                                        Foreground="#CCCCCC" FontWeight="SemiBold"
@@ -248,7 +265,7 @@
                             </DataGridTextColumn>
 
                             <!-- Date — editable; per-track yyyy-MM-dd validated on Save (empty allowed). -->
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="120">
+                            <DataGridTextColumn x:Name="DateColumn" Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="120">
                                 <DataGridTextColumn.EditingElementStyle>
                                     <Style TargetType="TextBox">
                                         <Setter Property="Background" Value="#3C3C3C"/>

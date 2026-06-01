@@ -45,5 +45,36 @@ namespace DeadEditor.Tests
             var result = BoxSetGroupHeader.FormatGroupHeader("", null, 1);
             Assert.Equal("(no date) (1 track)", result);
         }
+
+        // ===== IsActiveGroup — the accordion null-vs-empty rule (commit H2) =====
+
+        [Theory]
+        [InlineData("1987-12-27")]
+        [InlineData("")]
+        public void IsActiveGroup_NullActive_NeverMatches(string groupName)
+        {
+            // null active = nothing expanded (fresh box all-collapsed); must not match
+            // even the no-date ("") group.
+            Assert.False(BoxSetGroupHeader.IsActiveGroup(groupName, null));
+        }
+
+        [Fact]
+        public void IsActiveGroup_EmptyActiveMatchesNoDateGroup()
+        {
+            // A deliberate "" (set by Add) expands the no-date group.
+            Assert.True(BoxSetGroupHeader.IsActiveGroup("", ""));
+        }
+
+        [Fact]
+        public void IsActiveGroup_SameDate_Matches()
+        {
+            Assert.True(BoxSetGroupHeader.IsActiveGroup("1987-12-27", "1987-12-27"));
+        }
+
+        [Fact]
+        public void IsActiveGroup_DifferentDate_DoesNotMatch()
+        {
+            Assert.False(BoxSetGroupHeader.IsActiveGroup("1987-12-27", "1989-07-15"));
+        }
     }
 }

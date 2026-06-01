@@ -29,5 +29,20 @@ namespace DeadEditor.Helpers
 
             return $"{date} — {venue} ({count})";
         }
+
+        /// <summary>
+        /// Whether a date group is the single active (expanded) group in the wizard's
+        /// accordion (commit H2). <paramref name="groupName"/> is the group's date key
+        /// (<c>CollectionViewGroup.Name</c>); <paramref name="activeDate"/> is the wizard's
+        /// <c>ActiveGroupDate</c>.
+        /// <para>
+        /// The null-vs-empty rule lives here: a <c>null</c> active date means nothing is
+        /// expanded (a fresh box is all-collapsed), while a deliberate empty string matches
+        /// the no-date group (set by Add). Null and "" are NOT treated alike — collapsing
+        /// them would auto-expand "(no date)" on a fresh box.
+        /// </para>
+        /// </summary>
+        public static bool IsActiveGroup(string? groupName, string? activeDate)
+            => activeDate != null && groupName == activeDate;
     }
 }
