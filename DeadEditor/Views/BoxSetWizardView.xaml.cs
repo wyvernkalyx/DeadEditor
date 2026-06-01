@@ -311,6 +311,28 @@ namespace DeadEditor
                 return;
             }
 
+            // Same-date collision: pull is no longer unconditionally append-only. If the target
+            // date already has rows, ask the curator (Replace / Append / Cancel). Replace clears
+            // that date's rows here — BEFORE the startNumber max below, so the removed rows are
+            // not counted and numbering resumes from the remaining max+1 (the accepted
+            // non-renumber behavior). Append falls through unchanged; Cancel aborts untouched.
+            // No prompt when the date has no existing tracks — pull behaves exactly as before.
+            if (BoxSetPullCollision.HasTracksForDate(_definition.Tracks, date))
+            {
+                var existingCount = _definition.Tracks.Count(t => t.Date == date);
+                var dialog = new PullCollisionDialog(date, existingCount)
+                {
+                    Owner = Window.GetWindow(this)
+                };
+                dialog.ShowDialog();
+
+                if (dialog.Result == PullCollisionAction.Cancel)
+                    return;
+
+                if (dialog.Result == PullCollisionAction.Replace)
+                    _definition.Tracks.RemoveAll(t => t.Date == date);
+            }
+
             int startNumber = _definition.Tracks.Count == 0
                 ? 1
                 : _definition.Tracks.Max(t => t.TrackNumber) + 1;
