@@ -143,11 +143,11 @@ Both paths use the same camelCase JSON shape (`ContractResolver = new CamelCaseP
 
 The slug is derived from the box-set name (algorithm TBD; see open questions).
 
-A `BoxSetDefinition` carries top-level metadata (name, release date, label, catalog number, notes, verified flag) and a `concerts` array. Each concert has its metadata (id, date, venue, city, state, country) and a `tracks` array. Each track has `trackNumber`, `songName`, and `segueOut`.
+A `BoxSetDefinition` carries top-level metadata (`version`, `name`, `releaseDate`, `label`, `catalogNumber`, `notes`, `verified`) and a single flat `tracks` array. Each track carries `trackNumber`, `songName`, `date`, and `segueOut`. The date lives on the track, not on an intervening concert object — the format is multi-date by nature (see the 2026-05-28 decision entry). Venue, city, and state (country for non-US shows) are derived from the date via `ShowLookupService` (`GetShowByDate(date)?.FormattedVenueLocation`) and are not stored.
 
-No `discs` array. No `discCount` field. No `setlist` sub-structure on concerts. The data shape is two levels deep: definition → concerts → tracks.
+No `concerts` array. No `discs` array. No `discCount` field. No `setlist` sub-structure. The data shape is one level deep: definition → tracks.
 
-Conceptual shape (final field names settled during implementation):
+Serialized shape (camelCase; matches what the wizard writes):
 
 ```json
 {
@@ -158,19 +158,9 @@ Conceptual shape (final field names settled during implementation):
   "catalogNumber": "...",
   "notes": "Limited edition of 13,000 numbered copies. 84-page hardcover book.",
   "verified": false,
-  "concerts": [
-    {
-      "id": "1971-12-09",
-      "date": "1971-12-09",
-      "venue": "Fox Theatre",
-      "city": "St. Louis",
-      "state": "MO",
-      "country": "USA",
-      "tracks": [
-        { "trackNumber": 101, "songName": "Truckin'", "segueOut": false },
-        { "trackNumber": 102, "songName": "Brown-Eyed Women", "segueOut": false }
-      ]
-    }
+  "tracks": [
+    { "trackNumber": 101, "songName": "Truckin'", "date": "1971-12-09", "segueOut": false },
+    { "trackNumber": 102, "songName": "Brown-Eyed Women", "date": "1971-12-09", "segueOut": false }
   ]
 }
 ```
@@ -179,11 +169,13 @@ A few design notes on this shape:
 
 - **`verified` is on the definition itself.** This is the "definition completeness" flag — has the user audited that the whole structure is correct. Default false.
 - **`trackNumber` is an opaque integer.** When the source uses disc-prefixed encoding, the curator records `101, 102 ... 501, 502 ...` and so on. When the source uses continuous 1-to-N numbering, the curator records it that way. DeadEditor stores whatever the curator entered.
-- **Concerts have their own `id`.** Using the date as the ID works for a band that played at most once a day. If a box set contains two performances on the same date (early/late shows), the ID can become `1971-12-09-early` / `1971-12-09-late`.
-- **Tracks live directly on concerts.** No setlist sub-structure, no set-1/set-2/encore grouping. Tracks are an ordered list per concert; set boundaries are implicit in the ordering or carried elsewhere if needed later.
-- **Fingerprints, no-audio slots, and external-concert bonus tracks** were design considerations for the prior shape (where they lived on disc tracks). When import wiring lands, equivalent affordances will be added to track entries on concerts. The data shape today is the curation-only MVP shape and intentionally minimal.
+- **`date` is the per-track performance date** in `yyyy-MM-dd` (empty permitted while unknown). It is the grouping key in the wizard and the basis for the derived venue/city; a cross-show compilation carries a different date per track, a complete-shows box repeats one date across a run.
+- **No concert object and no `id`.** Tracks for the same date are simply the tracks whose `date` matches; the wizard groups on that. Two performances on one date (early/late shows) are a parked open question (see below) — there is no per-concert identifier to disambiguate them in the flat shape today.
+- **Fingerprints, no-audio slots, and external-concert bonus tracks** were design considerations for an earlier shape. When import wiring lands, equivalent affordances will be added to track entries. The data shape today is the curation-only MVP shape and intentionally minimal.
 
 ### Per-concert manifest
+
+*(Uses the superseded two-level "concert" vocabulary — per-concert grouping is a future Layer-B import concern and will be revisited under the flat `List<BoxSetTrack>` model when import wiring lands. No manifest design is settled here.)*
 
 When a box set is imported, in addition to the box-set's collection manifest, the app generates per-concert manifests. Each carries:
 
@@ -204,7 +196,7 @@ A new top-level **Box Sets** view in the sidebar, sibling to Library / Import / 
 The wizard has three steps:
 
 1. **Top-Level Info** — name, release date, label, catalog number, notes.
-2. **Concerts and Tracks** — a flat, editable track grid bound to `BoxSetDefinition.Tracks`. Columns: **TrackNumber** (editable int; Add defaults to the next sequential — max existing + 1, first row 1), **SongName** (free text), **Date** (`yyyy-MM-dd`, validated per track; empty permitted for not-yet-known dates), **SegueOut** (checkbox). Add appends a row; Delete (Del key, when not mid-edit) removes selected rows without renumbering. Edits flow into `BoxSetDefinition.Tracks` and persist on Save. Additionally, a **Pull setlist for date** action reads the gdshowsdb reference setlist (`ShowLookupService.GetSetlist`) for an entered `yyyy-MM-dd`, flattens it (set labels discarded, per-song segue preserved), and appends one track per song stamped with that date and numbered sequentially from the current max. Pull is no longer unconditionally append-only: if the target date already has rows in the box, a modal prompts **Replace / Append / Cancel** (Replace removes that date's existing rows then adds the pulled setlist; Append keeps the prior add-alongside behavior, duplicates included by design; Cancel, like window-close/Esc, does nothing). A date with no existing rows pulls with no prompt, exactly as before. Numbering is not reclaimed on Replace — the removed rows' numbers are not reused; the pull resumes from the remaining max+1, then the curator prunes/renumbers. Same-date collision is still purely a view/service interaction over the flat `List<BoxSetTrack>` (the predicate is the pure `BoxSetPullCollision.HasTracksForDate`); serialization is unchanged. Per-song dedup remains rejected (intentional setlist repeats). Song-name normalization against `songs.json` is a deferred follow-up, not part of this grid. The grid can be **grouped by date** (a "Group by date" toggle in the step-2 action row, default on) with collapsible per-date headers showing the derived venue (`ShowLookupService.GetShowByDate`) and track count; headers default collapsed. Grouping is purely a view concern — the model stays a flat `List<BoxSetTrack>` and serialization is unchanged.
+2. **Concerts and Tracks** — a flat, editable track grid bound to `BoxSetDefinition.Tracks`. Columns: **TrackNumber** (editable int; Add defaults to the next sequential — max existing + 1, first row 1), **SongName** (free text), **Date** (`yyyy-MM-dd`, validated per track; empty permitted for not-yet-known dates), **SegueOut** (checkbox). Add appends a row; Delete (Del key, when not mid-edit) removes selected rows without renumbering. Edits flow into `BoxSetDefinition.Tracks` and persist on Save. Additionally, a **Pull setlist for date** action reads the gdshowsdb reference setlist (`ShowLookupService.GetSetlist`) for an entered `yyyy-MM-dd`, flattens it (set labels discarded, per-song segue preserved), and appends one track per song stamped with that date and numbered sequentially from the current max. Pull is no longer unconditionally append-only: if the target date already has rows in the box, a modal prompts **Replace / Append / Cancel** (Replace removes that date's existing rows then adds the pulled setlist; Append keeps the prior add-alongside behavior, duplicates included by design; Cancel, like window-close/Esc, does nothing). A date with no existing rows pulls with no prompt, exactly as before. Numbering is not reclaimed on Replace — the removed rows' numbers are not reused; the pull resumes from the remaining max+1, then the curator prunes/renumbers. Same-date collision is still purely a view/service interaction over the flat `List<BoxSetTrack>` (the predicate is the pure `BoxSetPullCollision.HasTracksForDate`); serialization is unchanged. Per-song dedup remains rejected (intentional setlist repeats). Song-name normalization against `songs.json` is a deferred follow-up, not part of this grid. The grid can be **grouped by date** (a "Group by date" toggle in the step-2 action row, default on) with collapsible per-date headers showing the derived venue (`ShowLookupService.GetShowByDate`) and track count. The headers behave as an **accordion**: exactly one date group is expanded at a time, and the expanded group is always the last-touched date — the date just pulled, added to, deleted from, or whose Date cell was edited. The active date is held in a transient `ActiveGroupDate` (set before each view refresh so a regenerated header realizes already in the right state), and each header's expand state is driven from it through `GroupActiveConverter`. The authority for the match — including the null-vs-empty rule: `null` means nothing is expanded (a fresh box is all-collapsed) while a deliberate `""` matches the no-date group — lives in the pure `BoxSetGroupHeader.IsActiveGroup`. Grouping (and which group is open) is purely a view concern — the model stays a flat `List<BoxSetTrack>` and serialization is unchanged.
 3. **Review** — read-only summary of the definition with validation, color-coded track display (initially all dimmed since no audio is matched yet), and the Save action.
 
 The wizard can also be entered in edit mode for an existing definition.
@@ -250,7 +242,7 @@ Nothing in `BoxSetDefinition` is band-specific. The wizard's song autocomplete p
 
 A box set like *Enjoying the Ride* has ~287 tracks across 21+ concerts. Storage is trivial (one JSON file). Three real performance concerns:
 
-1. **Wizard responsiveness during data entry.** Filling out 287 tracks via a single monolithic form will not be pleasant. The wizard's step 2 paginates by *concert* (one concert visible at a time), driven by the concert list pane on the left. This keeps the visible track grid bounded to one concert's tracks at a time even when the box has 21+ concerts.
+1. **Wizard responsiveness during data entry.** Filling out 287 tracks will stress the grid. The wizard's step 2 is a single flat track grid grouped by date, with the per-date headers collapsible as an accordion (one group expanded at a time). Collapsing keeps the realized row count bounded to the open date's tracks even when the box spans 21+ dates. (An earlier design paginated by concert via a left-hand concert pane; that did not ship — the flat date-grouped grid replaced it.)
 2. **Fingerprint matching at import.** 287 fingerprints to compute and match. fpcalc is single-threaded per process; this needs the parallelization already on the horizon (per `userMemories`).
 3. **Color-coded track list rendering.** A 287-row visual indicator must render without UI stutter. Existing virtualization patterns should handle this; flag for measurement.
 
