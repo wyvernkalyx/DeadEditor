@@ -70,6 +70,12 @@ When adding a new feature that writes to disk:
 | `Views/SidebarPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Sidebar | - | Sidebar icon navigation: Library, Import, Songs, Releases, Concerts, Box Sets, Settings |
 | `Views/PlayerBar.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Player Bar | - | Transport controls, progress, volume |
 | `Views/PlaylistPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Playlist | - | Compact track list, always visible |
+| `Views/SongsView.xaml/.cs` | (inline — no separate doc) | - | Songs editor: browse/search/add/edit/remove songs in songs.json, grouped alphabetically |
+| `Views/ReleasesView.xaml/.cs` | (inline — no separate doc) | - | Releases editor: two-panel Series + Standalone management over releases.json |
+| `Views/ConcertDatabaseView.xaml/.cs` | (inline — no separate doc) | - | Browse the Data/concerts/ reference database via ConcertLookupService |
+| `Views/ConcertDetailView.xaml/.cs` | (inline — no separate doc) | - | Per-concert detail: setlist + venue, setlist.fm link, and which owned library copies match the date |
+| `Views/EditSetlistView.xaml/.cs` | (inline — no separate doc) | - | Edit a concert's setlist; raises SaveCompleted so the shell refreshes |
+| `Views/MbidMigrationView.xaml/.cs` | [documentation/mbid-foundation-spec.md](documentation/mbid-foundation-spec.md) | - | MBID migration UI: album counts (total / already-tagged / needs-migration) and start/resume the run |
 | **Dialogs (modal, overlay shell)** | | | |
 | `AdvancedSearchDialog.xaml/.cs` | [documentation/03-advanced-search-dialog.md](documentation/03-advanced-search-dialog.md) | ~9,500 words | 3-tab search (Contains/Exclude/Sequence) |
 | `AddSongDialog.xaml/.cs` | [documentation/04-add-song-dialog.md](documentation/04-add-song-dialog.md) | ~7,600 words | Add songs to database with artist support |
@@ -77,6 +83,9 @@ When adding a new feature that writes to disk:
 | `ReleaseSelectorDialog.xaml/.cs` | [documentation/07-release-selector-dialog.md](documentation/07-release-selector-dialog.md) | ~7,400 words | Select from multiple MusicBrainz releases |
 | `AlbumSearchDialog.xaml/.cs` | [documentation/08-album-search-dialog.md](documentation/08-album-search-dialog.md) | ~7,000 words | Manual MusicBrainz search by name |
 | `MatchToSongDialog.xaml/.cs` | [documentation/01-main-window.md](documentation/01-main-window.md) § Match to Song | - | Manual match unmatched track to setlist song with auto-alias |
+| `MbidCandidateDialog.xaml/.cs` | [documentation/mbid-foundation-spec.md](documentation/mbid-foundation-spec.md) | - | Pick a MusicBrainz release candidate and choose which fields (title/artist/year/track titles) to apply during MBID migration |
+| `TrackInfoDialog.xaml/.cs` | (inline — no separate doc) | - | Inspect one track: on-disk FLAC/MP3 tags plus in-memory import status (raw title, match, modified) |
+| `UnmatchedSongsDialog.xaml/.cs` | (inline — no separate doc) | - | Resolve tracks the normalizer left unmatched: per-track dropdown to assign the canonical song title |
 | **Services** | | | |
 | `MetadataService.cs` | [documentation/11-metadata-service.md](documentation/11-metadata-service.md) | ~8,000 words | ID3 tags, ParseAlbumTitle regex, box set vs official release |
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
@@ -84,6 +93,10 @@ When adding a new feature that writes to disk:
 | `MusicBrainzService.cs` | [documentation/14-musicbrainz-service.md](documentation/14-musicbrainz-service.md) | ~9,500 words | AcoustID fingerprinting, fpcalc.exe, MusicBrainz API, rate limiting |
 | `ShowLookupService.cs` | (inline — no separate doc) | - | Loads Data/shows.json; setlist + venue lookup by yyyy-MM-dd (GetSetlist, GetSegue, GetDiscTrack, SuggestTrackNumber, GetSetlistSongCount, GetShowByDate, FormattedVenueLocation) |
 | `ReleaseLookupService.cs` | (inline — no separate doc) | - | Loads Data/releases.json, autocomplete for album/release names |
+| `ConcertLookupService.cs` | (inline — no separate doc) | - | O(1) per-date lookup over Data/concerts/; AppData-first with bundled fallback + first-run copy |
+| `ManifestService.cs` | [documentation/19-folder-import-and-manifests.md](documentation/19-folder-import-and-manifests.md) | - | Read/write sidecar JSON manifests capturing verified metadata for re-import |
+| `FingerprintService.cs` | [documentation/fingerprint-persistence-spec.md](documentation/fingerprint-persistence-spec.md) | - | AcoustID/Chromaprint fingerprint precompute + persistence to track files |
+| `MbidMigrationService.cs` | [documentation/mbid-foundation-spec.md](documentation/mbid-foundation-spec.md) | - | Orchestrate MBID migration: lookup, candidate confirmation, tag write, state persistence |
 | **Models** | | | |
 | `AlbumInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § AlbumInfo | ~11,000 words | Album metadata, type-based polymorphism, AlbumTitle format |
 | `TrackInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § TrackInfo | ~11,000 words | Track metadata, segue notation, GetFinalMetadataTitle |
@@ -94,6 +107,14 @@ When adding a new feature that writes to disk:
 | `Data/shows.json` | (inline — no separate doc) | - | Full gdshowsdb setlists keyed by yyyy-MM-dd (~1,797 shows with per-song segues); venue + setlist lookup via ShowLookupService |
 | `Data/releases.json` | (inline — no separate doc) | - | Series templates + standalone album names for autocomplete |
 | `%APPDATA%/DeadEditor/settings.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § settings.json | ~11,000 words | Settings JSON schema, all 12 keys with defaults |
+| **Box Sets** | | | |
+| `Views/BoxSetsView.xaml/.cs`, `BoxSetWizardView.xaml/.cs` | [documentation/box-set-design-memo.md](documentation/box-set-design-memo.md) | ~316 lines | Box Sets list + 3-step authoring wizard (flat track grid, pull-setlist, accordion) |
+| `Services/BoxSetService.cs` | [documentation/box-set-design-memo.md](documentation/box-set-design-memo.md) § Data model | - | Read/write/list/delete BoxSetDefinition files; AppData vs Data/box-sets + DEADEDITOR_DEV dev mode |
+| `Models/BoxSetDefinition.cs`, `BoxSetTrack.cs` | [documentation/box-set-design-memo.md](documentation/box-set-design-memo.md) § Data model | - | Flat definition -> List<BoxSetTrack> ({trackNumber, songName, date, segueOut}) |
+| **Other shipped docs** | | | |
+| Import redesign | [documentation/16-import-redesign-spec.md](documentation/16-import-redesign-spec.md) | - | Import screen redesign spec (live in ImportView) |
+| Player | [documentation/17-player-window.md](documentation/17-player-window.md) | - | Global playback design (PlaybackService, player/playlist windows) |
+| Folder import & manifests | [documentation/19-folder-import-and-manifests.md](documentation/19-folder-import-and-manifests.md) | - | Universal single-path import + sidecar manifest design |
 
 ### Future Design Documents
 
@@ -101,6 +122,8 @@ Stubs and banking memos for design conversations not yet implemented:
 
 - [verification-model.md](documentation/verification-model.md) — verification status for curated records (placeholder)
 - [curation-layer-design-memo.md](documentation/curation-layer-design-memo.md) — Layer A setlist authority vs Layer B per-recording manifest, fingerprints as curation lookup key, curation layer as foundational to verification (banking memo)
+
+The `documentation/` folder now holds 41 files. Beyond the numbered specs above, the design memos and spec/inspection set includes: [box-set-design-memo.md](documentation/box-set-design-memo.md) (authoritative for Box Sets), [verification-and-manifest-wiring-design-memo.md](documentation/verification-and-manifest-wiring-design-memo.md), [audio-as-archive-design-memo.md](documentation/audio-as-archive-design-memo.md), [mbid-foundation-spec.md](documentation/mbid-foundation-spec.md), [fingerprint-persistence-spec.md](documentation/fingerprint-persistence-spec.md), [source-folder-preservation-spec.md](documentation/source-folder-preservation-spec.md), [feature-parity-spec.md](documentation/feature-parity-spec.md), [title-structure-parser-spec.md](documentation/title-structure-parser-spec.md), and [concerts-owned-missing-spec.md](documentation/concerts-owned-missing-spec.md), plus dated audit/inspection/diagnostic notes. Consult the folder directly rather than assuming this list is exhaustive.
 
 ### Documentation-First Development Workflow
 
@@ -249,6 +272,118 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 
 ---
 
+## Box Sets
+
+Box sets are a distinct feature from the `OfficialRelease` album type. A single
+Dave's Picks / Dick's Picks / Road Trips volume is one show or one continuous
+run — a normal live album, `AlbumType.OfficialRelease`. A **box set** is a
+multi-show bundle or cross-show compilation with its own identity (*Europe '72:
+The Complete Recordings*, *So Many Roads*, *Listen to the River*). The
+authoritative design is [documentation/box-set-design-memo.md](documentation/box-set-design-memo.md);
+this is the summary.
+
+### Data model (flat: definition -> tracks)
+A box set is a **curation artifact**, defined independently of owning any audio.
+The model is one level deep — no concert or disc objects:
+
+- `BoxSetDefinition` ([Models/BoxSetDefinition.cs](Models/BoxSetDefinition.cs)):
+  `Version`, `Name`, `ReleaseDate` (yyyy-MM-dd), `Label`, `CatalogNumber`,
+  `Notes`, `Verified`, and `List<BoxSetTrack> Tracks`.
+- `BoxSetTrack` ([Models/BoxSetTrack.cs](Models/BoxSetTrack.cs)): `TrackNumber`
+  (opaque int — disc-prefixed `101`/`1207` or continuous), `SongName`, `Date`
+  (yyyy-MM-dd; the date lives on the track because a box set is multi-date by
+  nature), `SegueOut`. Implements `INotifyPropertyChanged` for two-way grid
+  binding; the four properties serialize as camelCase.
+
+Venue/city/state are NOT stored — they are derived from each track's date via
+`ShowLookupService.GetShowByDate(date)?.FormattedVenueLocation`.
+
+### Storage
+One JSON file per box set (camelCase, atomic temp-and-rename write), via
+[Services/BoxSetService.cs](Services/BoxSetService.cs):
+- `%APPDATA%\DeadEditor\box-sets\<slug>.json` — user-runtime location; seeded
+  from the bundled copy on first run. All production reads/writes here.
+- `Data\box-sets\<slug>.json` — bundled location shipped with the app.
+- When `DEADEDITOR_DEV=1`, AppData is bypassed: reads and writes go straight to
+  `Data\box-sets\` (maintainer authoring mode).
+
+### Box Sets view + 3-step wizard
+A top-level **Box Sets** sidebar item ([Views/BoxSetsView.xaml](Views/BoxSetsView.xaml))
+lists existing definitions (re-read from disk on each navigation); "+ New Box
+Set" opens the wizard ([Views/BoxSetWizardView.xaml](Views/BoxSetWizardView.xaml)),
+a single UserControl that toggles three panels:
+1. **Top-Level Info** — name, release date, label, catalog number, notes.
+2. **Concerts and Tracks** — a flat, editable track grid bound to
+   `BoxSetDefinition.Tracks` (TrackNumber / SongName / Date / SegueOut).
+3. **Review** — read-only summary, validation, and Save.
+
+The wizard never touches audio; it is pure curation data entry. Import wiring
+(fingerprint matching, per-concert manifests) is a documented post-MVP follow-up.
+
+### Pull setlist + collision
+In step 2, **Pull setlist for date** reads the gdshowsdb reference setlist
+(`ShowLookupService.GetSetlist`) for a date, flattens it (set labels dropped,
+per-song segue preserved), and appends one track per song stamped with that date
+([Helpers/SetlistTrackBuilder.cs](Helpers/SetlistTrackBuilder.cs)). If the date
+already has rows, a modal prompts **Replace / Append / Cancel**
+([Views/PullCollisionDialog.xaml](Views/PullCollisionDialog.xaml)); the pure
+predicate is `BoxSetPullCollision.HasTracksForDate`
+([Helpers/BoxSetPullCollision.cs](Helpers/BoxSetPullCollision.cs)). A date with
+no existing rows pulls with no prompt.
+
+### Accordion date-grouping
+The grid groups by date (toggle, default on) with collapsible per-date headers
+showing the derived venue and track count
+([Helpers/BoxSetGroupHeader.cs](Helpers/BoxSetGroupHeader.cs) `FormatGroupHeader`).
+Headers behave as an **accordion** — exactly one group expanded, always the
+last-touched date. The active date lives in a transient `ActiveGroupDate`; each
+header's expand state is driven through
+[Converters/GroupActiveConverter.cs](Converters/GroupActiveConverter.cs), with
+the null-vs-empty rule (`null` = all-collapsed; `""` = the no-date group) owned
+by the pure `BoxSetGroupHeader.IsActiveGroup`. Grouping is purely a view concern
+— the model stays a flat `List<BoxSetTrack>` and serialization is unchanged.
+
+---
+
+## Reference Data Layer
+
+Beyond `songs.json` and `releases.json`, the app ships read-only reference data
+keyed by yyyy-MM-dd.
+
+### Data/concerts/*.json — Layer-A authority files
+Per-concert reference files (one per date), loaded by
+[Services/ConcertLookupService.cs](Services/ConcertLookupService.cs). Each file
+([Models/ConcertReference.cs](Models/ConcertReference.cs)) carries: `date`,
+`venue`, `city`, `state`, `country`, `setlistFmId`, `setlistFmUrl`,
+`lastUpdated`, `hasSetlist`, `multiShow`, `sets[]` (name + songs), and
+`tracks[]` (position, songName, date, segue, set). Sourced from setlist.fm via
+the `tools/SetlistFetcher` console tool. Loaded **AppData-first**
+(`%APPDATA%\DeadEditor\concerts\`) with a bundled `Data\concerts\` fallback and a
+first-run copy from bundle to AppData, so the dataset survives upgrades.
+
+### Data/heady.json
+Best-version rankings sourced from headyversion.com: a `versions[]` array of
+`{ song, date, venue, city, state, rank, votes, url }`. Crowd-ranked "best
+performance" pointers per song.
+
+### Note: two overlapping concert-data systems
+DeadEditor currently has two reference systems that overlap:
+- **`shows.json`** (via `ShowLookupService`) — full gdshowsdb setlists (sets +
+  per-song segues) plus a venue index. The setlist layer is gdshowsdb-sourced;
+  the venue/city/state index is (re)generated from setlist.fm by
+  `tools/SetlistFetcher` (which writes only venue fields to shows.json — it does
+  not write `sets`, see `tools/SetlistFetcher/Program.cs:164-171`). Used for
+  venue lookup at import and by the box-set wizard's pull-setlist.
+- **`Data/concerts/*.json`** (via `ConcertLookupService`) — richer per-concert
+  files (above), generated entirely from setlist.fm.
+
+**FLAG:** the long-term division of labor between these two systems is not
+settled. [documentation/releases-inspection-2026-04-17.md](documentation/releases-inspection-2026-04-17.md)
+(open questions, §2) records them as candidates for unification or clearer
+delineation. This documents the current state, not an endorsed end-state.
+
+---
+
 ## Core Features
 
 ### 1. Import Workflow
@@ -375,6 +510,11 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `MusicBrainzService.cs` - MusicBrainz API integration
 - `ShowLookupService.cs` - Setlist + venue lookup by date from Data/shows.json (GetSetlist / GetSegue / GetDiscTrack / SuggestTrackNumber / GetShowByDate / FormattedVenueLocation)
 - `ReleaseLookupService.cs` - Album name autocomplete from Data/releases.json
+- `ConcertLookupService.cs` - Per-date lookup over Data/concerts/ reference files
+- `ManifestService.cs` - Sidecar metadata manifests (verified state for re-import)
+- `FingerprintService.cs` - AcoustID/Chromaprint fingerprint precompute + persistence
+- `MbidMigrationService.cs` - MBID migration orchestration
+- `BoxSetService.cs` - BoxSetDefinition read/write/list/delete (AppData vs Data/box-sets)
 
 #### Shell + Views
 - `ShellWindow.xaml/.cs` - Single-window shell, sidebar, navigation
@@ -387,6 +527,11 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `Views/SidebarPanel.xaml/.cs` - Sidebar navigation icons (Library, Import, Songs, Releases, Concerts, Box Sets, Settings)
 - `Views/PlayerBar.xaml/.cs` - Transport controls, progress, volume
 - `Views/PlaylistPanel.xaml/.cs` - Compact playlist panel
+- `Views/SongsView`, `ReleasesView` - songs.json / releases.json editors
+- `Views/ConcertDatabaseView`, `ConcertDetailView` - browse Data/concerts/
+- `Views/EditSetlistView` - edit a concert's setlist
+- `Views/MbidMigrationView` - MBID migration UI
+- `Views/BoxSetsView`, `BoxSetWizardView` - box-set list + authoring wizard
 
 #### Dialogs (modal)
 - `AdvancedSearchDialog.xaml/.cs` - 3-tab search (Contains/Exclude/Sequence)
@@ -394,11 +539,27 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `ManageSongsDialog.xaml/.cs` - Browse/export song database
 - `ReleaseSelectorDialog.xaml/.cs` - Select from multiple MusicBrainz releases
 - `MatchToSongDialog.xaml/.cs` - Manual match unmatched track to setlist song with auto-alias
+- `MbidCandidateDialog.xaml/.cs` - Confirm a MusicBrainz release candidate (MBID migration)
+- `TrackInfoDialog.xaml/.cs` - Inspect one track's on-disk tags + import status
+- `UnmatchedSongsDialog.xaml/.cs` - Assign canonical titles to normalizer-unmatched tracks
+- `Views/PullCollisionDialog.xaml/.cs` - Replace/Append/Cancel for box-set pull-setlist
+
+#### Helpers / Converters
+- `Helpers/SetlistTrackBuilder.cs` - gdshowsdb setlist -> flat BoxSetTrack rows
+- `Helpers/BoxSetPullCollision.cs`, `BoxSetGroupHeader.cs` - pure wizard predicates
+- `Converters/GroupActiveConverter.cs` - drives the wizard accordion's IsExpanded
+
+#### Tools
+- `tools/SetlistFetcher/` - console tool: fetches GD shows from the setlist.fm API,
+  (re)writes shows.json's venue index and the Data/concerts/ files
 
 #### Data
 - `Data/songs.json` - Song database (598 songs, artist-organized)
 - `Data/shows.json` - Full gdshowsdb setlists by date (venue/location + per-song segues), via ShowLookupService
 - `Data/releases.json` - Series templates + standalone release names for autocomplete
+- `Data/concerts/*.json` - Layer-A per-concert authority files (setlist.fm, via SetlistFetcher)
+- `Data/heady.json` - headyversion.com best-version rankings
+- `Data/box-sets/*.json` - bundled box-set definitions (also %APPDATA%\DeadEditor\box-sets\)
 
 ---
 
@@ -638,10 +799,11 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 
 ## End of Document
 
-**Last Updated:** 2026-03-28
-**Architecture:** Single-window shell (Phase 6 complete — search/filter, keyboard shortcuts, UI polish)
+**Last Updated:** 2026-06-02
+**Architecture:** Single-window shell (`ShellWindow` + `NavigationService`); Box Sets feature shipped (curation wizard + flat model)
 **Song Database:** 598 songs (594 Grateful Dead, 4 NRPS)
-**Documentation:** 15 comprehensive documentation files covering all windows, dialogs, services, and data models
+**Documentation:** 41 files in `documentation/` (specs, design memos, audits/inspections)
+**Build/Test Baseline (2026-06-02):** `dotnet build DeadEditor/DeadEditor.csproj` (clean) -> 0 errors, 51 unique warnings (MSBuild reports 102; the WPF markup + main double-compile emits each warning under both the main and `_wpftmp` project): 25 CA1416 platform-compat + 22 CS8618 uninitialized-non-nullable + 4 other nullable CS86xx; `dotnet test DeadEditor.sln` -> 258 passed, 0 failed, 0 skipped
 
 ## Development Environment
 - OS: Windows 10.0.26200
