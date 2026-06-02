@@ -67,7 +67,7 @@ When adding a new feature that writes to disk:
 | `Views/EditMetadataView.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Edit Metadata | - | Edit FLAC tags in-place, save changes |
 | `Views/SettingsView.xaml/.cs` | [documentation/06-settings-window.md](documentation/06-settings-window.md) | - | Library paths, fpcalc, primary artist, reset data |
 | `Views/HeaderBar.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Header Bar | - | Context-sensitive header with nav + action buttons |
-| `Views/SidebarPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Sidebar | - | Library/Import/Settings icon navigation |
+| `Views/SidebarPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Sidebar | - | Sidebar icon navigation: Library, Import, Songs, Releases, Concerts, Box Sets, Settings |
 | `Views/PlayerBar.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Player Bar | - | Transport controls, progress, volume |
 | `Views/PlaylistPanel.xaml/.cs` | [documentation/18-shell-redesign-spec.md](documentation/18-shell-redesign-spec.md) § Playlist | - | Compact track list, always visible |
 | **Dialogs (modal, overlay shell)** | | | |
@@ -82,7 +82,7 @@ When adding a new feature that writes to disk:
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
 | `LibraryImportService.cs` | [documentation/13-library-import-service.md](documentation/13-library-import-service.md) | ~5,000 words | Universal single-path library system, folder creation, metadata preservation |
 | `MusicBrainzService.cs` | [documentation/14-musicbrainz-service.md](documentation/14-musicbrainz-service.md) | ~9,500 words | AcoustID fingerprinting, fpcalc.exe, MusicBrainz API, rate limiting |
-| `ShowLookupService.cs` | (inline — no separate doc) | - | Loads Data/shows.json, O(1) venue lookup by yyyy-MM-dd date |
+| `ShowLookupService.cs` | (inline — no separate doc) | - | Loads Data/shows.json; setlist + venue lookup by yyyy-MM-dd (GetSetlist, GetSegue, GetDiscTrack, SuggestTrackNumber, GetSetlistSongCount, GetShowByDate, FormattedVenueLocation) |
 | `ReleaseLookupService.cs` | (inline — no separate doc) | - | Loads Data/releases.json, autocomplete for album/release names |
 | **Models** | | | |
 | `AlbumInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § AlbumInfo | ~11,000 words | Album metadata, type-based polymorphism, AlbumTitle format |
@@ -91,7 +91,7 @@ When adding a new feature that writes to disk:
 | `SongDatabase.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § SongDatabase | ~11,000 words | Song database structure, artist-based organization |
 | **Data Files** | | | |
 | `Data/songs.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § songs.json | ~11,000 words | JSON schema, examples, 598 songs across 2 artists |
-| `Data/shows.json` | (inline — no separate doc) | - | setlist.fm venue data keyed by yyyy-MM-dd, used by ShowLookupService |
+| `Data/shows.json` | (inline — no separate doc) | - | Full gdshowsdb setlists keyed by yyyy-MM-dd (~1,797 shows with per-song segues); venue + setlist lookup via ShowLookupService |
 | `Data/releases.json` | (inline — no separate doc) | - | Series templates + standalone album names for autocomplete |
 | `%APPDATA%/DeadEditor/settings.json` | [documentation/15-data-model.md](documentation/15-data-model.md) § settings.json | ~11,000 words | Settings JSON schema, all 12 keys with defaults |
 
@@ -218,13 +218,13 @@ All dates use strict **yyyy-MM-dd** format for consistent sorting.
 ### Artist Organization
 ```json
 {
-  "artists": [
+  "Artists": [
     {
-      "name": "Grateful Dead",
-      "songs": [
+      "Name": "Grateful Dead",
+      "Songs": [
         {
-          "canonical": "Dark Star",
-          "aliases": ["Darkstar", "Dark Star ->", "-> Dark Star"]
+          "OfficialTitle": "Alabama Getaway",
+          "Aliases": ["Alabama"]
         }
       ]
     }
@@ -233,7 +233,7 @@ All dates use strict **yyyy-MM-dd** format for consistent sorting.
 ```
 
 ### Features
-- **Canonical Names:** Primary/official song title
+- **Official Titles:** Primary/official song title (the `OfficialTitle` field)
 - **Aliases:** Common variations and typos
 - **Fuzzy Matching:** Levenshtein distance algorithm (max 2 character difference or 20% of string length)
 - **Runtime Addition:** Songs can be added via UI without recompiling
@@ -373,7 +373,7 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `NormalizationService.cs` - Song title normalization, fuzzy matching, Levenshtein distance
 - `LibraryImportService.cs` - Concert import from folder structure
 - `MusicBrainzService.cs` - MusicBrainz API integration
-- `ShowLookupService.cs` - Venue lookup by date from Data/shows.json
+- `ShowLookupService.cs` - Setlist + venue lookup by date from Data/shows.json (GetSetlist / GetSegue / GetDiscTrack / SuggestTrackNumber / GetShowByDate / FormattedVenueLocation)
 - `ReleaseLookupService.cs` - Album name autocomplete from Data/releases.json
 
 #### Shell + Views
@@ -384,7 +384,7 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 - `Views/EditMetadataView.xaml/.cs` - Edit FLAC tags in-place
 - `Views/SettingsView.xaml/.cs` - Library paths, fpcalc, primary artist
 - `Views/HeaderBar.xaml/.cs` - Context-sensitive header bar
-- `Views/SidebarPanel.xaml/.cs` - Sidebar navigation icons
+- `Views/SidebarPanel.xaml/.cs` - Sidebar navigation icons (Library, Import, Songs, Releases, Concerts, Box Sets, Settings)
 - `Views/PlayerBar.xaml/.cs` - Transport controls, progress, volume
 - `Views/PlaylistPanel.xaml/.cs` - Compact playlist panel
 
@@ -397,7 +397,7 @@ Fuzzy matching (up to 2 character typos) automatically handles these without req
 
 #### Data
 - `Data/songs.json` - Song database (598 songs, artist-organized)
-- `Data/shows.json` - Venue/location lookup by date (from setlist.fm)
+- `Data/shows.json` - Full gdshowsdb setlists by date (venue/location + per-song segues), via ShowLookupService
 - `Data/releases.json` - Series templates + standalone release names for autocomplete
 
 ---
@@ -411,10 +411,10 @@ taskkill //F //IM DeadEditor.exe //T
 taskkill //F //IM dotnet.exe //T
 
 # Build
-dotnet build DeadEditor.csproj
+dotnet build DeadEditor/DeadEditor.csproj
 
 # Run
-dotnet run --project DeadEditor.csproj
+dotnet run --project DeadEditor/DeadEditor.csproj
 ```
 
 ### Running Tests
@@ -436,7 +436,9 @@ dotnet test DeadEditor.sln
 
 ---
 
-## Current Development Focus (2026-01-25)
+## Historical Development Focus (2026-01-25)
+
+*(Historical context, captured 2026-01-25. Retained as background; no longer the current focus.)*
 
 ### Multiple Official Release Editions
 **Goal:** Support importing different editions of the same studio album as separate entities
@@ -482,7 +484,7 @@ Each edition should be treated as a distinct album with its own metadata, even t
    - Current filter: Only includes "Official" status and "Album" type
 
 3. **AcoustID API key issue** - Service initialization may be failing
-   - Check how `_musicBrainzService` is initialized in MainWindow
+   - Check how `_musicBrainzService` is initialized in `ImportView` (ImportView.xaml.cs)
    - Verify API key is valid
 
 **Expected Behavior:**
@@ -496,7 +498,7 @@ Each edition should be treated as a distinct album with its own metadata, even t
 3. Test with known album that has multiple editions
 
 ### Minor UI Issue
-- Main window sometimes opens in background at startup (requires Alt+Tab to bring forward)
+- The shell window (`ShellWindow`) sometimes opens in background at startup (requires Alt+Tab to bring forward)
 
 ---
 
