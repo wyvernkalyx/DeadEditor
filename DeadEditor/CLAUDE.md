@@ -340,8 +340,15 @@ last-touched date. The active date lives in a transient `ActiveGroupDate`; each
 header's expand state is driven through
 [Converters/GroupActiveConverter.cs](Converters/GroupActiveConverter.cs), with
 the null-vs-empty rule (`null` = all-collapsed; `""` = the no-date group) owned
-by the pure `BoxSetGroupHeader.IsActiveGroup`. Grouping is purely a view concern
-— the model stays a flat `List<BoxSetTrack>` and serialization is unchanged.
+by the pure `BoxSetGroupHeader.IsActiveGroup`. Each header also carries a ✕
+"remove this date" action ([Helpers/BoxSetTrackMutations.cs](Helpers/BoxSetTrackMutations.cs)
+`RemoveTracksForDate`): it prompts a Yes/No confirm with the track count, then
+drops every row for that date in one step. The accordion collapses to
+all-collapsed only when the removed date was the open group — deleting a
+different, collapsed group leaves the open one expanded (`ActiveGroupDate` is
+nulled only when it equals the removed date). TrackNumbers are not renumbered,
+matching the per-row delete. Grouping is purely a view concern — the model stays
+a flat `List<BoxSetTrack>` and serialization is unchanged.
 
 ---
 
@@ -546,7 +553,7 @@ delineation. This documents the current state, not an endorsed end-state.
 
 #### Helpers / Converters
 - `Helpers/SetlistTrackBuilder.cs` - gdshowsdb setlist -> flat BoxSetTrack rows
-- `Helpers/BoxSetPullCollision.cs`, `BoxSetGroupHeader.cs` - pure wizard predicates
+- `Helpers/BoxSetPullCollision.cs`, `BoxSetGroupHeader.cs`, `BoxSetTrackMutations.cs` - pure wizard predicates/mutations
 - `Converters/GroupActiveConverter.cs` - drives the wizard accordion's IsExpanded
 
 #### Tools

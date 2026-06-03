@@ -228,10 +228,24 @@
                                                                          RelativeSource="{RelativeSource AncestorType={x:Type UserControl}}"/>
                                                             </MultiBinding>
                                                         </Expander.IsExpanded>
+                                                        <!-- Header: derived "date — venue (N tracks)" text on the left,
+                                                             a flat ✕ "remove this date" button docked right (commit H3).
+                                                             The button's DataContext is this group's CollectionViewGroup,
+                                                             so RemoveDateButton_Click reads its .Name (the date key). -->
                                                         <Expander.Header>
-                                                            <TextBlock Text="{Binding Converter={StaticResource GroupHeaderConverter}}"
-                                                                       Foreground="#CCCCCC" FontWeight="SemiBold"
-                                                                       FontSize="14" VerticalAlignment="Center"/>
+                                                            <DockPanel LastChildFill="True">
+                                                                <Button DockPanel.Dock="Right"
+                                                                        Click="RemoveDateButton_Click"
+                                                                        Content="&#x2715;"
+                                                                        ToolTip="Remove this date"
+                                                                        Width="20" Height="20" Padding="0"
+                                                                        Background="Transparent" BorderThickness="0"
+                                                                        Foreground="#CCCCCC" Cursor="Hand"
+                                                                        VerticalAlignment="Center" Margin="8,0,4,0"/>
+                                                                <TextBlock Text="{Binding Converter={StaticResource GroupHeaderConverter}}"
+                                                                           Foreground="#CCCCCC" FontWeight="SemiBold"
+                                                                           FontSize="14" VerticalAlignment="Center"/>
+                                                            </DockPanel>
                                                         </Expander.Header>
                                                         <ItemsPresenter/>
                                                     </Expander>

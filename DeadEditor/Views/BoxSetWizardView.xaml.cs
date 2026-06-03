@@ -378,6 +378,41 @@ namespace DeadEditor
             }
         }
 
+        /// <summary>Removes every track for one date in a single action via the ✕ on that
+        /// date's group header (commit H3) — the whole-date analog of the per-row Del above.
+        /// The date comes from the clicked header's <see cref="CollectionViewGroup"/> context
+        /// (proven reachable by the header's IsExpanded MultiBinding). A Yes/No confirm guards
+        /// the destructive single click (per-row delete needs no confirm because it's a
+        /// deliberate multi-select gesture). Accordion rule: collapse to all-collapsed only
+        /// when the removed date was the open group; deleting a different (collapsed) group
+        /// leaves the open one expanded. Set ActiveGroupDate BEFORE the single Refresh, per the
+        /// accordion contract. TrackNumbers are not renumbered (matches per-row delete).</summary>
+        private void RemoveDateButton_Click(object sender, RoutedEventArgs e)
+        {
+            var group = (sender as FrameworkElement)?.DataContext as CollectionViewGroup;
+            string date = group?.Name as string ?? "";
+
+            int count = _definition.Tracks.Count(
+                t => string.Equals(t?.Date ?? "", date, StringComparison.Ordinal));
+            if (count == 0) return; // defensive; a visible group always has >=1
+
+            // [Q1 CONFIRM BLOCK] -- remove this block for no-confirm parity with per-row delete
+            string label = string.IsNullOrWhiteSpace(date) ? "(no date)" : date;
+            var answer = MessageBox.Show(
+                $"Remove all {count} track(s) for {label}?",
+                "Remove date", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (answer != MessageBoxResult.Yes) return;
+            // [/Q1 CONFIRM BLOCK]
+
+            // Q2 conditional active-group rule: only collapse if we deleted the open group.
+            if (string.Equals(ActiveGroupDate, date, StringComparison.Ordinal))
+                ActiveGroupDate = null;
+
+            BoxSetTrackMutations.RemoveTracksForDate(_definition.Tracks, date);
+            _tracksView.Refresh();
+            e.Handled = true;
+        }
+
         /// <summary>Toggles date grouping on the shared view. Grouped (checked) adds the Date
         /// <see cref="PropertyGroupDescription"/>; flat (unchecked) clears it. The TrackNumber
         /// <see cref="SortDescription"/> stays in both modes, so the flat list is still
