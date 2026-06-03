@@ -413,6 +413,19 @@ namespace DeadEditor
             e.Handled = true;
         }
 
+        /// <summary>Re-sequences every track's TrackNumber to a contiguous 1..N ordered by
+        /// (Date asc, then existing TrackNumber asc), with no-date tracks last (the Renumber
+        /// action). Fixes out-of-order pulls — a later-pulled date no longer keeps lower numbers
+        /// than an earlier date — and closes gaps left by deletes, without delete-and-reimport.
+        /// Non-destructive (no row added/removed), so no confirm prompt. Dates are unchanged, so
+        /// the accordion's active group stays valid and needs no ActiveGroupDate touch; a single
+        /// Refresh re-renders the groups in the new order. TrackNumber re-sorts on Refresh.</summary>
+        private void RenumberButton_Click(object sender, RoutedEventArgs e)
+        {
+            BoxSetTrackMutations.RenumberByDate(_definition.Tracks);
+            _tracksView.Refresh();
+        }
+
         /// <summary>Toggles date grouping on the shared view. Grouped (checked) adds the Date
         /// <see cref="PropertyGroupDescription"/>; flat (unchecked) clears it. The TrackNumber
         /// <see cref="SortDescription"/> stays in both modes, so the flat list is still

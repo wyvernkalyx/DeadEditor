@@ -350,6 +350,24 @@ nulled only when it equals the removed date). TrackNumbers are not renumbered,
 matching the per-row delete. Grouping is purely a view concern — the model stays
 a flat `List<BoxSetTrack>` and serialization is unchanged.
 
+### Renumber action
+A **Renumber** button (third bulk action in the step-2 row, after Pull) re-sequences
+every track's `TrackNumber` to a contiguous `1..N` ordered by **`(Date asc, then
+existing TrackNumber asc)`**, no-date (`""`) tracks **last**, via the pure
+`BoxSetTrackMutations.RenumberByDate`. It fixes out-of-order pulls (group display
+order is a side effect of TrackNumber, so a later-pulled date otherwise renders its
+block above an earlier one) and closes delete gaps — without delete-and-reimport.
+Non-destructive, so **no confirm prompt**; dates are untouched so the accordion's
+active group stays valid (no `ActiveGroupDate` change — a single `_tracksView.Refresh()`
+re-renders groups in the new order). Unlike grouping, Renumber **does change
+serialization**: the helper physically reorders the backing list so the persisted
+`tracks` array matches the numbering (array order == TrackNumber order ==
+chronological). The renumber is **flat and unconditional** — hand-entered
+disc-prefixed numbers (`101`, `503`) are overwritten; a disc-prefixed-preserving
+variant is banked until import wiring lands (box-set-design-memo positions 10/11).
+Segues are unaffected (within-date order preserved; no live next-track computation
+over `BoxSetTrack`).
+
 ---
 
 ## Reference Data Layer

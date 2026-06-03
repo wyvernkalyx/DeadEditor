@@ -121,6 +121,16 @@
                             BorderBrush="#555555" BorderThickness="1"
                             Padding="12,6" Cursor="Hand" FontSize="14"/>
 
+                    <!-- Renumber: third bulk action. Re-sequences TrackNumber to 1..N by date
+                         (no-date last); fixes out-of-order pulls and closes delete gaps. -->
+                    <Border Width="1" Background="#555555" Margin="16,2,16,2"/>
+                    <Button x:Name="RenumberButton" Content="Renumber"
+                            Click="RenumberButton_Click"
+                            Background="#3E3E42" Foreground="#CCCCCC"
+                            BorderBrush="#555555" BorderThickness="1"
+                            Padding="12,6" Cursor="Hand" FontSize="14"
+                            ToolTip="Renumber tracks 1…N by date"/>
+
                     <!-- Group/flat toggle (commit H); default grouped. -->
                     <Border Width="1" Background="#555555" Margin="16,2,16,2"/>
                     <CheckBox x:Name="GroupByDateCheckBox" Content="Group by date"
