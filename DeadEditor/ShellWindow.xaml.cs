@@ -550,6 +550,9 @@ namespace DeadEditor
             if (_boxSetsView == null)
             {
                 _boxSetsView = new BoxSetsView();
+                // Persistent instance (created once) — subscribe the edit-launch event here so it
+                // is wired exactly once. Double-click / Enter on a saved row opens edit-mode.
+                _boxSetsView.EditBoxSetRequested += (s, slug) => OpenBoxSetForEdit(slug);
             }
 
             // Re-read from disk on every navigation (cheap — dozens of files at most,
@@ -575,6 +578,37 @@ namespace DeadEditor
             wizard.StepChanged += (s, step) => HeaderBar.UpdateBoxSetWizardStep(step);
 
             _navigationService.NavigateToRoot(wizard);
+        }
+
+        /// <summary>
+        /// Opens the wizard in edit-mode for a saved box. Reads a FRESH copy from disk by slug
+        /// (the read-fresh copy is itself the isolated editable buffer — edits don't touch the
+        /// file until Save, and Cancel discards by dropping the wizard). If the box is gone since
+        /// the list was loaded, refreshes the list and notifies rather than opening an empty wizard.
+        /// Lands on step 2 AFTER subscribing StepChanged so the HeaderBar receives the step.
+        /// </summary>
+        private void OpenBoxSetForEdit(string slug)
+        {
+            var svc = new Services.BoxSetService();
+            var existing = svc.Read(slug);
+            if (existing == null)
+            {
+                NavigateToBoxSets(); // re-read from disk; drops the stale row
+                System.Windows.MessageBox.Show(
+                    "This box set could not be found; the list has been refreshed.",
+                    "Box Set Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var wizard = new BoxSetWizardView(svc, existing, slug);
+            wizard.Completed += (s, a) => NavigateToBoxSets();
+            wizard.StepChanged += (s, step) => HeaderBar.UpdateBoxSetWizardStep(step);
+
+            _navigationService.NavigateToRoot(wizard);
+
+            // After NavigateToRoot the HeaderBar is showing the wizard header (title "Edit Box Set"
+            // via IsEditingExisting) on step 1; advance to step 2 now that StepChanged is wired.
+            wizard.GoToStep(2);
         }
 
         // ===== WIZARD HEADER ROUTING =====

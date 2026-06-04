@@ -61,6 +61,8 @@
                   AutoGenerateColumns="False"
                   SelectionMode="Single"
                   IsReadOnly="True"
+                  MouseDoubleClick="BoxSetsDataGrid_MouseDoubleClick"
+                  PreviewKeyDown="BoxSetsDataGrid_PreviewKeyDown"
                   Background="#252526"
                   RowBackground="#252526"
                   AlternatingRowBackground="#2D2D30"

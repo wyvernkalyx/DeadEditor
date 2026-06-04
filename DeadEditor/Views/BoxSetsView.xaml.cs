@@ -1,7 +1,9 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DeadEditor
 {
@@ -28,10 +30,38 @@ namespace DeadEditor
         /// <summary>Filtered count — same as TotalCount in MVP (no filter yet).</summary>
         public int FilteredCount => _boxSets.Count;
 
+        /// <summary>Raised when the user activates a saved row (double-click or Enter) to edit it.
+        /// Carries the box's slug; the shell reads a fresh copy from disk by that slug and opens
+        /// the wizard in edit-mode.</summary>
+        public event EventHandler<string>? EditBoxSetRequested;
+
         public BoxSetsView()
         {
             InitializeComponent();
             BoxSetsDataGrid.ItemsSource = _boxSets;
+        }
+
+        /// <summary>Double-click a saved row → request edit. Ignores clicks that land off a row
+        /// (header/empty space) where SelectedItem is not a definition.</summary>
+        private void BoxSetsDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            RequestEditForSelectedRow();
+        }
+
+        /// <summary>Enter on a selected row → request edit (keyboard parity with double-click).</summary>
+        private void BoxSetsDataGrid_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                RequestEditForSelectedRow();
+                e.Handled = true;
+            }
+        }
+
+        private void RequestEditForSelectedRow()
+        {
+            if (BoxSetsDataGrid.SelectedItem is BoxSetDefinition def)
+                EditBoxSetRequested?.Invoke(this, BoxSetService.DeriveSlug(def.Name));
         }
 
         /// <summary>

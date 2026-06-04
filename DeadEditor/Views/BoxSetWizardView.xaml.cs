@@ -30,8 +30,13 @@ namespace DeadEditor
     {
         private readonly BoxSetService _boxSetService;
         private readonly NormalizationService _normalizationService = new();
-        private readonly BoxSetDefinition _definition = new();
+        private readonly BoxSetDefinition _definition;
         private readonly ListCollectionView _tracksView;
+        // Edit-mode (commit 2): true when the wizard was opened on a saved box. _originalSlug is
+        // the slug it was loaded from, so Save can resolve overwrite vs. rename-move vs. collision
+        // via BoxSetSaveResolution. Both null/false for the new-box path.
+        private readonly bool _isEditingExisting;
+        private readonly string? _originalSlug;
         private int _currentStep = 1;
 
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
@@ -39,6 +44,10 @@ namespace DeadEditor
 
         /// <summary>The currently visible step (1-4).</summary>
         public int CurrentStep => _currentStep;
+
+        /// <summary>True when the wizard was opened to edit a saved box set (drives the header
+        /// title "Edit Box Set" vs. "New Box Set"). Read by <c>HeaderBar.ShowBoxSetWizardHeader</c>.</summary>
+        public bool IsEditingExisting => _isEditingExisting;
 
         /// <summary>Fired when the wizard finishes — either Save succeeded or the user
         /// cancelled. ShellWindow uses this to navigate back to the Box Sets list.</summary>
@@ -71,16 +80,31 @@ namespace DeadEditor
             set => SetValue(ActiveGroupDateProperty, value);
         }
 
+        /// <summary>New-box-set entry: a fresh, empty definition, discarded on Cancel. Chains
+        /// to the shared ctor with no original slug (the not-editing case).</summary>
         public BoxSetWizardView(BoxSetService boxSetService)
+            : this(boxSetService, new BoxSetDefinition(), null) { }
+
+        /// <summary>
+        /// Shared ctor. <paramref name="definition"/> is the object the wizard edits; for
+        /// edit-mode entry (commit 2) it is a fresh read-from-disk copy (read by slug), so edits
+        /// are isolated from the saved file until Save and discarded on Cancel. <paramref
+        /// name="originalSlug"/> is that box's slug when editing, or null for a new box — it
+        /// drives Save's overwrite/rename/collision resolution. The grid + view wiring binds to
+        /// <c>definition.Tracks</c>, so the definition MUST be assigned before that wiring.
+        /// </summary>
+        public BoxSetWizardView(BoxSetService boxSetService, BoxSetDefinition definition, string? originalSlug)
         {
             InitializeComponent();
             _boxSetService = boxSetService;
+            _definition = definition;
+            _originalSlug = originalSlug;
+            _isEditingExisting = !string.IsNullOrEmpty(originalSlug);
 
-            // Bind the step-2 grid directly to the long-lived definition's track list.
-            // Edits flow live into _definition.Tracks (approach (a), INPC on BoxSetTrack),
-            // so Save() needs no separate step-2 sync. Safe for the new-box-set flow: a
-            // fresh _definition per wizard, discarded on Cancel. Edit-mode entry (banked)
-            // will revisit with a load-a-copy / discard-on-cancel approach.
+            // Bind the step-2 grid directly to the definition's track list. Edits flow live into
+            // _definition.Tracks (approach (a), INPC on BoxSetTrack), so Save() needs no separate
+            // step-2 sync. In edit-mode the definition is a read-fresh copy, so this live binding
+            // stays safe — the on-disk file is untouched until Write.
             TracksDataGrid.ItemsSource = _definition.Tracks;
 
             // Group the grid by Date with a deterministic within-group order. Configure the
@@ -96,6 +120,13 @@ namespace DeadEditor
             _tracksView.IsLiveGrouping = true;
             _tracksView.LiveGroupingProperties.Add(nameof(BoxSetTrack.Date));
 
+            // Prefill the step-1 form from the loaded box (inverse of SyncStep1FieldsToDefinition).
+            // New-box path leaves the fields blank. Tracks need no prefill — they bind live above.
+            if (_isEditingExisting)
+                LoadStep1FieldsFromDefinition();
+
+            // Initial step. Edit-mode lands on step 2, but the shell drives that AFTER subscribing
+            // StepChanged (a ctor-set step is not seen by the HeaderBar) — see GoToStep.
             ShowStep(1);
         }
 
@@ -119,6 +150,12 @@ namespace DeadEditor
             if (_currentStep > 1)
                 ShowStep(_currentStep - 1);
         }
+
+        /// <summary>Jumps directly to a step (no validation). Used by the shell to land edit-mode
+        /// on step 2 AFTER it has subscribed <see cref="StepChanged"/>, so the HeaderBar receives
+        /// the step. The box being edited was already valid when saved; per-field validation still
+        /// runs on Save.</summary>
+        public void GoToStep(int step) => ShowStep(step);
 
         /// <summary>
         /// Validates step 1, checks for slug collision against existing definitions, and
@@ -157,10 +194,14 @@ namespace DeadEditor
 
             var slug = BoxSetService.DeriveSlug(_definition.Name);
 
-            // Collision check — Write would silently overwrite. Surface as a validation
-            // error so the user picks a different name. Edit-existing (commit 6) will use
-            // a different code path that does want to overwrite.
-            if (_boxSetService.Read(slug) != null)
+            // Route the save through the pure identity resolver (BoxSetSaveResolution). For a new
+            // box (_originalSlug null) the outcomes are SaveNew / NameCollision; in edit-mode they
+            // are Overwrite (name unchanged), MoveRename (name changed to a free slug), or
+            // NameCollision (the new slug belongs to a different box — refuse, don't clobber it).
+            var outcome = BoxSetSaveResolution.Resolve(
+                _originalSlug, slug, _boxSetService.Read(slug) != null);
+
+            if (outcome == BoxSetSaveOutcome.NameCollision)
             {
                 ValidationMessage.Text = "A box set with this name already exists. Please use a different name.";
                 if (_currentStep != 1) ShowStep(1);
@@ -169,7 +210,16 @@ namespace DeadEditor
 
             try
             {
+                // SaveNew / Overwrite / MoveRename all write the (whole) definition to the new
+                // slug. Verified and every other field persist because the read-fresh definition
+                // is serialized whole.
                 _boxSetService.Write(_definition, slug);
+
+                // Rename: the name changed to a free slug, so the box moved to a new file. Delete
+                // the old file AFTER the new write succeeds — write-then-delete means a failed
+                // delete leaves a recoverable orphan, whereas delete-first would risk data loss.
+                if (outcome == BoxSetSaveOutcome.MoveRename)
+                    _boxSetService.Delete(_originalSlug!);
             }
             catch (Exception ex)
             {
@@ -249,6 +299,19 @@ namespace DeadEditor
             _definition.Label = LabelTextBox.Text?.Trim() ?? "";
             _definition.CatalogNumber = CatalogNumberTextBox.Text?.Trim() ?? "";
             _definition.Notes = NotesTextBox.Text?.Trim() ?? "";
+        }
+
+        /// <summary>Populates the step-1 TextBoxes from <see cref="_definition"/> — the exact
+        /// inverse of <see cref="SyncStep1FieldsToDefinition"/>. Called once at construction in
+        /// edit-mode. Verified and the track list are not step-1 fields: Verified rides through
+        /// untouched on the read-fresh definition and is persisted whole by Save; tracks bind live.</summary>
+        private void LoadStep1FieldsFromDefinition()
+        {
+            NameTextBox.Text = _definition.Name;
+            ReleaseDateTextBox.Text = _definition.ReleaseDate;
+            LabelTextBox.Text = _definition.Label;
+            CatalogNumberTextBox.Text = _definition.CatalogNumber;
+            NotesTextBox.Text = _definition.Notes;
         }
 
         // ===== STEP 2 — TRACK GRID (add / delete) =====

@@ -368,6 +368,37 @@ variant is banked until import wiring lands (box-set-design-memo positions 10/11
 Segues are unaffected (within-date order preserved; no live next-track computation
 over `BoxSetTrack`).
 
+### Save identity
+A box set's identity is its **slug** — one `<slug>.json` file per box, with the slug
+derived from the name via `BoxSetService.DeriveSlug`. The save-overwrite/rename/collision
+decision is centralized in the pure
+[Helpers/BoxSetSaveResolution.cs](Helpers/BoxSetSaveResolution.cs)
+`Resolve(originalSlug, newSlug, targetSlugExists)`, which returns one of four
+`BoxSetSaveOutcome`s: **SaveNew** (new box, free name), **Overwrite** (editing, name
+unchanged — slug == original, so the existing file is the box itself, not a collision),
+**MoveRename** (editing, name changed to a free slug), and **NameCollision** (the target
+slug already belongs to a *different* box). A brand-new box is simply the "edit with no
+original" case (`originalSlug` null/empty).
+
+### Edit-mode entry
+Double-clicking (or pressing Enter on) a saved row in the Box Sets list opens the wizard
+**pre-populated** for editing. `BoxSetsView` raises `EditBoxSetRequested` with the box's
+slug; `ShellWindow.OpenBoxSetForEdit` reads a **fresh copy from disk** by slug
+(`BoxSetService.Read`) — the deserialized object is itself the isolated editable buffer, so
+edits never touch the saved file until Save and Cancel/"← Box Sets" discards by dropping the
+wizard (no in-memory `DeepCopy` needed). If the box is gone since the list loaded, the list
+refreshes and a notice shows instead of opening an empty wizard. Edit-mode reuses the wizard
+via a shared ctor `BoxSetWizardView(svc, definition, originalSlug)` (the new-box ctor chains
+to it with a fresh definition and null slug); the loaded definition is injected **before** the
+grid/`_tracksView` wiring, step-1 fields are prefilled (`LoadStep1FieldsFromDefinition`, the
+inverse of `SyncStep1FieldsToDefinition`), and the wizard lands on **step 2** (the shell calls
+`GoToStep(2)` after subscribing `StepChanged`). The header reads **"Edit Box Set"** (driven by
+`IsEditingExisting`). On Save the resolver's outcome decides the I/O: **Overwrite** and
+**SaveNew** write in place; **MoveRename** writes the new slug **then** deletes the old
+(write-then-delete: a failed delete leaves a recoverable orphan, delete-first would risk data
+loss); **NameCollision** refuses. `Verified` and all other fields ride through because the
+read-fresh definition is serialized whole.
+
 ---
 
 ## Reference Data Layer

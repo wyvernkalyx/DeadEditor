@@ -235,6 +235,7 @@ namespace DeadEditor
         {
             HideAllHeaders();
             BoxSetWizardHeader.Visibility = Visibility.Visible;
+            BoxSetWizardTitleText.Text = wizard.IsEditingExisting ? "Edit Box Set" : "New Box Set";
             UpdateBoxSetWizardStep(wizard.CurrentStep);
         }
 
