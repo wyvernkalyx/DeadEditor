@@ -54,6 +54,10 @@ The column is present only in the album (Library) view; it is absent in "Shows I
 - A Library filter by verification state (All / Verified / Partial / Unverified) is the next step.
 - The tri-state summarization rule (none/some/all → Unverified/Partial/Verified) is settled for the grid; whether `Partial` should surface anywhere beyond a derived row summary is a v2 question, related to Q2's state-machine discussion.
 
+## Box-Set Surface (shipped 2026-06-06)
+
+Verification extended from albums to box sets. `BoxSetDefinition.Verified` — previously a passive bool that persisted and rendered a Box Sets list glyph but was never set, gated, or cleared — is now wired end to end. The gate is a pure `BoxSetVerifyGate` (name non-empty, release date `yyyy-MM-dd`, at least one track, every track having a song name, and every track having a parseable date), returning the first failing reason. Unverify-on-edit uses **diff-at-save** rather than the album's live field handlers: a normalized, serialized baseline is snapshotted at the wizard constructor, and Save drops `Verified` when the current serialized definition differs (`EditUnverifyRule.IsDirty`, the same ordinal compare). The newly built Step 3 Review panel carries the verify surface — a badge, a Mark-Verified button, and a wrapping disabled-reason — driven across three states (verified / verifiable / blocked); the badge shows an honest `effectiveVerified` (stored bool AND clean-vs-baseline) recomputed on panel-show, with no live tracking. Mark-Verified is in-memory (set + rebaseline + refresh); the wizard's terminal Save persists it and Cancel discards it. Design authority: [box-set-verification-spec.md](box-set-verification-spec.md).
+
 ## Required Fields (Concept)
 
 A record cannot be marked verified unless certain required fields are populated and valid. The exact set is per-record-type, but the principle is that **verified means something specific** rather than being a sticker the user can apply arbitrarily.

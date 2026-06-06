@@ -1,6 +1,7 @@
 # Box-Set Verification Spec
 
-**Status:** Confirmed (ready for the doc commit)
+**Status:** Shipped (2026-06-06)
+Implemented by 3d1965b (Step 3 Review surface) and 1c24a27 (verification behavior); spec landed in 1b69c9b.
 **Date:** 2026-06-06
 **Branch:** `feature/library-verification-surface`
 
