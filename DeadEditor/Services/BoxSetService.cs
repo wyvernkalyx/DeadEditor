@@ -114,6 +114,15 @@ namespace DeadEditor.Services
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
+        /// <summary>
+        /// Serializes a definition to the canonical box-set JSON form. The single serializer used
+        /// by <see cref="Write"/> AND by the wizard's verification baseline/diff snapshots, so the
+        /// persisted bytes, the baseline, and the dirty-check all share one format and cannot drift
+        /// (box-set-verification-spec.md refinement 2). Pure — no I/O.
+        /// </summary>
+        public static string Serialize(BoxSetDefinition definition)
+            => JsonConvert.SerializeObject(definition, _jsonSettings);
+
         private static bool _initialized;
         private static readonly object _initLock = new();
 
@@ -258,7 +267,7 @@ namespace DeadEditor.Services
             var targetPath = Path.Combine(ActiveBoxSetsPath, slug + ".json");
             var tempPath = targetPath + ".tmp";
 
-            var json = JsonConvert.SerializeObject(definition, _jsonSettings);
+            var json = Serialize(definition);
 
             File.WriteAllText(tempPath, json);
             if (File.Exists(targetPath))

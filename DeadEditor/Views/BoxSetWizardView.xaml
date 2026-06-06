@@ -337,10 +337,31 @@
                         <TextBlock x:Name="ReviewNameText" Grid.Column="0"
                                    Foreground="#E0E0E0" FontSize="20" FontWeight="Bold"
                                    TextWrapping="Wrap" VerticalAlignment="Center"/>
-                        <!-- commit 3: Mark-Verified button + effectiveVerified badge (Badge* brushes) -->
+                        <!-- commit 3: effectiveVerified badge + Mark-Verified button + gate reason.
+                             Badge colours/text and the button/reason visibility are driven in
+                             code-behind by RefreshVerifyControls (Badge* brushes via FindResource);
+                             the literals here are the unverified default. -->
                         <StackPanel x:Name="VerifyActionSlot" Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                                    Orientation="Vertical"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Border x:Name="VerifyBadge" Padding="12,4" CornerRadius="3"
+                                        VerticalAlignment="Center" Background="#3C3C3C">
+                                    <TextBlock x:Name="VerifyBadgeText" Text="Unverified"
+                                               Foreground="#888888" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+                                <Button x:Name="MarkVerifiedButton" Content="Mark Verified"
+                                        Margin="8,0,0,0" Height="26" Padding="10,2" FontSize="12"
+                                        VerticalAlignment="Center" Cursor="Hand"
+                                        Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                                        Click="MarkVerifiedButton_Click"
+                                        ToolTip="Mark this box set as verified"/>
+                            </StackPanel>
+                            <TextBlock x:Name="VerifyReasonText" Visibility="Collapsed"
+                                       Margin="0,6,0,0" MaxWidth="260"
+                                       HorizontalAlignment="Right" TextAlignment="Right"
+                                       TextWrapping="Wrap" FontSize="12" Foreground="#E74C3C"/>
+                        </StackPanel>
                     </Grid>
 
                     <!-- Release date -->

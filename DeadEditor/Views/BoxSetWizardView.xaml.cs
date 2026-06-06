@@ -40,10 +40,17 @@ namespace DeadEditor
         private readonly string? _originalSlug;
         private int _currentStep = 1;
 
+        // Verification baseline (commit 3): a serialized snapshot of the normalized definition,
+        // captured at ctor and re-captured by Mark-Verified. The Save diff and the Review panel's
+        // effectiveVerified both compare this against the current serialized definition. MUST be a
+        // string, never a reference to _definition/.Tracks — the grid mutates those instances live,
+        // so a reference baseline would always equal current and never fire (spec refinement 1).
+        private string _baselineJson = "";
+
         // yyyy-MM-dd validation regex — same pattern as EditSetlistView.xaml.cs:197.
         private static readonly Regex DateRegex = new(@"^\d{4}-\d{2}-\d{2}$", RegexOptions.Compiled);
 
-        /// <summary>The currently visible step (1-4).</summary>
+        /// <summary>The currently visible step (1-3).</summary>
         public int CurrentStep => _currentStep;
 
         /// <summary>True when the wizard was opened to edit a saved box set (drives the header
@@ -129,13 +136,21 @@ namespace DeadEditor
             // Initial step. Edit-mode lands on step 2, but the shell drives that AFTER subscribing
             // StepChanged (a ctor-set step is not seen by the HeaderBar) — see GoToStep.
             ShowStep(1);
+
+            // Capture the verification baseline (commit 3). Normalize first — SyncStep1FieldsToDefinition
+            // trims the step-1 fields into _definition — so an untrimmed on-disk box does not
+            // false-unverify on open-and-save with no user edit (spec refinement 3). Serialized to a
+            // string, never a live reference (see _baselineJson). New-box mode: empty fields + empty
+            // def, so the baseline is the normalized-empty form; both paths coherent.
+            SyncStep1FieldsToDefinition();
+            _baselineJson = BoxSetService.Serialize(_definition);
         }
 
         // ===== STEP NAVIGATION (called from HeaderBar via ShellWindow) =====
 
         /// <summary>Advances to the next step if the current step's validation passes.
-        /// Step 1 has real validation; later steps' content is a placeholder and always
-        /// passes.</summary>
+        /// Step 1 has real validation; step 2 (track grid) and step 3 (the built Review summary)
+        /// have no Next-gate, so advancing from them always passes.</summary>
         public void GoNext()
         {
             if (_currentStep == 1 && !ValidateStep1())
@@ -208,6 +223,17 @@ namespace DeadEditor
                 if (_currentStep != 1) ShowStep(1);
                 return;
             }
+
+            // Unverify-on-edit (commit 3, spec decision 4): if the box is verified and any tracked
+            // field changed since the baseline snapshot, drop Verified before the write. One
+            // serialized compare covers every edit path uniformly — step-1 fields, cell edits,
+            // Add/Remove/Renumber/date-delete/pull-setlist. Runs after the flush + Sync (ValidateStep1
+            // normalized step-1 into _definition) and immediately before Write, which carries Verified
+            // through whole-object serialization. Mark-Verified rebaselines, so a just-verified box
+            // diffs equal here and stays verified; a later edit re-dirties and unverifies.
+            if (_definition.Verified &&
+                EditUnverifyRule.IsDirty(_baselineJson, BoxSetService.Serialize(_definition)))
+                _definition.Verified = false;
 
             try
             {
@@ -317,6 +343,74 @@ namespace DeadEditor
                 ReviewNotesSection.Visibility = Visibility.Visible;
                 ReviewNotesText.Text = _definition.Notes;
             }
+
+            RefreshVerifyControls();
+        }
+
+        // ===== STEP 3 — VERIFICATION SURFACE (commit 3) =====
+
+        /// <summary>
+        /// Refreshes the verify badge + Mark-Verified button + reason in <c>VerifyActionSlot</c>
+        /// from the current definition. Called on panel-show (from <see cref="PopulateReview"/>,
+        /// after its Sync) and by the Mark-Verified handler. A one-shot evaluation, not live
+        /// tracking — it stays inside the "no amber markers" deferral (spec refinement 5).
+        /// <para>
+        /// <c>effectiveVerified</c> is the HONEST state: the stored bool AND the definition being
+        /// clean vs. the baseline (the same diff the Save uses). A verified box that has been edited
+        /// shows as not-verified here, which is the truth. Three states:
+        /// verified -> green badge, button hidden (you unverify by editing), no reason;
+        /// unverified + complete -> grey badge, enabled "Mark Verified", no reason;
+        /// unverified + incomplete -> grey badge, disabled button, first failing reason shown.
+        /// </para>
+        /// </summary>
+        private void RefreshVerifyControls()
+        {
+            var (canVerify, reason) = BoxSetVerifyGate.Evaluate(_definition);
+            bool effectiveVerified = _definition.Verified
+                && !EditUnverifyRule.IsDirty(_baselineJson, BoxSetService.Serialize(_definition));
+
+            if (effectiveVerified)
+            {
+                VerifyBadge.Background = (SolidColorBrush)FindResource("BadgeVerifiedBg");
+                VerifyBadgeText.Text = "✓ Verified";
+                VerifyBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeVerifiedFg");
+                MarkVerifiedButton.Visibility = Visibility.Collapsed;
+                VerifyReasonText.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            VerifyBadge.Background = (SolidColorBrush)FindResource("BadgeUnverifiedBg");
+            VerifyBadgeText.Text = "Unverified";
+            VerifyBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeUnverifiedFg");
+            MarkVerifiedButton.Visibility = Visibility.Visible;
+            MarkVerifiedButton.IsEnabled = canVerify;
+
+            if (canVerify)
+            {
+                VerifyReasonText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                VerifyReasonText.Text = reason;
+                VerifyReasonText.Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Marks the box verified in memory (Option 1: persist-on-Save). Re-checks the gate
+        /// defensively (the button is disabled when it fails, but a stale click must not verify an
+        /// incomplete box), sets <c>Verified = true</c>, and rebaselines so the same-pass Save diff
+        /// sees baseline == current and Verified persists. No disk write here — the HeaderBar Save
+        /// writes; Cancel discards. A subsequent edit re-dirties the baseline and unverifies at Save.
+        /// </summary>
+        private void MarkVerifiedButton_Click(object sender, RoutedEventArgs e)
+        {
+            var (canVerify, _) = BoxSetVerifyGate.Evaluate(_definition);
+            if (!canVerify) return;
+
+            _definition.Verified = true;
+            _baselineJson = BoxSetService.Serialize(_definition);
+            RefreshVerifyControls();
         }
 
         /// <summary>
