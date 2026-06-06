@@ -1,4 +1,6 @@
-# Verification Model (Stub — Future Design)
+# Verification Model (Status Doc)
+
+**Box-set extension: see box-set-verification-spec.md.**
 
 **Status:** Partially formalized. The page-level verification model and its manifest storage shipped in the MVP wiring chain (commits `2415bfb` through `0d56b90`, 2026-05-18 through 2026-05-20). This stub retains the open architectural questions that the MVP did not resolve.
 
