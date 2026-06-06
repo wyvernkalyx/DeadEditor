@@ -43,7 +43,8 @@ read-on-save, not live-bound. No new verification model; new Review UI required.
    Today Step 3 is a placeholder TextBlock (`BoxSetWizardView.xaml:326-331`); Save/Next is HeaderBar-
    driven. The Review panel (a summary of the box + a validation/verify control) must be built. The
    verify control is local to the Review panel.
-   - **Honest badge.** Because unverify is deferred to save with no live feedback, the Review panel
+   - **Honest badge (refinement 5).** Because unverify is deferred to save with no live feedback,
+     the Review panel
      must display the *projected* state, not the stale stored bool. Compute, on panel-show,
      `effectiveVerified = _definition.Verified && !IsDirty(baselineSnapshot, currentSnapshot)` (the
      same diff used at save). A verified box that has been edited shows as not-verified on Review,
@@ -71,27 +72,30 @@ read-on-save, not live-bound. No new verification model; new Review UI required.
    ctor; one dirty-check at Save. This single check covers every edit path uniformly - step-1 fields,
    cell edits, Add/Remove/Renumber/H3-date-delete/pull-setlist - so **no** TextChanged handlers, no
    broadened `CellEditEnding`, no per-mutation hooks.
-   - **Baseline must be a serialized string, never an object/list reference (the correctness
-     landmine).** The grid binds live to `_definition.Tracks` and edits mutate those exact
+   - **Baseline must be a serialized string, never an object/list reference (refinement 1, the
+     correctness landmine).** The grid binds live to `_definition.Tracks` and edits mutate those exact
      `BoxSetTrack` instances (`BoxSetWizardView.xaml.cs:108-121`). A baseline of `_definition` or
      `_definition.Tracks` (or a shallow copy) equals current at save *always* - the diff silently
      never fires and verified boxes would never unverify, with no error. Capture baseline as a
      serialized JSON string (or a deep clone).
-   - **Diff = serialized compare, not field-by-field.** `EditUnverifyRule.IsDirty` is a pure ordinal
+   - **Diff = serialized compare, not field-by-field (refinement, IsDirty semantics).**
+     `EditUnverifyRule.IsDirty` is a pure ordinal
      two-string compare (`EditUnverifyRule.cs:18-21`), no trim/no case-fold. So the mechanism is
      `IsDirty(baselineJson, currentJson)` where both are the serialized definition. Do not reach for
      a structural comparer.
-   - **Shared serializer.** `BoxSetService._jsonSettings` is private static (camelCase,
+   - **Shared serializer (refinement 2).** `BoxSetService._jsonSettings` is private static (camelCase,
      `NullValueHandling.Ignore`, `:110-115`); `Write` serializes via it (`:261`). Expose a
      `public static string Serialize(BoxSetDefinition)` (or `Snapshot`) on `BoxSetService` that
      `Write` also uses, so baseline, diff, and persisted bytes share one serializer and cannot drift.
      Including `Verified`/`Version` in the snapshot is harmless (equal on both sides at diff time).
-   - **Normalize before snapshotting.** Because `IsDirty` is ordinal and `Sync` trims, capture the
-     baseline from the *normalized* definition (run `SyncStep1FieldsToDefinition` once at ctor before
-     the snapshot), so an untrimmed on-disk box does not false-unverify on open-and-save with no edit.
-   - **Position in Save().** Run the dirty-check after `ValidateStep1()`/Sync (which trims step-1 into
-     `_definition`) and after the CommitEdit flush (`:171`), immediately before the `Write` block
-     (`:216`). If `Verified && IsDirty(baseline, current)` -> `Verified = false`, then Write.
+   - **Normalize before snapshotting (refinement 3).** Because `IsDirty` is ordinal and `Sync`
+     trims, capture the baseline from the *normalized* definition (run `SyncStep1FieldsToDefinition`
+     once at ctor before the snapshot), so an untrimmed on-disk box does not false-unverify on
+     open-and-save with no user edit.
+   - **Position in Save() (refinement 4).** Run the dirty-check after `ValidateStep1()`/Sync (which
+     trims step-1 into `_definition`) and after the CommitEdit flush (`:171`), immediately before the
+     `Write` block (`:216`). If `Verified && IsDirty(baseline, current)` -> `Verified = false`, then
+     Write (which already carries `Verified` through whole-object serialization).
    - **Verify rebaselines.** "Mark Verified" re-snapshots the current definition as the new baseline,
      so the same-pass diff does not undo the verify, and a *subsequent* edit re-dirties and unverifies.
    - **Tracked fields** (any difference unverifies): Name, ReleaseDate, Label, CatalogNumber, Notes,
