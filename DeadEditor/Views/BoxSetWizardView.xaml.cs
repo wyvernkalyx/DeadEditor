@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
 
@@ -19,8 +20,8 @@ namespace DeadEditor
     /// <summary>
     /// Multi-step wizard for authoring a <see cref="BoxSetDefinition"/>. Single
     /// UserControl; step transitions toggle <c>Visibility</c> on three content panels
-    /// rather than navigating between views. Step 1 (top-level info) ships in this
-    /// commit; steps 2-3 are placeholders.
+    /// rather than navigating between views. Step 1 is the top-level info form, step 2
+    /// the editable track grid, and step 3 the read-only Review summary.
     ///
     /// Shell-agnostic by design: raises <see cref="Completed"/> (Save success or
     /// Cancel) and <see cref="StepChanged"/> for the ShellWindow to plumb back to
@@ -258,7 +259,114 @@ namespace DeadEditor
                 _ => $"Step {step} of 3"
             };
 
+            // Populate the read-only Review summary whenever step 3 becomes active. The
+            // Visibility-toggling and StepChanged logic above is unchanged.
+            if (step == 3)
+                PopulateReview();
+
             StepChanged?.Invoke(this, step);
+        }
+
+        // ===== STEP 3 — REVIEW SUMMARY (read-only) =====
+
+        /// <summary>
+        /// Populates the read-only Review panel from the current definition. Called by
+        /// <see cref="ShowStep"/> when step 3 becomes active. Syncs the step-1 TextBoxes into
+        /// <see cref="_definition"/> first so the summary reflects the latest edits even on a
+        /// path that skipped validation; Sync only normalizes the current definition (no
+        /// baseline/diff — that is commit 3). Rebuilds the per-date list on every call.
+        /// </summary>
+        private void PopulateReview()
+        {
+            SyncStep1FieldsToDefinition();
+
+            ReviewNameText.Text = string.IsNullOrWhiteSpace(_definition.Name)
+                ? "(untitled)"
+                : _definition.Name;
+
+            ReviewReleaseDateText.Text = string.IsNullOrWhiteSpace(_definition.ReleaseDate)
+                ? "—"
+                : _definition.ReleaseDate;
+
+            // Label / Catalog: omit either if blank; hide the whole line if both blank.
+            var label = _definition.Label?.Trim() ?? "";
+            var catalog = _definition.CatalogNumber?.Trim() ?? "";
+            if (label.Length == 0 && catalog.Length == 0)
+            {
+                ReviewLabelCatalogSection.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ReviewLabelCatalogSection.Visibility = Visibility.Visible;
+                ReviewLabelCatalogText.Text =
+                    label.Length > 0 && catalog.Length > 0 ? $"{label} · {catalog}"
+                    : label.Length > 0 ? label
+                    : catalog;
+            }
+
+            PopulateReviewDates();
+
+            // Notes: surfaced only when present.
+            if (string.IsNullOrWhiteSpace(_definition.Notes))
+            {
+                ReviewNotesSection.Visibility = Visibility.Collapsed;
+                ReviewNotesText.Text = "";
+            }
+            else
+            {
+                ReviewNotesSection.Visibility = Visibility.Visible;
+                ReviewNotesText.Text = _definition.Notes;
+            }
+        }
+
+        /// <summary>
+        /// Rebuilds the per-date track summary: a count lead line plus one read-only line per
+        /// date, each formatted by <see cref="BoxSetGroupHeader.FormatGroupHeader"/> with the
+        /// venue derived from <see cref="ShowLookupService"/> — the same path Step 2's group
+        /// headers use (<c>GroupHeaderConverter</c>). No-date tracks fold into a single
+        /// "(no date)" line; dates are ordered chronologically with no-date last. Zero tracks
+        /// renders "0 tracks" with no per-date lines.
+        /// </summary>
+        private void PopulateReviewDates()
+        {
+            ReviewDatesPanel.Children.Clear();
+
+            var tracks = _definition.Tracks;
+            int total = tracks.Count;
+
+            if (total == 0)
+            {
+                ReviewTrackCountText.Text = "0 tracks";
+                return;
+            }
+
+            var groups = tracks
+                .GroupBy(t => t.Date ?? "")
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .OrderBy(g => string.IsNullOrWhiteSpace(g.Date) ? 1 : 0)
+                .ThenBy(g => g.Date, StringComparer.Ordinal)
+                .ToList();
+
+            int dateCount = groups.Count(g => !string.IsNullOrWhiteSpace(g.Date));
+
+            ReviewTrackCountText.Text =
+                $"{total} {(total == 1 ? "track" : "tracks")} across " +
+                $"{dateCount} {(dateCount == 1 ? "date" : "dates")}";
+
+            var lineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xCC, 0xCC));
+            foreach (var g in groups)
+            {
+                string? venue = ShowLookupService.Instance.GetShowByDate(g.Date)?.FormattedVenueLocation;
+                ReviewDatesPanel.Children.Add(new TextBlock
+                {
+                    Text = BoxSetGroupHeader.FormatGroupHeader(g.Date, venue, g.Count),
+                    Foreground = lineBrush,
+                    FontSize = 14,
+                    FontWeight = FontWeights.SemiBold,
+                    TextWrapping = TextWrapping.Wrap,
+                    Margin = new Thickness(0, 2, 0, 0)
+                });
+            }
         }
 
         // ===== STEP 1 VALIDATION =====

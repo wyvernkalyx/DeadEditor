@@ -39,7 +39,7 @@
             <RowDefinition Height="*"/>     <!-- Step content -->
         </Grid.RowDefinitions>
 
-        <!-- Step indicator: "Step N of 4 — Title" -->
+        <!-- Step indicator: "Step N of 3 — Title" -->
         <Border Grid.Row="0" Background="#252526" Padding="20,12"
                 BorderBrush="#3F3F46" BorderThickness="0,0,0,1">
             <TextBlock x:Name="StepIndicatorText"
@@ -323,12 +323,52 @@
                 </Border>
             </Grid>
 
-            <!-- ===== STEP 3 — Review (placeholder; real content in a later commit) ===== -->
-            <TextBlock x:Name="Step3Content" Visibility="Collapsed"
-                       Text="Step 3 — Review (coming next commit). Clicking Save will write the definition with the step-1 fields and an empty track list."
-                       Foreground="#888888" FontSize="16"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       TextWrapping="Wrap" MaxWidth="500" TextAlignment="Center"/>
+            <!-- ===== STEP 3 — Review (read-only summary of the box set) ===== -->
+            <ScrollViewer x:Name="Step3Content" Visibility="Collapsed"
+                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel MaxWidth="600" HorizontalAlignment="Left">
+
+                    <!-- Header row: box name (left) + reserved verify slot (right) -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="ReviewNameText" Grid.Column="0"
+                                   Foreground="#E0E0E0" FontSize="20" FontWeight="Bold"
+                                   TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <!-- commit 3: Mark-Verified button + effectiveVerified badge (Badge* brushes) -->
+                        <StackPanel x:Name="VerifyActionSlot" Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                    </Grid>
+
+                    <!-- Release date -->
+                    <TextBlock Text="RELEASE DATE" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock x:Name="ReviewReleaseDateText"
+                               Foreground="#FFFFFF" FontSize="15" Margin="0,0,0,16"/>
+
+                    <!-- Label / Catalog (whole section collapsed when both are blank) -->
+                    <StackPanel x:Name="ReviewLabelCatalogSection">
+                        <TextBlock Text="LABEL / CATALOG" Style="{StaticResource LabelStyle}"/>
+                        <TextBlock x:Name="ReviewLabelCatalogText"
+                                   Foreground="#E0E0E0" FontSize="15" Margin="0,0,0,16"/>
+                    </StackPanel>
+
+                    <!-- Track summary: count lead line + one read-only line per date -->
+                    <TextBlock x:Name="ReviewTrackCountText"
+                               Foreground="#FFFFFF" FontSize="15" FontWeight="SemiBold"
+                               Margin="0,0,0,8"/>
+                    <StackPanel x:Name="ReviewDatesPanel" Margin="0,0,0,16"/>
+
+                    <!-- Notes (collapsed when empty) -->
+                    <StackPanel x:Name="ReviewNotesSection">
+                        <TextBlock Text="NOTES" Style="{StaticResource LabelStyle}"/>
+                        <TextBlock x:Name="ReviewNotesText"
+                                   Foreground="#E0E0E0" FontSize="15" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>
