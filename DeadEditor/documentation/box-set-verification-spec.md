@@ -156,5 +156,5 @@ Per-track/field verification; provenance fields; pre-apply pull-setlist preview;
 - `verification-model.md`: drop the "(Stub - Future Design)" title; it is a populated status doc.
 - `CLAUDE.md` (~line 123): `verification-model.md` is no longer "(placeholder)".
 - Add a pointer from `verification-model.md` to this spec for the box-set extension.
-- Reconcile the test baseline (handoff 279 vs `CLAUDE.md:862` 258) with one clean
-  `dotnet test DeadEditor.sln`; correct `CLAUDE.md` to the real count.
+- ~~Reconcile the test baseline with one clean `dotnet test DeadEditor.sln`; correct
+  `CLAUDE.md` to the real count.~~ **Done** — `CLAUDE.md:862` now records 292 passed.

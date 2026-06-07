@@ -1,6 +1,8 @@
 # Box-Set Design Memo
 
-**Status:** Design memo. No code yet. Sits alongside `audio-as-archive-design-memo.md` and `curation-layer-design-memo.md` as a sibling conceptual document.
+**Status:** Largely shipped. The box-set feature is in production — wizard, flat `definition → List<BoxSetTrack>` model, Box Sets list, edit-mode entry, verification (gate + diff-at-save unverify + Step 3 Review surface), Renumber, accordion date-grouping, and pull-collision. Import wiring (fingerprint matching, per-concert manifests) remains the documented post-MVP follow-up. Sits alongside `audio-as-archive-design-memo.md` and `curation-layer-design-memo.md` as a sibling conceptual document.
+
+**Doc-debt note:** the `## What a box set actually is` and `## Data model` body sections below still describe the superseded two-level (concerts → tracks) model; the rewrite to the flat `definition → tracks` model is banked as **follow-ups.md item 7** and is not done in this commit.
 
 **What this is for:** Establishing the data model, workflow, and surfacing rules for box sets before any implementation. The conversation that produced this memo started from three Wikipedia examples — *Listen to the River*, *Lyceum '72*, and *Enjoying the Ride* — which between them break every simple model of "box set = parent folder with concert subfolders." The memo captures what we decided, parking the things we deferred.
 

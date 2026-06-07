@@ -216,12 +216,14 @@ re-imports.
 
 1. **Universal folder convention** — single path, artist/album structure, 
    `BuildLibraryFolderName()` composes folder names ✅ DONE
-2. **Manifest generation** — auto-generate on import and save
+2. **Manifest generation** — auto-generate on import and save ✅ DONE
+   (write-on-import `5f4cd73`, write-on-save `50615e6`)
 3. **Manifest-aware import** — detect matching manifests on import, 
-   show compare/apply UI
+   show compare/apply UI — ⏳ DEFERRED (fingerprint-keyed lookup at folder
+   load, compare/apply dialog; see the wiring memo's Deferred set)
 4. **Bulk operations** — lower priority, design when needed
 
 ---
 
 **Last Updated:** 2026-04-14
-**Status:** Step 1 complete (universal folder convention). Step 2 pending (manifest generation).
+**Status:** Steps 1–2 shipped (universal folder convention; manifest generation on import and save, commits `5f4cd73`/`50615e6`). Only Step 3 (manifest-aware / fingerprint-keyed import: detect a matching manifest, compare/apply UI) remains deferred. The broader manifest-spec reconciliation (per-track fingerprints, `verified`/`archivistNote` fields, etc.) stays banked under the wiring memo's Deferred set.

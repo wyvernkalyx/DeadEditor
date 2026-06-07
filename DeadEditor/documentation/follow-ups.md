@@ -19,11 +19,6 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Suspected cause:** UI-blocking startup work, likely concert load.
 - **Impact:** Poor first-use experience; settings unreachable during startup window.
 
-### Library view doesn't refresh after database reset in Settings
-- **Symptom:** After resetting the database via Settings, the Library view continues to show stale state until the app is closed and reopened.
-- **Workaround:** Close and reopen the app.
-- **Impact:** Confusing UX; users may assume the reset failed.
-
 ### Autocomplete control duplicated; no song-name autocomplete
 - **What:** `AlbumNameSuggestions` (the TextBox + Popup + ListBox pattern) is duplicated between `EditMetadataView.xaml` and `ImportView.xaml`. Song names have no autocomplete at all — the setlist editor uses a type-then-Normalize pattern instead.
 - **Proposed fix:** Extract the album-name pattern into a reusable `AutocompleteTextBox` user control, add a song-name autocomplete variant scoped by `LibrarySettings.PrimaryArtistName`, and adopt it across `EditMetadataView`, `ImportView`, and the box-set wizard.

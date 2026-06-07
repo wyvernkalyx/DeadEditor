@@ -354,11 +354,16 @@ CopyFileWithRetry(track.FilePath, targetPath);  // 3 retries, 500ms delay
 
 ---
 
-## Future: Manifest Generation
+## Manifest Generation (implemented)
 
-Manifest sidecar JSON files will be generated on import and save to capture
-verified metadata state. See [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md)
-for the full spec. Not yet implemented.
+Manifest sidecar JSON files are generated on import and save to capture
+verified metadata state: write-on-import (`5f4cd73`) and write-on-save
+(`50615e6`), part of the 2026-05 verification-and-manifest wiring chain.
+See [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md)
+for the full spec and
+[verification-and-manifest-wiring-design-memo.md](verification-and-manifest-wiring-design-memo.md)
+for the wiring. Step 3 (manifest-aware / fingerprint-keyed import — detect a
+matching manifest, compare/apply UI) remains deferred.
 
 ---
 
