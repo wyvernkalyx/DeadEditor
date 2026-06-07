@@ -787,5 +787,13 @@ namespace DeadEditor
             var migrationView = new Views.MbidMigrationView(libraryShows);
             _navigationService.NavigateTo(migrationView);
         }
+
+        /// <summary>
+        /// Reloads the persistent Library grid from disk. Public entry point so callers
+        /// (e.g. SettingsView's data reset) can refresh the library regardless of which
+        /// view is currently shown. The persistent _libraryView is created at startup
+        /// (ctor -> NavigateToLibrary), so the null-conditional is just defensive.
+        /// </summary>
+        public void ReloadLibrary() => _libraryView?.ReloadLibrary();
     }
 }

@@ -380,10 +380,11 @@ namespace DeadEditor
 
                 StatusText.Text = $"Reset complete: {deletedItems} items moved to Recycle Bin";
 
-                // Refresh library view
-                var shell = Window.GetWindow(this) as ShellWindow;
-                var libraryView = shell?.CurrentView is LibraryGridView lgv ? lgv : null;
-                libraryView?.ReloadLibrary();
+                // Refresh the persistent Library grid. We reach it via ShellWindow rather
+                // than CurrentView: the reset runs from the Settings view, so CurrentView is
+                // the SettingsView (not the LibraryGridView) and the old cast was always null,
+                // leaving the cached grid stale until an app restart.
+                (Window.GetWindow(this) as ShellWindow)?.ReloadLibrary();
 
                 System.Windows.MessageBox.Show(
                     $"Successfully reset library data!\n\n" +
