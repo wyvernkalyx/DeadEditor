@@ -424,19 +424,32 @@ performance" pointers per song.
 
 ### Note: two overlapping concert-data systems
 DeadEditor currently has two reference systems that overlap:
-- **`shows.json`** (via `ShowLookupService`) — full gdshowsdb setlists (sets +
-  per-song segues) plus a venue index. The setlist layer is gdshowsdb-sourced;
-  the venue/city/state index is (re)generated from setlist.fm by
-  `tools/SetlistFetcher` (which writes only venue fields to shows.json — it does
-  not write `sets`, see `tools/SetlistFetcher/Program.cs:164-171`). Used for
-  venue lookup at import and by the box-set wizard's pull-setlist.
+- **`shows.json`** (via `ShowLookupService`) — a **venue index** keyed by date. The
+  venue/city/state index is (re)generated from setlist.fm by `tools/SetlistFetcher`
+  (which writes only venue fields to shows.json — it does not write `sets`, see
+  `tools/SetlistFetcher/Program.cs:164-171`). `shows.json` still carries legacy
+  gdshowsdb `sets` for ~1,797 dates, but those are **no longer read** — see the
+  setlist-source note below. Used for **venue lookup** at import (`GetShowByDate`)
+  and venue write-back (`UpdateShow`/`SaveToFile`).
 - **`Data/concerts/*.json`** (via `ConcertLookupService`) — richer per-concert
-  files (above), generated entirely from setlist.fm.
+  files (above), generated entirely from setlist.fm, and the **sole source of
+  setlist data**.
 
-**FLAG:** the long-term division of labor between these two systems is not
-settled. [documentation/releases-inspection-2026-04-17.md](documentation/releases-inspection-2026-04-17.md)
-(open questions, §2) records them as candidates for unification or clearer
-delineation. This documents the current state, not an endorsed end-state.
+**Setlist source (since the concerts/ redirect):** `ShowLookupService.GetSetlist`
+sources its `Sets` from `ConcertLookupService` (`Data/concerts/`) through the pure
+[Helpers/ConcertSetlistAdapter.cs](Helpers/ConcertSetlistAdapter.cs), **not** from
+`shows.json`. All setlist-derived methods (`GetDiscTrack`, `GetSegue`,
+`GetSetlistSongCount`, `SuggestTrackNumber`) call `GetSetlist`, so they read
+`concerts/` too. This fixed the box-set pull (loud "No setlist found") and the
+Import/Edit "Match Setlist" surfaces (quiet button-disable) for the ~495 dates that
+are venue-only stubs in `shows.json`. Only **venue** lookup still reads `shows.json`.
+
+**FLAG:** the long-term division of labor between these two systems is still not
+fully settled — `shows.json` is retained for the venue index + venue write-back,
+which `ConcertLookupService` (read-only) does not yet cover.
+[documentation/releases-inspection-2026-04-17.md](documentation/releases-inspection-2026-04-17.md)
+(open questions, §2) records the systems as candidates for full unification. This
+documents the current state, not an endorsed end-state.
 
 ---
 

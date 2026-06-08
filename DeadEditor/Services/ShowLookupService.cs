@@ -189,11 +189,23 @@ namespace DeadEditor.Services
 
         /// <summary>
         /// Returns the setlist for a show date, or null if no setlist data exists.
+        ///
+        /// Setlist data is sourced from the <c>Data/concerts/</c> store (via
+        /// <see cref="ConcertLookupService"/>), not from <c>shows.json</c>: the concerts
+        /// store is setlist-complete, whereas <c>shows.json</c> carries venue-only stubs
+        /// for ~495 dates (no <c>sets</c>). Venue lookups (<see cref="GetShowByDate"/>)
+        /// still read <c>shows.json</c>. All setlist-derived methods below
+        /// (<see cref="GetDiscTrack"/>, <see cref="GetSegue"/>,
+        /// <see cref="GetSetlistSongCount"/>, <see cref="SuggestTrackNumber"/>) route
+        /// through here, so they pick up the concerts/ source automatically.
         /// </summary>
         public List<SetInfo>? GetSetlist(string dateYyyyMmDd)
         {
-            var show = GetShowByDate(dateYyyyMmDd);
-            return show?.HasSetlist == true ? show.Sets : null;
+            if (string.IsNullOrEmpty(dateYyyyMmDd))
+                return null;
+
+            var concert = ConcertLookupService.Instance.GetConcertByDate(dateYyyyMmDd);
+            return Helpers.ConcertSetlistAdapter.ToSetInfoList(concert);
         }
 
         /// <summary>
