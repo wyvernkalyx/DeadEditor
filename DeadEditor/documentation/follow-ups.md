@@ -14,11 +14,6 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Impact:** Dirty data in `songs.json`; harmless to matching (lookups tolerate dupes) but accumulates over time.
 - **Likely location:** The code path that appends to a song's `Aliases` list after a user matches an unmatched track.
 
-### Settings menu slow to open after launch
-- **Symptom:** ~26 seconds to open Settings after app launch.
-- **Suspected cause:** UI-blocking startup work, likely concert load.
-- **Impact:** Poor first-use experience; settings unreachable during startup window.
-
 ### Autocomplete control duplicated; no song-name autocomplete
 - **What:** `AlbumNameSuggestions` (the TextBox + Popup + ListBox pattern) is duplicated between `EditMetadataView.xaml` and `ImportView.xaml`. Song names have no autocomplete at all — the setlist editor uses a type-then-Normalize pattern instead.
 - **Proposed fix:** Extract the album-name pattern into a reusable `AutocompleteTextBox` user control, add a song-name autocomplete variant scoped by `LibrarySettings.PrimaryArtistName`, and adopt it across `EditMetadataView`, `ImportView`, and the box-set wizard.
@@ -38,3 +33,14 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **What:** The `## What a box set actually is` and `## Data model` sections of `box-set-design-memo.md` still describe the concerts → tracks two-level model. The 2026-05-28 concert-collapse decision entry supersedes them, but the section bodies were not rewritten (the doc commit captured the decision only).
 - **Proposed fix:** Rewrite both sections to the flat `definition → tracks` model so the memo body matches its own top decision entry. Documentation-only.
 - **Surfaced:** Concert-collapse doc commit.
+
+### ConcertLookupService cache: editing a concert date desyncs the dictionary key
+- **What:** `EditSetlistView` save writes `{newDate}.json`, but the in-memory `ConcertLookupService._concerts` dict stays keyed by the old date. Lookups by the new date miss the cache until restart; the old date still resolves to the now-mutated `ConcertReference`.
+- **Why latent:** Today's coherence relies on in-place mutation of the shared cached instance; there is no invalidation/reload path. A date edit is the one case in-place mutation can't cover — the dictionary key, not just the value, changes.
+- **Proposed fix:** Any redesign that stops sharing the live cached instance must add explicit cache invalidation (covers both this and the delete-no-evict item below). Pre-existing; restart-resolved.
+- **Surfaced:** Concert-load perf audit.
+
+### ConcertLookupService cache: deleting a concert does not evict it
+- **What:** The `ShellWindow` delete path recycles `{date}.json` but leaves the entry in `ConcertLookupService._concerts`, so the deleted concert still resolves from the cache until restart.
+- **Impact:** Stale cache hit for a deleted concert until app restart. Pre-existing; restart-resolved.
+- **Surfaced:** Concert-load perf audit.
