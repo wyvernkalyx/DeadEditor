@@ -1,6 +1,6 @@
 using DeadEditor.Models;
 using DeadEditor.Services;
-using Newtonsoft.Json;
+using DeadEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -273,7 +273,9 @@ namespace DeadEditor
                 var targetPath = Path.Combine(concertsDir, $"{date}.json");
                 var tempPath = targetPath + ".tmp";
 
-                var json = JsonConvert.SerializeObject(_concert, Formatting.Indented);
+                // Canonical camelCase, indented, computed keys dropped — matches the bundled
+                // concerts/ schema (shared with BoxSetService via CanonicalJson).
+                var json = CanonicalJson.Serialize(_concert);
 
                 await System.Threading.Tasks.Task.Run(() =>
                 {

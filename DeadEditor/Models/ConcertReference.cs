@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace DeadEditor.Models
 {
@@ -23,7 +24,10 @@ namespace DeadEditor.Models
 
         /// <summary>
         /// Formats location as "City, ST" (US) or "City, Country" (non-US).
+        /// Computed view-only — never persisted (would otherwise leak a junk
+        /// camelCase key into written concert files).
         /// </summary>
+        [JsonIgnore]
         public string FormattedLocation
         {
             get
@@ -50,7 +54,8 @@ namespace DeadEditor.Models
             }
         }
 
-        /// <summary>Number of songs in the setlist.</summary>
+        /// <summary>Number of songs in the setlist. Computed view-only — never persisted.</summary>
+        [JsonIgnore]
         public int SongCount => Tracks.Count;
     }
 

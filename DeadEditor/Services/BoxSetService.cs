@@ -1,7 +1,7 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -107,12 +107,9 @@ namespace DeadEditor.Services
         /// <summary>The directory all reads and writes target in the current mode.</summary>
         private static string ActiveBoxSetsPath => IsDevMode ? BundledBoxSetsPath : AppDataBoxSetsPath;
 
-        private static readonly JsonSerializerSettings _jsonSettings = new()
-        {
-            Formatting = Formatting.Indented,
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
+        // Shared canonical settings (camelCase, indented, ignore-null), lifted to
+        // CanonicalJson so the concert writer uses the exact same shape.
+        private static readonly JsonSerializerSettings _jsonSettings = CanonicalJson.Settings;
 
         /// <summary>
         /// Serializes a definition to the canonical box-set JSON form. The single serializer used
