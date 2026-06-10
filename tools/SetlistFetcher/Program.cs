@@ -178,6 +178,7 @@ await File.WriteAllTextAsync(showsJsonPath, showsJson);
 
 int showsWithSetlists = 0;
 int showsWithoutSetlists = 0;
+int verifiedSkipped = 0;
 
 foreach (var kvp in allShows.OrderBy(k => k.Key))
 {
@@ -297,6 +298,35 @@ foreach (var kvp in allShows.OrderBy(k => k.Key))
 
     string concertJson = JsonConvert.SerializeObject(concert, Formatting.Indented);
     string concertPath = Path.Combine(concertsDir, $"{dateKey}.json");
+
+    // Skip-verified guard (concert-verification-spec.md decision 8): never clobber a
+    // user-verified concert. Parse the existing file as raw JSON — this tool stays a
+    // standalone console project with no reference to the app's model assembly — and skip
+    // the write when verified == true. Absent / false / non-boolean writes as normal. An
+    // existing file that fails to parse is overwritten (an unreadable file is not trustable
+    // curation; fresh data repairs it).
+    if (File.Exists(concertPath))
+    {
+        bool isVerified = false;
+        try
+        {
+            var existing = JObject.Parse(await File.ReadAllTextAsync(concertPath));
+            isVerified = existing["verified"]?.Type == JTokenType.Boolean
+                         && existing.Value<bool>("verified");
+        }
+        catch (JsonException)
+        {
+            Console.WriteLine($"  [WARN unparseable, overwriting] {dateKey}");
+        }
+
+        if (isVerified)
+        {
+            verifiedSkipped++;
+            Console.WriteLine($"  [SKIP verified] {dateKey}");
+            continue;
+        }
+    }
+
     await File.WriteAllTextAsync(concertPath, concertJson);
 }
 
@@ -309,6 +339,7 @@ Console.WriteLine($"  Shows with setlists: {showsWithSetlists:N0}");
 Console.WriteLine($"  Shows without setlists: {showsWithoutSetlists:N0}");
 Console.WriteLine($"  Date range: {dates.First()} to {dates.Last()}");
 Console.WriteLine($"  Multi-show dates: {multiShowCount}");
+Console.WriteLine($"  Verified concerts skipped: {verifiedSkipped:N0}");
 Console.WriteLine($"  Concert files written to: {concertsDir}");
 Console.WriteLine($"  Shows.json updated: {showsJsonPath}");
 
