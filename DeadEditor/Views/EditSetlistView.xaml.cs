@@ -246,6 +246,26 @@ namespace DeadEditor
                 return;
             }
 
+            // Duplicate-date refusal (add-concert-spec.md Decision 1): never clobber a DIFFERENT
+            // existing record. The _originalDate exclusion is load-bearing — a no-change re-save of
+            // this concert (date unchanged) is saving itself, not a collision, and must pass. This one
+            // check covers both the New-Concert case (_originalDate == "") and the pre-existing
+            // mid-edit silent-overwrite (editing one concert's date onto another's).
+            if (ConcertLookupService.Instance.HasConcert(date) &&
+                !string.Equals(date, _originalDate, StringComparison.Ordinal))
+            {
+                var existing = ConcertLookupService.Instance.GetConcertByDate(date);
+                var venueNote = !string.IsNullOrWhiteSpace(existing?.Venue)
+                    ? $" ({existing!.Venue})"
+                    : "";
+                MessageBox.Show(
+                    $"A concert already exists for {date}{venueNote}.\n\n" +
+                    "Change the date, or edit the existing record instead.",
+                    "Date Already Exists",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             if (_tracks.Count == 0)
             {
                 MessageBox.Show("Setlist must have at least one song.", "Empty Setlist",
