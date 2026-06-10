@@ -12,6 +12,7 @@ using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DeadEditor
 {
@@ -25,6 +26,17 @@ namespace DeadEditor
         // instance, so by save time _concert.Date already holds the NEW date — the
         // original must be snapshotted up front to detect a date change and rekey the cache.
         private string _originalDate;
+
+        // Serialized baseline for diff-at-save unverify (concert-verification-spec.md decision 4).
+        // Captured from the editor's loaded state (LoadTrackData), normalized through the same
+        // ConcertSnapshot projection the persisted form uses, with LastUpdated excluded. Never an
+        // object reference — the grid mutates live instances, so a reference baseline would never
+        // diff dirty.
+        private string _baselineJson = "";
+
+        // Suppresses change-tracking + verify refresh while LoadTrackData populates the fields
+        // (setting TextBox.Text fires TextChanged). Mirrors the existing recursion-guard pattern.
+        private bool _suppressChangeTracking;
         private List<EditableTrack> _tracks = new();
         private bool _hasUnsavedChanges;
 
@@ -61,6 +73,8 @@ namespace DeadEditor
 
         private void LoadTrackData()
         {
+            _suppressChangeTracking = true;
+
             // Populate metadata fields
             VenueTextBox.Text = _concert.Venue;
             var location = _concert.FormattedLocation;
@@ -99,11 +113,35 @@ namespace DeadEditor
 
             TracksDataGrid.ItemsSource = _tracks;
             BottomStatusText.Text = $"{_tracks.Count} tracks";
+
+            // Capture the diff-at-save baseline now that the editor reflects the loaded concert,
+            // before any user edit — then show the verify surface. Done here (not the ctor) because
+            // the fields are populated in this Loaded-time method, not in the constructor.
+            _suppressChangeTracking = false;
+            _baselineJson = BuildSnapshotJson();
+            RefreshVerifyControls();
         }
 
         private void Track_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            OnEditorChanged();
+        }
+
+        /// <summary>
+        /// Common editor-change hook: marks unsaved and refreshes the verify surface (honest badge +
+        /// gate). Routed from every tracked edit path (metadata fields, track property changes, cell
+        /// edits, Add/Remove/Normalize). Suppressed during LoadTrackData's field population.
+        /// </summary>
+        private void OnEditorChanged()
+        {
+            if (_suppressChangeTracking) return;
             _hasUnsavedChanges = true;
+            RefreshVerifyControls();
+        }
+
+        private void MetadataField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnEditorChanged();
         }
 
         // ===== ADD / REMOVE SONGS =====
@@ -123,7 +161,7 @@ namespace DeadEditor
             _tracks.Add(newTrack);
             TracksDataGrid.ItemsSource = null;
             TracksDataGrid.ItemsSource = _tracks;
-            _hasUnsavedChanges = true;
+            OnEditorChanged();
 
             BottomStatusText.Text = $"{_tracks.Count} tracks";
 
@@ -159,7 +197,7 @@ namespace DeadEditor
 
             TracksDataGrid.ItemsSource = null;
             TracksDataGrid.ItemsSource = _tracks;
-            _hasUnsavedChanges = true;
+            OnEditorChanged();
             BottomStatusText.Text = $"{_tracks.Count} tracks";
         }
 
@@ -186,12 +224,13 @@ namespace DeadEditor
             StatusText.Text = normalized > 0
                 ? $"Normalized {normalized} song{(normalized == 1 ? "" : "s")}"
                 : "All songs already normalized";
-            _hasUnsavedChanges = _hasUnsavedChanges || normalized > 0;
+            if (normalized > 0) _hasUnsavedChanges = true;
+            RefreshVerifyControls();
         }
 
         private void TracksDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            _hasUnsavedChanges = true;
+            OnEditorChanged();
         }
 
         // ===== SAVE =====
@@ -214,61 +253,29 @@ namespace DeadEditor
                 return;
             }
 
-            // Update the concert reference object
-            _concert.Date = date;
-            _concert.Venue = VenueTextBox.Text.Trim();
+            // Build the persisted object THROUGH the shared projection (same rebuild logic the
+            // baseline/diff snapshot uses, so they cannot drift), then apply onto the live cached
+            // _concert instance — preserving identity fields (Country, SetlistFmId, …) and the
+            // shared-instance cache coherence (NotifySaved below rekeys this same object).
+            var projected = ConcertSnapshot.Project(date, VenueTextBox.Text.Trim(),
+                CityStateTextBox.Text.Trim(), BuildTrackInputs());
+            var currentSnapshot = ConcertSnapshot.Serialize(projected);
 
-            // Parse city/state from the text box
-            var cityState = CityStateTextBox.Text.Trim();
-            var parts = cityState.Split(',', 2);
-            _concert.City = parts.Length > 0 ? parts[0].Trim() : "";
-            _concert.State = parts.Length > 1 ? parts[1].Trim() : "";
-
-            // Rebuild sets and tracks from the editable track list
-            var setGroups = _tracks
-                .GroupBy(t => t.Set)
-                .OrderBy(g => GetSetOrder(g.Key));
-
-            _concert.Sets.Clear();
-            _concert.Tracks.Clear();
-            int position = 0;
-
-            foreach (var group in setGroups)
-            {
-                var concertSet = new ConcertSet
-                {
-                    Name = group.Key,
-                    Songs = new List<ConcertSong>()
-                };
-
-                foreach (var track in group)
-                {
-                    position++;
-                    var trackDate = !string.IsNullOrEmpty(track.Date) ? track.Date : date;
-
-                    concertSet.Songs.Add(new ConcertSong
-                    {
-                        Name = track.SongName,
-                        Date = trackDate,
-                        Segue = track.Segue,
-                        Info = track.Info
-                    });
-
-                    _concert.Tracks.Add(new ConcertTrack
-                    {
-                        Position = position,
-                        SongName = track.SongName,
-                        Date = trackDate,
-                        Segue = track.Segue,
-                        Set = group.Key
-                    });
-                }
-
-                _concert.Sets.Add(concertSet);
-            }
-
-            _concert.HasSetlist = _concert.Tracks.Count > 0;
+            _concert.Date = projected.Date;
+            _concert.Venue = projected.Venue;
+            _concert.City = projected.City;
+            _concert.State = projected.State;
+            _concert.Sets = projected.Sets;
+            _concert.Tracks = projected.Tracks;
+            _concert.HasSetlist = projected.HasSetlist;
             _concert.LastUpdated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
+
+            // Unverify-on-edit (spec decision 4): if the concert is verified and any tracked field
+            // changed since the baseline, drop Verified before the write. The compare is over the
+            // editor-content snapshot (LastUpdated excluded by construction), so a no-edit save does
+            // NOT unverify. Mark-Verified rebaselines, so a just-verified concert diffs equal here.
+            if (_concert.Verified && EditUnverifyRule.IsDirty(_baselineJson, currentSnapshot))
+                _concert.Verified = false;
 
             // Write to AppData concerts directory (atomic: temp file + rename)
             try
@@ -313,6 +320,12 @@ namespace DeadEditor
                 _originalDate = date;
 
                 _hasUnsavedChanges = false;
+
+                // Re-baseline: the saved editor state is the new reference, so a reopened-or-reused
+                // view does not see phantom dirt. Refresh the verify surface to the persisted state.
+                _baselineJson = currentSnapshot;
+                RefreshVerifyControls();
+
                 StatusText.Text = "Setlist saved";
                 Debug.WriteLine($"[CONCERT EDIT] Saved {date} to {targetPath}");
 
@@ -350,17 +363,81 @@ namespace DeadEditor
             CancelEdit();
         }
 
-        private static int GetSetOrder(string setName)
+        // ===== VERIFICATION SURFACE (spec decision 7) =====
+
+        /// <summary>Current editor rows as WPF-free projection inputs.</summary>
+        private IReadOnlyList<ConcertTrackInput> BuildTrackInputs() =>
+            _tracks.Select(t => new ConcertTrackInput(t.SongName, t.Date, t.Segue, t.Set, t.Info)).ToList();
+
+        /// <summary>
+        /// Serialized snapshot of the current editor state — the same projection the persisted
+        /// object is built through, with LastUpdated excluded by construction. Used for the
+        /// baseline, the diff-at-save, and the honest badge.
+        /// </summary>
+        private string BuildSnapshotJson() =>
+            ConcertSnapshot.Serialize(DateTextBox.Text.Trim(), VenueTextBox.Text.Trim(),
+                CityStateTextBox.Text.Trim(), BuildTrackInputs());
+
+        /// <summary>
+        /// Refreshes the verify badge + Mark-Verified button + reason from the current editor state.
+        /// The badge shows the HONEST effectiveVerified: the stored bool AND the editor being clean
+        /// vs. the baseline (the same diff Save uses). The gate is evaluated against the current
+        /// snapshot projection, not the stale loaded object. Three states mirror the box-set surface:
+        /// verified → green badge, button hidden, no reason; unverified + complete → grey badge,
+        /// enabled button, no reason; unverified + incomplete → grey badge, disabled button, reason.
+        /// </summary>
+        private void RefreshVerifyControls()
         {
-            return setName switch
+            var projected = ConcertSnapshot.Project(DateTextBox.Text.Trim(), VenueTextBox.Text.Trim(),
+                CityStateTextBox.Text.Trim(), BuildTrackInputs());
+            var (canVerify, reason) = ConcertVerifyGate.Evaluate(projected);
+            bool effectiveVerified = _concert.Verified
+                && !EditUnverifyRule.IsDirty(_baselineJson, ConcertSnapshot.Serialize(projected));
+
+            if (effectiveVerified)
             {
-                "Set 1" => 0,
-                "Set 2" => 1,
-                "Set 3" => 2,
-                "Encore" => 3,
-                "Encore 2" => 4,
-                _ => 5
-            };
+                VerifyBadge.Background = (SolidColorBrush)FindResource("BadgeVerifiedBg");
+                VerifyBadgeText.Text = "✓ Verified";
+                VerifyBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeVerifiedFg");
+                MarkVerifiedButton.Visibility = Visibility.Collapsed;
+                VerifyReasonText.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            VerifyBadge.Background = (SolidColorBrush)FindResource("BadgeUnverifiedBg");
+            VerifyBadgeText.Text = "Unverified";
+            VerifyBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeUnverifiedFg");
+            MarkVerifiedButton.Visibility = Visibility.Visible;
+            MarkVerifiedButton.IsEnabled = canVerify;
+
+            if (canVerify)
+            {
+                VerifyReasonText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                VerifyReasonText.Text = reason;
+                VerifyReasonText.Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// Marks the concert verified in memory (persist-on-Save). Re-checks the gate defensively
+        /// against the current projection (a stale click must not verify an incomplete concert),
+        /// sets Verified, and rebaselines so the same-pass Save diff sees baseline == current and
+        /// Verified persists. No disk write here — the toolbar Save writes; navigating away without
+        /// saving discards the verify.
+        /// </summary>
+        private void MarkVerifiedButton_Click(object sender, RoutedEventArgs e)
+        {
+            var projected = ConcertSnapshot.Project(DateTextBox.Text.Trim(), VenueTextBox.Text.Trim(),
+                CityStateTextBox.Text.Trim(), BuildTrackInputs());
+            var (canVerify, _) = ConcertVerifyGate.Evaluate(projected);
+            if (!canVerify) return;
+
+            _concert.Verified = true;
+            _baselineJson = ConcertSnapshot.Serialize(projected);
+            RefreshVerifyControls();
         }
     }
 

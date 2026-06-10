@@ -43,38 +43,74 @@
 
             <StackPanel Grid.Column="0" Margin="0,0,16,0">
                 <TextBlock Text="VENUE" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="VenueTextBox" Style="{StaticResource FieldStyle}"/>
+                <TextBox x:Name="VenueTextBox" Style="{StaticResource FieldStyle}"
+                         TextChanged="MetadataField_TextChanged"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="0,0,16,0">
                 <TextBlock Text="CITY, STATE" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="CityStateTextBox" Style="{StaticResource FieldStyle}"/>
+                <TextBox x:Name="CityStateTextBox" Style="{StaticResource FieldStyle}"
+                         TextChanged="MetadataField_TextChanged"/>
             </StackPanel>
 
             <StackPanel Grid.Column="2">
                 <TextBlock Text="DATE" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="DateTextBox" Style="{StaticResource FieldStyle}"/>
+                <TextBox x:Name="DateTextBox" Style="{StaticResource FieldStyle}"
+                         TextChanged="MetadataField_TextChanged"/>
             </StackPanel>
         </Grid>
 
-        <!-- Row 1: Action buttons -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
-            <Button x:Name="AddSongButton" Content="＋ Add Song"
-                    Click="AddSongButton_Click"
-                    Background="#3E3E42" Foreground="#CCCCCC"
-                    BorderBrush="#555555" BorderThickness="1"
-                    Padding="12,6" Cursor="Hand" FontSize="14"
-                    Margin="0,0,8,0"/>
-            <Button x:Name="NormalizeButton" Content="Normalize"
-                    Click="NormalizeButton_Click"
-                    Background="#3E3E42" Foreground="#CCCCCC"
-                    BorderBrush="#555555" BorderThickness="1"
-                    Padding="12,6" Cursor="Hand" FontSize="14"
-                    Margin="0,0,8,0"/>
-            <TextBlock x:Name="StatusText" Text=""
-                       Foreground="#888888" FontSize="14"
-                       VerticalAlignment="Center" Margin="8,0,0,0"/>
-        </StackPanel>
+        <!-- Row 1: Action buttons (left) + verification surface (right) -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Button x:Name="AddSongButton" Content="＋ Add Song"
+                        Click="AddSongButton_Click"
+                        Background="#3E3E42" Foreground="#CCCCCC"
+                        BorderBrush="#555555" BorderThickness="1"
+                        Padding="12,6" Cursor="Hand" FontSize="14"
+                        Margin="0,0,8,0"/>
+                <Button x:Name="NormalizeButton" Content="Normalize"
+                        Click="NormalizeButton_Click"
+                        Background="#3E3E42" Foreground="#CCCCCC"
+                        BorderBrush="#555555" BorderThickness="1"
+                        Padding="12,6" Cursor="Hand" FontSize="14"
+                        Margin="0,0,8,0"/>
+                <TextBlock x:Name="StatusText" Text=""
+                           Foreground="#888888" FontSize="14"
+                           VerticalAlignment="Center" Margin="8,0,0,0"/>
+            </StackPanel>
+
+            <!-- Verification surface (spec decision 7): effectiveVerified badge + Mark-Verified
+                 button + gate reason. Badge colours/text and button/reason visibility are driven
+                 in code-behind by RefreshVerifyControls (Badge* brushes via FindResource); the
+                 literals here are the unverified default. -->
+            <StackPanel x:Name="VerifyActionSlot" Grid.Column="1"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Right" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Border x:Name="VerifyBadge" Padding="12,4" CornerRadius="3"
+                            VerticalAlignment="Center" Background="#3C3C3C">
+                        <TextBlock x:Name="VerifyBadgeText" Text="Unverified"
+                                   Foreground="#888888" FontSize="12" FontWeight="SemiBold"/>
+                    </Border>
+                    <Button x:Name="MarkVerifiedButton" Content="Mark Verified"
+                            Margin="8,0,0,0" Height="26" Padding="10,2" FontSize="12"
+                            VerticalAlignment="Center" Cursor="Hand"
+                            Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                            Click="MarkVerifiedButton_Click"
+                            ToolTip="Mark this concert as verified"/>
+                </StackPanel>
+                <TextBlock x:Name="VerifyReasonText" Visibility="Collapsed"
+                           Margin="0,6,0,0" MaxWidth="260"
+                           HorizontalAlignment="Right" TextAlignment="Right"
+                           TextWrapping="Wrap" FontSize="12" Foreground="#E74C3C"/>
+            </StackPanel>
+        </Grid>
 
         <!-- Row 2: Editable track grid -->
         <Border Grid.Row="2" BorderBrush="#555555" BorderThickness="1" Background="#1E1E1E">
