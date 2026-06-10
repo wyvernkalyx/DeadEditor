@@ -1,6 +1,6 @@
 # Add Concert Spec
 
-**Status:** Specified (2026-06-10) — implementation pending
+**Status:** Implemented (2026-06-10)
 **Date:** 2026-06-10
 **Branch:** `feature/library-verification-surface`
 
@@ -159,13 +159,21 @@ this feature), no such exposure exists — the fetcher will never produce a comp
 ---
 
 ## Commit plan (ledger)
-1. **[Planned]** (this commit) Spec doc (`add-concert-spec.md`) + `follow-ups.md` update marking the
+1. **[Implemented `67be225`]** Spec doc (`add-concert-spec.md`) + `follow-ups.md` update marking the
    Add Concert entry active. Docs-only.
-2. **[Planned]** Entry point: `ConcertsHeader` restructure + `+ New Concert` button +
+2. **[Implemented `7362cee`]** Entry point: `ConcertsHeader` restructure + `+ New Concert` button +
    `NewConcertRequested` event + shell handler constructing the blank record + back-label fallback.
-   **Manual WPF gate before commit.**
-3. **[Planned]** Duplicate-date refusal on the save path (with the `_originalDate` exclusion).
-   **Manual WPF gate before commit** — exercise BOTH the collision case (refused) AND the no-change
-   re-save case (allowed through).
-4. **[Planned]** Tests + polish: xUnit coverage for the pure pieces (extract the collision predicate
-   as a pure helper if it is not trivially inline-testable); any residual polish. **No WPF in tests.**
+   Manual WPF gate cleared 2026-06-10.
+3. **[Implemented `a6a652b`]** Duplicate-date refusal on the save path (with the `_originalDate`
+   exclusion). Manual WPF gate cleared 2026-06-10 — both the collision case (refused) and the
+   no-change re-save case (allowed through) confirmed, plus the free-date rekey regression.
+4. **[Implemented `e182ec3`]** Tests + polish: extracted the collision predicate as the pure
+   `Services/DuplicateDateRule.IsCollision` (behavior-identical rewire of the commit-3 inline check),
+   with five xUnit cases (create-collision, free date, no-change re-save, mid-edit collision,
+   free-date rekey). The planned sixth Ordinal-sensitivity case was **dropped as non-meaningful**:
+   `yyyy-MM-dd` keys are pure ASCII (digits + hyphens), so an Ordinal vs culture-aware comparison can
+   never diverge for them — the rationale is recorded in the test file. Test baseline moves
+   **333 → 338**. No WPF in tests.
+5. **[Implemented `<this commit>`]** Docs close-out: this ledger to Implemented; `follow-ups.md`
+   Add Concert entry closed and the in-app-alert entry strengthened; `verification-model.md` Concert
+   Surface cross-reference; `CLAUDE.md` Handbook entry + test baseline bumped to 338. Docs-only.

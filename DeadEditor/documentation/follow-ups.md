@@ -9,9 +9,11 @@ this is a reference list, not a narrative.
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
 ### In-app alert system (replace native MessageBox dialogs)
-- **What:** The app uses native Windows `MessageBox` dialogs for the unsaved-changes prompt, delete confirmations, and save-error reports. These break visual consistency with the dark in-app UI and cannot be styled or positioned.
-- **Proposed fix:** Replace them with an in-app alert/dialog surface for visual consistency and control.
-- **Surfaced:** Preference surfaced 2026-06-10.
+- **What:** The app uses native Windows `MessageBox` dialogs for the unsaved-changes prompt, delete confirmations, save-error reports, the setlist-editor save validations (invalid date, empty setlist), and now the duplicate-date refusal. These break visual consistency with the dark in-app UI and cannot be styled or positioned.
+- **The sound, not just the dialog:** the `MessageBoxImage.Warning` icon plays the Windows warning chime. Gregg (2026-06-10): the **system alert sound interrupts his state of mind** as much as the dialog interrupts the screen — the audio startle is a distinct pain point from the visual inconsistency. Any in-app replacement should be **silent or use a non-startling cue**, not just a re-skinned modal that still chimes.
+- **Call-site inventory this will sweep (grows as features land):** unsaved-changes prompt, delete confirmations, save-error reports; `EditSetlistView.SaveChangesAsync` invalid-date + empty-setlist validations; and the duplicate-date refusal added in commit `a6a652b` (`EditSetlistView.SaveChangesAsync`, `MessageBoxImage.Warning`).
+- **Proposed fix:** Replace them with an in-app alert/dialog surface for visual consistency and control — silent (or softly cued) by default.
+- **Surfaced:** Preference surfaced 2026-06-10; second lived-demand data point the **same day** during the Add Concert duplicate-date gate (the refusal chime, hit repeatedly while exercising collisions, is what surfaced the sound detail).
 
 ### Cold-start concert load (~17s cold, ~0.6s warm)
 - **What:** The first `ConcertLookupService` load after a reboot/cache flush took **16,758ms** for 2,293 files; the immediate second run took **583ms** (measured 2026-06-10). Steady-state is fine — this is **NOT** a reopening of the closed Settings-perf item.
@@ -49,12 +51,13 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Proposed fix:** Rewrite both sections to the flat `definition → tracks` model so the memo body matches its own top decision entry. Documentation-only.
 - **Surfaced:** Concert-collapse doc commit.
 
-### Add Concert capability (no in-app concert record creation) — ACTIVE
-- **Status:** ACTIVE — specced in [add-concert-spec.md](add-concert-spec.md) (2026-06-10). Decisions
-  ruled on: duplicate-date **refuse at save** (also fixes a pre-existing mid-edit silent-overwrite),
-  grid-header **+ New Concert** entry point, and an **unchanged save floor**. Phase A confirmed the
-  substrate already handles blank `ConcertReference` instances end-to-end. Commit ledger lives in the
-  spec.
+### ~~Add Concert capability (no in-app concert record creation)~~ (DONE 2026-06-10)
+- **Done:** Shipped per [add-concert-spec.md](add-concert-spec.md) across four commits — `67be225`
+  (spec), `7362cee` (grid-header **+ New Concert** entry point → blank editor), `a6a652b`
+  (duplicate-date **refuse at save**, which also fixed a pre-existing mid-edit silent-overwrite via
+  the `_originalDate` exclusion), `e182ec3` (pure `DuplicateDateRule` + five xUnit cases). Save floor
+  left unchanged; hand-created concerts are born unverified. Phase A confirmed the substrate already
+  handled blank `ConcertReference` instances end-to-end.
 - **What:** There is no way to create a new concert record in-app — the concert store is fetcher-populated and `EditSetlistView` only edits existing records. Needed for actively touring artists (the app is multi-band by design; new shows happen and have no setlist.fm-sourced file yet).
 - **Why low-friction:** `ConcertLookupService.NotifySaved` (commit `4c560a0`) already inserts an absent date key into the live cache, so the cache side is done. The work is the **UI entry point** — likely a "New Concert" action in `ConcertDatabaseView` that routes to `EditSetlistView` with a blank `ConcertReference` — plus first-save handling (a record with no prior file: the existing atomic write + `NotifySaved` path should cover it; confirm the blank-instance flow).
 - **Verification tie-in:** a hand-entered concert is **born unverified** and uses the same `ConcertVerifyGate` to be marked verified (see `concert-verification-spec.md`). Record creation is its own feature, separate from verification.
