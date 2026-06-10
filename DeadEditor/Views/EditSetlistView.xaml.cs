@@ -251,8 +251,8 @@ namespace DeadEditor
             // this concert (date unchanged) is saving itself, not a collision, and must pass. This one
             // check covers both the New-Concert case (_originalDate == "") and the pre-existing
             // mid-edit silent-overwrite (editing one concert's date onto another's).
-            if (ConcertLookupService.Instance.HasConcert(date) &&
-                !string.Equals(date, _originalDate, StringComparison.Ordinal))
+            if (DuplicateDateRule.IsCollision(
+                    ConcertLookupService.Instance.HasConcert(date), date, _originalDate))
             {
                 var existing = ConcertLookupService.Instance.GetConcertByDate(date);
                 var venueNote = !string.IsNullOrWhiteSpace(existing?.Venue)
