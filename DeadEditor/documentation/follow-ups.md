@@ -49,7 +49,12 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Proposed fix:** Rewrite both sections to the flat `definition → tracks` model so the memo body matches its own top decision entry. Documentation-only.
 - **Surfaced:** Concert-collapse doc commit.
 
-### Add Concert capability (no in-app concert record creation)
+### Add Concert capability (no in-app concert record creation) — ACTIVE
+- **Status:** ACTIVE — specced in [add-concert-spec.md](add-concert-spec.md) (2026-06-10). Decisions
+  ruled on: duplicate-date **refuse at save** (also fixes a pre-existing mid-edit silent-overwrite),
+  grid-header **+ New Concert** entry point, and an **unchanged save floor**. Phase A confirmed the
+  substrate already handles blank `ConcertReference` instances end-to-end. Commit ledger lives in the
+  spec.
 - **What:** There is no way to create a new concert record in-app — the concert store is fetcher-populated and `EditSetlistView` only edits existing records. Needed for actively touring artists (the app is multi-band by design; new shows happen and have no setlist.fm-sourced file yet).
 - **Why low-friction:** `ConcertLookupService.NotifySaved` (commit `4c560a0`) already inserts an absent date key into the live cache, so the cache side is done. The work is the **UI entry point** — likely a "New Concert" action in `ConcertDatabaseView` that routes to `EditSetlistView` with a blank `ConcertReference` — plus first-save handling (a record with no prior file: the existing atomic write + `NotifySaved` path should cover it; confirm the blank-instance flow).
 - **Verification tie-in:** a hand-entered concert is **born unverified** and uses the same `ConcertVerifyGate` to be marked verified (see `concert-verification-spec.md`). Record creation is its own feature, separate from verification.
