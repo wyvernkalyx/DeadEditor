@@ -19,6 +19,15 @@ namespace DeadEditor.Models
         public string LastUpdated { get; set; } = "";
         public bool HasSetlist { get; set; }
         public bool MultiShow { get; set; }
+
+        /// <summary>
+        /// User attestation that this concert's data is correct. Bare bool, no provenance —
+        /// matches BoxSetDefinition.Verified and AlbumManifest.Verified. Absent from legacy
+        /// fetcher-sourced files, which deserialize to false (the correct default). Serializes
+        /// as camelCase "verified" via CanonicalJson. See documentation/concert-verification-spec.md.
+        /// </summary>
+        public bool Verified { get; set; }
+
         public List<ConcertSet> Sets { get; set; } = new();
         public List<ConcertTrack> Tracks { get; set; } = new();
 
