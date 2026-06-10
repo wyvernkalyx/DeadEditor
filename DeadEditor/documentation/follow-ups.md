@@ -34,13 +34,15 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Proposed fix:** Rewrite both sections to the flat `definition → tracks` model so the memo body matches its own top decision entry. Documentation-only.
 - **Surfaced:** Concert-collapse doc commit.
 
-### ConcertLookupService cache: editing a concert date desyncs the dictionary key
-- **What:** `EditSetlistView` save writes `{newDate}.json`, but the in-memory `ConcertLookupService._concerts` dict stays keyed by the old date. Lookups by the new date miss the cache until restart; the old date still resolves to the now-mutated `ConcertReference`.
-- **Why latent:** Today's coherence relies on in-place mutation of the shared cached instance; there is no invalidation/reload path. A date edit is the one case in-place mutation can't cover — the dictionary key, not just the value, changes.
-- **Proposed fix:** Any redesign that stops sharing the live cached instance must add explicit cache invalidation (covers both this and the delete-no-evict item below). Pre-existing; restart-resolved.
-- **Surfaced:** Concert-load perf audit.
+### ~~ConcertLookupService cache: editing a concert date desyncs the dictionary key~~ (FIXED)
+- **Fixed:** rekey-on-save. `EditSetlistView` snapshots the concert's original date at
+  construction and, after a successful save, calls `ConcertLookupService.NotifySaved(oldDate,
+  concert)` — which evicts the old-date key, re-inserts the concert under its new date, and
+  maintains `_sortedDates`. The orphaned `{oldDate}.json` is recycled with the same mechanism
+  the delete path uses. (Shared-live-instance model retained; surgical fix, no reload system.)
 
-### ConcertLookupService cache: deleting a concert does not evict it
-- **What:** The `ShellWindow` delete path recycles `{date}.json` but leaves the entry in `ConcertLookupService._concerts`, so the deleted concert still resolves from the cache until restart.
-- **Impact:** Stale cache hit for a deleted concert until app restart. Pre-existing; restart-resolved.
-- **Surfaced:** Concert-load perf audit.
+### ~~ConcertLookupService cache: deleting a concert does not evict it~~ (FIXED)
+- **Fixed:** evict-on-delete. The `ShellWindow` delete path now calls
+  `ConcertLookupService.Evict(date)` after recycling `{date}.json`, removing the entry from
+  both `_concerts` and `_sortedDates`. Both `Evict` and `NotifySaved` are idempotent (no throw
+  on an absent key).

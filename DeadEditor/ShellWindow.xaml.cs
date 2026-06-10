@@ -757,6 +757,10 @@ namespace DeadEditor
                         Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
                 }
 
+                // Evict from the in-memory cache so the deleted concert no longer
+                // resolves before restart (called regardless of whether the file existed).
+                ConcertLookupService.Instance.Evict(concert.Date);
+
                 // Navigate back to concerts grid
                 NavigateToConcerts();
             }

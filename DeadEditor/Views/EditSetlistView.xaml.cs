@@ -20,6 +20,11 @@ namespace DeadEditor
         private readonly ShellWindow _shell;
         private readonly ConcertReference _concert;
         private readonly NormalizationService _normalizationService;
+
+        // The concert's date at view construction. The grid mutates the live cached
+        // instance, so by save time _concert.Date already holds the NEW date — the
+        // original must be snapshotted up front to detect a date change and rekey the cache.
+        private string _originalDate;
         private List<EditableTrack> _tracks = new();
         private bool _hasUnsavedChanges;
 
@@ -38,6 +43,7 @@ namespace DeadEditor
             InitializeComponent();
             _shell = shell;
             _concert = concert;
+            _originalDate = concert.Date ?? "";
             _normalizationService = new NormalizationService();
         }
 
@@ -284,6 +290,27 @@ namespace DeadEditor
                         File.Delete(targetPath);
                     File.Move(tempPath, targetPath);
                 });
+
+                // If the date changed, the old-date file is now an orphan (we wrote
+                // {newDate}.json above). Recycle it with the same mechanism the delete
+                // path uses, then reconcile the in-memory cache.
+                if (!string.Equals(_originalDate, date, StringComparison.Ordinal) &&
+                    !string.IsNullOrEmpty(_originalDate))
+                {
+                    var oldPath = Path.Combine(concertsDir, $"{_originalDate}.json");
+                    if (File.Exists(oldPath))
+                    {
+                        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                            oldPath,
+                            Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                            Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+                    }
+                }
+
+                // Rekey the cache on a date change (value is already current — same
+                // live instance). Idempotent for an unchanged date.
+                ConcertLookupService.Instance.NotifySaved(_originalDate, _concert);
+                _originalDate = date;
 
                 _hasUnsavedChanges = false;
                 StatusText.Text = "Setlist saved";

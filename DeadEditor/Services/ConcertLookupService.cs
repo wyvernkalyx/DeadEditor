@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("DeadEditor.Tests")]
 
 namespace DeadEditor.Services
 {
@@ -26,6 +29,11 @@ namespace DeadEditor.Services
 
         private readonly Dictionary<string, ConcertReference> _concerts;
         private readonly List<string> _sortedDates;
+
+        // Guards the post-load cache mutations (Evict / NotifySaved) and the paired
+        // _sortedDates maintenance. Reads run on the WPF UI thread alongside the saves
+        // and deletes that drive these mutations.
+        private readonly object _writeLock = new();
 
         /// <summary>The directory concerts were loaded from.</summary>
         public string ConcertsPath { get; }
@@ -72,6 +80,24 @@ namespace DeadEditor.Services
             _sortedDates = _concerts.Keys.OrderBy(d => d).ToList();
             sw.Stop();
             Debug.WriteLine($"[CONCERTS] Loaded {_concerts.Count:N0} concerts from {ConcertsPath} in {sw.ElapsedMilliseconds}ms");
+        }
+
+        /// <summary>
+        /// Test-only constructor: seeds the cache directly from in-memory concerts,
+        /// bypassing all file I/O so the cache-coherence logic (Evict / NotifySaved)
+        /// can be unit-tested without touching the real AppData concerts directory.
+        /// Not used in production — production goes through the lazy singleton.
+        /// </summary>
+        internal ConcertLookupService(IEnumerable<ConcertReference> concerts)
+        {
+            _concerts = new Dictionary<string, ConcertReference>();
+            foreach (var concert in concerts)
+            {
+                if (concert != null && !string.IsNullOrEmpty(concert.Date))
+                    _concerts[concert.Date] = concert;
+            }
+            _sortedDates = _concerts.Keys.OrderBy(d => d).ToList();
+            ConcertsPath = string.Empty;
         }
 
         private static void CopyBundledToAppData(string sourceDir, string destDir)
@@ -136,6 +162,71 @@ namespace DeadEditor.Services
         public bool HasConcert(string date)
         {
             return !string.IsNullOrEmpty(date) && _concerts.ContainsKey(date);
+        }
+
+        /// <summary>
+        /// Reconciles the cache after a concert is saved through the setlist editor.
+        /// In the shared-live-instance model the cached value is the very object the
+        /// editor mutated, so the value is already current — what goes stale is the
+        /// dictionary KEY when the date changes. If <paramref name="oldDate"/> differs
+        /// from the saved concert's date, the old-date entry is evicted and the concert
+        /// is re-inserted under its new date; <c>_sortedDates</c> is maintained either way.
+        /// Idempotent: a missing old key is not an error (no throw).
+        /// </summary>
+        public void NotifySaved(string oldDate, ConcertReference concert)
+        {
+            if (concert == null || string.IsNullOrEmpty(concert.Date))
+                return;
+
+            var newDate = concert.Date;
+            lock (_writeLock)
+            {
+                if (!string.Equals(oldDate, newDate, StringComparison.Ordinal))
+                    RemoveLocked(oldDate);
+
+                _concerts[newDate] = concert;
+                InsertDateLocked(newDate);
+            }
+        }
+
+        /// <summary>
+        /// Removes the concert for <paramref name="date"/> from the cache, used by the
+        /// delete path so a deleted concert no longer resolves from memory before restart.
+        /// Idempotent: evicting a date not in the cache does nothing (no throw).
+        /// </summary>
+        public void Evict(string date)
+        {
+            if (string.IsNullOrEmpty(date))
+                return;
+
+            lock (_writeLock)
+            {
+                RemoveLocked(date);
+            }
+        }
+
+        // Removes a date from both the dictionary and the sorted-date index, keeping them
+        // in sync. Caller holds _writeLock.
+        private void RemoveLocked(string date)
+        {
+            if (string.IsNullOrEmpty(date))
+                return;
+
+            if (_concerts.Remove(date))
+            {
+                var idx = _sortedDates.BinarySearch(date);
+                if (idx >= 0)
+                    _sortedDates.RemoveAt(idx);
+            }
+        }
+
+        // Inserts a date into the sorted index in order if not already present. Uses the
+        // same default string comparer as the initial OrderBy. Caller holds _writeLock.
+        private void InsertDateLocked(string date)
+        {
+            var idx = _sortedDates.BinarySearch(date);
+            if (idx < 0)
+                _sortedDates.Insert(~idx, date);
         }
 
         /// <summary>Get all concert dates, sorted ascending.</summary>
