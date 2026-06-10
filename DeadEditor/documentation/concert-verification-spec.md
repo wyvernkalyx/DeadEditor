@@ -140,8 +140,29 @@ desync it is meant to prevent.
 5. **No carve-out.** Concerts have no Archivist-Note equivalent. Every tracked-field edit unverifies;
    there is nothing to exempt.
 
-6. **No unlock gesture.** Consistent with albums and box sets: no separate unlock step. First edit
-   dirties → unverifies at save; re-verify via the in-body Mark Verified control.
+6. **Explicit Unverify control** (amended 2026-06-10 — supersedes the original "no unlock gesture").
+   Concerts gain a manual **Unverify** control in the `EditSetlistView` verify slot, alongside Mark
+   Verified.
+   - **Rationale.** Verification can be withdrawn purely for *trust* reasons, independent of having a
+     correction in hand ("I no longer trust this record as-is"). Forcing a throwaway edit to express
+     that — the only way under the original decision — is a workaround. Surfaced by lived demand
+     during the 2026-06-10 implementation gates; the edit-and-revert workaround is rejected.
+   - **Additive, not a replacement.** The edit-driven unverify (diff-at-save, decision 4) is
+     **unchanged**. The manual control is a second, independent way to drop `Verified`; the first
+     edit still dirties → unverifies at save exactly as before. Re-verify via the same in-body Mark
+     Verified control.
+   - **Behavior.** Visible **only** when the badge shows verified (the honest `effectiveVerified`
+     state), mirroring how Mark Verified hides in that state. Click sets `_concert.Verified = false`
+     in-memory and calls `RefreshVerifyControls()` — the badge drops to Unverified and Mark Verified
+     reappears (enabled, since the content still passes the gate). **No rebaseline** — `Verified` is
+     not part of the content snapshot and the content has not changed, so the baseline stays valid.
+   - **Persist-on-save symmetry.** Like Mark Verified, Unverify sets the in-memory flag only; the
+     change reaches disk through the editor's normal Save. **Implication:** unverifying and then
+     navigating away *without saving* leaves the concert **verified on disk** — exactly as Mark
+     Verified without saving does not persist the verify.
+   - **Precedent divergence.** This diverges from the album/box-set surfaces, which have no manual
+     unverify. Whether they adopt the same control is **banked as a follow-up** (`follow-ups.md`) — do
+     **not** implement it there as part of this work.
 
 7. **Verify UI — in-body in `EditSetlistView`, not HeaderBar.** Unlike the concert delete/edit actions
    (HeaderBar-driven), the verify surface lives in the view body alongside the setlist, mirroring the

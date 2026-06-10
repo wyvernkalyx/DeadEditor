@@ -40,6 +40,16 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Verification tie-in:** a hand-entered concert is **born unverified** and uses the same `ConcertVerifyGate` to be marked verified (see `concert-verification-spec.md`). Record creation is its own feature, separate from verification.
 - **Surfaced:** Concert-verification spec (2026-06-10).
 
+### Unverify control on album + box-set surfaces (consistency with concerts)
+- **What:** Concerts gained an explicit manual **Unverify** control (`concert-verification-spec.md`
+  decision 6, amended 2026-06-10) so trust can be withdrawn without a fake edit. The album
+  (`EditMetadataView`) and box-set (`BoxSetWizardView` Step 3) verify surfaces have **no** such
+  control — they only unverify via the diff-at-save edit path.
+- **Proposed fix:** Decide per-surface, in those surfaces' own sessions, whether to add the same
+  low-emphasis Unverify control mirroring the concert one. Not implemented as part of the concert
+  work. See amended decision 6 for the rationale and the persist-on-save symmetry.
+- **Surfaced:** Concert-verification Unverify amendment (2026-06-10).
+
 ### ~~ConcertLookupService cache: editing a concert date desyncs the dictionary key~~ (FIXED)
 - **Fixed:** rekey-on-save. `EditSetlistView` snapshots the concert's original date at
   construction and, after a successful save, calls `ConcertLookupService.NotifySaved(oldDate,

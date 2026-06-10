@@ -104,6 +104,17 @@
                             Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
                             Click="MarkVerifiedButton_Click"
                             ToolTip="Mark this concert as verified"/>
+                    <!-- Unverify (spec decision 6, amended): low-emphasis secondary action shown
+                         ONLY when the badge is verified; withdraws trust without an edit. Borderless
+                         link-style so it doesn't compete with Save. Visibility driven in code-behind
+                         by RefreshVerifyControls (mutually exclusive with Mark Verified). -->
+                    <Button x:Name="UnverifyButton" Content="Unverify"
+                            Margin="8,0,0,0" Height="26" Padding="6,2" FontSize="12"
+                            VerticalAlignment="Center" Cursor="Hand"
+                            Background="Transparent" Foreground="#888888" BorderThickness="0"
+                            Visibility="Collapsed"
+                            Click="UnverifyButton_Click"
+                            ToolTip="Withdraw verification for this concert"/>
                 </StackPanel>
                 <TextBlock x:Name="VerifyReasonText" Visibility="Collapsed"
                            Margin="0,6,0,0" MaxWidth="260"

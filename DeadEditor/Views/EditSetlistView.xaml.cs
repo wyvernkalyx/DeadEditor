@@ -400,6 +400,9 @@ namespace DeadEditor
                 VerifyBadgeText.Text = "✓ Verified";
                 VerifyBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeVerifiedFg");
                 MarkVerifiedButton.Visibility = Visibility.Collapsed;
+                // Unverify is the mirror of Mark Verified: visible only in the verified state
+                // (spec decision 6, amended). Mutually exclusive with the Mark Verified button.
+                UnverifyButton.Visibility = Visibility.Visible;
                 VerifyReasonText.Visibility = Visibility.Collapsed;
                 return;
             }
@@ -409,6 +412,7 @@ namespace DeadEditor
             VerifyBadgeText.Foreground = (SolidColorBrush)FindResource("BadgeUnverifiedFg");
             MarkVerifiedButton.Visibility = Visibility.Visible;
             MarkVerifiedButton.IsEnabled = canVerify;
+            UnverifyButton.Visibility = Visibility.Collapsed;
 
             if (canVerify)
             {
@@ -437,6 +441,19 @@ namespace DeadEditor
 
             _concert.Verified = true;
             _baselineJson = ConcertSnapshot.Serialize(projected);
+            RefreshVerifyControls();
+        }
+
+        /// <summary>
+        /// Withdraws verification in memory (spec decision 6, amended). Symmetric with Mark Verified:
+        /// drops the flag and refreshes the surface, with no disk write — the toolbar Save persists it,
+        /// and navigating away without saving leaves the concert verified on disk. No rebaseline:
+        /// Verified is not part of the content snapshot and the content has not changed, so the existing
+        /// baseline stays valid and the badge correctly returns to Unverified with Mark Verified enabled.
+        /// </summary>
+        private void UnverifyButton_Click(object sender, RoutedEventArgs e)
+        {
+            _concert.Verified = false;
             RefreshVerifyControls();
         }
     }
