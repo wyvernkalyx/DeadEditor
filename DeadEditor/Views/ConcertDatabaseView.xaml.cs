@@ -51,6 +51,24 @@ namespace DeadEditor
         }
 
         /// <summary>
+        /// Re-queries the in-memory concert cache and re-applies the current filter so the grid
+        /// reflects changes made while the user was away in the detail/edit views: in-place edits
+        /// to the live <see cref="ConcertReference"/> instances (Verified flag, venue/date/song
+        /// edits) as well as cache rekeys (a date change re-sorts the underlying order) and
+        /// evictions (a delete drops a row). <see cref="ConcertReference"/> is a plain DTO with no
+        /// INotifyPropertyChanged, so already-rendered rows do not re-read their bindings on their
+        /// own — rebuilding ItemsSource from a fresh query forces a full re-render. Called by
+        /// ShellWindow each time the grid is navigated back to. Cheap: the cache is in memory.
+        /// </summary>
+        public void RefreshFromCache()
+        {
+            if (!_isLoaded) return;
+
+            _allConcerts = ConcertLookupService.Instance.GetAllConcerts().ToList();
+            ApplyFilter(_lastSearchText);
+        }
+
+        /// <summary>
         /// Sets the library shows for cross-referencing ownership status.
         /// Called by ShellWindow after the library is loaded and after each import.
         /// </summary>

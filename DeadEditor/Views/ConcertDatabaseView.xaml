@@ -3,11 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:DeadEditor.Converters"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000"
              Background="#1E1E1E">
 
     <UserControl.Resources>
+        <!-- Verified glyph column converters — reused from the Library grid (LibraryGridView
+             MakeVerificationColumn) so the ✓ glyph and verified-green stay a single source of truth. -->
+        <conv:VerificationStateToGlyphConverter x:Key="VerificationStateToGlyph"/>
+        <conv:VerificationStateToBrushConverter x:Key="VerificationStateToBrush"/>
+
         <!-- DataGrid column header style -->
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#2A2D3E"/>
@@ -86,6 +92,31 @@
         </DataGrid.Resources>
 
         <DataGrid.Columns>
+            <!-- Leading verified glyph: ✓ (verified-green) when Verified, empty cell otherwise
+                 (absence is the indicator). Mirrors the Library grid's verification column —
+                 same converters, glyph size/weight, fixed 36px width, and zero-padding centered
+                 CellStyle that overrides the shared 12px cell padding. -->
+            <DataGridTemplateColumn Header="" Width="36" MinWidth="36" MaxWidth="36" IsReadOnly="True">
+                <DataGridTemplateColumn.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </DataGridTemplateColumn.CellStyle>
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding VerificationState, Converter={StaticResource VerificationStateToGlyph}}"
+                                   Foreground="{Binding VerificationState, Converter={StaticResource VerificationStateToBrush}}"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
             <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="110"/>
             <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="Auto" MinWidth="200"/>
             <DataGridTextColumn Header="City, State" Binding="{Binding FormattedLocation}" Width="Auto" MinWidth="140"/>

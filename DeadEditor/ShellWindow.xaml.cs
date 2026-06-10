@@ -208,6 +208,15 @@ namespace DeadEditor
 
             // Update sidebar active indicator to match current view
             SidebarPanel.SetActiveForView(e.View);
+
+            // The concerts grid is a cached, reused instance bound to live ConcertReference DTOs
+            // (no INotifyPropertyChanged). Whenever it becomes the current view — back from
+            // detail/edit, or returning via the sidebar — re-query and re-render so in-place edits
+            // (verify, venue/date/song) and cache rekeys/evictions made while away are reflected.
+            if (e.View is ConcertDatabaseView concertsView)
+            {
+                concertsView.RefreshFromCache();
+            }
         }
 
         private void UpdateHeaderBar(System.Windows.Controls.UserControl view, object? context)

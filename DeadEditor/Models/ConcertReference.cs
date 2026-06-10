@@ -66,6 +66,17 @@ namespace DeadEditor.Models
         /// <summary>Number of songs in the setlist. Computed view-only — never persisted.</summary>
         [JsonIgnore]
         public int SongCount => Tracks.Count;
+
+        /// <summary>
+        /// Bridges the bare <see cref="Verified"/> bool to the shared <see cref="Models.VerificationState"/>
+        /// enum so the ConcertDatabaseView leading glyph column can reuse the Library grid's glyph/brush
+        /// converters (single source of truth for the ✓ glyph and verified-green). Binary only — a concert
+        /// is single-record, so Partial never applies (concert-verification-spec.md decision 9). Computed
+        /// view-only — never persisted.
+        /// </summary>
+        [JsonIgnore]
+        public VerificationState VerificationState =>
+            Verified ? VerificationState.Verified : VerificationState.Unverified;
     }
 
     public class ConcertSet
