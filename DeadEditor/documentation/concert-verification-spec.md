@@ -1,8 +1,16 @@
 # Concert Verification Spec
 
-**Status:** Specced (not yet implemented)
+**Status:** Implemented (2026-06-10)
 **Date:** 2026-06-10
 **Branch:** `feature/library-verification-surface`
+
+**Shipped commits**
+- `4c560a0` — prerequisite: cache coherence (rekey on date-change save, evict on delete)
+- `581eac5` — layer 1: `ConcertReference.Verified` + `ConcertVerifyGate`
+- `845b316` — layer 2: `EditSetlistView` verify wiring (`ConcertSnapshot`, diff-at-save)
+- `8258116` — layer 3: `SetlistFetcher` skip-verified guard
+- `2cfe5e2` — layer 4: `ConcertDatabaseView` glyph column + navigation refresh
+- `1c41de4` — amendment: explicit Unverify control (decision 6 revised)
 
 **Cross-references**
 - `documentation/verification-model.md` — verification status doc (the principle: "import once,

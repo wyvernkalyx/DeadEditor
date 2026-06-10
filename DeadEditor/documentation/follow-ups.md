@@ -8,6 +8,21 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### In-app alert system (replace native MessageBox dialogs)
+- **What:** The app uses native Windows `MessageBox` dialogs for the unsaved-changes prompt, delete confirmations, and save-error reports. These break visual consistency with the dark in-app UI and cannot be styled or positioned.
+- **Proposed fix:** Replace them with an in-app alert/dialog surface for visual consistency and control.
+- **Surfaced:** Preference surfaced 2026-06-10.
+
+### Cold-start concert load (~17s cold, ~0.6s warm)
+- **What:** The first `ConcertLookupService` load after a reboot/cache flush took **16,758ms** for 2,293 files; the immediate second run took **583ms** (measured 2026-06-10). Steady-state is fine — this is **NOT** a reopening of the closed Settings-perf item.
+- **Possible mitigation (only if it ever bites):** kick the load on a background thread shortly after startup so the cache is warm before first Concerts use.
+- **Surfaced:** 2026-06-10.
+
+### SetlistFetcher arg-parser guard
+- **What:** The arg parser accepts an option token as a value — `--concerts --output` silently set the concerts dir to the literal string `"--output"` during the 2026-06-10 gate, writing 2,292 files into a stray directory.
+- **One-line fix when touched next:** reject values starting with `--` with a clear error.
+- **Surfaced:** 2026-06-10 implementation gate.
+
 ### Alias-learning double-write
 - **Symptom:** Import view's right-click "Match to Song" writes the new alias to `songs.json` twice on a single match event.
 - **Surfaced:** Commit `1840a44` deduped one such occurrence ("The Monkey and the Engineer" written twice for "Monkey And The Engineer").
