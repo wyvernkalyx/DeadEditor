@@ -568,9 +568,15 @@
             </StackPanel>
         </Grid>
 
-        <!-- Concerts Header: "Concerts  {count} shows  [Search...]" -->
+        <!-- Concerts Header: "Concerts  {count} shows  [filter]  [Search...]   [+ New Concert]" -->
         <Grid x:Name="ConcertsHeader" Height="50" Visibility="Collapsed">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
                 <TextBlock Text="Concerts"
                            Foreground="#E0E0E0"
                            FontSize="20"
@@ -660,6 +666,49 @@
                         </Button.Style>
                     </Button>
                 </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                <!-- Style cloned from NewBoxSetButton (the SaveChangesButton clone) — the
+                     established in-header primary-action treatment. Click raises NewConcertRequested;
+                     ShellWindow constructs a blank ConcertReference and opens EditSetlistView
+                     (add-concert-spec.md Decision 2). -->
+                <Button x:Name="NewConcertButton"
+                        Content="+ New Concert"
+                        Click="NewConcertButton_Click"
+                        Padding="12,8"
+                        Cursor="Hand"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        MinHeight="36">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#0E7A0D"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Setter Property="BorderBrush" Value="#13A10E"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#13A10E"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
         </Grid>
 

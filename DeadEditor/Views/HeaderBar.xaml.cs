@@ -184,6 +184,14 @@ namespace DeadEditor
             UpdateConcertsCount(concertsView.FilteredCount, concertsView.TotalCount);
         }
 
+        /// <summary>Fired when the "+ New Concert" button in the Concerts header is clicked.</summary>
+        public event EventHandler? NewConcertRequested;
+
+        private void NewConcertButton_Click(object sender, RoutedEventArgs e)
+        {
+            NewConcertRequested?.Invoke(this, EventArgs.Empty);
+        }
+
         /// <summary>Fired when the "+ New Box Set" button in the Box Sets header is clicked.</summary>
         public event EventHandler? NewBoxSetRequested;
 
@@ -289,7 +297,10 @@ namespace DeadEditor
 
             HideAllHeaders();
             EditSetlistHeader.Visibility = Visibility.Visible;
-            EditSetlistBackButton.Content = $"\u2190 {editView.VenueName}";
+            // A hand-created concert (add-concert-spec.md Decision 2) has no venue yet \u2014 fall back
+            // to "New Concert" so the back button isn't a bare arrow.
+            var label = string.IsNullOrWhiteSpace(editView.VenueName) ? "New Concert" : editView.VenueName;
+            EditSetlistBackButton.Content = $"\u2190 {label}";
         }
 
         public void UpdateConcertsCount(int filtered, int total)

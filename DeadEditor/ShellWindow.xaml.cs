@@ -56,6 +56,7 @@ namespace DeadEditor
             HeaderBar.ConcertsSearchChanged += HeaderBar_ConcertsSearchChanged;
             HeaderBar.ConcertsOwnershipFilterChanged += HeaderBar_ConcertsOwnershipFilterChanged;
             HeaderBar.EditSetlistRequested += HeaderBar_EditSetlistRequested;
+            HeaderBar.NewConcertRequested += HeaderBar_NewConcertRequested;
             HeaderBar.DeleteConcertRequested += HeaderBar_DeleteConcertRequested;
             HeaderBar.NewBoxSetRequested += HeaderBar_NewBoxSetRequested;
             HeaderBar.BoxSetWizardBackClicked += HeaderBar_BoxSetWizardBackClicked;
@@ -738,6 +739,27 @@ namespace DeadEditor
 
                 _navigationService.NavigateTo(editView, concert);
             }
+        }
+
+        /// <summary>
+        /// Creates a brand-new concert by hand (add-concert-spec.md Decision 2). Constructs a blank
+        /// ConcertReference and opens the setlist editor directly on it — no intermediate detail view.
+        /// The editor's first save writes {date}.json and inserts the absent cache key; back-navigation
+        /// lands on the Concerts grid, which RefreshFromCache repaints (a saved concert appears in
+        /// sorted position; a cancelled one leaves no file and no cache entry).
+        /// </summary>
+        private void HeaderBar_NewConcertRequested(object? sender, EventArgs e)
+        {
+            var concert = new ConcertReference();
+            var editView = new EditSetlistView(this, concert);
+
+            editView.SaveCompleted += (s, args) =>
+            {
+                // After save, navigate back happens inside EditSetlistView. The Concerts grid is on
+                // the back stack and RefreshFromCache (on navigation) shows the new row.
+            };
+
+            _navigationService.NavigateTo(editView, concert);
         }
 
         private void HeaderBar_DeleteConcertRequested(object? sender, EventArgs e)
