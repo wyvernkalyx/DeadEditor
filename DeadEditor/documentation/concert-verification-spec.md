@@ -240,9 +240,12 @@ desync it is meant to prevent.
    **Manual WPF gate before commit.**
 
 3. **`SetlistFetcher` skip-verified guard.** Raw-JSON existence/`verified` check before write; per-file
-   skip log + summary count. **Note:** the tool currently has no test project; **manual verification is
-   acceptable** for this commit (run the fetcher against a directory containing one hand-marked
+   skip log + summary count. **Note:** the skip-verified write path and the fetch loop are still
+   **manually verified** (run the fetcher against a directory containing one hand-marked
    `verified: true` file and confirm it is skipped while others rewrite) — state this in the commit.
+   **Update (2026-06-11):** the tool is no longer test-free — its `ArgParser` is unit-tested
+   (`DeadEditor.Tests/ArgParserTests.cs`, 8 cases) via a new project reference, added when the
+   arg-parser silent-misfire guard landed. The fetch/write paths above remain manually verified.
 
 4. **`ConcertDatabaseView` glyph column.** Leading `Verified` glyph column, Library-grid vocabulary.
    **Manual WPF gate before commit.**

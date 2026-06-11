@@ -20,9 +20,16 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Possible mitigation (only if it ever bites):** kick the load on a background thread shortly after startup so the cache is warm before first Concerts use.
 - **Surfaced:** 2026-06-10.
 
-### SetlistFetcher arg-parser guard
-- **What:** The arg parser accepts an option token as a value — `--concerts --output` silently set the concerts dir to the literal string `"--output"` during the 2026-06-10 gate, writing 2,292 files into a stray directory.
-- **One-line fix when touched next:** reject values starting with `--` with a clear error.
+### ~~SetlistFetcher arg-parser guard~~ (DONE 2026-06-11)
+- **Done:** Inline parse loop (`Program.cs:11-22`, `args.Length - 1` bound, positional next-token,
+  no validation) replaced by the pure `tools/SetlistFetcher/ArgParser.Parse` (side-effect-free,
+  throws `ArgParserException`). Guard rejects a missing value, a value that is itself a flag
+  (the swallow), and any unknown token; `Program.cs` writes the message to stderr and exits
+  non-zero before any fetch or write. Eight xUnit cases in `DeadEditor.Tests/ArgParserTests.cs`
+  (new `SetlistFetcher` project reference); test baseline 338 -> 346.
+- **What:** The arg parser accepted an option token as a value — `--concerts --output` silently set
+  the concerts dir to the literal string `"--output"` during the 2026-06-10 gate, writing 2,292 files
+  into a stray directory.
 - **Surfaced:** 2026-06-10 implementation gate.
 
 ### Alias-learning double-write

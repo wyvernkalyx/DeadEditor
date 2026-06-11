@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SetlistFetcher;
 
 const string Mbid = "6faa7ca7-0d99-4a5e-bfa6-1fd5037520c6";
 const string ApiKey = "66sBcvcLBIo7bYMjoNS7PwHq3wSnQHUzbyqI";
@@ -11,14 +12,23 @@ const int MaxRetries = 3;
 // Parse optional arguments:
 //   --output <path>     Explicit Data/ folder path (for shows.json)
 //   --concerts <path>   Explicit concerts output folder (default: %APPDATA%/DeadEditor/concerts/)
-string? explicitDataDir = null;
-string? explicitConcertsDir = null;
-for (int i = 0; i < args.Length - 1; i++)
+// Parsing is delegated to the pure ArgParser; a malformed argument (missing
+// value, a value that is itself a flag, or an unknown token) is rejected here —
+// non-zero exit, nothing fetched, nothing written — before any HTTP call or
+// file write. Guards the 2026-06-10 silent-misfire where `--concerts --output`
+// wrote 2,292 files into a stray "--output" directory.
+string? explicitDataDir;
+string? explicitConcertsDir;
+try
 {
-    if (args[i] == "--output")
-        explicitDataDir = args[i + 1];
-    else if (args[i] == "--concerts")
-        explicitConcertsDir = args[i + 1];
+    var parsed = ArgParser.Parse(args);
+    explicitDataDir = parsed.DataDir;
+    explicitConcertsDir = parsed.ConcertsDir;
+}
+catch (ArgParserException ex)
+{
+    Console.Error.WriteLine($"SetlistFetcher: {ex.Message}");
+    return 1;
 }
 
 using var http = new HttpClient();
@@ -342,6 +352,8 @@ Console.WriteLine($"  Multi-show dates: {multiShowCount}");
 Console.WriteLine($"  Verified concerts skipped: {verifiedSkipped:N0}");
 Console.WriteLine($"  Concert files written to: {concertsDir}");
 Console.WriteLine($"  Shows.json updated: {showsJsonPath}");
+
+return 0;
 
 // --- Helper methods ---
 

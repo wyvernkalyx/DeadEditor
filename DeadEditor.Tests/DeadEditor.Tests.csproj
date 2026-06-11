@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DeadEditor\DeadEditor.csproj" />
+    <ProjectReference Include="..\tools\SetlistFetcher\SetlistFetcher.csproj" />
   </ItemGroup>
 
 </Project>
