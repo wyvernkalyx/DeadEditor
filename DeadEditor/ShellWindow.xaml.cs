@@ -378,11 +378,7 @@ namespace DeadEditor
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show(
-                    $"Error deleting album:\n\n{ex.Message}",
-                    "Delete Failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                App.Alerts.Notify($"Error deleting album:\n\n{ex.Message}", AlertSeverity.Error, "Delete Failed");
             }
         }
 
@@ -802,11 +798,7 @@ namespace DeadEditor
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show(
-                    $"Error deleting concert:\n\n{ex.Message}",
-                    "Delete Failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                App.Alerts.Notify($"Error deleting concert:\n\n{ex.Message}", AlertSeverity.Error, "Delete Failed");
             }
         }
 

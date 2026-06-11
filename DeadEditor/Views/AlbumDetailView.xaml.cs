@@ -744,7 +744,7 @@ namespace DeadEditor
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Could not delete file:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Alerts.Notify($"Could not delete file:\n{ex.Message}", AlertSeverity.Error, "Error");
                 return;
             }
 

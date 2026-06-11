@@ -353,8 +353,7 @@ namespace DeadEditor
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving setlist:\n\n{ex.Message}", "Save Failed",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Alerts.Notify($"Error saving setlist:\n\n{ex.Message}", AlertSeverity.Error, "Save Failed");
                 Debug.WriteLine($"[CONCERT EDIT] Save error: {ex}");
             }
         }

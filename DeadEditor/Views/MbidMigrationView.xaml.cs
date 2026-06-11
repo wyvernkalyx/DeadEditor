@@ -127,7 +127,7 @@ namespace DeadEditor.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Migration error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Alerts.Notify($"Migration error: {ex.Message}", AlertSeverity.Error, "Error");
                 ShowPanel(StartPanel);
             }
         }

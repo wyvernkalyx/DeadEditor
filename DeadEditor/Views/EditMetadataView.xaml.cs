@@ -991,8 +991,7 @@ namespace DeadEditor
             {
                 ProgressBar.Visibility = Visibility.Collapsed;
                 StatusTextBlock.Text = $"Save failed: {ex.Message}";
-                System.Windows.MessageBox.Show($"Error saving changes:\n\n{ex.Message}", "Save Failed",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Alerts.Notify($"Error saving changes:\n\n{ex.Message}", AlertSeverity.Error, "Save Failed");
             }
         }
 

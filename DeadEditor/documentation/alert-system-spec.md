@@ -124,11 +124,11 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | # | File:line | Scenario | Image / Buttons | Bucket |
 |---|-----------|----------|-----------------|--------|
 | 1 | `ShellWindow.xaml.cs:344` | Confirm delete album → Recycle Bin | Warning / YesNo | B |
-| 2 | `ShellWindow.xaml.cs:376` | Album delete failed | Error / OK | A |
+| 2 | `ShellWindow.xaml.cs:376` | Album delete failed — **converted (inc 3)** | Error / OK | A |
 | 3 | `ShellWindow.xaml.cs:423` | Leave Import with unimported tracks | Question / YesNo | B |
 | 4 | `ShellWindow.xaml.cs:607` | Box set gone since list loaded | Information / OK | A |
 | 5 | `ShellWindow.xaml.cs:770` | Confirm delete concert JSON | Warning / YesNo | B |
-| 6 | `ShellWindow.xaml.cs:800` | Concert delete failed | Error / OK | A |
+| 6 | `ShellWindow.xaml.cs:800` | Concert delete failed — **converted (inc 3)** | Error / OK | A |
 | 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) | Warning / OK | A |
 | 8 | `AdvancedSearchDialog.xaml.cs:317` | No search criteria (date/venue) | Warning / OK | A |
 | 9 | `AlbumSearchDialog.xaml.cs:40` | Missing album/artist — **ORPHANED: no live caller, site unreachable** (excluded from conversion) | Warning / OK | A |
@@ -138,7 +138,7 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 13 | `UnmatchedSongsDialog.xaml.cs:118` | N songs added | Information / OK | A |
 | 14 | `UnmatchedSongsDialog.xaml.cs:126` | Apply corrections failed | Error / OK | A |
 | 15 | `Views/AlbumDetailView.xaml.cs:730` | Confirm delete track → Recycle Bin | Warning / OKCancel | B |
-| 16 | `Views/AlbumDetailView.xaml.cs:747` | Could not delete file | Error / OK | A |
+| 16 | `Views/AlbumDetailView.xaml.cs:747` | Could not delete file — **converted (inc 3)** | Error / OK | A |
 | 17 | `Views/BoxSetWizardView.xaml.cs:198` | Invalid track date(s) on save | Warning / OK | A |
 | 18 | `Views/BoxSetWizardView.xaml.cs:255` | Box set save failed | Error / OK | A |
 | 19 | `Views/BoxSetWizardView.xaml.cs:566` | Pull: invalid date entry | Warning / OK | A |
@@ -146,28 +146,28 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 21 | `Views/BoxSetWizardView.xaml.cs:666` | Confirm remove all tracks for date | Warning / YesNo | B |
 | 22 | `Views/EditMetadataView.xaml.cs:469` | Manifest sidecar write failed | Warning / OK | A |
 | 23 | `Views/EditMetadataView.xaml.cs:976` | Album type changed (move-files notice) | Information / OK | A |
-| 24 | `Views/EditMetadataView.xaml.cs:994` | Save changes failed | Error / OK | A |
+| 24 | `Views/EditMetadataView.xaml.cs:994` | Save changes failed — **converted (inc 3)** | Error / OK | A |
 | 25 | `Views/EditMetadataView.xaml.cs:1007` | Cancel with unsaved changes | Question / YesNo | B |
 | 26 | `Views/EditMetadataView.xaml.cs:1317` | Cannot verify — required fields missing | Warning / OK | A |
 | 27 | `Views/EditMetadataView.xaml.cs:1703` | Existing MBID — refresh / search / cancel | Question / YesNoCancel | B |
-| 28 | `Views/EditSetlistView.xaml.cs:244` | Invalid date format on save | Warning / OK | A |
-| 29 | `Views/EditSetlistView.xaml.cs:261` | **Duplicate-date refusal (commit `a6a652b`)** | Warning / OK | A |
-| 30 | `Views/EditSetlistView.xaml.cs:271` | Empty setlist on save | Warning / OK | A |
-| 31 | `Views/EditSetlistView.xaml.cs:359` | Setlist save failed | Error / OK | A |
+| 28 | `Views/EditSetlistView.xaml.cs:244` | Invalid date format on save — **converted (slice 1)** | Warning / OK | A |
+| 29 | `Views/EditSetlistView.xaml.cs:261` | **Duplicate-date refusal (commit `a6a652b`)** — **converted (slice 1)** | Warning / OK | A |
+| 30 | `Views/EditSetlistView.xaml.cs:271` | Empty setlist on save — **converted (slice 1)** | Warning / OK | A |
+| 31 | `Views/EditSetlistView.xaml.cs:359` | Setlist save failed — **converted (inc 3)** | Error / OK | A |
 | 32 | `Views/EditSetlistView.xaml.cs:369` | Cancel with unsaved changes | Question / YesNo | B |
 | 33 | `Views/ImportView.xaml.cs:1577` | Display info `.txt` file content | Information / OK | C |
 | 34 | `Views/MbidMigrationView.xaml.cs:80` | Confirm start migration fresh | Question / YesNo | B |
-| 35 | `Views/MbidMigrationView.xaml.cs:130` | Migration error | Error / OK | A |
+| 35 | `Views/MbidMigrationView.xaml.cs:130` | Migration error — **converted (inc 3)** | Error / OK | A |
 | 36 | `Views/ReleasesView.xaml.cs:326` | Confirm remove standalone release | Question / YesNo | B |
 | 37 | `Views/ReleasesView.xaml.cs:359` | Confirm remove last volume | Question / YesNo | B |
-| 38 | `Views/ReleasesView.xaml.cs:419` | Duplicate release name | Warning / OK | A |
+| 38 | `Views/ReleasesView.xaml.cs:419` | Duplicate release name — **converted (inc 2)** | Warning / OK | A |
 | 39 | `Views/SettingsView.xaml.cs:135` | Confirm re-enrich library | Question / YesNo | B |
 | 40 | `Views/SettingsView.xaml.cs:346` | Confirm reset library data | Warning / YesNo | B |
 | 41 | `Views/SettingsView.xaml.cs:393` | Reset complete | Information / OK | A |
 | 42 | `Views/SettingsView.xaml.cs:404` | Reset error | Error / OK | A |
-| 43 | `Views/SongsView.xaml.cs:227` | Duplicate song name (rename) | Warning / OK | A |
+| 43 | `Views/SongsView.xaml.cs:227` | Duplicate song name (rename) — **converted (inc 2)** | Warning / OK | A |
 | 44 | `Views/SongsView.xaml.cs:262` | Confirm remove song | Question / YesNo | B |
-| 45 | `Views/SongsView.xaml.cs:327` | Duplicate song name (add) | Warning / OK | A |
+| 45 | `Views/SongsView.xaml.cs:327` | Duplicate song name (add) — **converted (inc 2)** | Warning / OK | A |
 
 **Bucket counts:** A = 30, B = 14, C = 1 (total 45). Site **#9 is orphaned** (`AlbumSearchDialog` has
 no live caller), so the **live actionable count is effectively 44** — #9 is excluded from conversion
@@ -309,8 +309,19 @@ clear the gate — a human clears the manual WPF gate before each commit.
    dialog-architecture audit and deferred to a later increment; this increment took the shell-hosted
    duplicate-name refusals (#38/#43/#45), which the banner serves directly, first. **Manual WPF gate
    is Gregg's, separate.**
-4. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
-5. _(future)_ Increment 4 — bucket-B sweep.
-6. _(future)_ Increment 5 — bucket-C scrollable read panel.
+4. **[Implemented — pending WPF gate]** Bucket-A sweep, batch 2 — error reports (the second commit of
+   the increment-2 bucket-A sweep; the "increment 3" work session). Converted the six
+   `MessageBoxImage.Error` catch-block reports to `App.Alerts.Notify(..., AlertSeverity.Error, title)`,
+   full exception detail preserved (Error banners persist until closed): **#2** (`ShellWindow` album
+   delete failed), **#6** (`ShellWindow` concert delete failed), **#16** (`AlbumDetailView` could not
+   delete file), **#24** (`EditMetadataView` save changes failed), **#31** (`EditSetlistView` setlist
+   save failed), **#35** (`MbidMigrationView` migration error). Surface only — every catch/abort flow
+   unchanged; no other sites in those files touched (confirm/branching sites #1/#3/#5, #15,
+   #22/#23/#25/#26/#27, #32, #34 left as-is). `using MessageBox` aliases retained (those files still
+   host unconverted sites) to minimize diff. No new tests (baseline holds at **355**); build clean (51
+   unique warnings). **Manual WPF gate is Gregg's, separate.**
+5. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
+6. _(future)_ Increment 4 — bucket-B sweep.
+7. _(future)_ Increment 5 — bucket-C scrollable read panel.
 
 Status flips to **Implemented** at close-out once the sweep lands.
