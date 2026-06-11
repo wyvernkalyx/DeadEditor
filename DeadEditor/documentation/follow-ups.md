@@ -20,6 +20,11 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Proposed fix:** Delete the `.bak` file. Trivial, no code impact.
 - **Surfaced:** Alert-system inventory (2026-06-11).
 
+### `AlbumSearchDialog` has no live caller — decide delete vs revive
+- **What:** `AlbumSearchDialog` (a modal `Window`) has a constructor but **no `new AlbumSearchDialog(` anywhere in source** — nothing opens it. Its `MessageBox` site #9 (missing album/artist validation) in [alert-system-spec.md](alert-system-spec.md) is therefore **unreachable**, and is excluded from the alert-system conversion until this is resolved.
+- **Proposed fix:** Decide delete vs revive. If dead, remove the dialog (`AlbumSearchDialog.xaml(.cs)`) and drop site #9 from the inventory; if it should be wired up, restore a caller, then convert #9 to inline validation text per alert-system-spec.md Ruling 6.
+- **Surfaced:** Alert-system dialog-architecture audit (2026-06-11).
+
 ### Fix stale MainWindow MessageBox reference in `01-main-window.md`
 - **What:** [01-main-window.md:281](01-main-window.md) documents a deprecated "Settings menu item" `MessageBox.Show(...)` in `MainWindow` (marked "Partial (deprecated, should be removed)"). `MainWindow.xaml.cs` no longer exists — the shell redesign removed it — so the reference describes nonexistent code.
 - **Proposed fix:** Update or drop that doc row so the inventory reflects reality. Documentation-only.

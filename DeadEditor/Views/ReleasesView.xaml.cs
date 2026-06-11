@@ -416,7 +416,7 @@ namespace DeadEditor
                 {
                     if (_service.IsKnownRelease(name))
                     {
-                        MessageBox.Show($"A release named \"{name}\" already exists.", "Duplicate", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        App.Alerts.Notify($"A release named \"{name}\" already exists.", AlertSeverity.Warning, "Duplicate");
                         StandalonePanel.Children.Remove(addPanel);
                         return;
                     }

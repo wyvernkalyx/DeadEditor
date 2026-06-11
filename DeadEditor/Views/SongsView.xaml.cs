@@ -224,7 +224,7 @@ namespace DeadEditor
                     // Check for duplicates
                     if (_allSongs.Any(s => s != song && s.OfficialTitle.Equals(newName, StringComparison.OrdinalIgnoreCase)))
                     {
-                        MessageBox.Show($"A song named \"{newName}\" already exists.", "Duplicate", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        App.Alerts.Notify($"A song named \"{newName}\" already exists.", AlertSeverity.Warning, "Duplicate");
                         container.Child = originalChild;
                         return;
                     }
@@ -324,7 +324,7 @@ namespace DeadEditor
                 {
                     if (_allSongs.Any(s => s.OfficialTitle.Equals(name, StringComparison.OrdinalIgnoreCase)))
                     {
-                        MessageBox.Show($"A song named \"{name}\" already exists.", "Duplicate", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        App.Alerts.Notify($"A song named \"{name}\" already exists.", AlertSeverity.Warning, "Duplicate");
                         SongListPanel.Children.Remove(addPanel);
                         return;
                     }

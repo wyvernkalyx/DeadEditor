@@ -95,6 +95,23 @@ Bucket A (`Notify`) and bucket B (`ConfirmAsync`) are different surfaces with di
 (cosmetic notification swap vs branch-preserving decision swap). They are **never interleaved in one
 commit**. Build and verify each surface independently.
 
+### Ruling 6 — Modal-dialog sites are not served by the shell banner
+The shell banner **cannot serve bucket-A sites that fire inside a modal `Window` opened via
+`ShowDialog()`** (confirmed by the 2026-06-11 dialog-architecture audit). A modal window sits above
+`ShellWindow` and runs a nested message loop, so the content-cell banner is **occluded** behind it and
+**undismissable** while the modal is up. Those sites get per-classification handling instead:
+- **Input-validation refusals** — dialog stays open, user must fix a field (#7, #8, #12): **inline
+  validation text adjacent to the offending field** (no banner; reads where the eye already is).
+- **Terminal notifications where the dialog closes immediately** (#13, #14): **return the result to
+  the caller** and `App.Alerts.Notify` on the shell **after `ShowDialog` returns**, landing on the
+  now-visible banner.
+- **Terminal notifications where the dialog persists as a workspace** (#10, #11 `ManageSongsDialog`,
+  which is not closed by the export): an **embedded `AlertBannerHost` instance inside the dialog** —
+  the control is self-contained and reusable, so the same silent surface works in-dialog.
+
+This is why the bucket-A sweep (increment 2) takes **shell-hosted views first** (#38/#43/#45);
+dialog-hosted sites are deferred to a later increment with the handling above.
+
 ---
 
 ## Inventory
@@ -114,7 +131,7 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 6 | `ShellWindow.xaml.cs:800` | Concert delete failed | Error / OK | A |
 | 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) | Warning / OK | A |
 | 8 | `AdvancedSearchDialog.xaml.cs:317` | No search criteria (date/venue) | Warning / OK | A |
-| 9 | `AlbumSearchDialog.xaml.cs:40` | Missing album/artist | Warning / OK | A |
+| 9 | `AlbumSearchDialog.xaml.cs:40` | Missing album/artist — **ORPHANED: no live caller, site unreachable** (excluded from conversion) | Warning / OK | A |
 | 10 | `ManageSongsDialog.xaml.cs:199` | Export succeeded | Information / OK | A |
 | 11 | `ManageSongsDialog.xaml.cs:204` | Export failed | Error / OK | A |
 | 12 | `ReleaseSelectorDialog.xaml.cs:34` | No release selected | Warning / OK | A |
@@ -152,7 +169,9 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 44 | `Views/SongsView.xaml.cs:262` | Confirm remove song | Question / YesNo | B |
 | 45 | `Views/SongsView.xaml.cs:327` | Duplicate song name (add) | Warning / OK | A |
 
-**Bucket counts:** A = 30, B = 14, C = 1 (total 45).
+**Bucket counts:** A = 30, B = 14, C = 1 (total 45). Site **#9 is orphaned** (`AlbumSearchDialog` has
+no live caller), so the **live actionable count is effectively 44** — #9 is excluded from conversion
+until that dialog is deleted or revived (see `follow-ups.md`).
 
 ### Sound mapping (Windows 11)
 On Windows, `MessageBox.Show` calls the Win32 `MessageBox`, which calls `MessageBeep(uType)` for the
@@ -273,7 +292,23 @@ clear the gate — a human clears the manual WPF gate before each commit.
    flow unchanged (each still returns/aborts the save). Sites #31/#32 in the same file left for later
    increments. Tests: 9 `AlertQueueTests` (baseline **346 → 355**). Build clean (51 unique warnings,
    zero from new files). **Manual WPF gate is Gregg's, separate.**
-3. _(future)_ Increment 2 — bucket-A sweep.
+3. **[Implemented — pending WPF gate]** Increment 2 — bucket-A sweep, shell-hosted views first.
+   Converted the three duplicate-name validation refusals in shell-hosted views to
+   `App.Alerts.Notify(..., AlertSeverity.Warning, "Duplicate")`, surface only (every abort/return flow
+   unchanged): **#38** (`ReleasesView` duplicate release name), **#43** (`SongsView` duplicate song
+   name on rename), **#45** (`SongsView` duplicate song name on add). Sites #36/#37 (ReleasesView
+   Yes/No remove confirms), #44 (SongsView remove confirm), and #41/#42 (SettingsView) untouched.
+   No new pure logic, no new tests (baseline holds at **355**); build clean (51 unique warnings).
+   **Reorder vs the rollout-plan ordering:** the plan listed *search dialogs* as the first sweep
+   batch, but those eight sites (#7–#14) live inside **modal `Window` dialogs** (`AdvancedSearchDialog`,
+   `AlbumSearchDialog`, `ReleaseSelectorDialog`, `ManageSongsDialog`, `UnmatchedSongsDialog`) opened
+   via `ShowDialog()`. A modal dialog sits above the shell, so the shell's content-cell banner is
+   occluded and would not be visible while the dialog is open — those sites are **not servable by the
+   shell banner as-is** and need per-dialog handling (inline field validation, an embedded banner, or
+   deferring result notifications until after close). That design is captured in the increment-2
+   dialog-architecture audit and deferred to a later increment; this increment took the shell-hosted
+   duplicate-name refusals (#38/#43/#45), which the banner serves directly, first. **Manual WPF gate
+   is Gregg's, separate.**
 4. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
 5. _(future)_ Increment 4 — bucket-B sweep.
 6. _(future)_ Increment 5 — bucket-C scrollable read panel.
