@@ -241,8 +241,7 @@ namespace DeadEditor
             var date = DateTextBox.Text.Trim();
             if (!Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$"))
             {
-                MessageBox.Show("Date must be in yyyy-MM-dd format.", "Invalid Date",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                App.Alerts.Notify("Date must be in yyyy-MM-dd format.", AlertSeverity.Warning, "Invalid Date");
                 return;
             }
 
@@ -258,18 +257,16 @@ namespace DeadEditor
                 var venueNote = !string.IsNullOrWhiteSpace(existing?.Venue)
                     ? $" ({existing!.Venue})"
                     : "";
-                MessageBox.Show(
+                App.Alerts.Notify(
                     $"A concert already exists for {date}{venueNote}.\n\n" +
                     "Change the date, or edit the existing record instead.",
-                    "Date Already Exists",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AlertSeverity.Warning, "Date Already Exists");
                 return;
             }
 
             if (_tracks.Count == 0)
             {
-                MessageBox.Show("Setlist must have at least one song.", "Empty Setlist",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                App.Alerts.Notify("Setlist must have at least one song.", AlertSeverity.Warning, "Empty Setlist");
                 return;
             }
 

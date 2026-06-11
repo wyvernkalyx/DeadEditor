@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeadEditor"
+        xmlns:views="clr-namespace:DeadEditor.Views"
         mc:Ignorable="d"
         Title="Dead Editor"
         Icon="pack://application:,,,/Resources/app-icon.ico"
@@ -39,6 +40,15 @@
         <ContentPresenter Grid.Column="1" Grid.Row="1"
                          x:Name="ContentPresenter"
                          Content="{Binding CurrentView, RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+        <!-- In-window alert banner: overlays the top of the content cell, layered above the
+             swappable ContentPresenter (same cell, higher Z) so it survives view switches and
+             stays within the content area — never colliding with the sidebar, header, playlist,
+             or docked player bar. Collapsed when idle. -->
+        <views:AlertBannerHost Grid.Column="1" Grid.Row="1"
+                         x:Name="AlertBanner"
+                         VerticalAlignment="Top"
+                         Panel.ZIndex="10"/>
 
         <!-- Playlist Panel -->
         <local:PlaylistPanel Grid.Column="1" Grid.Row="2"

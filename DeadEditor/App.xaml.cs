@@ -17,6 +17,12 @@ public partial class App : System.Windows.Application
     public static AudioPlayerService PlaybackService => AudioPlayerService.Instance;
 
     /// <summary>
+    /// Static accessor for the shell-wide alert service (in-window banner; confirm host lands in a
+    /// later increment). Mirrors <see cref="PlaybackService"/> — one instance reachable from any view.
+    /// </summary>
+    public static IAlertService Alerts => AlertService.Instance;
+
+    /// <summary>
     /// Flag indicating whether the application is shutting down.
     /// Set to true in OnExit before cleanup.
     /// Used by child windows to distinguish app shutdown from user clicking X.

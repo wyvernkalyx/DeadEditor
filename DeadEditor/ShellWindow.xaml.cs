@@ -38,6 +38,11 @@ namespace DeadEditor
         {
             InitializeComponent();
 
+            // Wire the in-window alert banner as the shell-wide alert surface (alert-system-spec.md
+            // Ruling 1). The shell is the single window created at startup, so the sink is attached
+            // before any view can call App.Alerts.Notify.
+            AlertService.Instance.RegisterSink(AlertBanner);
+
             _settings = LibrarySettings.Load();
             _navigationService = new NavigationService();
 

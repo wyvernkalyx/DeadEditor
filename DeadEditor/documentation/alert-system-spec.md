@@ -60,9 +60,13 @@ the screen. The audio startle is a distinct pain from the visual inconsistency.
 The **30 fire-and-forget notification sites** (OK-only; code does not branch on the result) convert to
 a **banner strip anchored at the top of the content area inside `ShellWindow`**:
 - Color-coded by severity (info / warn / error).
-- Auto-dismiss after a timeout, with a manual close (✕).
-- **Silent** and **never steals focus** — it is passive chrome above the active view.
-- **Queued** if multiple notifications fire — banners stack/sequence rather than overwrite.
+- **Severity-dependent dismissal** (refined in slice 1): **Info auto-dismisses** after ~5s (manual
+  close ✕ also available); **Warning and Error persist** until manually closed — a refusal or error
+  must be read, never timed out from under the user.
+- **Silent** and **never steals focus** — it is passive chrome above the active view; showing a banner
+  never calls `Focus()`.
+- **Queued** if multiple notifications fire — **one visible at a time**, the next surfaces on dismiss
+  (FIFO). The queue + dismissal policy is the pure, tested `Services/AlertQueue`.
 
 ### Ruling 2 — Bucket B (blocking decisions) → in-window modal dialog host
 The **14 blocking-decision sites** (Yes/No, OK/Cancel, Yes/No/Cancel; code branches on the answer)
@@ -257,7 +261,18 @@ clear the gate — a human clears the manual WPF gate before each commit.
    the alert entry here as the authoritative inventory and banking two cleanup items (delete
    `LibraryBrowserWindow.xaml.cs.bak`; fix the stale `01-main-window.md:281` MessageBox reference).
    Docs-only.
-2. _(future)_ Increment 1 — `IAlertService` + banner + EditSetlistView cluster.
+2. **[Implemented — pending WPF gate]** Increment 1 — `IAlertService.Notify` + the in-window banner
+   surface + the EditSetlistView validation cluster. New: `Services/IAlertService.cs` (`AlertSeverity`,
+   `AlertItem`, `IAlertService` with `Notify` only — `ConfirmAsync` deferred to increment 3, not
+   stubbed), `Services/AlertQueue.cs` (pure FIFO queue + severity dismissal policy), `Services/AlertService.cs`
+   (shell-wide singleton mirroring `AudioPlayerService.Instance`, reached via `App.Alerts`),
+   `Views/AlertBannerHost.xaml(.cs)` (`IAlertSink` banner, overlaid at the top of the content cell in
+   `ShellWindow`, registered by the shell at construction). Converted sites **#28** (invalid date),
+   **#29** (duplicate-date refusal), **#30** (empty setlist) in `EditSetlistView.SaveChangesAsync` from
+   `MessageBox.Show(..., Warning)` to `App.Alerts.Notify(..., AlertSeverity.Warning, title)` — control
+   flow unchanged (each still returns/aborts the save). Sites #31/#32 in the same file left for later
+   increments. Tests: 9 `AlertQueueTests` (baseline **346 → 355**). Build clean (51 unique warnings,
+   zero from new files). **Manual WPF gate is Gregg's, separate.**
 3. _(future)_ Increment 2 — bucket-A sweep.
 4. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
 5. _(future)_ Increment 4 — bucket-B sweep.
