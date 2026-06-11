@@ -195,9 +195,9 @@ namespace DeadEditor
             if (badTracks.Count > 0)
             {
                 var rows = string.Join(", ", badTracks.Select(t => $"#{t.TrackNumber}"));
-                MessageBox.Show(
+                App.Alerts.Notify(
                     $"Track date(s) must be in yyyy-MM-dd format (leave blank if unknown).\n\nFix track(s): {rows}",
-                    "Invalid Track Date", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    AlertSeverity.Warning, "Invalid Track Date");
                 if (_currentStep != 2) ShowStep(2);
                 return;
             }
@@ -250,10 +250,9 @@ namespace DeadEditor
             }
             catch (Exception ex)
             {
-                // Pattern from EditSetlistView.xaml.cs:296-300 — surface as MessageBox,
+                // Pattern from EditSetlistView.xaml.cs — surface via App.Alerts.Notify,
                 // do not raise Completed.
-                MessageBox.Show($"Error saving box set:\n\n{ex.Message}", "Save Failed",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Alerts.Notify($"Error saving box set:\n\n{ex.Message}", AlertSeverity.Error, "Save Failed");
                 return;
             }
 
@@ -563,16 +562,14 @@ namespace DeadEditor
 
             if (!DateRegex.IsMatch(date))
             {
-                MessageBox.Show("Enter a date as yyyy-MM-dd.", "Invalid Date",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                App.Alerts.Notify("Enter a date as yyyy-MM-dd.", AlertSeverity.Warning, "Invalid Date");
                 return;
             }
 
             var sets = ShowLookupService.Instance.GetSetlist(date);
             if (sets == null)
             {
-                MessageBox.Show($"No setlist found for {date}.", "No Setlist",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                App.Alerts.Notify($"No setlist found for {date}.", AlertSeverity.Info, "No Setlist");
                 return;
             }
 

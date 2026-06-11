@@ -139,10 +139,10 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 14 | `UnmatchedSongsDialog.xaml.cs:126` | Apply corrections failed | Error / OK | A |
 | 15 | `Views/AlbumDetailView.xaml.cs:730` | Confirm delete track → Recycle Bin | Warning / OKCancel | B |
 | 16 | `Views/AlbumDetailView.xaml.cs:747` | Could not delete file — **converted (inc 3)** | Error / OK | A |
-| 17 | `Views/BoxSetWizardView.xaml.cs:198` | Invalid track date(s) on save | Warning / OK | A |
-| 18 | `Views/BoxSetWizardView.xaml.cs:255` | Box set save failed | Error / OK | A |
-| 19 | `Views/BoxSetWizardView.xaml.cs:566` | Pull: invalid date entry | Warning / OK | A |
-| 20 | `Views/BoxSetWizardView.xaml.cs:574` | Pull: no setlist for date | Information / OK | A |
+| 17 | `Views/BoxSetWizardView.xaml.cs:198` | Invalid track date(s) on save — **converted (inc 4)** | Warning / OK | A |
+| 18 | `Views/BoxSetWizardView.xaml.cs:255` | Box set save failed — **converted (inc 4)** | Error / OK | A |
+| 19 | `Views/BoxSetWizardView.xaml.cs:566` | Pull: invalid date entry — **converted (inc 4)** | Warning / OK | A |
+| 20 | `Views/BoxSetWizardView.xaml.cs:574` | Pull: no setlist for date — **converted (inc 4, first Info)** | Information / OK | A |
 | 21 | `Views/BoxSetWizardView.xaml.cs:666` | Confirm remove all tracks for date | Warning / YesNo | B |
 | 22 | `Views/EditMetadataView.xaml.cs:469` | Manifest sidecar write failed | Warning / OK | A |
 | 23 | `Views/EditMetadataView.xaml.cs:976` | Album type changed (move-files notice) | Information / OK | A |
@@ -320,8 +320,18 @@ clear the gate — a human clears the manual WPF gate before each commit.
    #22/#23/#25/#26/#27, #32, #34 left as-is). `using MessageBox` aliases retained (those files still
    host unconverted sites) to minimize diff. No new tests (baseline holds at **355**); build clean (51
    unique warnings). **Manual WPF gate is Gregg's, separate.**
-5. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
-6. _(future)_ Increment 4 — bucket-B sweep.
-7. _(future)_ Increment 5 — bucket-C scrollable read panel.
+5. **[Implemented — pending WPF gate]** Bucket-A sweep, batch 3 — `BoxSetWizardView` cluster (the
+   "increment 4" work session). Converted four sites to `App.Alerts.Notify`, surface only (abort/return
+   flows unchanged): **#17** (invalid track date(s) on save, Warning), **#18** (box set save failed,
+   Error — full exception detail preserved), **#19** (pull: invalid date entry, Warning), **#20**
+   (pull: no setlist for date, **Info — the first Info-severity conversion**, which exercises the ~5s
+   auto-dismiss path live for the first time). Severities map 1:1 from the code's existing
+   `MessageBoxImage` (Warning/Error/Warning/Information). Untouched: #21 (Yes/No remove-all-tracks
+   confirm) and the `PullCollisionDialog` interaction; `using MessageBox` alias retained (file still
+   hosts #21). No new tests (baseline holds at **355**); build clean (51 unique warnings). **Manual WPF
+   gate is Gregg's, separate.**
+6. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
+7. _(future)_ Increment 4 — bucket-B sweep.
+8. _(future)_ Increment 5 — bucket-C scrollable read panel.
 
 Status flips to **Implemented** at close-out once the sweep lands.
