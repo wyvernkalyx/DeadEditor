@@ -605,9 +605,9 @@ namespace DeadEditor
             if (existing == null)
             {
                 NavigateToBoxSets(); // re-read from disk; drops the stale row
-                System.Windows.MessageBox.Show(
+                App.Alerts.Notify(
                     "This box set could not be found; the list has been refreshed.",
-                    "Box Set Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+                    AlertSeverity.Info, "Box Set Not Found");
                 return;
             }
 

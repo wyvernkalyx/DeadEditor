@@ -67,6 +67,13 @@ a **banner strip anchored at the top of the content area inside `ShellWindow`**:
   never calls `Focus()`.
 - **Queued** if multiple notifications fire — **one visible at a time**, the next surfaces on dismiss
   (FIFO). The queue + dismissal policy is the pure, tested `Services/AlertQueue`.
+- **Severity follows what the content requires, not the legacy `MessageBoxImage`.** An **actionable
+  advisory** — anything that asks the user to do something or that they must read — maps to **Warning**
+  so it **persists**, even if the old dialog used the Information icon. Reserve **Info** (auto-dismiss)
+  for transient "done"/FYI confirmations the user need not act on. Gate finding (2026-06-11): site #23
+  ("Album Type Changed", old icon Information) auto-dismissed before its *"you may need to move the
+  folder"* advisory could be read, because it fires simultaneously with `GoBack` navigation — so it was
+  **remapped Info → Warning**.
 
 ### Ruling 2 — Bucket B (blocking decisions) → in-window modal dialog host
 The **14 blocking-decision sites** (Yes/No, OK/Cancel, Yes/No/Cancel; code branches on the answer)
@@ -126,7 +133,7 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 1 | `ShellWindow.xaml.cs:344` | Confirm delete album → Recycle Bin | Warning / YesNo | B |
 | 2 | `ShellWindow.xaml.cs:376` | Album delete failed — **converted (inc 3)** | Error / OK | A |
 | 3 | `ShellWindow.xaml.cs:423` | Leave Import with unimported tracks | Question / YesNo | B |
-| 4 | `ShellWindow.xaml.cs:607` | Box set gone since list loaded | Information / OK | A |
+| 4 | `ShellWindow.xaml.cs:607` | Box set gone since list loaded — **converted (inc 5)** | Information / OK | A |
 | 5 | `ShellWindow.xaml.cs:770` | Confirm delete concert JSON | Warning / YesNo | B |
 | 6 | `ShellWindow.xaml.cs:800` | Concert delete failed — **converted (inc 3)** | Error / OK | A |
 | 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) | Warning / OK | A |
@@ -144,11 +151,11 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 19 | `Views/BoxSetWizardView.xaml.cs:566` | Pull: invalid date entry — **converted (inc 4)** | Warning / OK | A |
 | 20 | `Views/BoxSetWizardView.xaml.cs:574` | Pull: no setlist for date — **converted (inc 4, first Info)** | Information / OK | A |
 | 21 | `Views/BoxSetWizardView.xaml.cs:666` | Confirm remove all tracks for date | Warning / YesNo | B |
-| 22 | `Views/EditMetadataView.xaml.cs:469` | Manifest sidecar write failed | Warning / OK | A |
-| 23 | `Views/EditMetadataView.xaml.cs:976` | Album type changed (move-files notice) | Information / OK | A |
+| 22 | `Views/EditMetadataView.xaml.cs:469` | Manifest sidecar write failed — **converted (inc 5)** | Warning / OK | A |
+| 23 | `Views/EditMetadataView.xaml.cs:976` | Album type changed (move-files notice) — **converted (inc 5), Warning** (remapped from the original Information icon per gate finding: it is an actionable advisory and must persist) | Information / OK | A |
 | 24 | `Views/EditMetadataView.xaml.cs:994` | Save changes failed — **converted (inc 3)** | Error / OK | A |
 | 25 | `Views/EditMetadataView.xaml.cs:1007` | Cancel with unsaved changes | Question / YesNo | B |
-| 26 | `Views/EditMetadataView.xaml.cs:1317` | Cannot verify — required fields missing | Warning / OK | A |
+| 26 | `Views/EditMetadataView.xaml.cs:1317` | Cannot verify — required fields missing — **converted (inc 5)** | Warning / OK | A |
 | 27 | `Views/EditMetadataView.xaml.cs:1703` | Existing MBID — refresh / search / cancel | Question / YesNoCancel | B |
 | 28 | `Views/EditSetlistView.xaml.cs:244` | Invalid date format on save — **converted (slice 1)** | Warning / OK | A |
 | 29 | `Views/EditSetlistView.xaml.cs:261` | **Duplicate-date refusal (commit `a6a652b`)** — **converted (slice 1)** | Warning / OK | A |
@@ -163,8 +170,8 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 38 | `Views/ReleasesView.xaml.cs:419` | Duplicate release name — **converted (inc 2)** | Warning / OK | A |
 | 39 | `Views/SettingsView.xaml.cs:135` | Confirm re-enrich library | Question / YesNo | B |
 | 40 | `Views/SettingsView.xaml.cs:346` | Confirm reset library data | Warning / YesNo | B |
-| 41 | `Views/SettingsView.xaml.cs:393` | Reset complete | Information / OK | A |
-| 42 | `Views/SettingsView.xaml.cs:404` | Reset error | Error / OK | A |
+| 41 | `Views/SettingsView.xaml.cs:393` | Reset complete — **converted (inc 5)** | Information / OK | A |
+| 42 | `Views/SettingsView.xaml.cs:404` | Reset error — **converted (inc 5)** | Error / OK | A |
 | 43 | `Views/SongsView.xaml.cs:227` | Duplicate song name (rename) — **converted (inc 2)** | Warning / OK | A |
 | 44 | `Views/SongsView.xaml.cs:262` | Confirm remove song | Question / YesNo | B |
 | 45 | `Views/SongsView.xaml.cs:327` | Duplicate song name (add) — **converted (inc 2)** | Warning / OK | A |
@@ -330,8 +337,32 @@ clear the gate — a human clears the manual WPF gate before each commit.
    confirm) and the `PullCollisionDialog` interaction; `using MessageBox` alias retained (file still
    hosts #21). No new tests (baseline holds at **355**); build clean (51 unique warnings). **Manual WPF
    gate is Gregg's, separate.**
-6. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
-7. _(future)_ Increment 4 — bucket-B sweep.
-8. _(future)_ Increment 5 — bucket-C scrollable read panel.
+6. **[Implemented — pending WPF gate]** Bucket-A sweep, batch 4 — final shell-hosted sites (the
+   "increment 5" work session). Converted six sites to `App.Alerts.Notify`, surface only (flows
+   unchanged): **#4** (`ShellWindow` box set gone since list loaded, Info), **#22** (`EditMetadataView`
+   manifest sidecar write failed, Warning), **#23** (`EditMetadataView` album-type-changed move-files
+   notice, **Warning** — see remap below), **#26** (`EditMetadataView` cannot verify — required fields
+   missing, Warning), **#41** (`SettingsView` reset complete, Info), **#42** (`SettingsView` reset
+   error, Error — full exception detail preserved). Severities map 1:1 from the code's existing
+   `MessageBoxImage` except #23 (see below).
+   **#23 + #4 blocking-dependency check:** both clear — #4's `MessageBox` fired *after*
+   `NavigateToBoxSets()` already refreshed the list (only a bare `return` follows), and #23 moves **no
+   files** (it advises the user to move the folder manually); the sole post-notice code is the
+   unconditional `_shell.Navigation.GoBack()`, which does not depend on acknowledgment. So both are
+   pure surface swaps — neither is a sequencing question.
+   **#23 severity remap (gate finding 2026-06-11):** initially converted to Info (matching the old
+   Information icon), but the banner auto-dismissed before the *"you may need to move the folder"*
+   advisory could be read, because it fires simultaneously with the `GoBack` navigation. Remapped
+   **Info → Warning** so it persists until closed — see the severity-follows-content principle in
+   Ruling 1.
+   Untouched: #25/#27 (EditMetadataView decisions), #39/#40 (SettingsView confirms), #1/#3/#5
+   (ShellWindow confirms); all three files still host those `MessageBox` sites, so no aliases removed.
+   No new tests (baseline holds at **355**); build clean (51 unique warnings).
+   **This completes the bucket-A conversions for all shell-hosted views** — every remaining bucket-A
+   site (#7–#14, minus orphaned #9) lives in a modal `ShowDialog()` window and is handled per Ruling 6
+   in a later increment. **Manual WPF gate is Gregg's, separate.**
+7. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
+8. _(future)_ Increment 4 — bucket-B sweep.
+9. _(future)_ Increment 5 — bucket-C scrollable read panel.
 
 Status flips to **Implemented** at close-out once the sweep lands.

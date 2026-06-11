@@ -390,22 +390,20 @@ namespace DeadEditor
                 // leaving the cached grid stale until an app restart.
                 (Window.GetWindow(this) as ShellWindow)?.ReloadLibrary();
 
-                System.Windows.MessageBox.Show(
+                App.Alerts.Notify(
                     $"Successfully reset library data!\n\n" +
                     $"\u2022 {deletedItems} items moved to Recycle Bin\n" +
                     $"\u2022 Your settings and paths have been preserved\n\n" +
                     $"You can restore files from the Recycle Bin if needed.",
-                    "Reset Complete",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    AlertSeverity.Info,
+                    "Reset Complete");
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show(
+                App.Alerts.Notify(
                     $"Error resetting data: {ex.Message}",
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    AlertSeverity.Error,
+                    "Error");
             }
         }
     }

@@ -466,11 +466,10 @@ namespace DeadEditor
             catch (Exception ex)
             {
                 Debug.WriteLine($"[MANIFEST] Write failed for {folder}: {ex}");
-                System.Windows.MessageBox.Show(
+                App.Alerts.Notify(
                     $"Tag changes were saved, but the manifest sidecar could not be written:\n\n{ex.Message}\n\nSave again to retry the manifest write.",
-                    "Manifest write failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                    AlertSeverity.Warning,
+                    "Manifest write failed");
             }
         }
 
@@ -973,15 +972,14 @@ namespace DeadEditor
                 {
                     var newTypeName = _albumInfo.Type == AlbumType.OfficialRelease
                         ? "Official Release" : "Audience Recording";
-                    System.Windows.MessageBox.Show(
+                    App.Alerts.Notify(
                         $"Album type changed to {newTypeName}.\n\n" +
                         "The tags have been updated, but the files remain in their current folder. " +
                         "You may need to move the folder to your " +
                         (_albumInfo.Type == AlbumType.OfficialRelease ? "Official Releases" : "Library Root") +
                         " path for correct library organization.",
-                        "Album Type Changed",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                        AlertSeverity.Warning,
+                        "Album Type Changed");
                 }
 
                 // Navigate back to album detail
@@ -1313,11 +1311,10 @@ namespace DeadEditor
 
             if (missing.Count > 0)
             {
-                System.Windows.MessageBox.Show(
+                App.Alerts.Notify(
                     $"Cannot verify — the following fields are required:\n\n• {string.Join("\n• ", missing)}",
-                    "Required fields missing",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                    AlertSeverity.Warning,
+                    "Required fields missing");
                 return;
             }
 
