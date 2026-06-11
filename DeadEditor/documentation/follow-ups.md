@@ -9,11 +9,21 @@ this is a reference list, not a narrative.
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
 ### In-app alert system (replace native MessageBox dialogs)
-- **What:** The app uses native Windows `MessageBox` dialogs for the unsaved-changes prompt, delete confirmations, save-error reports, the setlist-editor save validations (invalid date, empty setlist), and now the duplicate-date refusal. These break visual consistency with the dark in-app UI and cannot be styled or positioned.
-- **The sound, not just the dialog:** the `MessageBoxImage.Warning` icon plays the Windows warning chime. Gregg (2026-06-10): the **system alert sound interrupts his state of mind** as much as the dialog interrupts the screen — the audio startle is a distinct pain point from the visual inconsistency. Any in-app replacement should be **silent or use a non-startling cue**, not just a re-skinned modal that still chimes.
-- **Call-site inventory this will sweep (grows as features land):** unsaved-changes prompt, delete confirmations, save-error reports; `EditSetlistView.SaveChangesAsync` invalid-date + empty-setlist validations; and the duplicate-date refusal added in commit `a6a652b` (`EditSetlistView.SaveChangesAsync`, `MessageBoxImage.Warning`).
-- **Proposed fix:** Replace them with an in-app alert/dialog surface for visual consistency and control — silent (or softly cued) by default.
-- **Surfaced:** Preference surfaced 2026-06-10; second lived-demand data point the **same day** during the Add Concert duplicate-date gate (the refusal chime, hit repeatedly while exercising collisions, is what surfaced the sound detail).
+- **Authoritative spec + inventory:** [alert-system-spec.md](alert-system-spec.md) (Status: Proposed). That spec's 45-site table is now the authoritative MessageBox inventory and supersedes the partial list this entry used to carry; the binding rulings (banner for notifications, in-window confirm host for decisions, no third-party packages, A/B never interleaved) and the five-increment rollout live there.
+- **What:** The app uses native Windows `MessageBox` dialogs for the unsaved-changes prompt, delete confirmations, save-error reports, the setlist-editor save validations (invalid date, empty setlist), the duplicate-date refusal, and ~40 more sites. These break visual consistency with the dark in-app UI, steal focus, and cannot be styled or positioned.
+- **The sound, not just the dialog:** the `MessageBoxImage.Warning` icon plays the Windows warning chime (~18 sites). Gregg (2026-06-10): the **system alert sound interrupts his state of mind** as much as the dialog interrupts the screen — the audio startle is a distinct pain point from the visual inconsistency. The replacement is **silent by construction** (in-window WPF never calls `MessageBeep`); a non-startling cue would be an opt-in future addition.
+- **Scope:** 45 live sites across 15 files (30 fire-and-forget notifications, 14 blocking decisions, 1 info-file viewer). Slice 1 converts the `EditSetlistView` validation cluster led by the duplicate-date refusal (`a6a652b`) that surfaced the sound complaint. See the spec for the full table and rollout.
+- **Surfaced:** Preference surfaced 2026-06-10; second lived-demand data point the **same day** during the Add Concert duplicate-date gate (the refusal chime, hit repeatedly while exercising collisions, is what surfaced the sound detail). Spec written 2026-06-11.
+
+### Delete `LibraryBrowserWindow.xaml.cs.bak` (dead file)
+- **What:** `DeadEditor/LibraryBrowserWindow.xaml.cs.bak` is a backup of a window the shell redesign already deleted ([18-shell-redesign-spec.md](18-shell-redesign-spec.md) § Removed Components). It carries 4 phantom `MessageBox.Show` sites that pollute alert-inventory greps but are unreachable dead code.
+- **Proposed fix:** Delete the `.bak` file. Trivial, no code impact.
+- **Surfaced:** Alert-system inventory (2026-06-11).
+
+### Fix stale MainWindow MessageBox reference in `01-main-window.md`
+- **What:** [01-main-window.md:281](01-main-window.md) documents a deprecated "Settings menu item" `MessageBox.Show(...)` in `MainWindow` (marked "Partial (deprecated, should be removed)"). `MainWindow.xaml.cs` no longer exists — the shell redesign removed it — so the reference describes nonexistent code.
+- **Proposed fix:** Update or drop that doc row so the inventory reflects reality. Documentation-only.
+- **Surfaced:** Alert-system inventory (2026-06-11).
 
 ### Cold-start concert load (~17s cold, ~0.6s warm)
 - **What:** The first `ConcertLookupService` load after a reboot/cache flush took **16,758ms** for 2,293 files; the immediate second run took **583ms** (measured 2026-06-10). Steady-state is fine — this is **NOT** a reopening of the closed Settings-perf item.
