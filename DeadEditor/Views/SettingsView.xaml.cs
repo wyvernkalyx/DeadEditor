@@ -132,14 +132,16 @@ namespace DeadEditor
 
         private async void ReenrichButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = System.Windows.MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #39). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> re-enrich; No/Esc (false) -> return. The old
+            // call passed an explicit MessageBoxResult.No default, so defaultToConfirm:false focuses
+            // the safe "No" button (Enter = No) — parity preserved.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 "This will update FLAC/MP3 venue, city, and state tags in your library using shows.json as the authoritative source.\n\nProceed?",
                 "Re-enrich Library?",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question,
-                MessageBoxResult.No);
+                defaultToConfirm: false);
 
-            if (result != MessageBoxResult.Yes)
+            if (!confirmed)
                 return;
 
             ReenrichButton.IsEnabled = false;
@@ -341,19 +343,22 @@ namespace DeadEditor
 
         // ===== DATA MANAGEMENT =====
 
-        private void ResetDataButton_Click(object sender, RoutedEventArgs e)
+        private async void ResetDataButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = System.Windows.MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #40). Branch mapping preserved from the old
+            // YesNo/Warning MessageBox: Yes (true) -> reset; No/Esc (false) -> return. The old call
+            // passed an explicit MessageBoxResult.No default (important for a destructive library
+            // wipe), so defaultToConfirm:false focuses the safe "No" button (Enter = No) \u2014 parity
+            // preserved. Event handler, so async void carries no call-site ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 "This will remove all imported library data:\n\n" +
                 "\u2022 Move all library files to the Recycle Bin\n\n" +
                 "Your settings, paths, and configuration will NOT be affected.\n\n" +
                 "Continue?",
                 "Reset Library Data?",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning,
-                MessageBoxResult.No);
+                defaultToConfirm: false);
 
-            if (result != MessageBoxResult.Yes)
+            if (!confirmed)
                 return;
 
             try

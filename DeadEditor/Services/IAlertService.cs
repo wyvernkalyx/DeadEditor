@@ -20,6 +20,20 @@ namespace DeadEditor.Services
     public sealed record AlertItem(string Message, AlertSeverity Severity, string? Title);
 
     /// <summary>
+    /// Tri-state result of the three-way confirm host (alert-system-spec.md Ruling 2). Role-named
+    /// (not Yes/No/Cancel) because the buttons carry caller-supplied labels: <see cref="Confirm"/> is
+    /// the primary/affirmative button, <see cref="Decline"/> the secondary alternative, and
+    /// <see cref="Cancel"/> the abort (Esc maps here). The names mirror the two-way path's
+    /// <c>confirmLabel</c>/<c>cancelLabel</c> vocabulary rather than presuming button text.
+    /// </summary>
+    public enum ConfirmResult
+    {
+        Confirm,
+        Decline,
+        Cancel
+    }
+
+    /// <summary>
     /// Shell-wide alert surface (alert-system-spec.md). Slice 1 implements <see cref="Notify"/>
     /// only — the silent in-window banner for bucket-A fire-and-forget notifications.
     /// <c>ConfirmAsync</c> (bucket B) is added in increment 3, not stubbed here.
@@ -39,12 +53,14 @@ namespace DeadEditor.Services
         /// system chime. Returns the user's decision via a <see cref="TaskCompletionSource{TResult}"/>
         /// so the await resumes on the UI thread, fitting the existing async save/cancel paths.
         /// <para>
-        /// Two-way only (Yes/No or OK/Cancel) — <c>true</c> = the affirmative button
+        /// Two-way (Yes/No or OK/Cancel) — <c>true</c> = the affirmative button
         /// (<paramref name="confirmLabel"/>) was chosen; <c>false</c> = the negative/safe button
-        /// (<paramref name="cancelLabel"/>) OR Esc. The three-way (Yes/No/Cancel) overload and the
-        /// <c>ConfirmResult</c> enum are deferred to the increment that converts site #27 (the sole
-        /// YesNoCancel site, bucket-B sweep) — they are not trivially shared with this two-way path
-        /// (a third button + tri-state result), and the spec forbids stubbed NotImplemented members.
+        /// (<paramref name="cancelLabel"/>) OR Esc. <paramref name="defaultToConfirm"/> controls which
+        /// button is focused/default (the one Enter activates): <c>true</c> (the default) focuses
+        /// Confirm; pass <c>false</c> to focus the negative button, preserving a site that deliberately
+        /// defaulted to the safe answer (a Win32 <c>MessageBox</c> with an explicit
+        /// <c>MessageBoxResult.No</c> default — e.g. the destructive reset/re-enrich/start-fresh
+        /// confirms). Esc always resolves <c>false</c> regardless.
         /// </para>
         /// <remarks>
         /// Re-entrancy: calling this while a confirm is already showing throws
@@ -54,7 +70,20 @@ namespace DeadEditor.Services
         /// </remarks>
         /// </summary>
         Task<bool> ConfirmAsync(string message, string title,
-                                string confirmLabel = "Yes", string cancelLabel = "No");
+                                string confirmLabel = "Yes", string cancelLabel = "No",
+                                bool defaultToConfirm = true);
+
+        /// <summary>
+        /// Three-way blocking confirm (alert-system-spec.md Ruling 2): a dimmed card with three
+        /// buttons. Returns <see cref="ConfirmResult.Confirm"/> for <paramref name="confirmLabel"/>,
+        /// <see cref="ConfirmResult.Decline"/> for <paramref name="declineLabel"/>, and
+        /// <see cref="ConfirmResult.Cancel"/> for <paramref name="cancelLabel"/>. The default/focused
+        /// button is Confirm (Enter); <b>Esc resolves Cancel</b> — the tri-state safe answer (mirrors
+        /// a Win32 YesNoCancel box, whose Esc closes to Cancel). Same scrim/card/TCS plumbing and
+        /// re-entrancy rule as the two-way path. Must be called on the UI thread.
+        /// </summary>
+        Task<ConfirmResult> ConfirmAsync(string message, string title,
+                                         string confirmLabel, string declineLabel, string cancelLabel);
     }
 
     /// <summary>
@@ -76,6 +105,10 @@ namespace DeadEditor.Services
     /// </summary>
     public interface IConfirmHost
     {
-        Task<bool> ConfirmAsync(string message, string title, string confirmLabel, string cancelLabel);
+        Task<bool> ConfirmAsync(string message, string title, string confirmLabel, string cancelLabel,
+                                bool defaultToConfirm = true);
+
+        Task<ConfirmResult> ConfirmAsync(string message, string title,
+                                         string confirmLabel, string declineLabel, string cancelLabel);
     }
 }

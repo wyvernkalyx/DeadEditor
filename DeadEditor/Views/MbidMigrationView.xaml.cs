@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Color = System.Windows.Media.Color;
-using MessageBox = System.Windows.MessageBox;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace DeadEditor.Views
@@ -75,14 +74,19 @@ namespace DeadEditor.Views
             StartMigration(resume: true);
         }
 
-        private void StartFreshButton_Click(object sender, RoutedEventArgs e)
+        private async void StartFreshButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #34). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> discard state + start fresh; No/Esc (false) ->
+            // return. The old call passed an explicit MessageBoxResult.No default, so
+            // defaultToConfirm:false focuses the safe "No" button (Enter = No) — parity preserved.
+            // Event handler, so async void carries no call-site ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 "This will discard the previous migration state and start over.\n\nContinue?",
                 "Start Fresh?",
-                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+                defaultToConfirm: false);
 
-            if (result != MessageBoxResult.Yes) return;
+            if (!confirmed) return;
 
             MbidMigrationService.DeleteState();
             _existingState = null;

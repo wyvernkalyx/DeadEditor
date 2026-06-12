@@ -97,15 +97,22 @@ landed with the following rulings:
   captures all mouse input; keyboard is gated by the shell (below).
 - **Focus ownership — the deliberate contrast with the banner.** The banner is passive chrome that
   **never calls `Focus()`** (it must not steal focus from the active control). The confirm card is the
-  opposite **by design**: it **takes keyboard focus** (the Confirm button is focused on show), because
-  a blocking decision is the one surface that *should* own focus until answered. This contrast is
-  intentional, not an inconsistency.
+  opposite **by design**: it **takes keyboard focus** (the **default button** is focused on show),
+  because a blocking decision is the one surface that *should* own focus until answered. This contrast
+  is intentional, not an inconsistency. The default button is Confirm except on the two-way
+  `defaultToConfirm:false` path, where it is the negative/safe button (increment 8).
+- **Accent follows the default button.** The accent (filled, primary) style is applied **to whichever
+  button is the default** — the same button that takes focus — so the visual highlight always matches
+  the Enter target. Both derive from one `defaultButton` reference in `ConfirmHost.Show`
+  (`ApplyDefaultButtonStyling`); they cannot diverge by construction. (Increment-8 gate fix
+  2026-06-12: the accent was previously hardcoded to Confirm, so a `defaultToConfirm:false` card showed
+  Yes highlighted while Enter pressed No.)
 - **Keyboard (Esc/Enter).** Handled in `ShellWindow_PreviewKeyDown` while `ConfirmHost.IsShowing`
   (the Window's tunnelling preview fires before the card's own elements): **Enter** → the
-  focused/default **Confirm** button (resolves `true`); **Esc** → the **safe/negative** answer
-  (resolves `false`, identical to the Cancel/No button). Every other key is **swallowed**
-  (`e.Handled = true`) so no shell shortcut (Space = play/pause, Ctrl+F, Delete, the shell's own
-  Esc = GoBack) leaks behind the scrim.
+  focused/**default** button (Confirm on the standard path; the negative button when
+  `defaultToConfirm:false`); **Esc** → the **safe answer** (two-way: `false` / the Cancel-or-No button;
+  three-way: `Cancel`). Every other key is **swallowed** (`e.Handled = true`) so no shell shortcut
+  (Space = play/pause, Ctrl+F, Delete, the shell's own Esc = GoBack) leaks behind the scrim.
 - **Esc = negative is a deliberate, uniform improvement.** A Win32 **YesNo** `MessageBox` has **no
   Esc-close** (Esc does nothing without a Cancel button). All three converted sites (#3/#25/#32) were
   YesNo, so the new surface **adds** Esc = No (stay / keep editing — the safe answer). This is recorded
@@ -201,20 +208,20 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 24 | `Views/EditMetadataView.xaml.cs:994` | Save changes failed — **converted (inc 3)** | Error / OK | A |
 | 25 | `Views/EditMetadataView.xaml.cs:1007` | Cancel with unsaved changes — **converted (inc 6)** | Question / YesNo | B |
 | 26 | `Views/EditMetadataView.xaml.cs:1317` | Cannot verify — required fields missing — **converted (inc 5)** | Warning / OK | A |
-| 27 | `Views/EditMetadataView.xaml.cs:1703` | Existing MBID — refresh / search / cancel | Question / YesNoCancel | B |
+| 27 | `Views/EditMetadataView.xaml.cs:1703` | Existing MBID — refresh / search / cancel — **converted (inc 8, three-way)** | Question / YesNoCancel | B |
 | 28 | `Views/EditSetlistView.xaml.cs:244` | Invalid date format on save — **converted (slice 1)** | Warning / OK | A |
 | 29 | `Views/EditSetlistView.xaml.cs:261` | **Duplicate-date refusal (commit `a6a652b`)** — **converted (slice 1)** | Warning / OK | A |
 | 30 | `Views/EditSetlistView.xaml.cs:271` | Empty setlist on save — **converted (slice 1)** | Warning / OK | A |
 | 31 | `Views/EditSetlistView.xaml.cs:359` | Setlist save failed — **converted (inc 3)** | Error / OK | A |
 | 32 | `Views/EditSetlistView.xaml.cs:369` | Cancel with unsaved changes — **converted (inc 6)** | Question / YesNo | B |
 | 33 | `Views/ImportView.xaml.cs:1577` | Display info `.txt` file content | Information / OK | C |
-| 34 | `Views/MbidMigrationView.xaml.cs:80` | Confirm start migration fresh | Question / YesNo | B |
+| 34 | `Views/MbidMigrationView.xaml.cs:80` | Confirm start migration fresh — **converted (inc 8)** | Question / YesNo | B |
 | 35 | `Views/MbidMigrationView.xaml.cs:130` | Migration error — **converted (inc 3)** | Error / OK | A |
 | 36 | `Views/ReleasesView.xaml.cs:326` | Confirm remove standalone release — **converted (inc 7)** | Question / YesNo | B |
 | 37 | `Views/ReleasesView.xaml.cs:359` | Confirm remove last volume — **converted (inc 7)** | Question / YesNo | B |
 | 38 | `Views/ReleasesView.xaml.cs:419` | Duplicate release name — **converted (inc 2)** | Warning / OK | A |
-| 39 | `Views/SettingsView.xaml.cs:135` | Confirm re-enrich library | Question / YesNo | B |
-| 40 | `Views/SettingsView.xaml.cs:346` | Confirm reset library data | Warning / YesNo | B |
+| 39 | `Views/SettingsView.xaml.cs:135` | Confirm re-enrich library — **converted (inc 8)** | Question / YesNo | B |
+| 40 | `Views/SettingsView.xaml.cs:346` | Confirm reset library data — **converted (inc 8)** | Warning / YesNo | B |
 | 41 | `Views/SettingsView.xaml.cs:393` | Reset complete — **converted (inc 5)** | Information / OK | A |
 | 42 | `Views/SettingsView.xaml.cs:404` | Reset error — **converted (inc 5)** | Error / OK | A |
 | 43 | `Views/SongsView.xaml.cs:227` | Duplicate song name (rename) — **converted (inc 2)** | Warning / OK | A |
@@ -265,23 +272,39 @@ public interface IAlertService
 
     // Bucket B — silent in-window dimmed confirm host; result via TaskCompletionSource.
     // Two-way (Yes/No, OK/Cancel) — IMPLEMENTED (increment 6). true = confirmLabel, false = cancelLabel/Esc.
+    // defaultToConfirm (added increment 8): false focuses the negative button (Enter = the safe
+    // answer), preserving sites that passed an explicit MessageBoxResult.No default.
     Task<bool> ConfirmAsync(string message, string title,
-                            string confirmLabel = "Yes", string cancelLabel = "No");
+                            string confirmLabel = "Yes", string cancelLabel = "No",
+                            bool defaultToConfirm = true);
 
-    // Three-way (Yes/No/Cancel) — DEFERRED to the #27 conversion (bucket-B sweep); not stubbed.
-    //   Task<ConfirmResult> ConfirmAsync(string message, string title,
-    //                                    string yesText, string noText, string cancelText);
+    // Three-way (Yes/No/Cancel) — IMPLEMENTED (increment 8). Confirm/Decline/Cancel; default button
+    // = Confirm (Enter); Esc = Cancel (the tri-state safe answer).
+    Task<ConfirmResult> ConfirmAsync(string message, string title,
+                                     string confirmLabel, string declineLabel, string cancelLabel);
 }
 
-// public enum ConfirmResult { Yes, No, Cancel }   // added with the three-way overload (deferred)
+public enum ConfirmResult { Confirm, Decline, Cancel }   // IMPLEMENTED (increment 8)
 ```
 
 > **Implementation note (increment 6).** The two-way signature shipped as
 > `ConfirmAsync(string message, string title, string confirmLabel = "Yes", string cancelLabel = "No")`
 > — the defaults were changed from the original `"OK"/"Cancel"` sketch to `"Yes"/"No"` to match the
-> three converted YesNo sites (#3/#25/#32). The three-way overload + `ConfirmResult` are deferred (not
-> stubbed) per Ruling 4; they land with #27. The host also exposes a parallel `IConfirmHost` interface
+> three converted YesNo sites (#3/#25/#32). The host also exposes a parallel `IConfirmHost` interface
 > (the view the service forwards to), mirroring the `IAlertSink` split for the banner.
+>
+> **Implementation note (increment 8).** The three-way overload + `ConfirmResult` shipped with the #27
+> conversion. The enum is **role-named `Confirm`/`Decline`/`Cancel`** (not the earlier `Yes`/`No`/`Cancel`
+> sketch) because the buttons carry caller-supplied labels — the names describe roles, not button text,
+> and align with the two-way `confirmLabel`/`cancelLabel` vocabulary. Three-way keyboard: **Enter =
+> default/focused button (Confirm); Esc = Cancel** (the tri-state safe answer, mirroring a Win32
+> YesNoCancel box's Esc-close). Both paths share one card/scrim/`TaskCompletionSource<ConfirmResult>`
+> and one re-entrancy guard — the two-way path hides the middle button and maps the tri-state result
+> down to a bool (`Confirm` → true, else false). The new `defaultToConfirm` flag (two-way) focuses the
+> negative button when `false`, **preserving the explicit `MessageBoxResult.No` defaults** three of the
+> four batch-2 sites carried (#34/#39/#40 — destructive start-fresh / re-enrich / reset). No pure logic
+> was extracted (the result/keyboard/default-button mappings are trivial 1:1 switches with no ordering
+> or policy, unlike the banner's `AlertQueue`) — justified skip, consistent with increment 6.
 
 **Proof-of-silence precedent.** `Views/PullCollisionDialog` is already a dark-themed WPF dialog
 (Replace / Append / Cancel) that passes **no `MessageBoxImage`** and therefore **chimes not at all** —
@@ -480,9 +503,54 @@ clear the gate — a human clears the manual WPF gate before each commit.
    (`SongsView.xaml.cs:190-192`); #15 = AlbumDetailView track-grid right-click
    (`TracksDataGrid_MouseRightButtonUp`) → "🗑  Delete Track" `MenuItem`
    (`AlbumDetailView.xaml.cs:718-720`).
-9. _(future)_ Increment 4 — bucket-B sweep, **batch 2**: #27 (existing-MBID refresh/search/cancel —
-   adds the three-way `ConfirmAsync` + `ConfirmResult`), #34 (start migration fresh), #39 (re-enrich
-   library), #40 (reset library data).
-10. _(future)_ Increment 5 — bucket-C scrollable read panel.
+9. **[Implemented — pending WPF gate]** Increment 4 — bucket-B sweep, **batch 2: remaining confirms +
+   the three-way** (the "increment 8" work session). **This completes bucket B.** Added the three-way
+   API (`ConfirmResult { Confirm, Decline, Cancel }`, the `Task<ConfirmResult> ConfirmAsync(message,
+   title, confirmLabel, declineLabel, cancelLabel)` overload on `IAlertService`/`IConfirmHost`/
+   `AlertService`, the `defaultToConfirm` flag on the two-way path, and a third button in `ConfirmHost`
+   shown only on the three-way path) — both paths share one card/scrim/`TaskCompletionSource<ConfirmResult>`
+   and the re-entrancy guard (see the increment-8 implementation note under § Service API). Converted
+   the four remaining bucket-B sites, **branch mapping preserved exactly**:
+   - **#27** (`EditMetadataView` existing-MBID, **three-way**): old `Yes` → `Confirm` → refresh from
+     existing MBID then return; old `No` → `Decline` → fall through to fingerprint/name search; old
+     `Cancel` → `Cancel` → abort (return). Cancel and No **differ** (that is why it is three-way) and
+     are preserved distinctly. Default = Confirm (the old first button, Yes); **Esc = Cancel** (the old
+     YesNoCancel box's Esc-close). Labels kept faithful as Yes/No/Cancel (the message body references
+     them). Containing handler `MusicBrainzButton_Click` already `async void` — no ripple.
+   - **#34** (`MbidMigrationView` start fresh), **#39** (`SettingsView` re-enrich), **#40**
+     (`SettingsView` reset library data): two-way, `Yes` (true) → action; `No`/Esc (false) → return.
+     #34/#40 handlers became `async void` (event handlers, no ripple); #39 was already `async void`.
+   **Default-button parity finding (contrast with batch 1):** unlike the increment-7 deletes,
+   **all three** of #34/#39/#40 passed an **explicit `MessageBoxResult.No` default** in the old call
+   (the 5-arg `MessageBox.Show` overload) — a deliberate safe-default on heavy/destructive actions
+   (notably #40, a library wipe). The task expected none; this is the finding. Preserved per Ruling 2
+   via **`defaultToConfirm: false`**, which focuses the negative "No" button so Enter takes the safe
+   answer — Enter-semantics unchanged. #27 used the 4-arg overload (default = first button), so its
+   default needed no override.
+   Alias removed: `MbidMigrationView` (#34 was its last `MessageBox` site). `SettingsView` and
+   `EditMetadataView` used fully-qualified `System.Windows.MessageBox` (no alias) and now host no
+   `MessageBox` code (only prose references remain in comments). No new tests (the result/keyboard/
+   default-button mappings are trivial 1:1, nothing to extract — justified skip per increment 6;
+   baseline holds at **355**); build clean (51 unique warnings).
+   **Bucket-B complete — remaining-site grep (2026-06-12):** a full `MessageBox.Show` sweep across the
+   app (excluding the dead `.bak`) now returns **exactly the 9 expected sites and no strays**: the eight
+   dialog-hosted bucket-A sites **#7/#8** (`AdvancedSearchDialog`), **#9** (`AlbumSearchDialog`,
+   orphaned), **#10/#11** (`ManageSongsDialog`), **#12** (`ReleaseSelectorDialog`), **#13/#14**
+   (`UnmatchedSongsDialog`) — deferred to the Ruling 6 increments — plus bucket-C **#33** (`ImportView`
+   info-file viewer, via the `WpfMessageBox` alias). A cross-check grep for
+   `MessageBoxButton`/`MessageBoxResult`/`MessageBoxImage` surfaced only those files plus comment-only
+   references in the three converted files and `IAlertService.cs` (no live code). **Manual WPF gate is
+   Gregg's, separate** — note for the gate: verify #27's three buttons (Refresh=Yes / Search=No /
+   Cancel all distinct, Esc = Cancel) and that #34/#39/#40 focus **No** by default (Enter does not fire
+   the destructive action).
+   **Gate finding + fix (2026-06-12, accent amendment):** on the `defaultToConfirm:false` cards
+   (#34/#39/#40) the keyboard correctly resolved No on Enter, but the accent fill was hardcoded to the
+   Confirm button, so the card showed Yes highlighted while Enter pressed No. Fixed by deriving the
+   accent and the focus from a single `defaultButton` reference in `ConfirmHost.Show`
+   (`ApplyDefaultButtonStyling`): the default button is accented and focused, the others drop to the
+   plain style — styling-only, resolution unchanged (Enter still resolves the default, Esc the safe
+   answer).
+10. _(future)_ Increment 5 — bucket-C scrollable read panel (#33), and the Ruling 6 dialog-hosted
+    bucket-A sites (#7–#14, minus orphaned #9).
 
 Status flips to **Implemented** at close-out once the sweep lands.

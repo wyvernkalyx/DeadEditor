@@ -56,11 +56,20 @@
                            TextWrapping="Wrap"
                            Margin="0,0,0,20"/>
 
+                <!-- The accent (PrimaryButton) fill is assigned in code to the DEFAULT button for the
+                     current confirm — the SAME button that takes focus — so the highlight always
+                     matches the Enter target (gate finding 2026-06-12). No button hardcodes a style
+                     here; ApplyDefaultButtonStyling sets all three on each show. -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="ConfirmButton"
                             MinWidth="100" Margin="0,0,10,0"
-                            Style="{StaticResource PrimaryButton}"
                             Click="ConfirmButton_Click"/>
+                    <!-- The middle button is shown only on the three-way path (YesNoCancel); the
+                         two-way path leaves it collapsed so its layout is visually unchanged. -->
+                    <Button x:Name="DeclineButton"
+                            MinWidth="100" Margin="0,0,10,0"
+                            Visibility="Collapsed"
+                            Click="DeclineButton_Click"/>
                     <Button x:Name="CancelButton"
                             MinWidth="100"
                             Click="CancelButton_Click"/>

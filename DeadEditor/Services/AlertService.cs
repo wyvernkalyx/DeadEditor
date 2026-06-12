@@ -51,7 +51,8 @@ namespace DeadEditor.Services
         }
 
         public Task<bool> ConfirmAsync(string message, string title,
-                                       string confirmLabel = "Yes", string cancelLabel = "No")
+                                       string confirmLabel = "Yes", string cancelLabel = "No",
+                                       bool defaultToConfirm = true)
         {
             // Blocking decisions are raised from UI-thread event handlers (the save/cancel paths);
             // the confirm host renders + focuses a card, so this requires the UI thread. With no host
@@ -59,7 +60,18 @@ namespace DeadEditor.Services
             var host = _confirmHost;
             if (host == null) return Task.FromResult(false);
 
-            return host.ConfirmAsync(message, title, confirmLabel, cancelLabel);
+            return host.ConfirmAsync(message, title, confirmLabel, cancelLabel, defaultToConfirm);
+        }
+
+        public Task<ConfirmResult> ConfirmAsync(string message, string title,
+                                                string confirmLabel, string declineLabel, string cancelLabel)
+        {
+            // Three-way path. With no host attached, default to Cancel — the tri-state safe answer
+            // (abort, touch nothing).
+            var host = _confirmHost;
+            if (host == null) return Task.FromResult(ConfirmResult.Cancel);
+
+            return host.ConfirmAsync(message, title, confirmLabel, declineLabel, cancelLabel);
         }
     }
 }

@@ -1699,23 +1699,31 @@ namespace DeadEditor
                 // If MBID already exists, offer two paths
                 if (!string.IsNullOrEmpty(_show.MusicBrainzReleaseId))
                 {
-                    var result = System.Windows.MessageBox.Show(
+                    // Bucket-B three-way confirm (alert-system-spec.md #27). Branch mapping preserved
+                    // EXACTLY from the old YesNoCancel/Question MessageBox (Yes/No/Cancel each differ —
+                    // that is why it is three-way):
+                    //   Yes    -> Confirm -> refresh from existing MBID, then return.
+                    //   No     -> Decline -> fall through to fingerprint/name search.
+                    //   Cancel -> Cancel  -> abort entirely (return; touch nothing).
+                    // Default button = Confirm (the old box's first button, Yes); Esc -> Cancel (the
+                    // old YesNoCancel box's Esc-close). Labels kept faithful as Yes/No/Cancel (the
+                    // message body references them). The containing handler is already async void.
+                    var result = await App.Alerts.ConfirmAsync(
                         "This album already has a MusicBrainz Release ID.\n\n" +
                         "Click Yes to refresh metadata from the existing MBID.\n" +
                         "Click No to search for a different release.",
                         "Existing MBID Found",
-                        MessageBoxButton.YesNoCancel,
-                        MessageBoxImage.Question);
+                        "Yes", "No", "Cancel");
 
-                    if (result == MessageBoxResult.Cancel) return;
+                    if (result == ConfirmResult.Cancel) return;
 
-                    if (result == MessageBoxResult.Yes)
+                    if (result == ConfirmResult.Confirm)
                     {
                         // Refresh from existing MBID — skip search, go directly to candidate dialog
                         await ShowMbidCandidateDialog(musicBrainzService, null, _show.MusicBrainzReleaseId);
                         return;
                     }
-                    // result == No → fall through to fingerprint/search
+                    // result == Decline (old No) → fall through to fingerprint/search
                 }
 
                 MusicBrainzButton.IsEnabled = false;
