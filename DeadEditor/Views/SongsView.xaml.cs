@@ -14,7 +14,6 @@ using Button = System.Windows.Controls.Button;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Cursors = System.Windows.Input.Cursors;
-using MessageBox = System.Windows.MessageBox;
 using Orientation = System.Windows.Controls.Orientation;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -257,15 +256,16 @@ namespace DeadEditor
             textBox.LostFocus += (s, e) => CommitEdit();
         }
 
-        private void RemoveSong(SongEntry song)
+        private async void RemoveSong(SongEntry song)
         {
-            var result = MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #44). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> remove; No/Esc (false) -> return. Called
+            // fire-and-forget from the context-menu Click lambda, so async void carries no ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 $"Remove \"{song.OfficialTitle}\" from the song database?",
-                "Remove Song",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+                "Remove Song");
 
-            if (result != MessageBoxResult.Yes) return;
+            if (!confirmed) return;
 
             // Remove from all artists
             if (_database?.Artists != null)

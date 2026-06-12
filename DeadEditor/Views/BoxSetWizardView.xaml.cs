@@ -12,7 +12,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
 
 namespace DeadEditor
@@ -649,7 +648,7 @@ namespace DeadEditor
         /// when the removed date was the open group; deleting a different (collapsed) group
         /// leaves the open one expanded. Set ActiveGroupDate BEFORE the single Refresh, per the
         /// accordion contract. TrackNumbers are not renumbered (matches per-row delete).</summary>
-        private void RemoveDateButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoveDateButton_Click(object sender, RoutedEventArgs e)
         {
             var group = (sender as FrameworkElement)?.DataContext as CollectionViewGroup;
             string date = group?.Name as string ?? "";
@@ -658,12 +657,21 @@ namespace DeadEditor
                 t => string.Equals(t?.Date ?? "", date, StringComparison.Ordinal));
             if (count == 0) return; // defensive; a visible group always has >=1
 
+            // e.Handled moved AHEAD of the await (was set at the end of the confirmed path): the
+            // confirm is now async, so the Click event finishes bubbling at the await — marking it
+            // handled afterward would be a no-op. Setting it synchronously here preserves the
+            // intent (the ✕ click is ours). FLAG: the old code left the click unhandled on the
+            // No/count==0 paths; it is now handled on every path past the count guard.
+            e.Handled = true;
+
             // [Q1 CONFIRM BLOCK] -- remove this block for no-confirm parity with per-row delete
+            // Bucket-B confirm (alert-system-spec.md #21). Branch mapping preserved from the old
+            // YesNo/Warning MessageBox: Yes (true) -> remove; No/Esc (false) -> return.
             string label = string.IsNullOrWhiteSpace(date) ? "(no date)" : date;
-            var answer = MessageBox.Show(
+            bool remove = await App.Alerts.ConfirmAsync(
                 $"Remove all {count} track(s) for {label}?",
-                "Remove date", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (answer != MessageBoxResult.Yes) return;
+                "Remove date");
+            if (!remove) return;
             // [/Q1 CONFIRM BLOCK]
 
             // Q2 conditional active-group rule: only collapse if we deleted the open group.
@@ -672,7 +680,6 @@ namespace DeadEditor
 
             BoxSetTrackMutations.RemoveTracksForDate(_definition.Tracks, date);
             _tracksView.Refresh();
-            e.Handled = true;
         }
 
         /// <summary>Re-sequences every track's TrackNumber to a contiguous 1..N ordered by

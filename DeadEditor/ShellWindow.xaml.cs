@@ -342,7 +342,7 @@ namespace DeadEditor
             }
         }
 
-        private void HeaderBar_DeleteAlbumRequested(object? sender, EventArgs e)
+        private async void HeaderBar_DeleteAlbumRequested(object? sender, EventArgs e)
         {
             if (_navigationService.CurrentContext is not LibraryShow show)
                 return;
@@ -365,15 +365,16 @@ namespace DeadEditor
                 : !string.IsNullOrEmpty(show.Venue) ? $"{show.Date} {show.Venue}"
                 : show.Date;
 
-            var result = System.Windows.MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #1). Branch mapping preserved from the old
+            // YesNo/Warning MessageBox: Yes (true) -> delete; No/Esc (false) -> return. Event
+            // subscription, so async void carries no call-site ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 $"Delete '{displayName}'?\n\n" +
                 $"This will send {fileCount} audio file{(fileCount == 1 ? "" : "s")} to the Recycle Bin.\n\n" +
                 $"This action can be undone by restoring from the Recycle Bin.",
-                "Delete Album",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                "Delete Album");
 
-            if (result != MessageBoxResult.Yes)
+            if (!confirmed)
                 return;
 
             try
@@ -783,19 +784,20 @@ namespace DeadEditor
             _navigationService.NavigateTo(editView, concert);
         }
 
-        private void HeaderBar_DeleteConcertRequested(object? sender, EventArgs e)
+        private async void HeaderBar_DeleteConcertRequested(object? sender, EventArgs e)
         {
             if (_navigationService.CurrentContext is not ConcertReference concert)
                 return;
 
-            var result = System.Windows.MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #5). Branch mapping preserved from the old
+            // YesNo/Warning MessageBox: Yes (true) -> delete; No/Esc (false) -> return. Event
+            // subscription, so async void carries no call-site ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 $"Delete the setlist for {concert.Date}?\n\n" +
                 $"This will remove the concert JSON file from the database.",
-                "Delete Concert",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                "Delete Concert");
 
-            if (result != MessageBoxResult.Yes)
+            if (!confirmed)
                 return;
 
             try

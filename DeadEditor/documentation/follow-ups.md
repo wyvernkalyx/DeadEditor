@@ -8,6 +8,13 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Banked 2026-06-12 (alert-system increment-7 gate)
+- **Delete-affordance discoverability:** song delete (#44 trigger, SongsView row right-click → "Remove") and track delete (#15 trigger, AlbumDetailView track-grid right-click → "Delete Track") not findable by the owner; surface or relabel, then review #15's OK/Cancel labels.
+- **Setlist editor song autocomplete:** realtime lookup against `songs.json` while typing (replaces free-type-then-Normalize flow). Lived demand 2026-06-12.
+- **Concert grid sort:** persist sort state across navigation within a session; add per-column sort-direction indicators. Lived demand 2026-06-12.
+- **SongsView grid layout:** alias column placement/justification inconsistent with other grids.
+- **Releases view redesign:** owner flag 2026-06-12 — "needs a lot of attention".
+
 ### In-app alert system (replace native MessageBox dialogs)
 - **Authoritative spec + inventory:** [alert-system-spec.md](alert-system-spec.md) (Status: Proposed). That spec's 45-site table is now the authoritative MessageBox inventory and supersedes the partial list this entry used to carry; the binding rulings (banner for notifications, in-window confirm host for decisions, no third-party packages, A/B never interleaved) and the five-increment rollout live there.
 - **What:** The app uses native Windows `MessageBox` dialogs for the unsaved-changes prompt, delete confirmations, save-error reports, the setlist-editor save validations (invalid date, empty setlist), the duplicate-date refusal, and ~40 more sites. These break visual consistency with the dark in-app UI, steal focus, and cannot be styled or positioned.

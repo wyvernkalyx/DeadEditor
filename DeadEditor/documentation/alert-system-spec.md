@@ -175,11 +175,11 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 
 | # | File:line | Scenario | Image / Buttons | Bucket |
 |---|-----------|----------|-----------------|--------|
-| 1 | `ShellWindow.xaml.cs:344` | Confirm delete album → Recycle Bin | Warning / YesNo | B |
+| 1 | `ShellWindow.xaml.cs:344` | Confirm delete album → Recycle Bin — **converted (inc 7)** | Warning / YesNo | B |
 | 2 | `ShellWindow.xaml.cs:376` | Album delete failed — **converted (inc 3)** | Error / OK | A |
 | 3 | `ShellWindow.xaml.cs:423` | Leave Import with unimported tracks — **converted (inc 6)** | Question / YesNo | B |
 | 4 | `ShellWindow.xaml.cs:607` | Box set gone since list loaded — **converted (inc 5)** | Information / OK | A |
-| 5 | `ShellWindow.xaml.cs:770` | Confirm delete concert JSON | Warning / YesNo | B |
+| 5 | `ShellWindow.xaml.cs:770` | Confirm delete concert JSON — **converted (inc 7)** | Warning / YesNo | B |
 | 6 | `ShellWindow.xaml.cs:800` | Concert delete failed — **converted (inc 3)** | Error / OK | A |
 | 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) | Warning / OK | A |
 | 8 | `AdvancedSearchDialog.xaml.cs:317` | No search criteria (date/venue) | Warning / OK | A |
@@ -189,13 +189,13 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 12 | `ReleaseSelectorDialog.xaml.cs:34` | No release selected | Warning / OK | A |
 | 13 | `UnmatchedSongsDialog.xaml.cs:118` | N songs added | Information / OK | A |
 | 14 | `UnmatchedSongsDialog.xaml.cs:126` | Apply corrections failed | Error / OK | A |
-| 15 | `Views/AlbumDetailView.xaml.cs:730` | Confirm delete track → Recycle Bin | Warning / OKCancel | B |
+| 15 | `Views/AlbumDetailView.xaml.cs:730` | Confirm delete track → Recycle Bin — **converted (inc 7)** | Warning / OKCancel | B |
 | 16 | `Views/AlbumDetailView.xaml.cs:747` | Could not delete file — **converted (inc 3)** | Error / OK | A |
 | 17 | `Views/BoxSetWizardView.xaml.cs:198` | Invalid track date(s) on save — **converted (inc 4)** | Warning / OK | A |
 | 18 | `Views/BoxSetWizardView.xaml.cs:255` | Box set save failed — **converted (inc 4)** | Error / OK | A |
 | 19 | `Views/BoxSetWizardView.xaml.cs:566` | Pull: invalid date entry — **converted (inc 4)** | Warning / OK | A |
 | 20 | `Views/BoxSetWizardView.xaml.cs:574` | Pull: no setlist for date — **converted (inc 4, first Info)** | Information / OK | A |
-| 21 | `Views/BoxSetWizardView.xaml.cs:666` | Confirm remove all tracks for date | Warning / YesNo | B |
+| 21 | `Views/BoxSetWizardView.xaml.cs:666` | Confirm remove all tracks for date — **converted (inc 7)** | Warning / YesNo | B |
 | 22 | `Views/EditMetadataView.xaml.cs:469` | Manifest sidecar write failed — **converted (inc 5)** | Warning / OK | A |
 | 23 | `Views/EditMetadataView.xaml.cs:976` | Album type changed (move-files notice) — **converted (inc 5), Warning** (remapped from the original Information icon per gate finding: it is an actionable advisory and must persist) | Information / OK | A |
 | 24 | `Views/EditMetadataView.xaml.cs:994` | Save changes failed — **converted (inc 3)** | Error / OK | A |
@@ -210,15 +210,15 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 33 | `Views/ImportView.xaml.cs:1577` | Display info `.txt` file content | Information / OK | C |
 | 34 | `Views/MbidMigrationView.xaml.cs:80` | Confirm start migration fresh | Question / YesNo | B |
 | 35 | `Views/MbidMigrationView.xaml.cs:130` | Migration error — **converted (inc 3)** | Error / OK | A |
-| 36 | `Views/ReleasesView.xaml.cs:326` | Confirm remove standalone release | Question / YesNo | B |
-| 37 | `Views/ReleasesView.xaml.cs:359` | Confirm remove last volume | Question / YesNo | B |
+| 36 | `Views/ReleasesView.xaml.cs:326` | Confirm remove standalone release — **converted (inc 7)** | Question / YesNo | B |
+| 37 | `Views/ReleasesView.xaml.cs:359` | Confirm remove last volume — **converted (inc 7)** | Question / YesNo | B |
 | 38 | `Views/ReleasesView.xaml.cs:419` | Duplicate release name — **converted (inc 2)** | Warning / OK | A |
 | 39 | `Views/SettingsView.xaml.cs:135` | Confirm re-enrich library | Question / YesNo | B |
 | 40 | `Views/SettingsView.xaml.cs:346` | Confirm reset library data | Warning / YesNo | B |
 | 41 | `Views/SettingsView.xaml.cs:393` | Reset complete — **converted (inc 5)** | Information / OK | A |
 | 42 | `Views/SettingsView.xaml.cs:404` | Reset error — **converted (inc 5)** | Error / OK | A |
 | 43 | `Views/SongsView.xaml.cs:227` | Duplicate song name (rename) — **converted (inc 2)** | Warning / OK | A |
-| 44 | `Views/SongsView.xaml.cs:262` | Confirm remove song | Question / YesNo | B |
+| 44 | `Views/SongsView.xaml.cs:262` | Confirm remove song — **converted (inc 7)** | Question / YesNo | B |
 | 45 | `Views/SongsView.xaml.cs:327` | Duplicate song name (add) — **converted (inc 2)** | Warning / OK | A |
 
 **Bucket counts:** A = 30, B = 14, C = 1 (total 45). Site **#9 is orphaned** (`AlbumSearchDialog` has
@@ -437,8 +437,52 @@ clear the gate — a human clears the manual WPF gate before each commit.
    sites). No new pure logic, **no new tests** (the confirm result mapping is a trivial 1:1, nothing
    to extract — see Ruling 2; baseline holds at **355**); build clean (51 unique warnings). **Manual
    WPF gate is Gregg's, separate.**
-8. _(future)_ Increment 4 — bucket-B sweep (deletes, reset/re-enrich, MBID flows — including #27, the
-   YesNoCancel site that adds the three-way `ConfirmAsync` overload + `ConfirmResult`).
-9. _(future)_ Increment 5 — bucket-C scrollable read panel.
+8. **[Implemented — pending WPF gate]** Increment 4 — bucket-B sweep, **batch 1: delete/remove
+   confirms** (the "increment 7" work session). Converted the seven destructive confirms from
+   `MessageBox.Show` to `await App.Alerts.ConfirmAsync(...)`, **branch mapping preserved exactly**
+   (the affirmative result → the destructive action; the negative result / Esc → `return`): **#1**
+   (`ShellWindow` delete album → Recycle Bin), **#5** (`ShellWindow` delete concert JSON), **#15**
+   (`AlbumDetailView` delete track → Recycle Bin), **#21** (`BoxSetWizardView` remove all tracks for
+   date), **#36** (`ReleasesView` remove standalone release), **#37** (`ReleasesView` remove last
+   volume), **#44** (`SongsView` remove song). Each containing method became `async void`; all are
+   either event subscriptions (#1/#5/#37/#21) or fire-and-forget context-menu Click lambdas
+   (#15/#36/#44) with nothing running after the call, so the ripple is contained — **no call-site
+   signature changes**.
+   **#15 label decision:** the sole OKCancel site — labels kept as the original **"OK"/"Cancel"** (no
+   relabel; the action-specific "Delete"/"Cancel" was considered and *not* taken, to stay faithful and
+   avoid a gate-relabel flag). All YesNo sites use the default "Yes"/"No" labels (increment-6
+   precedent).
+   **Default-button parity:** every converted call used the 4-arg `MessageBox.Show` overload (no
+   explicit `MessageBoxResult defaultResult`), so all defaulted to the first button (Yes/OK). The
+   confirm card focuses the Confirm button → parity holds; **no site deliberately defaulted to the
+   safe answer, so no Enter-semantics were flipped.**
+   **#21 `e.Handled` reorder (flag):** the old handler set `e.Handled = true` only on the *confirmed*
+   path, at the very end. Because the confirm is now async (the Click event finishes bubbling at the
+   `await`), a late `e.Handled` would be a no-op — so it was moved **synchronously ahead of the
+   await**, right after the count guard. Net effect: the ✕ click is now marked handled on every path
+   past the guard (previously the No / `count==0` paths left it unhandled). Flagged for the WPF gate
+   (confirm the ✕ still behaves — no stray accordion toggle).
+   Aliases removed where the converted site was the file's last `MessageBox`: `BoxSetWizardView`
+   (#21), `ReleasesView` (#36/#37), `SongsView` (#44). `ShellWindow`/`AlbumDetailView` used
+   fully-qualified `System.Windows.MessageBox` (no alias) and now have no `MessageBox` sites. No new
+   tests (the result mapping is trivial 1:1; baseline holds at **355**); build clean (51 unique
+   warnings). Untouched, deferred to batch 2: #27 (the YesNoCancel site that adds the three-way
+   overload + `ConfirmResult`), #34 (MBID start), #39/#40 (SettingsView re-enrich / reset);
+   dialog-hosted bucket-A sites still wait for the Ruling 6 increments. **Manual WPF gate is Gregg's,
+   separate.**
+   **Gate result (2026-06-12):** five of seven gated live on throwaway records — **#1**, **#5**,
+   **#21** (including the no-stray-toggle check on the ✕), **#36**, **#37** — all branch paths, silent
+   card, scrim confirmed. **#44** and **#15** are **inspection-covered**: identical-pattern surface
+   swaps whose UI triggers (both right-click context-menu items — see below) the owner could not
+   locate during the gate, so they were not exercised live. **#15's OK/Cancel labels stand unreviewed**
+   until that surface is discoverable. Both triggers banked as a delete-affordance discoverability
+   follow-up: #44 = SongsView song row right-click → "Remove" `MenuItem`
+   (`SongsView.xaml.cs:190-192`); #15 = AlbumDetailView track-grid right-click
+   (`TracksDataGrid_MouseRightButtonUp`) → "🗑  Delete Track" `MenuItem`
+   (`AlbumDetailView.xaml.cs:718-720`).
+9. _(future)_ Increment 4 — bucket-B sweep, **batch 2**: #27 (existing-MBID refresh/search/cancel —
+   adds the three-way `ConfirmAsync` + `ConfirmResult`), #34 (start migration fresh), #39 (re-enrich
+   library), #40 (reset library data).
+10. _(future)_ Increment 5 — bucket-C scrollable read panel.
 
 Status flips to **Implemented** at close-out once the sweep lands.

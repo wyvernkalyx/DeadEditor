@@ -11,7 +11,6 @@ using Button = System.Windows.Controls.Button;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Cursors = System.Windows.Input.Cursors;
-using MessageBox = System.Windows.MessageBox;
 using Orientation = System.Windows.Controls.Orientation;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -321,15 +320,16 @@ namespace DeadEditor
             textBox.LostFocus += (s, e) => CommitEdit();
         }
 
-        private void RemoveStandaloneRelease(string release)
+        private async void RemoveStandaloneRelease(string release)
         {
-            var result = MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #36). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> remove; No/Esc (false) -> return. Called
+            // fire-and-forget from the context-menu Click lambda, so async void carries no ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 $"Remove \"{release}\" from standalone releases?",
-                "Remove Release",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+                "Remove Release");
 
-            if (result != MessageBoxResult.Yes) return;
+            if (!confirmed) return;
 
             _service.RemoveStandaloneRelease(release);
             _standaloneData = _service.GetStandaloneReleases();
@@ -352,17 +352,18 @@ namespace DeadEditor
             }
         }
 
-        private void RemoveVolumeButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoveVolumeButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is string seriesName)
             {
-                var result = MessageBox.Show(
+                // Bucket-B confirm (alert-system-spec.md #37). Branch mapping preserved from the old
+                // YesNo/Question MessageBox: Yes (true) -> remove; No/Esc (false) -> return. Event
+                // handler, so async void carries no call-site ripple.
+                bool confirmed = await App.Alerts.ConfirmAsync(
                     $"Remove the last volume from {seriesName}?",
-                    "Remove Volume",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                    "Remove Volume");
 
-                if (result != MessageBoxResult.Yes) return;
+                if (!confirmed) return;
 
                 if (_service.RemoveLastVolumeFromSeries(seriesName))
                 {

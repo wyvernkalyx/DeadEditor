@@ -725,15 +725,18 @@ namespace DeadEditor
 
         // ===== DELETE TRACK =====
 
-        private void DeleteTrack(TrackInfo track)
+        private async void DeleteTrack(TrackInfo track)
         {
-            var result = System.Windows.MessageBox.Show(
+            // Bucket-B confirm (alert-system-spec.md #15). Branch mapping preserved from the old
+            // OKCancel/Warning MessageBox: OK (true) -> delete; Cancel/Esc (false) -> return. Labels
+            // kept as the original "OK"/"Cancel" (no relabel). Called fire-and-forget from the
+            // context-menu Click lambda, so async void carries no call-site ripple.
+            bool confirmed = await App.Alerts.ConfirmAsync(
                 $"Delete track {track.TrackNumber} '{track.Title}'?\n\nThis will send the file to the Recycle Bin.",
                 "Delete Track",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Warning);
+                "OK", "Cancel");
 
-            if (result != MessageBoxResult.OK) return;
+            if (!confirmed) return;
 
             try
             {
