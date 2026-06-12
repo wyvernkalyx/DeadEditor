@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MessageBox = System.Windows.MessageBox;
 using CheckBox = System.Windows.Controls.CheckBox;
 using Button = System.Windows.Controls.Button;
 
@@ -288,11 +287,12 @@ namespace DeadEditor
             // Collect sequence
             SongSequence = _sequenceItems.Select(i => i.Song).ToList();
 
-            // Validate
+            // Validate — inline message (Ruling 6: #7), no MessageBox, no sound, no focus jump.
+            ValidationText.Visibility = Visibility.Collapsed;
             if (!SelectedSongs.Any() && !ExcludedSongs.Any() && !SongSequence.Any())
             {
-                MessageBox.Show("Please select some songs, excluded songs, or create a sequence to search for.",
-                    "No Search Criteria", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ValidationText.Text = "Select songs, excluded songs, or a sequence to search for.";
+                ValidationText.Visibility = Visibility.Visible;
                 return;
             }
 
@@ -312,10 +312,12 @@ namespace DeadEditor
             var searchDate = TrackDateTextBox.Text?.Trim();
             var searchVenue = TrackVenueTextBox.Text?.Trim();
 
+            // Inline validation (Ruling 6: #8) — adjacent to the Search Tracks button.
+            TrackValidationText.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(searchDate) && string.IsNullOrEmpty(searchVenue))
             {
-                MessageBox.Show("Please enter a date or venue to search.", "No Search Criteria",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                TrackValidationText.Text = "Enter a date or venue to search.";
+                TrackValidationText.Visibility = Visibility.Visible;
                 return;
             }
 
@@ -334,6 +336,28 @@ namespace DeadEditor
                 TrackResultsEmptyText.Text = "No tracks found matching your search criteria.";
                 TrackResultsEmptyText.Visibility = Visibility.Visible;
             }
+        }
+
+        /// <summary>Clear the #8 inline validation as soon as the user edits the date or venue field
+        /// (Ruling 6: "clears when the user corrects the input").</summary>
+        private void TrackSearchInput_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (TrackValidationText != null)
+                TrackValidationText.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>Clear BOTH inline validation messages on a tab switch (inc-9 gate fix 2026-06-12):
+        /// the #7 bottom-row message lingering while the user works the Track Search tab (or vice
+        /// versa) reads as a stale error. Guarded on OriginalSource because SelectionChanged also
+        /// bubbles up from the Selector controls (ComboBox/ListBox/DataGrid) inside the tabs.</summary>
+        private void SearchTabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (!ReferenceEquals(e.OriginalSource, SearchTabControl)) return;
+
+            if (ValidationText != null)
+                ValidationText.Visibility = Visibility.Collapsed;
+            if (TrackValidationText != null)
+                TrackValidationText.Visibility = Visibility.Collapsed;
         }
 
         private List<TrackSearchResult> SearchTracksInLibrary(string? searchDate, string? searchVenue)

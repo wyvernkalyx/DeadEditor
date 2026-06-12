@@ -16,7 +16,7 @@
         <TextBlock Grid.Row="0" Text="Advanced Concert Search" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
 
         <!-- Search Criteria -->
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" x:Name="SearchTabControl" SelectionChanged="SearchTabControl_SelectionChanged">
             <!-- Song Search Tab -->
             <TabItem Header="Contains Songs">
                 <Grid Margin="15">
@@ -212,18 +212,29 @@
                         <!-- Date -->
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Date:" VerticalAlignment="Center" Margin="0,0,10,8"/>
                         <TextBox Grid.Row="0" Grid.Column="1" x:Name="TrackDateTextBox" Height="28" Margin="0,0,0,8"
+                                 TextChanged="TrackSearchInput_Changed"
                                  ToolTip="Enter date (yyyy-MM-dd, e.g., 1972-05-04)"/>
 
                         <!-- Venue -->
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Venue:" VerticalAlignment="Center" Margin="0,0,10,8"/>
                         <TextBox Grid.Row="1" Grid.Column="1" x:Name="TrackVenueTextBox" Height="28" Margin="0,0,0,8"
+                                 TextChanged="TrackSearchInput_Changed"
                                  ToolTip="Enter venue name (e.g., Bickershaw Festival)"/>
 
-                        <!-- Search Button -->
-                        <Button Grid.Row="2" Grid.Column="1" x:Name="TrackSearchButton" Content="Search Tracks"
-                                Width="150" Height="35" HorizontalAlignment="Left" Margin="0,10,0,0"
-                                Click="TrackSearchButton_Click"
-                                FontWeight="SemiBold" Background="#094771" Foreground="White"/>
+                        <!-- Search Button + inline validation (Ruling 6: #8). The validation text sits
+                             immediately right of the Search Tracks button, just below the Date/Venue
+                             fields it references; it clears as soon as either field is edited
+                             (TrackSearchInput_Changed) or on a valid retry. -->
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                            <Button x:Name="TrackSearchButton" Content="Search Tracks"
+                                    Width="150" Height="35"
+                                    Click="TrackSearchButton_Click"
+                                    FontWeight="SemiBold" Background="#094771" Foreground="White"/>
+                            <TextBlock x:Name="TrackValidationText"
+                                       Foreground="#C0392B" FontWeight="SemiBold" FontSize="13"
+                                       VerticalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap"
+                                       Visibility="Collapsed"/>
+                        </StackPanel>
                     </Grid>
 
                     <!-- Results -->
@@ -252,13 +263,22 @@
             </TabItem>
         </TabControl>
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button x:Name="SearchButton" Content="Search" Width="110" Height="35"
-                    Margin="0,0,10,0" Click="SearchButton_Click" IsDefault="True"
-                    FontSize="13" FontWeight="SemiBold" Background="#094771" Foreground="White"/>
-            <Button x:Name="CancelButton" Content="Cancel" Width="110" Height="35"
-                    Click="CancelButton_Click" IsCancel="True" FontSize="13"/>
-        </StackPanel>
+        <!-- Buttons + inline validation (Ruling 6: #7). The validation text renders at the LEFT of the
+             action row, immediately left of the Search button the user clicked; it reports the
+             missing-criteria refusal that the old MessageBox raised. Red for readability on this
+             dialog's light background. -->
+        <DockPanel Grid.Row="2" Margin="0,15,0,0" LastChildFill="False">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button x:Name="SearchButton" Content="Search" Width="110" Height="35"
+                        Margin="0,0,10,0" Click="SearchButton_Click" IsDefault="True"
+                        FontSize="13" FontWeight="SemiBold" Background="#094771" Foreground="White"/>
+                <Button x:Name="CancelButton" Content="Cancel" Width="110" Height="35"
+                        Click="CancelButton_Click" IsCancel="True" FontSize="13"/>
+            </StackPanel>
+            <TextBlock x:Name="ValidationText" DockPanel.Dock="Left"
+                       Foreground="#C0392B" FontWeight="SemiBold" FontSize="13"
+                       VerticalAlignment="Center" TextWrapping="Wrap"
+                       Visibility="Collapsed"/>
+        </DockPanel>
     </Grid>
 </Window>

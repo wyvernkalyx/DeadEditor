@@ -1201,7 +1201,9 @@ namespace DeadEditor
                         Owner = parentWindow
                     };
 
-                    if (dialog.ShowDialog() == true && dialog.ChangesMade)
+                    bool applied = dialog.ShowDialog() == true;
+
+                    if (applied && dialog.ChangesMade)
                     {
                         ReconstructRawTitles();
                         TracksDataGrid.Items.Refresh();
@@ -1210,6 +1212,17 @@ namespace DeadEditor
                         NormalizeStatusText.Text = correctionStatus;
                         StatusTextBlock.Text = correctionStatus;
                     }
+
+                    // Ruling 6 hand-off: the dialog notifies via the shell banner AFTER it closes
+                    // (#13 Info / #14 Error). Both outcomes are handled here.
+                    if (dialog.SongsAddedCount > 0)
+                        App.Alerts.Notify(
+                            $"Added {dialog.SongsAddedCount} new song{(dialog.SongsAddedCount == 1 ? "" : "s")} to the song database.",
+                            AlertSeverity.Info, "Songs Added");
+                    if (dialog.ApplyErrorMessage != null)
+                        App.Alerts.Notify(
+                            $"Error applying corrections:\n\n{dialog.ApplyErrorMessage}",
+                            AlertSeverity.Error, "Error");
                 }
             }
             catch (Exception ex)

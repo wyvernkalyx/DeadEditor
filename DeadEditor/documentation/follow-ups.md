@@ -8,6 +8,11 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Banked 2026-06-12 (alert-system increment-9 gate)
+- **Advanced Search song criteria not wired to any result:** the Contains / Exclude / Sequence tabs collect `SelectedSongs`/`ExcludedSongs`/`SongSequence` into public properties, but the caller (`HeaderBar_AdvancedSearchRequested`, `ShellWindow.xaml.cs:316`) calls `dialog.ShowDialog()` and discards the result — nothing reads the criteria, so a song search closes the dialog with no visible effect. Only the Track Search tab (its own in-dialog grid) works. Pre-existing (predates the alert sweep). Fix: consume the criteria after `ShowDialog()` and filter the library grid / present results.
+- **Match Setlist button styling:** the Match Setlist button in the `EditMetadataView` toolbar renders washed-out / unreadable (owner screenshots 2026-06-12). Restyle for contrast against the dark toolbar.
+- **OS SaveFileDialog OverwritePrompt chimes:** the Manage Songs export (and other `SaveFileDialog` pickers) raise the native overwrite-confirm, which chimes — outside the in-window alert sweep (Ruling: file/folder pickers are out of scope). Consider an in-window confirm after the picker returns if the chime bothers. Surfaced 2026-06-12 (inc-9 gate).
+
 ### Banked 2026-06-12 (alert-system increment-7 gate)
 - **Delete-affordance discoverability:** song delete (#44 trigger, SongsView row right-click → "Remove") and track delete (#15 trigger, AlbumDetailView track-grid right-click → "Delete Track") not findable by the owner; surface or relabel, then review #15's OK/Cancel labels.
 - **Setlist editor song autocomplete:** realtime lookup against `songs.json` while typing (replaces free-type-then-Normalize flow). Lived demand 2026-06-12.

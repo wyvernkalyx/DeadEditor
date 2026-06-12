@@ -188,14 +188,14 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 4 | `ShellWindow.xaml.cs:607` | Box set gone since list loaded — **converted (inc 5)** | Information / OK | A |
 | 5 | `ShellWindow.xaml.cs:770` | Confirm delete concert JSON — **converted (inc 7)** | Warning / YesNo | B |
 | 6 | `ShellWindow.xaml.cs:800` | Concert delete failed — **converted (inc 3)** | Error / OK | A |
-| 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) | Warning / OK | A |
-| 8 | `AdvancedSearchDialog.xaml.cs:317` | No search criteria (date/venue) | Warning / OK | A |
+| 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) — **converted (inc 9, inline validation)** | Warning / OK | A |
+| 8 | `AdvancedSearchDialog.xaml.cs:317` | No search criteria (date/venue) — **converted (inc 9, inline validation)** | Warning / OK | A |
 | 9 | `AlbumSearchDialog.xaml.cs:40` | Missing album/artist — **ORPHANED: no live caller, site unreachable** (excluded from conversion) | Warning / OK | A |
-| 10 | `ManageSongsDialog.xaml.cs:199` | Export succeeded | Information / OK | A |
-| 11 | `ManageSongsDialog.xaml.cs:204` | Export failed | Error / OK | A |
-| 12 | `ReleaseSelectorDialog.xaml.cs:34` | No release selected | Warning / OK | A |
-| 13 | `UnmatchedSongsDialog.xaml.cs:118` | N songs added | Information / OK | A |
-| 14 | `UnmatchedSongsDialog.xaml.cs:126` | Apply corrections failed | Error / OK | A |
+| 10 | `ManageSongsDialog.xaml.cs:199` | Export succeeded — **converted (inc 9, embedded banner, Info)** | Information / OK | A |
+| 11 | `ManageSongsDialog.xaml.cs:204` | Export failed — **converted (inc 9, embedded banner, Error)** | Error / OK | A |
+| 12 | `ReleaseSelectorDialog.xaml.cs:34` | No release selected — **converted (inc 9, inline validation)** | Warning / OK | A |
+| 13 | `UnmatchedSongsDialog.xaml.cs:118` | N songs added — **converted (inc 9, post-close shell banner, Info)** | Information / OK | A |
+| 14 | `UnmatchedSongsDialog.xaml.cs:126` | Apply corrections failed — **converted (inc 9, post-close shell banner, Error)** | Error / OK | A |
 | 15 | `Views/AlbumDetailView.xaml.cs:730` | Confirm delete track → Recycle Bin — **converted (inc 7)** | Warning / OKCancel | B |
 | 16 | `Views/AlbumDetailView.xaml.cs:747` | Could not delete file — **converted (inc 3)** | Error / OK | A |
 | 17 | `Views/BoxSetWizardView.xaml.cs:198` | Invalid track date(s) on save — **converted (inc 4)** | Warning / OK | A |
@@ -550,7 +550,70 @@ clear the gate — a human clears the manual WPF gate before each commit.
    (`ApplyDefaultButtonStyling`): the default button is accented and focused, the others drop to the
    plain style — styling-only, resolution unchanged (Enter still resolves the default, Esc the safe
    answer).
-10. _(future)_ Increment 5 — bucket-C scrollable read panel (#33), and the Ruling 6 dialog-hosted
-    bucket-A sites (#7–#14, minus orphaned #9).
+10. **[Implemented — pending WPF gate]** Increment 9 — the **Ruling 6 dialog-hosted bucket-A sites**.
+    Converted seven sites across three dialogs by the per-classification mechanism Ruling 6 prescribes
+    (the shell banner cannot serve a site inside a modal `ShowDialog()` window — it is occluded behind
+    the modal). **This completes all bucket-A conversions** (every notification site is now in-window).
+    - **Inline validation** (input-validation refusals — the dialog stays open, the user must fix a
+      field; no banner): **#7** (`AdvancedSearchDialog` no song/exclude/sequence criteria) and **#8**
+      (`AdvancedSearchDialog` track-search no date/venue) render red validation text in the dialog —
+      #7 at the **left of the bottom action row** (left of the Search button), #8 **immediately right
+      of the Search Tracks button**, below the Date/Venue fields it references. **#12**
+      (`ReleaseSelectorDialog` no release selected) renders amber text (dark dialog) at the **left of
+      the Select/Cancel row**. Each appears on the failed action, clears on a valid retry (cleared at
+      the top of the action handler) and — for #8/#12 — also the moment the user edits a field
+      (`TextChanged`) or selects a row (`SelectionChanged`). #7's criteria are checkboxes/sequence
+      across three tabs, so it clears on retry only (not per-checkbox) — minor, noted. No sound, no
+      focus jump.
+    - **Post-close shell-banner hand-off** (terminal notifications — the dialog closes): **#13**
+      (songs added, Info) / **#14** (apply-corrections error, Error) in `UnmatchedSongsDialog`. The
+      dialog no longer shows its own `MessageBox`; it records the outcome on new
+      `SongsAddedCount` / `ApplyErrorMessage` properties, and **both callers** (`EditMetadataView` and
+      `ImportView`, which each open it) fire `App.Alerts.Notify` on the shell **after `ShowDialog`
+      returns**. **Behavior change (noted):** #14 previously kept the dialog open on error; it now
+      closes (`DialogResult=true`, so partial corrections applied before the throw still flow through
+      the caller's existing reload), matching Ruling 6's "dialog closes" classification — the error
+      surfaces on the persistent shell Error banner instead.
+    - **Embedded banner** (terminal notifications, but the dialog persists as a workspace and is not
+      closed by the export): **#10** (export succeeded, Info — auto-dismiss) / **#11** (export failed,
+      Error — persists) in `ManageSongsDialog`. An `AlertBannerHost` instance is embedded in the
+      dialog (overlaid at the top of the list cell, shell pattern) and driven directly via
+      `DialogBanner.Show(new AlertItem(...))`.
+    **AlertBannerHost reusability — no refactor needed.** The control was already reusable outside the
+    shell as-is: it owns a **per-instance** `AlertQueue` + `DispatcherTimer` and exposes a public
+    `Show(AlertItem)`; the `AlertService` singleton registration is done **externally** by `ShellWindow`
+    (`RegisterSink`), not in the control. So the embedded instance calls `Show` directly and is fully
+    independent of the shell singleton's queue (#11's persistent Error in the dialog never touches the
+    shell banner) — exactly the isolation Ruling 6 requires. (`xmlns:views` added to the dialog; the
+    instance is named `DialogBanner`.)
+    **Aliases removed** where the file's last `MessageBox` site was converted: `AdvancedSearchDialog`
+    (#7/#8), `ManageSongsDialog` (#10/#11). `ReleaseSelectorDialog` and `UnmatchedSongsDialog` used
+    fully-qualified `System.Windows.MessageBox` (no alias).
+    **Closing grep (2026-06-12):** a full `MessageBox.Show`/`WpfMessageBox.Show` sweep (excluding the
+    dead `.bak`) now returns **exactly two live sites**: **#9** (`AlbumSearchDialog`, orphaned — left
+    per the banked delete-vs-revive decision) and **#33** (`ImportView`, bucket-C info-file viewer).
+    A cross-check for `MessageBoxButton`/`MessageBoxResult`/`MessageBoxImage` surfaced only those two
+    plus comment-only references in `IAlertService`/`MbidMigrationView`/`SettingsView` (no live code).
+    No new tests (baseline holds at **355**); build clean (51 unique warnings). **Manual WPF gate is
+    Gregg's, separate.**
+    **Gate findings (2026-06-12):**
+    - **Tab-switch clearing fix:** both `ValidationText` (#7) and `TrackValidationText` (#8) now clear
+      on `AdvancedSearchDialog`'s `TabControl.SelectionChanged` (guarded on `OriginalSource` so inner
+      `Selector` bubbling does not trigger it) — the #7 bottom-row message lingering while the user
+      worked the Track Search tab read as a stale error.
+    - **Search-trace verdict — PRE-EXISTING, not a regression:** "selected a song, clicked Search,
+      dialog closed, nothing happened" is independent of inc 9. Our change only swapped the
+      validation-fail `MessageBox` for inline text and restructured the button bar
+      (`StackPanel`→`DockPanel`, same names/handlers/`IsDefault`); the success path
+      (`DialogResult = true; Close()`) is unchanged. The caller `HeaderBar_AdvancedSearchRequested`
+      (`ShellWindow.xaml.cs:316`) calls `dialog.ShowDialog()` and **discards the result** — the
+      Contains/Exclude/Sequence criteria (`SelectedSongs`/`ExcludedSongs`/`SongSequence`, public) are
+      **never read by any caller**. So the song-criteria tabs have no result wiring; only the Track
+      Search tab (its own in-dialog results grid) is functional. Banked as a UX gap in `follow-ups.md`.
+    - **Match Setlist button readability** in the `EditMetadataView` toolbar (washed-out/unreadable
+      styling, owner screenshots) banked in `follow-ups.md`.
+11. _(future)_ Increment 5 — bucket-C scrollable read panel (#33). The only other remaining
+    `MessageBox` site is orphaned #9, gated on the `AlbumSearchDialog` delete-vs-revive decision
+    (`follow-ups.md`).
 
 Status flips to **Implemented** at close-out once the sweep lands.

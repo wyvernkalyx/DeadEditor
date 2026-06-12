@@ -17,6 +17,13 @@ namespace DeadEditor
 
         public bool ChangesMade { get; private set; } = false;
 
+        // Ruling 6 (#13/#14): the dialog no longer shows its own MessageBox — it is a terminal dialog
+        // that closes immediately, so it returns the outcome here and each caller fires
+        // App.Alerts.Notify on the shell banner AFTER ShowDialog returns. SongsAddedCount drives the
+        // #13 Info ("Added N songs"); ApplyErrorMessage (non-null) drives the #14 Error.
+        public int SongsAddedCount { get; private set; }
+        public string? ApplyErrorMessage { get; private set; }
+
         public UnmatchedSongsDialog(List<TrackInfo> unmatchedTracks, NormalizationService normalizationService)
         {
             InitializeComponent();
@@ -110,21 +117,19 @@ namespace DeadEditor
                     }
                 }
 
-                // Show summary if songs were added
-                if (songsAdded.Count > 0)
-                {
-                    var message = $"Added {songsAdded.Count} new song(s) to songs.json:\n" +
-                                  string.Join("\n", songsAdded.Select(s => $"  • {s}"));
-                    System.Windows.MessageBox.Show(message, "Songs Added", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-
+                // Ruling 6: hand the outcome to the caller instead of showing an in-dialog MessageBox.
+                SongsAddedCount = songsAdded.Count;
                 DialogResult = true;
                 Close();
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Error applying corrections: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                // Terminal error: record it for the caller's shell-banner notify (#14), then close so
+                // ShowDialog returns. DialogResult=true because corrections applied before the throw
+                // are already live (ChangesMade reflects that) and the caller should process them.
+                ApplyErrorMessage = ex.Message;
+                DialogResult = true;
+                Close();
             }
         }
 

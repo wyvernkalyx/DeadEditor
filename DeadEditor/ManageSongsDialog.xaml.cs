@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MessageBox = System.Windows.MessageBox;
 
 namespace DeadEditor
 {
@@ -196,13 +195,18 @@ namespace DeadEditor
                         }
                     }
 
-                    MessageBox.Show($"Song database exported to:\n{dialog.FileName}",
-                        "Export Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Ruling 6 (#10): in-dialog banner, Info (auto-dismisses). Independent of the
+                    // shell singleton — DialogBanner has its own queue.
+                    DialogBanner.Show(new AlertItem(
+                        $"Song database exported to:\n{dialog.FileName}",
+                        AlertSeverity.Info, "Export Successful"));
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error exporting database: {ex.Message}",
-                        "Export Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    // Ruling 6 (#11): in-dialog banner, Error (persists until closed).
+                    DialogBanner.Show(new AlertItem(
+                        $"Error exporting database: {ex.Message}",
+                        AlertSeverity.Error, "Export Failed"));
                 }
             }
         }

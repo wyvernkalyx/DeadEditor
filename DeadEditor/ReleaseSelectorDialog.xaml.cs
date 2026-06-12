@@ -31,8 +31,18 @@ namespace DeadEditor
             }
             else
             {
-                System.Windows.MessageBox.Show("Please select a release.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Inline validation (Ruling 6: #12) — adjacent to the Select button, no MessageBox.
+                ValidationText.Text = "Select a release from the list.";
+                ValidationText.Visibility = Visibility.Visible;
             }
+        }
+
+        /// <summary>Clear the #12 inline validation once a row is selected (Ruling 6: "clears when the
+        /// user corrects the input").</summary>
+        private void ReleasesDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (ValidationText != null && ReleasesDataGrid.SelectedItem != null)
+                ValidationText.Visibility = Visibility.Collapsed;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

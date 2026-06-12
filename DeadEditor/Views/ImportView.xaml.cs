@@ -1036,7 +1036,9 @@ namespace DeadEditor
                         Owner = parentWindow
                     };
 
-                    if (dialog.ShowDialog() == true && dialog.ChangesMade)
+                    bool applied = dialog.ShowDialog() == true;
+
+                    if (applied && dialog.ChangesMade)
                     {
                         TracksDataGrid.Items.Refresh();
                         int nowMatched = _tracks.Count(t => t.Track.IsMatched == true);
@@ -1047,6 +1049,17 @@ namespace DeadEditor
                         await ShowNotificationAsync("Normalization Complete",
                             $"{unmatched} songs not in database (will use original titles). Unmatched songs shown in gold.");
                     }
+
+                    // Ruling 6 hand-off: the dialog notifies via the shell banner AFTER it closes
+                    // (#13 Info / #14 Error). Both outcomes are handled here.
+                    if (dialog.SongsAddedCount > 0)
+                        App.Alerts.Notify(
+                            $"Added {dialog.SongsAddedCount} new song{(dialog.SongsAddedCount == 1 ? "" : "s")} to the song database.",
+                            AlertSeverity.Info, "Songs Added");
+                    if (dialog.ApplyErrorMessage != null)
+                        App.Alerts.Notify(
+                            $"Error applying corrections:\n\n{dialog.ApplyErrorMessage}",
+                            AlertSeverity.Error, "Error");
                 }
 
                 RefreshStepper();

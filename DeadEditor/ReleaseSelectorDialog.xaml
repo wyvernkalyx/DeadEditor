@@ -38,6 +38,7 @@
                       RowBackground="#2D2D30"
                       AlternatingRowBackground="#252526"
                       BorderThickness="0"
+                      SelectionChanged="ReleasesDataGrid_SelectionChanged"
                       MouseDoubleClick="ReleasesDataGrid_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="150" IsReadOnly="True"/>
@@ -72,10 +73,19 @@
             </DataGrid>
         </Border>
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button Content="Select" Width="100" Height="35" Margin="0,0,10,0" Click="SelectButton_Click" IsDefault="True"/>
-            <Button Content="Cancel" Width="100" Height="35" Click="CancelButton_Click" IsCancel="True"/>
-        </StackPanel>
+        <!-- Buttons + inline validation (Ruling 6: #12). The validation text renders at the LEFT of
+             the action row, left of the Select button; it reports the no-selection refusal and clears
+             when a row is selected (ReleasesDataGrid_SelectionChanged) or on a valid retry. Amber for
+             this dialog's dark (#1E1E1E) background. -->
+        <DockPanel Grid.Row="3" Margin="0,15,0,0" LastChildFill="False">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="Select" Width="100" Height="35" Margin="0,0,10,0" Click="SelectButton_Click" IsDefault="True"/>
+                <Button Content="Cancel" Width="100" Height="35" Click="CancelButton_Click" IsCancel="True"/>
+            </StackPanel>
+            <TextBlock x:Name="ValidationText" DockPanel.Dock="Left"
+                       Foreground="#F0D26A" FontWeight="SemiBold" FontSize="13"
+                       VerticalAlignment="Center" TextWrapping="Wrap"
+                       Visibility="Collapsed"/>
+        </DockPanel>
     </Grid>
 </Window>
