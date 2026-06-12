@@ -57,5 +57,15 @@
         <!-- Player Bar -->
         <local:PlayerBar Grid.Column="1" Grid.Row="3"
                         x:Name="PlayerBar"/>
+
+        <!-- In-window confirm host (alert-system-spec.md Ruling 2): full-shell dimmed scrim +
+             centered card for bucket-B blocking decisions. Spans every column and row (sidebar,
+             header, content, playlist, player) at a higher Z than the banner layer (ZIndex 10) so a
+             blocking decision dims and blocks the ENTIRE shell, banner included. Collapsed when idle;
+             banners may still fire behind the scrim without breaking. -->
+        <views:ConfirmHost Grid.Column="0" Grid.Row="0"
+                         Grid.ColumnSpan="2" Grid.RowSpan="4"
+                         x:Name="ConfirmHost"
+                         Panel.ZIndex="100"/>
     </Grid>
 </Window>

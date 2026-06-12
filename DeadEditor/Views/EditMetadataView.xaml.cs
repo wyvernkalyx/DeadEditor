@@ -997,17 +997,20 @@ namespace DeadEditor
         /// Cancel: discard changes and navigate back.
         /// Called from HeaderBar "Cancel" button.
         /// </summary>
-        public void CancelEdit()
+        public async void CancelEdit()
         {
+            // Bucket-B confirm (alert-system-spec.md #25). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> discard + GoBack; No/Esc (false) -> stay.
+            // async void mirrors the existing UI-handler pattern in this file; the HeaderBar
+            // Cancel/Back click handlers call this fire-and-forget (nothing runs after it), so the
+            // signature change is contained — NavigateBack() still delegates here unchanged.
             if (_hasUnsavedChanges)
             {
-                var result = System.Windows.MessageBox.Show(
+                bool discard = await App.Alerts.ConfirmAsync(
                     "You have unsaved changes. Discard them?",
-                    "Discard Changes",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                    "Discard Changes");
 
-                if (result != MessageBoxResult.Yes) return;
+                if (!discard) return;
             }
 
             _shell.Navigation.GoBack();

@@ -43,6 +43,10 @@ namespace DeadEditor
             // before any view can call App.Alerts.Notify.
             AlertService.Instance.RegisterSink(AlertBanner);
 
+            // Wire the dimmed-scrim confirm host as the shell-wide bucket-B surface (Ruling 2).
+            // Registered alongside the banner sink, before any view can call App.Alerts.ConfirmAsync.
+            AlertService.Instance.RegisterConfirmHost(ConfirmHost);
+
             _settings = LibrarySettings.Load();
             _navigationService = new NavigationService();
 
@@ -134,6 +138,21 @@ namespace DeadEditor
 
         private void ShellWindow_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            // Confirm host gate (alert-system-spec.md Ruling 2): while a blocking decision is up, the
+            // scrim owns the keyboard. Enter = the focused/default Confirm button; Esc = the safe
+            // negative answer. Every other key is swallowed so no shell shortcut (Space=play,
+            // Ctrl+F, Delete, Esc=GoBack) leaks behind the scrim. This runs first because the
+            // Window's PreviewKeyDown tunnels before the card's own elements.
+            if (ConfirmHost.IsShowing)
+            {
+                if (e.Key == Key.Enter)
+                    ConfirmHost.ConfirmByKeyboard();
+                else if (e.Key == Key.Escape)
+                    ConfirmHost.CancelByKeyboard();
+                e.Handled = true;
+                return;
+            }
+
             // Don't intercept keys when user is typing in a text box
             var focusedElement = Keyboard.FocusedElement;
             bool isTypingInTextBox = focusedElement is System.Windows.Controls.TextBox;
@@ -417,17 +436,18 @@ namespace DeadEditor
             }
         }
 
-        private void HeaderBar_ImportCancelRequested(object? sender, EventArgs e)
+        private async void HeaderBar_ImportCancelRequested(object? sender, EventArgs e)
         {
+            // Bucket-B confirm (alert-system-spec.md #3). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> leave Import; No/Esc (false) -> stay.
+            // The handler is already an event subscription, so async void carries no call-site ripple.
             if (_importView is ImportView importView && importView.HasUnsavedWork)
             {
-                var result = System.Windows.MessageBox.Show(
+                bool leave = await App.Alerts.ConfirmAsync(
                     "You have tracks loaded that haven't been imported. Leave Import?",
-                    "Leave Import",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                    "Leave Import");
 
-                if (result != MessageBoxResult.Yes) return;
+                if (!leave) return;
             }
 
             NavigateToLibrary();

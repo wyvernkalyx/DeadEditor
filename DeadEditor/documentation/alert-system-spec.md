@@ -86,6 +86,51 @@ result via `TaskCompletionSource`, which fits the existing `async` save paths
 Yes/No/Cancel), the same **default button**, and **Esc**/cancel mapping each site relies on today. A
 bucket-B conversion that changes which branch a button takes is a regression, not a re-skin.
 
+**Confirm host — implemented decisions (increment 6).** The two-way `ConfirmAsync` surface
+(`Views/ConfirmHost.xaml(.cs)`, registered by `ShellWindow` via `AlertService.RegisterConfirmHost`)
+landed with the following rulings:
+
+- **Placement / scrim.** A full-shell dimmed scrim (`#CC000000`) + centered dark card, mounted in
+  `ShellWindow.xaml` spanning **every column and row** (`Grid.ColumnSpan=2 Grid.RowSpan=4`) at
+  `Panel.ZIndex=100` — above the banner layer (`ZIndex=10`), so a blocking decision dims and blocks
+  the **entire** shell, sidebar/header/playlist/player and banner included. The opaque scrim `Border`
+  captures all mouse input; keyboard is gated by the shell (below).
+- **Focus ownership — the deliberate contrast with the banner.** The banner is passive chrome that
+  **never calls `Focus()`** (it must not steal focus from the active control). The confirm card is the
+  opposite **by design**: it **takes keyboard focus** (the Confirm button is focused on show), because
+  a blocking decision is the one surface that *should* own focus until answered. This contrast is
+  intentional, not an inconsistency.
+- **Keyboard (Esc/Enter).** Handled in `ShellWindow_PreviewKeyDown` while `ConfirmHost.IsShowing`
+  (the Window's tunnelling preview fires before the card's own elements): **Enter** → the
+  focused/default **Confirm** button (resolves `true`); **Esc** → the **safe/negative** answer
+  (resolves `false`, identical to the Cancel/No button). Every other key is **swallowed**
+  (`e.Handled = true`) so no shell shortcut (Space = play/pause, Ctrl+F, Delete, the shell's own
+  Esc = GoBack) leaks behind the scrim.
+- **Esc = negative is a deliberate, uniform improvement.** A Win32 **YesNo** `MessageBox` has **no
+  Esc-close** (Esc does nothing without a Cancel button). All three converted sites (#3/#25/#32) were
+  YesNo, so the new surface **adds** Esc = No (stay / keep editing — the safe answer). This is recorded
+  here as an intentional, uniform semantics improvement across the confirm surface, not a silent
+  per-site change: Esc can only ever take the *non-destructive* branch (it never discards or leaves).
+- **Re-entrancy — refuse with exception.** Calling `ConfirmAsync` while a confirm is already showing
+  throws `InvalidOperationException`. One blocking decision owns the surface at a time; the scrim
+  structurally prevents a *second user-initiated* confirm, so a second call is a logic error. Refusing
+  loudly is preferred over silently queuing a prompt the user never expected to be deferred (a queued
+  blocking decision would surface later, detached from its triggering action). The `TaskCompletionSource`
+  is torn down (`IsShowing` flips false) **before** the result is set, so a continuation that
+  immediately raises another confirm is allowed.
+- **Banner interplay.** Banners may still fire while the scrim is up — they render behind it at the
+  lower Z and surface normally once the card is dismissed; the two surfaces do not interfere.
+- **Pure-logic extraction — skipped, justified.** Unlike the banner (whose FIFO ordering + severity
+  auto-dismiss policy warranted the pure, tested `AlertQueue`), the confirm host has **no non-trivial
+  pure logic**: the result mapping is a direct 1:1 (Confirm → `true`, Cancel/Esc → `false`) with no
+  ordering, no queue (re-entrancy is refused, not buffered), and no severity policy. There is nothing
+  to extract that a test would meaningfully exercise; the manual WPF gate is the verification.
+- **Three-way overload deferred.** Only the two-way `Task<bool> ConfirmAsync(message, title,
+  confirmLabel = "Yes", cancelLabel = "No")` is implemented. The Yes/No/Cancel overload and the
+  `ConfirmResult` enum are **deferred to the increment that converts #27** (the sole YesNoCancel
+  site, bucket-B sweep) — they are not trivially shared with the two-way path (a third button +
+  tri-state result), and Ruling 4 / the rollout discipline forbid stubbed `NotImplemented` members.
+
 ### Ruling 3 — Bucket C (info-file viewer) → scrollable read panel, last
 The **single bucket-C site** (#33, `ImportView` info-`.txt` viewer) is not an alert — it dumps an
 arbitrarily long text file into a `MessageBox`. It converts to a **scrollable in-window read panel**,
@@ -132,7 +177,7 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 |---|-----------|----------|-----------------|--------|
 | 1 | `ShellWindow.xaml.cs:344` | Confirm delete album → Recycle Bin | Warning / YesNo | B |
 | 2 | `ShellWindow.xaml.cs:376` | Album delete failed — **converted (inc 3)** | Error / OK | A |
-| 3 | `ShellWindow.xaml.cs:423` | Leave Import with unimported tracks | Question / YesNo | B |
+| 3 | `ShellWindow.xaml.cs:423` | Leave Import with unimported tracks — **converted (inc 6)** | Question / YesNo | B |
 | 4 | `ShellWindow.xaml.cs:607` | Box set gone since list loaded — **converted (inc 5)** | Information / OK | A |
 | 5 | `ShellWindow.xaml.cs:770` | Confirm delete concert JSON | Warning / YesNo | B |
 | 6 | `ShellWindow.xaml.cs:800` | Concert delete failed — **converted (inc 3)** | Error / OK | A |
@@ -154,14 +199,14 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 22 | `Views/EditMetadataView.xaml.cs:469` | Manifest sidecar write failed — **converted (inc 5)** | Warning / OK | A |
 | 23 | `Views/EditMetadataView.xaml.cs:976` | Album type changed (move-files notice) — **converted (inc 5), Warning** (remapped from the original Information icon per gate finding: it is an actionable advisory and must persist) | Information / OK | A |
 | 24 | `Views/EditMetadataView.xaml.cs:994` | Save changes failed — **converted (inc 3)** | Error / OK | A |
-| 25 | `Views/EditMetadataView.xaml.cs:1007` | Cancel with unsaved changes | Question / YesNo | B |
+| 25 | `Views/EditMetadataView.xaml.cs:1007` | Cancel with unsaved changes — **converted (inc 6)** | Question / YesNo | B |
 | 26 | `Views/EditMetadataView.xaml.cs:1317` | Cannot verify — required fields missing — **converted (inc 5)** | Warning / OK | A |
 | 27 | `Views/EditMetadataView.xaml.cs:1703` | Existing MBID — refresh / search / cancel | Question / YesNoCancel | B |
 | 28 | `Views/EditSetlistView.xaml.cs:244` | Invalid date format on save — **converted (slice 1)** | Warning / OK | A |
 | 29 | `Views/EditSetlistView.xaml.cs:261` | **Duplicate-date refusal (commit `a6a652b`)** — **converted (slice 1)** | Warning / OK | A |
 | 30 | `Views/EditSetlistView.xaml.cs:271` | Empty setlist on save — **converted (slice 1)** | Warning / OK | A |
 | 31 | `Views/EditSetlistView.xaml.cs:359` | Setlist save failed — **converted (inc 3)** | Error / OK | A |
-| 32 | `Views/EditSetlistView.xaml.cs:369` | Cancel with unsaved changes | Question / YesNo | B |
+| 32 | `Views/EditSetlistView.xaml.cs:369` | Cancel with unsaved changes — **converted (inc 6)** | Question / YesNo | B |
 | 33 | `Views/ImportView.xaml.cs:1577` | Display info `.txt` file content | Information / OK | C |
 | 34 | `Views/MbidMigrationView.xaml.cs:80` | Confirm start migration fresh | Question / YesNo | B |
 | 35 | `Views/MbidMigrationView.xaml.cs:130` | Migration error — **converted (inc 3)** | Error / OK | A |
@@ -219,17 +264,24 @@ public interface IAlertService
     void Notify(string message, AlertSeverity severity = AlertSeverity.Info, string? title = null);
 
     // Bucket B — silent in-window dimmed confirm host; result via TaskCompletionSource.
-    // Two-way (Yes/No, OK/Cancel):
+    // Two-way (Yes/No, OK/Cancel) — IMPLEMENTED (increment 6). true = confirmLabel, false = cancelLabel/Esc.
     Task<bool> ConfirmAsync(string message, string title,
-                            string confirmText = "OK", string cancelText = "Cancel");
+                            string confirmLabel = "Yes", string cancelLabel = "No");
 
-    // Three-way (Yes/No/Cancel):
-    Task<ConfirmResult> ConfirmAsync(string message, string title,
-                                     string yesText, string noText, string cancelText);
+    // Three-way (Yes/No/Cancel) — DEFERRED to the #27 conversion (bucket-B sweep); not stubbed.
+    //   Task<ConfirmResult> ConfirmAsync(string message, string title,
+    //                                    string yesText, string noText, string cancelText);
 }
 
-public enum ConfirmResult { Yes, No, Cancel }
+// public enum ConfirmResult { Yes, No, Cancel }   // added with the three-way overload (deferred)
 ```
+
+> **Implementation note (increment 6).** The two-way signature shipped as
+> `ConfirmAsync(string message, string title, string confirmLabel = "Yes", string cancelLabel = "No")`
+> — the defaults were changed from the original `"OK"/"Cancel"` sketch to `"Yes"/"No"` to match the
+> three converted YesNo sites (#3/#25/#32). The three-way overload + `ConfirmResult` are deferred (not
+> stubbed) per Ruling 4; they land with #27. The host also exposes a parallel `IConfirmHost` interface
+> (the view the service forwards to), mirroring the `IAlertSink` split for the banner.
 
 **Proof-of-silence precedent.** `Views/PullCollisionDialog` is already a dark-themed WPF dialog
 (Replace / Append / Cancel) that passes **no `MessageBoxImage`** and therefore **chimes not at all** —
@@ -361,8 +413,32 @@ clear the gate — a human clears the manual WPF gate before each commit.
    **This completes the bucket-A conversions for all shell-hosted views** — every remaining bucket-A
    site (#7–#14, minus orphaned #9) lives in a modal `ShowDialog()` window and is handled per Ruling 6
    in a later increment. **Manual WPF gate is Gregg's, separate.**
-7. _(future)_ Increment 3 — confirm host + unsaved-changes prompts.
-8. _(future)_ Increment 4 — bucket-B sweep.
+7. **[Implemented — pending WPF gate]** Increment 3 — confirm host (`ConfirmAsync`) + the
+   unsaved-changes prompts (the "increment 6" work session — the **first bucket-B increment**, so A
+   and B still never interleave per Ruling 5). New: `Views/ConfirmHost.xaml(.cs)` (the full-shell
+   dimmed-scrim `IConfirmHost`, mounted in `ShellWindow` at `ZIndex=100` above the banner and
+   registered via the new `AlertService.RegisterConfirmHost`); `IAlertService` extended with the
+   two-way `Task<bool> ConfirmAsync(message, title, confirmLabel = "Yes", cancelLabel = "No")` and a
+   new `IConfirmHost` interface in `Services/IAlertService.cs`; `AlertService.ConfirmAsync` forwards
+   to the host (no host → `false`, the safe answer). Converted the three unsaved-changes / leave
+   prompts from `MessageBox.Show(..., YesNo, Question)` to `await App.Alerts.ConfirmAsync(...)`,
+   **branch mapping preserved exactly** (Yes/true → leave/discard + `GoBack`/`NavigateToLibrary`;
+   No/Esc/false → return/stay): **#3** (`ShellWindow.HeaderBar_ImportCancelRequested`), **#25**
+   (`EditMetadataView.CancelEdit`), **#32** (`EditSetlistView.CancelEdit`). Each containing method
+   became `async void` — #3 was already an event subscription; #25/#32 are UI command handlers called
+   fire-and-forget by the HeaderBar Cancel/Back click handlers (nothing runs after the call), so the
+   ripple is contained and `NavigateBack()` still delegates unchanged. Decisions recorded in Ruling 2:
+   **Esc = the safe negative answer** (a deliberate, uniform improvement — the old YesNo boxes had no
+   Esc-close); **Enter = the default Confirm button**; **re-entrancy refuses with
+   `InvalidOperationException`**; the card **takes focus by design** (the deliberate contrast with the
+   never-focusing banner); banners may fire behind the scrim without breaking. `EditSetlistView`'s now
+   unused `using MessageBox` alias removed (#32 was the file's last `MessageBox`); the `MessageBox`
+   surfaces in `ShellWindow`/`EditMetadataView` stay (those files still host unconverted confirm
+   sites). No new pure logic, **no new tests** (the confirm result mapping is a trivial 1:1, nothing
+   to extract — see Ruling 2; baseline holds at **355**); build clean (51 unique warnings). **Manual
+   WPF gate is Gregg's, separate.**
+8. _(future)_ Increment 4 — bucket-B sweep (deletes, reset/re-enrich, MBID flows — including #27, the
+   YesNoCancel site that adds the three-way `ConfirmAsync` overload + `ConfirmResult`).
 9. _(future)_ Increment 5 — bucket-C scrollable read panel.
 
 Status flips to **Implemented** at close-out once the sweep lands.

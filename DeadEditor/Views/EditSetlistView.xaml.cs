@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using MessageBox = System.Windows.MessageBox;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -358,17 +357,20 @@ namespace DeadEditor
             }
         }
 
-        public void CancelEdit()
+        public async void CancelEdit()
         {
+            // Bucket-B confirm (alert-system-spec.md #32). Branch mapping preserved from the old
+            // YesNo/Question MessageBox: Yes (true) -> discard + GoBack; No/Esc (false) -> stay.
+            // async void mirrors the existing UI-handler pattern; the HeaderBar Cancel/Back click
+            // handlers call this fire-and-forget (nothing runs after it), so the signature change is
+            // contained — NavigateBack() still delegates here unchanged.
             if (_hasUnsavedChanges)
             {
-                var result = MessageBox.Show(
+                bool discard = await App.Alerts.ConfirmAsync(
                     "You have unsaved changes. Discard them?",
-                    "Discard Changes?",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                    "Discard Changes?");
 
-                if (result != MessageBoxResult.Yes) return;
+                if (!discard) return;
             }
 
             _shell.Navigation.GoBack();
