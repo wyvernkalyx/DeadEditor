@@ -8,6 +8,14 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Banked 2026-06-12 (import normalization)
+- **Strip leading track-number prefix before canonical song matching:**
+  - **Symptom:** importing a concert whose track titles carry an embedded number prefix (e.g. `01 - Bertha`, `02 - Good Lovin'`) sends every track to the Unmatched Songs dialog even though the canonical name exists in `songs.json`; the dropdown pre-fills the raw prefixed string instead of the matched canonical name. Likely common given taper/ripper folder-naming conventions.
+  - **Hypothesis (untested):** the matcher compares the full raw title against canonical names without normalizing away a leading `<digits><separator>` prefix.
+  - **Direction (not designed; needs Phase A):** normalize only the comparison key used for matching — never mutate the stored FLAC tag (source-of-truth rule). Strip a leading track-number prefix across separator variants (` - `, `-`, `. `, `) `). Safety: no supported artist's canonical title legitimately begins with `NN -` (multi-band by design); the disc-prefixed track number (e.g. `Track 101`) is distinct from an in-title `01` and must not be conflated.
+  - **Open question:** should a stripped+matched title auto-resolve and skip the Unmatched dialog, or only pre-select the correct dropdown entry for user confirmation?
+  - **Status:** banked, non-blocking. Locate the matching/normalization site (candidate: `MetadataService` or the song-match service) and diagnose before any implementation.
+
 ### Banked 2026-06-12 (alert-system increment-9 gate)
 - **Advanced Search song criteria not wired to any result:** the Contains / Exclude / Sequence tabs collect `SelectedSongs`/`ExcludedSongs`/`SongSequence` into public properties, but the caller (`HeaderBar_AdvancedSearchRequested`, `ShellWindow.xaml.cs:316`) calls `dialog.ShowDialog()` and discards the result — nothing reads the criteria, so a song search closes the dialog with no visible effect. Only the Track Search tab (its own in-dialog grid) works. Pre-existing (predates the alert sweep). Fix: consume the criteria after `ShowDialog()` and filter the library grid / present results.
 - **Match Setlist button styling:** the Match Setlist button in the `EditMetadataView` toolbar renders washed-out / unreadable (owner screenshots 2026-06-12). Restyle for contrast against the dark toolbar.
