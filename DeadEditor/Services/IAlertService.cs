@@ -84,6 +84,15 @@ namespace DeadEditor.Services
         /// </summary>
         Task<ConfirmResult> ConfirmAsync(string message, string title,
                                          string confirmLabel, string declineLabel, string cancelLabel);
+
+        /// <summary>
+        /// Show a long text document in a silent, in-window scrollable read panel (bucket C,
+        /// alert-system-spec.md Ruling 3): a full-shell dimmed scrim + LARGE centered card with a
+        /// title, a read-only/selectable monospace text area, and a Close button. Esc and Close both
+        /// dismiss. Fire-and-forget — it returns no value (a viewer, not a decision). Must be called
+        /// on the UI thread. Used by the Import info-file viewer (#33).
+        /// </summary>
+        void ShowReadPanel(string title, string content);
     }
 
     /// <summary>
@@ -110,5 +119,16 @@ namespace DeadEditor.Services
 
         Task<ConfirmResult> ConfirmAsync(string message, string title,
                                          string confirmLabel, string declineLabel, string cancelLabel);
+    }
+
+    /// <summary>
+    /// The visual read-panel host the <see cref="AlertService"/> drives for bucket-C long-text
+    /// viewing (alert-system-spec.md Ruling 3). Implemented by the WPF dimmed-scrim overlay in the
+    /// shell; kept as an interface so the service layer does not depend on the view type.
+    /// <see cref="Show"/> is always invoked on the UI thread.
+    /// </summary>
+    public interface IReadPanelHost
+    {
+        void Show(string title, string content);
     }
 }

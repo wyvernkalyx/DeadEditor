@@ -47,6 +47,10 @@ namespace DeadEditor
             // Registered alongside the banner sink, before any view can call App.Alerts.ConfirmAsync.
             AlertService.Instance.RegisterConfirmHost(ConfirmHost);
 
+            // Wire the read-panel host as the shell-wide bucket-C surface (Ruling 3) for the Import
+            // info-file viewer (#33).
+            AlertService.Instance.RegisterReadPanelHost(ReadPanel);
+
             _settings = LibrarySettings.Load();
             _navigationService = new NavigationService();
 
@@ -150,6 +154,20 @@ namespace DeadEditor
                 else if (e.Key == Key.Escape)
                     ConfirmHost.CancelByKeyboard();
                 e.Handled = true;
+                return;
+            }
+
+            // Read-panel gate (alert-system-spec.md Ruling 3): while the info-file viewer is up, Esc
+            // dismisses it. Every OTHER key falls through UNHANDLED so it reaches the focused text area
+            // (PgUp/PgDn/arrows scroll) — but we return before the shell's own shortcuts so none of
+            // them (Space=play, Ctrl+F, Delete, Esc=GoBack) fire behind the scrim.
+            if (ReadPanel.IsShowing)
+            {
+                if (e.Key == Key.Escape)
+                {
+                    ReadPanel.Hide();
+                    e.Handled = true;
+                }
                 return;
             }
 

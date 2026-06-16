@@ -20,6 +20,7 @@ namespace DeadEditor.Services
 
         private IAlertSink? _sink;
         private IConfirmHost? _confirmHost;
+        private IReadPanelHost? _readPanelHost;
 
         /// <summary>
         /// Register the visual banner host. Called once by <c>ShellWindow</c> at construction — the
@@ -34,6 +35,13 @@ namespace DeadEditor.Services
         /// attached, <see cref="ConfirmAsync"/> resolves to <c>false</c> (the safe/negative answer).
         /// </summary>
         public void RegisterConfirmHost(IConfirmHost host) => _confirmHost = host;
+
+        /// <summary>
+        /// Register the visual read-panel host (the shell's dimmed-scrim viewer overlay). Called once
+        /// by <c>ShellWindow</c> at construction, alongside the other host registrations. With no host
+        /// attached, <see cref="ShowReadPanel"/> is a silent no-op.
+        /// </summary>
+        public void RegisterReadPanelHost(IReadPanelHost host) => _readPanelHost = host;
 
         public void Notify(string message, AlertSeverity severity = AlertSeverity.Info, string? title = null)
         {
@@ -72,6 +80,13 @@ namespace DeadEditor.Services
             if (host == null) return Task.FromResult(ConfirmResult.Cancel);
 
             return host.ConfirmAsync(message, title, confirmLabel, declineLabel, cancelLabel);
+        }
+
+        public void ShowReadPanel(string title, string content)
+        {
+            // Opened from a UI-thread click handler (the Import "View Info" button). With no host
+            // attached, silently no-op.
+            _readPanelHost?.Show(title, content);
         }
     }
 }

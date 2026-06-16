@@ -58,6 +58,17 @@
         <local:PlayerBar Grid.Column="1" Grid.Row="3"
                         x:Name="PlayerBar"/>
 
+        <!-- In-window read panel (alert-system-spec.md Ruling 3): full-shell dimmed scrim + LARGE
+             centered card for viewing a long text document (bucket C, the Import info-file viewer).
+             Spans the whole shell at ZIndex 50 — ABOVE the banner (10) so it dims everything, but
+             BELOW the confirm host (100) so a blocking DECISION still outranks an informational
+             viewer. A banner firing behind the scrim renders occluded and resurfaces unchanged when
+             the panel closes. Collapsed when idle. -->
+        <views:ReadPanelHost Grid.Column="0" Grid.Row="0"
+                         Grid.ColumnSpan="2" Grid.RowSpan="4"
+                         x:Name="ReadPanel"
+                         Panel.ZIndex="50"/>
+
         <!-- In-window confirm host (alert-system-spec.md Ruling 2): full-shell dimmed scrim +
              centered card for bucket-B blocking decisions. Spans every column and row (sidebar,
              header, content, playlist, player) at a higher Z than the banner layer (ZIndex 10) so a

@@ -20,7 +20,6 @@ using WpfUserControl = System.Windows.Controls.UserControl;
 using WpfMouseEventArgs = System.Windows.Input.MouseEventArgs;
 using WpfDragEventArgs = System.Windows.DragEventArgs;
 using WpfDragDropEffects = System.Windows.DragDropEffects;
-using WpfMessageBox = System.Windows.MessageBox;
 
 namespace DeadEditor
 {
@@ -1587,11 +1586,12 @@ namespace DeadEditor
             if (_albumInfo == null || string.IsNullOrEmpty(_albumInfo.InfoFileContent))
                 return;
 
-            WpfMessageBox.Show(
-                _albumInfo.InfoFileContent,
+            // Bucket-C read panel (alert-system-spec.md Ruling 3, #33): the whole info .txt in a
+            // scrollable, selectable, monospace in-window panel — replacing the silent-destroying,
+            // non-scrolling, proportional-font MessageBox.
+            App.Alerts.ShowReadPanel(
                 _albumInfo.InfoFileName ?? "Info File",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+                _albumInfo.InfoFileContent);
         }
 
         // ===== ARTWORK =====

@@ -214,7 +214,7 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 30 | `Views/EditSetlistView.xaml.cs:271` | Empty setlist on save — **converted (slice 1)** | Warning / OK | A |
 | 31 | `Views/EditSetlistView.xaml.cs:359` | Setlist save failed — **converted (inc 3)** | Error / OK | A |
 | 32 | `Views/EditSetlistView.xaml.cs:369` | Cancel with unsaved changes — **converted (inc 6)** | Question / YesNo | B |
-| 33 | `Views/ImportView.xaml.cs:1577` | Display info `.txt` file content | Information / OK | C |
+| 33 | `Views/ImportView.xaml.cs:1577` | Display info `.txt` file content — **converted (inc 10, scrollable read panel)** | Information / OK | C |
 | 34 | `Views/MbidMigrationView.xaml.cs:80` | Confirm start migration fresh — **converted (inc 8)** | Question / YesNo | B |
 | 35 | `Views/MbidMigrationView.xaml.cs:130` | Migration error — **converted (inc 3)** | Error / OK | A |
 | 36 | `Views/ReleasesView.xaml.cs:326` | Confirm remove standalone release — **converted (inc 7)** | Question / YesNo | B |
@@ -612,8 +612,43 @@ clear the gate — a human clears the manual WPF gate before each commit.
       Search tab (its own in-dialog results grid) is functional. Banked as a UX gap in `follow-ups.md`.
     - **Match Setlist button readability** in the `EditMetadataView` toolbar (washed-out/unreadable
       styling, owner screenshots) banked in `follow-ups.md`.
-11. _(future)_ Increment 5 — bucket-C scrollable read panel (#33). The only other remaining
-    `MessageBox` site is orphaned #9, gated on the `AlbumSearchDialog` delete-vs-revive decision
-    (`follow-ups.md`).
+11. **[Implemented — pending WPF gate]** Increment 10 — **bucket C (#33), the Import info-file
+    viewer**. Replaced the `WpfMessageBox.Show(infoContent, …, Information)` in
+    `ImportView.ViewInfoButton_Click` with `App.Alerts.ShowReadPanel(name, content)` → a new
+    **`Views/ReadPanelHost`**: a full-shell dimmed scrim + a LARGE centered dark card (insets the
+    content by an 80×56 scrim margin) with the info-file name as title, a Close button, and a
+    **read-only, selectable, `Consolas` (monospace), `NoWrap` `TextBox`** with both scrollbars.
+    New service surface: `IAlertService.ShowReadPanel(title, content)` + `IReadPanelHost` +
+    `AlertService.RegisterReadPanelHost`/forwarding, registered by `ShellWindow` alongside the other
+    hosts. `WpfMessageBox` alias removed from `ImportView` (#33 was its last use).
+    **Implementation shape — dedicated host (not a ConfirmHost generalization):** the viewer shares
+    *none* of ConfirmHost's decision machinery — no result, no `TaskCompletionSource<ConfirmResult>`,
+    no buttons-as-choices, no default-button accent/focus. Folding it in would have meant a mode flag
+    and a divergent content area, muddying that host's single responsibility; a separate ~50-line
+    UserControl reusing only the scrim/card/Esc/singleton-registration *shape* is the smaller clean
+    option and keeps each host single-purpose. It is reached through the existing `App.Alerts` surface
+    `ImportView` already uses (one new method), so no new wiring pattern is introduced — and no
+    speculative generality (one caller).
+    **Layering / z-order:** `ReadPanelHost` sits at **ZIndex 50** — above the banner (10) so it dims
+    the whole shell, below the confirm host (100) so a blocking *decision* still outranks an
+    informational viewer. A banner firing behind the scrim renders occluded and resurfaces unchanged
+    on close (the banner owns its own queue). **Re-entrancy is unguarded** (unlike ConfirmHost's
+    throw): the panel holds no pending result and the scrim blocks a second UI-initiated open, so a
+    second `Show` would simply replace the text — harmless.
+    **Keyboard:** the shell gates Esc → `Hide` while `ReadPanel.IsShowing`, but — unlike the confirm
+    gate, which swallows everything — lets **all other keys fall through to the focused `TextBox`** so
+    PgUp/PgDn/arrows scroll (the text area is focused on show); mouse-wheel scrolls natively. Shell
+    shortcuts (Space/Ctrl+F/Delete/Esc-back) are still suppressed (the gate returns before them).
+    **What the old `MessageBox` lost, now restored:** (1) **monospace alignment** — the Win32 box used
+    a proportional font, mangling ASCII-art etext/taper-note columns; `Consolas` + `NoWrap` preserves
+    them; (2) **full content** — the box had no scrolling, so long files were clipped/unreadable; the
+    panel scrolls vertically and horizontally; (3) **selection/copy** in a comfortable reading area.
+    **Closing grep (2026-06-12):** the only remaining `MessageBox.Show` in the app is **orphaned #9**
+    (`AlbumSearchDialog:40`); a cross-check for `MessageBoxButton`/`Result`/`Image` confirms #9 is the
+    sole live site. **Bucket C is complete; all 44 live actionable sites are converted.** No new tests
+    (the panel is pure view; baseline holds at **355**); build clean (51 unique warnings). **Manual WPF
+    gate is Gregg's, separate.**
 
-Status flips to **Implemented** at close-out once the sweep lands.
+**Remaining work.** Only **orphaned #9** (`AlbumSearchDialog`, no live caller) is unconverted, gated on
+the banked **delete-vs-revive** decision (`follow-ups.md`). The spec flips to **Implemented** at
+close-out — its **own commit after this gate clears** — not here.

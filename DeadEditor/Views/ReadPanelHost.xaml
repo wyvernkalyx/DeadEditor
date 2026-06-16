@@ -1,0 +1,69 @@
+<UserControl x:Class="DeadEditor.Views.ReadPanelHost"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Visibility="Collapsed">
+    <!-- Bucket-C read panel (alert-system-spec.md Ruling 3): a full-shell dimmed scrim + a LARGE
+         centered card for viewing a long text document (the imported info .txt). Same mold as
+         ConfirmHost (scrim + dark card, silent by construction, no MessageBeep / no OS chrome) but it
+         is a VIEWER, not a decision — no result, no buttons-as-choices, just a scrollable read area
+         and a Close. Collapsed when idle. -->
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3C3C3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Padding" Value="18,9"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A4A4F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="ScrimGrid" Background="#CC000000">
+        <!-- Large card: stretches to fill most of the shell, inset by a comfortable scrim margin. -->
+        <Border Margin="80,56"
+                Background="#252526"
+                BorderBrush="#3C3C3C" BorderThickness="1">
+            <DockPanel>
+                <!-- Title bar: info-file name on the left, Close on the right. -->
+                <Grid DockPanel.Dock="Top" Margin="20,16,16,10">
+                    <TextBlock x:Name="TitleText"
+                               FontSize="18" FontWeight="Bold"
+                               Foreground="#FFFFFF"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0,0,100,0"/>
+                    <Button x:Name="CloseButton" Content="Close"
+                            MinWidth="90"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Click="CloseButton_Click"/>
+                </Grid>
+
+                <!-- Scrollable, read-only, selectable (copyable) monospace text. NoWrap + both
+                     scrollbars preserve the column alignment of ASCII-art etext / taper notes that a
+                     proportional-font, non-scrolling MessageBox destroyed. -->
+                <Border Margin="20,0,20,20"
+                        Background="#1E1E1E" BorderBrush="#3C3C3C" BorderThickness="1">
+                    <TextBox x:Name="ContentText"
+                             IsReadOnly="True"
+                             IsReadOnlyCaretVisible="True"
+                             AcceptsReturn="True"
+                             TextWrapping="NoWrap"
+                             FontFamily="Consolas" FontSize="14"
+                             Background="Transparent" Foreground="#DDDDDD"
+                             BorderThickness="0"
+                             Padding="12"
+                             VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Auto"/>
+                </Border>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>
