@@ -1,6 +1,6 @@
 # Alert System Spec
 
-**Status:** Proposed
+**Status:** Implemented — close-out 2026-06-12 (buckets A/B/C converted; see Known exception re: orphaned #9)
 **Date:** 2026-06-11
 **Branch:** `feature/library-verification-surface`
 
@@ -649,6 +649,17 @@ clear the gate — a human clears the manual WPF gate before each commit.
     (the panel is pure view; baseline holds at **355**); build clean (51 unique warnings). **Manual WPF
     gate is Gregg's, separate.**
 
-**Remaining work.** Only **orphaned #9** (`AlbumSearchDialog`, no live caller) is unconverted, gated on
-the banked **delete-vs-revive** decision (`follow-ups.md`). The spec flips to **Implemented** at
-close-out — its **own commit after this gate clears** — not here.
+12. **[Implemented — gate cleared 2026-06-12]** Spec close-out (this commit, doc-only). Increment 10's
+    manual WPF gate (the #33 info-file read panel) **PASSED**, clearing the last converted bucket. With
+    buckets A, B, and C all converted and gated, **Status flips to Implemented** (header). No code
+    change; tests/warnings unchanged (355 passed; 51 unique warnings).
+
+**Known exception (so the status is not misread).** *Implemented* means **all live actionable
+MessageBox sites are converted** — the **44** in scope across buckets A/B/C — **not** that the codebase
+has zero `MessageBox.Show` calls. **Orphaned #9** (`AlbumSearchDialog.xaml.cs:40`) remains a live
+`MessageBox.Show`, but it is **orphaned code outside the conversion scope**: it has no live caller and
+was excluded from the inventory's actionable count from the start (see **Bucket counts** — "live
+actionable count is effectively 44"). It is tracked as a separate **orphaned-code cleanup** item
+pending a **delete-vs-revive** decision (`follow-ups.md`), **not** as an unconverted alert site. If
+that decision deletes the dialog, the last `MessageBox.Show` disappears with it; if it revives the
+dialog, #9 converts to inline validation per Ruling 6.
