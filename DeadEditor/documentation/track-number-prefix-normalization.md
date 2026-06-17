@@ -1,8 +1,9 @@
 # Track-Number Prefix Normalization
 
-Status: helper + tests implemented this commit (Phase B-1). `NormalizationService`
-wiring and the `TrackNumber` plumbing are **pending the next layer** — this layer
-adds the pure rule and its contract only, with **no behavior change** (no caller).
+Status: helper + tests shipped in Phase B-1 (commit `21ecfa8`). **Wiring shipped in
+Phase B-2 (Option B, match-key only): auto-resolve is live.**
+`NormalizationService.Normalize` now strips the prefix from its lookup key, and the
+import `NormalizeAll` path passes each track's number to gate the bare-space form.
 
 ## Problem
 
@@ -107,10 +108,20 @@ must survive. The old naive `^\d+[\s.\-_]+` regex would corrupt them (`16 Tons`
 style) and no canonical titles beginning with a digit. No data cleanup follow-up
 is needed.
 
-## Status / next layer
+## Wiring (Phase B-2)
 
-- This commit: `TrackNumberPrefix` helper + `TrackNumberPrefixTests` contract.
-- Pending: wire `TrackNumberPrefix.Strip` into `NormalizationService.Normalize`
-  (match-key-only), plumb the track's `TrackNumber` through for the gated
-  bare-space form, and auto-resolve stripped+matched tracks so they skip the
-  Unmatched Songs dialog.
+- `Normalize(string title, string? albumDate = null, int? trackNumber = null)` — new
+  optional `trackNumber` parameter (default null, so the three other callers compile
+  and behave unchanged). After `TitleStructureParser.Parse`, the lookup key becomes
+  `TrackNumberPrefix.Strip(cleaned, trackNumber)`; the existing L1→L6→L7→L9 cascade
+  runs on the stripped key. Stored `SongName`/`RawTitle` are untouched; a miss
+  preserves the original exactly (so genuinely-unmatched tracks still show their raw
+  title in the dialog).
+- `NormalizeAll` (the import "Normalize" button → Unmatched Songs dialog path) passes
+  `track.TrackNumber > 0 ? track.TrackNumber : (int?)null`, enabling the gated
+  bare-space form. Matched tracks are marked `IsMatched` and skip the dialog
+  (auto-resolve).
+- Other `Normalize` callers (`EditMetadataView`, `EditSetlistView`, the Match Setlist
+  `resolveCanonical` lambda) pass no track number → bare-space gate off → prior
+  behavior. Separator/disc-token forms still auto-resolve there (they strip without a
+  track number).

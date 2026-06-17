@@ -69,7 +69,12 @@ namespace DeadEditor.Services
         /// <param name="title">Raw track title from ID3 tag, file name, or external source.</param>
         /// <param name="albumDate">Optional album date (yyyy-MM-dd or yyyy form). Forwarded to the parser
         /// for two-digit-year resolution. See <see cref="TwoDigitYearResolver"/>.</param>
-        public string? Normalize(string title, string? albumDate = null)
+        /// <param name="trackNumber">Optional track number used to strip a leading track-number prefix
+        /// from the match key only (Option B). Gates the ambiguous bare-space form ("01 Bertha"); the
+        /// separator/disc-token forms strip regardless. The stored title is never touched; on a miss the
+        /// original is preserved. See <see cref="TrackNumberPrefix"/> and
+        /// documentation/track-number-prefix-normalization.md.</param>
+        public string? Normalize(string title, string? albumDate = null, int? trackNumber = null)
         {
             if (string.IsNullOrEmpty(title)) return null;
 
@@ -81,6 +86,12 @@ namespace DeadEditor.Services
             var parsed = TitleStructureParser.Parse(title, albumDate);
             var cleaned = parsed.SongName;
             if (string.IsNullOrEmpty(cleaned)) return null;
+
+            // Strip a leading track-number prefix from the match key only (e.g. "01 - Bertha"
+            // -> "Bertha"), restoring the strip lost when matching moved to TitleStructureParser.
+            // Match-key only: never mutates RawTitle, and a false strip simply misses the lookup
+            // below, leaving the original intact for the Unmatched Songs dialog.
+            cleaned = TrackNumberPrefix.Strip(cleaned, trackNumber);
 
             // L1: direct alias-table lookup.
             if (_aliasLookup.TryGetValue(cleaned, out var official))
@@ -214,8 +225,10 @@ namespace DeadEditor.Services
                 var titleToNormalize = !string.IsNullOrEmpty(track.SongName) ? track.SongName : track.Title;
 
                 // Normalize forwards albumDate to TitleStructureParser, which extracts and
-                // strips slash-formatted dates internally.
-                var normalized = Normalize(titleToNormalize, track.AlbumDate);
+                // strips slash-formatted dates internally. The track number gates the bare-space
+                // track-number-prefix strip ("01 Bertha" -> "Bertha"); 0 means "no number" -> null.
+                var normalized = Normalize(titleToNormalize, track.AlbumDate,
+                    track.TrackNumber > 0 ? track.TrackNumber : (int?)null);
                 if (normalized != null)
                 {
                     track.SongName = normalized;
