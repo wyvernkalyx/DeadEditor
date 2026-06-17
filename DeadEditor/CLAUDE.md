@@ -874,7 +874,7 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 **Architecture:** Single-window shell (`ShellWindow` + `NavigationService`); Box Sets feature shipped (curation wizard + flat model)
 **Song Database:** 598 songs (594 Grateful Dead, 4 NRPS)
 **Documentation:** 41 files in `documentation/` (specs, design memos, audits/inspections)
-**Build/Test Baseline (2026-06-11):** `dotnet build DeadEditor/DeadEditor.csproj` (clean) -> 0 errors, 51 unique warnings (MSBuild reports 102; the WPF markup + main double-compile emits each warning under both the main and `_wpftmp` project): 25 CA1416 platform-compat + 22 CS8618 uninitialized-non-nullable + 4 other nullable CS86xx; `dotnet test DeadEditor.sln` -> 355 passed, 0 failed, 0 skipped (was 346; +9 from the alert-system `AlertQueue` tests)
+**Build/Test Baseline (2026-06-11):** `dotnet build DeadEditor/DeadEditor.csproj` (clean) -> 0 errors, 51 unique warnings (MSBuild reports 102; the WPF markup + main double-compile emits each warning under both the main and `_wpftmp` project): 25 CA1416 platform-compat + 22 CS8618 uninitialized-non-nullable + 4 other nullable CS86xx; `dotnet test DeadEditor.sln` -> 385 passed, 0 failed, 0 skipped (was 355; +30 from the `TrackNumberPrefix` helper tests)
 
 ## Development Environment
 - OS: Windows 10.0.26200
