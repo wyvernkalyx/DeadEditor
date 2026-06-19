@@ -870,6 +870,8 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
   2. `Co-Authored-By: <model> <noreply@anthropic.com>` — identifies the specific model that authored the work (e.g. `Claude Opus 4.8 (1M context)`), updated to whatever model is in use.
 
   The example string is illustrative, not fixed — the second trailer tracks the current model. When in doubt, match the two trailers on the branch's last commit.
+- **One concern per commit.** Each commit addresses a single concern, with related documentation and code committed together — no broken or half-finished intermediate states between commits.
+- **Never push without authorization.** Commits accumulate locally on the feature branch; pushing to origin happens only on explicit authorization, never automatically.
 
 ---
 
