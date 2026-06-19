@@ -662,6 +662,6 @@ back **delete**: `AlbumSearchDialog` was dead since the March shell cutover (no 
 for a manual MusicBrainz-search entry point), so the dialog was removed and its `MessageBox` went with
 it. A full sweep — `grep -rn "MessageBox.Show" --include=*.cs` (excluding `bin/`/`obj/`) — now returns
 **zero hits in compiled source**. The codebase no longer contains a single live `MessageBox.Show`; the
-only residual `MessageBox` references are the dead `LibraryBrowserWindow.xaml.cs.bak` (4 phantom sites,
-separately tracked for deletion in `follow-ups.md`) and comment-only mentions. The dialog is
+dead `LibraryBrowserWindow.xaml.cs.bak` (4 phantom sites) was also **deleted 2026-06-19**
+(`follow-ups.md`), leaving only comment-only `MessageBox` mentions. The dialog is
 recoverable from git `006d170` if a manual album-search feature is ever scoped.

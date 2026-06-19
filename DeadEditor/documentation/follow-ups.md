@@ -36,9 +36,9 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Scope:** 45 live sites across 15 files (30 fire-and-forget notifications, 14 blocking decisions, 1 info-file viewer). Slice 1 converts the `EditSetlistView` validation cluster led by the duplicate-date refusal (`a6a652b`) that surfaced the sound complaint. See the spec for the full table and rollout.
 - **Surfaced:** Preference surfaced 2026-06-10; second lived-demand data point the **same day** during the Add Concert duplicate-date gate (the refusal chime, hit repeatedly while exercising collisions, is what surfaced the sound detail). Spec written 2026-06-11.
 
-### Delete `LibraryBrowserWindow.xaml.cs.bak` (dead file)
-- **What:** `DeadEditor/LibraryBrowserWindow.xaml.cs.bak` is a backup of a window the shell redesign already deleted ([18-shell-redesign-spec.md](18-shell-redesign-spec.md) § Removed Components). It carries 4 phantom `MessageBox.Show` sites that pollute alert-inventory greps but are unreachable dead code.
-- **Proposed fix:** Delete the `.bak` file. Trivial, no code impact.
+### Delete `LibraryBrowserWindow.xaml.cs.bak` (dead file) — **RESOLVED (2026-06-19)**
+- **What:** `DeadEditor/LibraryBrowserWindow.xaml.cs.bak` was a backup of a window the shell redesign already deleted ([18-shell-redesign-spec.md](18-shell-redesign-spec.md) § Removed Components). It carried 4 phantom `MessageBox.Show` sites that polluted alert-inventory greps but were unreachable dead code.
+- **Resolution:** **Deleted** the `.bak` file. Its 4 phantom sites are gone, so the unfiltered `MessageBox.Show` grep (no `--include=*.cs`) is now clean — the residual the alert-system true-zero close-out had to carve out no longer exists.
 - **Surfaced:** Alert-system inventory (2026-06-11).
 
 ### `AlbumSearchDialog` has no live caller — decide delete vs revive — **RESOLVED (2026-06-19)**
