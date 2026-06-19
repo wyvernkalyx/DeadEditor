@@ -865,6 +865,11 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 - Reference specific issues/features
 - Include session date in TODO.md updates
 - Note file counts and line changes for major work
+- **Co-Authored-By trailers.** Every commit carries exactly two `Co-Authored-By` trailers:
+  1. `Co-Authored-By: Claude <noreply@anthropic.com>` — the constant generic attribution.
+  2. `Co-Authored-By: <model> <noreply@anthropic.com>` — identifies the specific model that authored the work (e.g. `Claude Opus 4.8 (1M context)`), updated to whatever model is in use.
+
+  The example string is illustrative, not fixed — the second trailer tracks the current model. When in doubt, match the two trailers on the branch's last commit.
 
 ---
 
