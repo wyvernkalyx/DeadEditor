@@ -11,15 +11,27 @@ namespace DeadEditor.Services
     {
         private SongDatabase? _database;
         private Dictionary<string, string> _aliasLookup = new();
+        private readonly string _songsPath;
 
         public NormalizationService()
+            : this(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "songs.json"))
         {
+        }
+
+        /// <summary>
+        /// Test seam: construct against a specific songs.json path so AddAlias's write
+        /// path can be exercised without mutating the shipped fixture. Production uses
+        /// the parameterless ctor (BaseDirectory/Data/songs.json).
+        /// </summary>
+        internal NormalizationService(string songsPath)
+        {
+            _songsPath = songsPath;
             LoadDatabase();
         }
 
         private void LoadDatabase()
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "songs.json");
+            var path = _songsPath;
             if (File.Exists(path))
             {
                 var json = File.ReadAllText(path);
@@ -392,8 +404,17 @@ namespace DeadEditor.Services
             if (string.Equals(officialTitle, alias, StringComparison.OrdinalIgnoreCase))
                 return false;
 
+            // Idempotency: if the candidate already canonicalizes to this OfficialTitle via the
+            // cascade (dash/case/whitespace variants the parser folds before lookup), a stored
+            // alias would be a dead key. Don't append. (Verified: the manual Match-to-Song flow
+            // only reaches here for tracks Normalize left unmatched — IsMatched gates the menu and
+            // is set by NormalizeAll/Normalize incl. L9 fuzzy — so this won't suppress a legitimate
+            // first add.)
+            if (string.Equals(Normalize(alias), officialTitle, StringComparison.OrdinalIgnoreCase))
+                return false;
+
             // Re-read from disk to avoid overwriting concurrent changes
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "songs.json");
+            var path = _songsPath;
             if (!File.Exists(path)) return false;
 
             var json = File.ReadAllText(path);
@@ -440,7 +461,7 @@ namespace DeadEditor.Services
         {
             if (_database == null) return;
 
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "songs.json");
+            var path = _songsPath;
             var json = JsonConvert.SerializeObject(_database, Formatting.Indented);
             File.WriteAllText(path, json);
         }

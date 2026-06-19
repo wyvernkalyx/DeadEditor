@@ -68,11 +68,13 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
   into a stray directory.
 - **Surfaced:** 2026-06-10 implementation gate.
 
-### Alias-learning double-write
-- **Symptom:** Import view's right-click "Match to Song" writes the new alias to `songs.json` twice on a single match event.
+### Alias-learning double-write — **RESOLVED (2026-06-19)**
+- **Symptom (as banked):** Import view's right-click "Match to Song" writes the new alias to `songs.json` twice on a single match event.
 - **Surfaced:** Commit `1840a44` deduped one such occurrence ("The Monkey and the Engineer" written twice for "Monkey And The Engineer").
-- **Impact:** Dirty data in `songs.json`; harmless to matching (lookups tolerate dupes) but accumulates over time.
-- **Likely location:** The code path that appends to a song's `Aliases` list after a user matches an unmatched track.
+- **Investigation:** The literal "double-write per match event" was **not reproducible**. `AddAlias` has been dedup-guarded and idempotent since `d92d219` (official-title equality guard + existing-alias `.Any` guard), and each match call site calls it exactly once. `1840a44` was a one-time cleanup of a pre-feature working-copy artifact, not a recurring double-write.
+- **Real residual:** variant titles the cascade canonicalizes (typographic dashes, NBSP/Unicode whitespace, case) could still be stored as **dead alias keys** — the parser folds them to the canonical form *before* lookup, so the stored variant key is never reached at match time (e.g. `Peggy-O` carries a stored `Peggy–O` en-dash alias that no lookup ever hits).
+- **Resolution:** `AddAlias` now short-circuits when `Normalize(candidate)` already resolves to the OfficialTitle (approach (a), reusing the existing cascade — no second normalizer to diverge). Safe because the manual Match-to-Song flow only reaches `AddAlias` for tracks `Normalize` left unmatched (the menu is gated on `IsMatched != true`, set by `NormalizeAll`/`Normalize` incl. L9 fuzzy), so the guard cannot suppress a legitimate first add. Covered by `NormalizationServiceAliasIdempotencyTests` (variant rejected / novel accepted / idempotent re-add). A test path-seam ctor (`internal NormalizationService(string songsPath)`) lets the write path run against a temp `songs.json`.
+- **Optional follow-up (separate concern, NOT done here):** the existing dead artifacts in `songs.json` — `Peggy-O`'s stored `Peggy–O` (en-dash) alias plus the two case-variant seed entries — are harmless to matching but could be removed in a one-time data cleanup.
 
 ### Autocomplete control duplicated; no song-name autocomplete
 - **What:** `AlbumNameSuggestions` (the TextBox + Popup + ListBox pattern) is duplicated between `EditMetadataView.xaml` and `ImportView.xaml`. Song names have no autocomplete at all — the setlist editor uses a type-then-Normalize pattern instead.
