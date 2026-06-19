@@ -1,6 +1,6 @@
 # Alert System Spec
 
-**Status:** Implemented — close-out 2026-06-12 (buckets A/B/C converted; see Known exception re: orphaned #9)
+**Status:** Implemented — close-out 2026-06-12 (buckets A/B/C converted); orphaned #9 dialog deleted 2026-06-19, zero `MessageBox.Show` remaining
 **Date:** 2026-06-11
 **Branch:** `feature/library-verification-surface`
 
@@ -190,7 +190,6 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 6 | `ShellWindow.xaml.cs:800` | Concert delete failed — **converted (inc 3)** | Error / OK | A |
 | 7 | `AdvancedSearchDialog.xaml.cs:294` | No search criteria (songs) — **converted (inc 9, inline validation)** | Warning / OK | A |
 | 8 | `AdvancedSearchDialog.xaml.cs:317` | No search criteria (date/venue) — **converted (inc 9, inline validation)** | Warning / OK | A |
-| 9 | `AlbumSearchDialog.xaml.cs:40` | Missing album/artist — **ORPHANED: no live caller, site unreachable** (excluded from conversion) | Warning / OK | A |
 | 10 | `ManageSongsDialog.xaml.cs:199` | Export succeeded — **converted (inc 9, embedded banner, Info)** | Information / OK | A |
 | 11 | `ManageSongsDialog.xaml.cs:204` | Export failed — **converted (inc 9, embedded banner, Error)** | Error / OK | A |
 | 12 | `ReleaseSelectorDialog.xaml.cs:34` | No release selected — **converted (inc 9, inline validation)** | Warning / OK | A |
@@ -228,9 +227,10 @@ shell redesign deleted) and the stale `MainWindow` reference in `01-main-window.
 | 44 | `Views/SongsView.xaml.cs:262` | Confirm remove song — **converted (inc 7)** | Question / YesNo | B |
 | 45 | `Views/SongsView.xaml.cs:327` | Duplicate song name (add) — **converted (inc 2)** | Warning / OK | A |
 
-**Bucket counts:** A = 30, B = 14, C = 1 (total 45). Site **#9 is orphaned** (`AlbumSearchDialog` has
-no live caller), so the **live actionable count is effectively 44** — #9 is excluded from conversion
-until that dialog is deleted or revived (see `follow-ups.md`).
+**Bucket counts:** A = 29, B = 14, C = 1 (total 44) — **all live actionable sites converted**.
+(Site IDs run 1–45 with **#9 retired**: `AlbumSearchDialog` was orphaned dead code and was **deleted
+2026-06-19**, taking its `MessageBox` site with it — see `follow-ups.md`. The numbering keeps the gap
+at #9 so the stable site IDs referenced elsewhere in this spec do not shift.)
 
 ### Sound mapping (Windows 11)
 On Windows, `MessageBox.Show` calls the Win32 `MessageBox`, which calls `MessageBeep(uType)` for the
@@ -654,12 +654,14 @@ clear the gate — a human clears the manual WPF gate before each commit.
     buckets A, B, and C all converted and gated, **Status flips to Implemented** (header). No code
     change; tests/warnings unchanged (355 passed; 51 unique warnings).
 
-**Known exception (so the status is not misread).** *Implemented* means **all live actionable
-MessageBox sites are converted** — the **44** in scope across buckets A/B/C — **not** that the codebase
-has zero `MessageBox.Show` calls. **Orphaned #9** (`AlbumSearchDialog.xaml.cs:40`) remains a live
-`MessageBox.Show`, but it is **orphaned code outside the conversion scope**: it has no live caller and
-was excluded from the inventory's actionable count from the start (see **Bucket counts** — "live
-actionable count is effectively 44"). It is tracked as a separate **orphaned-code cleanup** item
-pending a **delete-vs-revive** decision (`follow-ups.md`), **not** as an unconverted alert site. If
-that decision deletes the dialog, the last `MessageBox.Show` disappears with it; if it revives the
-dialog, #9 converts to inline validation per Ruling 6.
+**True zero reached (2026-06-19).** *Implemented* originally meant **all live actionable MessageBox
+sites are converted** — the in-scope sites across buckets A/B/C — while one orphan remained: **#9**
+(`AlbumSearchDialog.xaml.cs:40`), a live `MessageBox.Show` with no caller, excluded from the actionable
+count and tracked as a separate **delete-vs-revive** decision (`follow-ups.md`). That decision came
+back **delete**: `AlbumSearchDialog` was dead since the March shell cutover (no caller, no lived demand
+for a manual MusicBrainz-search entry point), so the dialog was removed and its `MessageBox` went with
+it. A full sweep — `grep -rn "MessageBox.Show" --include=*.cs` (excluding `bin/`/`obj/`) — now returns
+**zero hits in compiled source**. The codebase no longer contains a single live `MessageBox.Show`; the
+only residual `MessageBox` references are the dead `LibraryBrowserWindow.xaml.cs.bak` (4 phantom sites,
+separately tracked for deletion in `follow-ups.md`) and comment-only mentions. The dialog is
+recoverable from git `006d170` if a manual album-search feature is ever scoped.

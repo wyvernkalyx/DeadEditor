@@ -41,9 +41,9 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 - **Proposed fix:** Delete the `.bak` file. Trivial, no code impact.
 - **Surfaced:** Alert-system inventory (2026-06-11).
 
-### `AlbumSearchDialog` has no live caller — decide delete vs revive
-- **What:** `AlbumSearchDialog` (a modal `Window`) has a constructor but **no `new AlbumSearchDialog(` anywhere in source** — nothing opens it. Its `MessageBox` site #9 (missing album/artist validation) in [alert-system-spec.md](alert-system-spec.md) is therefore **unreachable**, and is excluded from the alert-system conversion until this is resolved.
-- **Proposed fix:** Decide delete vs revive. If dead, remove the dialog (`AlbumSearchDialog.xaml(.cs)`) and drop site #9 from the inventory; if it should be wired up, restore a caller, then convert #9 to inline validation text per alert-system-spec.md Ruling 6.
+### `AlbumSearchDialog` has no live caller — decide delete vs revive — **RESOLVED (2026-06-19)**
+- **What:** `AlbumSearchDialog` (a modal `Window`) had a constructor but **no `new AlbumSearchDialog(` anywhere in source** — nothing opened it. Its `MessageBox` site #9 (missing album/artist validation) in [alert-system-spec.md](alert-system-spec.md) was therefore **unreachable**, and was excluded from the alert-system conversion until resolved.
+- **Resolution:** **Deleted** as dead code. `AlbumSearchDialog.xaml(.cs)` removed (dead since the March shell cutover; no live caller, no lived demand for a manual MusicBrainz-search entry point), and site #9 retired from the inventory. This dropped the **last live `MessageBox.Show`** in the app — a `grep -rn "MessageBox.Show" --include=*.cs` now returns zero hits in compiled source (alert migration at true zero). Recoverable from git `006d170` if a manual album-search feature is ever scoped.
 - **Surfaced:** Alert-system dialog-architecture audit (2026-06-11).
 
 ### Fix stale MainWindow MessageBox reference in `01-main-window.md`
