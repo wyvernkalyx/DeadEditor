@@ -831,7 +831,7 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 - **NEVER hardcode artist names** - Code must be artist-agnostic
   - Bad: `if (artist == "Grateful Dead")`
   - Good: Use `PrimaryArtistName` from settings or artist-agnostic logic
-- **Shared button styles:** `AccentButton` is centralized in `App.xaml` as a shared resource; new views consume it rather than re-declaring. `PrimaryButton` is NOT centralized - the key is overloaded (ImportView green vs. dialog blue) and must be disambiguated first (see follow-ups). `TertiaryButton` remains local to ImportView (single consumer); promote to `App.xaml` when a second view needs it.
+- **Shared button styles:** `AccentButton` and `TertiaryButton` are centralized in `App.xaml` as shared resources (Tertiary was promoted on its second consumer, EditMetadataView's Renumber); new views consume them rather than re-declaring. `PrimaryButton` is NOT centralized - the key is overloaded (ImportView green vs. dialog blue) and must be disambiguated first (see follow-ups).
 
 **Documentation-First Workflow:**
 1. **Check [Documentation Lookup Table](#documentation-lookup-table)** - Find the relevant doc file
