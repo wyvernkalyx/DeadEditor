@@ -36,15 +36,6 @@
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="Padding" Value="0,0,0,4"/>
         </Style>
-        <Style x:Key="AccentButton" TargetType="Button">
-            <Setter Property="Background" Value="#0E639C"/>
-            <Setter Property="Foreground" Value="#FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#1177BB"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
     </UserControl.Resources>
 
     <Grid Margin="10">

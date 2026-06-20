@@ -28,6 +28,19 @@
         <!-- Edit markers (reserved for prompt 6's amber left-edge marker on changed cells/inputs) -->
         <SolidColorBrush x:Key="MarkerAmberAccent"    Color="#F0AD4E"/>
 
+        <!-- Shared keyed button style. Centralized here (was duplicated identically in
+             ImportView + EditMetadataView). PrimaryButton/TertiaryButton remain per-view
+             (PrimaryButton key is overloaded; TertiaryButton is single-consumer). -->
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Background" Value="#0E639C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#1177BB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
         <!-- Dark Theme ComboBox Style (supports both editable and non-editable modes) -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#3C3C3C"/>

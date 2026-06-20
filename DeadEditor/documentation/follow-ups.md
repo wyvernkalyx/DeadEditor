@@ -16,6 +16,17 @@ The Import view's top action bar needs a visual/UX cleanup. Three issues:
 
 Two are quick XAML sizing/style fixes (1, 3); (2) is a genuine UX distinction. Good cohesive next-session candidate.
 
+### PrimaryButton key collision (Surfaced 2026-06-20)
+Two distinct styles share `x:Key="PrimaryButton"`: ImportView's green terminal-action
+button vs. the blue one in `ConfirmHost`/`PullCollisionDialog`. Currently runtime-safe
+(the dialog-local declarations shadow any other — `ConfirmHost` reads it via the local
+`Resources["PrimaryButton"]` indexer; `PullCollisionDialog` via local `StaticResource`),
+but the key carries two meanings. Disambiguate by renaming one (e.g. the dialog blue ->
+`DialogPrimaryButton`) so the key is single-meaning before any future centralization.
+Out of scope for the import UI pass; own concern. Surfaced during the AccentButton
+centralization (Commit 2 of the import action-bar pass), which left PrimaryButton local
+for exactly this reason.
+
 ### ~~Banked 2026-06-12 (import normalization)~~ (DONE 2026-06-17)
 - **Strip leading track-number prefix before canonical song matching:**
   - **Done:** Shipped as the pure `TrackNumberPrefix.Strip` helper + contract (`21ecfa8`) and its match-key wiring into `NormalizationService.Normalize` (`0d6381f`, manual import gate PASS). Hypothesis confirmed (Phase A): the regression was the leading-track-number strip lost when matching moved from the now-dead `MetadataService.CleanTitle` to `TitleStructureParser`. Option B (match-key only) — the stored FLAC tag/`RawTitle` are untouched; a false strip merely misses the lookup and the original survives in the dialog. Open question resolved: stripped+matched titles **auto-resolve** (skip the dialog). Intended boundary: bare-space auto-resolve (`01 Bertha`) fires only on the **Normalize** path (which carries a track number to gate it), not the Match Setlist path — by design; separator/disc-token forms auto-resolve everywhere. `songs.json` verified clean (no prefix pollution, no digit-leading titles). Spec: [track-number-prefix-normalization.md](track-number-prefix-normalization.md).
