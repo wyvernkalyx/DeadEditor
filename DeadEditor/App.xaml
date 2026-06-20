@@ -36,9 +36,47 @@
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="BorderBrush" Value="#1177BB"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,6"/>
+            <!-- Vertical padding kept tight (4, not 6) so the 16pt label centers within the
+                 consumers' fixed Height=32 instead of overflowing low; horizontal padding (12)
+                 and the fixed height are unchanged, so the footprint is identical. -->
+            <Setter Property="Padding" Value="12,4"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <!-- Template modeled on ImportView's TertiaryButton (same Border/ContentPresenter
+                 structure, square corners, ControlTemplate.Triggers). Enabled state flows from
+                 the setters above via TemplateBinding; the disabled state uses the muted-badge
+                 pair so a disabled AccentButton reads as deliberately inactive, not system
+                 washed-out. -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#1177BB"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#0A4F80"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource BadgeUnverifiedBg}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#3F3F46"/>
+                                <Setter Property="Foreground" Value="{StaticResource BadgeUnverifiedFg}"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- Dark Theme ComboBox Style (supports both editable and non-editable modes) -->
