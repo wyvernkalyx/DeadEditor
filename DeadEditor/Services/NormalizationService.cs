@@ -300,20 +300,44 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Adds a new song to the database for a specific artist
+        /// Adds a new song to the database for a specific artist.
+        /// <para>
+        /// Read-fresh-merge-append, mirroring <see cref="AddAlias"/>: re-reads songs.json from
+        /// disk and appends to that fresh graph rather than serializing the possibly-stale
+        /// in-memory <c>_database</c>. Each view holds its own <c>NormalizationService</c> whose
+        /// <c>_database</c> is loaded once at construction and is not refreshed on re-navigation
+        /// (e.g. the cached SettingsView instance). A blind whole-graph overwrite here would
+        /// clobber aliases or songs another instance wrote since this one loaded — a confirmed
+        /// cross-instance data-loss bug (alias learned in Import lost when a song is added via the
+        /// cached Settings instance). See follow-ups.md (RESOLVED 2026-06-19).
+        /// </para>
         /// </summary>
         public void AddSong(string officialTitle, List<string>? aliases, string artistName)
         {
-            if (_database == null) return;
+            if (string.IsNullOrEmpty(officialTitle)) return;
+
+            // Re-read from disk to avoid overwriting concurrent changes (see AddAlias).
+            var path = _songsPath;
+            SongDatabase? db;
+            if (File.Exists(path))
+            {
+                var json = File.ReadAllText(path);
+                db = JsonConvert.DeserializeObject<SongDatabase>(json);
+            }
+            else
+            {
+                db = new SongDatabase { Artists = new List<ArtistEntry>() };
+            }
+            if (db == null) return;
 
             // Ensure Artists list exists
-            if (_database.Artists == null)
+            if (db.Artists == null)
             {
-                _database.Artists = new List<ArtistEntry>();
+                db.Artists = new List<ArtistEntry>();
             }
 
             // Find or create artist
-            var artist = _database.Artists.FirstOrDefault(a => a.Name.Equals(artistName, StringComparison.OrdinalIgnoreCase));
+            var artist = db.Artists.FirstOrDefault(a => a.Name.Equals(artistName, StringComparison.OrdinalIgnoreCase));
             if (artist == null)
             {
                 artist = new ArtistEntry
@@ -321,22 +345,32 @@ namespace DeadEditor.Services
                     Name = artistName,
                     Songs = new List<SongEntry>()
                 };
-                _database.Artists.Add(artist);
+                db.Artists.Add(artist);
             }
+
+            if (artist.Songs == null)
+                artist.Songs = new List<SongEntry>();
 
             // Check if song already exists for this artist
             if (artist.Songs.Any(s => s.OfficialTitle.Equals(officialTitle, StringComparison.OrdinalIgnoreCase)))
                 return;
 
-            // Add song
+            // Add song to the fresh graph
             artist.Songs.Add(new SongEntry
             {
                 OfficialTitle = officialTitle,
                 Aliases = aliases ?? new List<string>()
             });
 
-            SaveDatabase();
-            LoadDatabase(); // Reload to update lookup
+            // Atomic write: temp file + rename (mirrors AddAlias)
+            var tempPath = path + ".tmp";
+            var newJson = JsonConvert.SerializeObject(db, Formatting.Indented);
+            File.WriteAllText(tempPath, newJson);
+            File.Delete(path);
+            File.Move(tempPath, path);
+
+            // Reload in-memory state so the new song is immediately available for lookup
+            LoadDatabase();
         }
 
         /// <summary>
