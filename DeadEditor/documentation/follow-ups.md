@@ -8,6 +8,14 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Import action-bar UI pass (Surfaced 2026-06-20)
+The Import view's top action bar needs a visual/UX cleanup. Three issues:
+1. **MusicBrainz button** — label text is vertically clipped (bottom of "MusicBrainz" cut off). Button height/padding/line-height doesn't accommodate the label.
+2. **Workflow stepper** (Load → Enrich → Clean → Structure → Import) is styled almost identically to the action buttons below it, so it reads as a row of interactive controls rather than a non-interactive process-flow indicator. Restyle as a clearly non-clickable stepper/breadcrumb that maps to the workflow the action buttons drive.
+3. **Match Setlist button** — styling inconsistent with the blue sibling action buttons (light/washed-out). Refines/absorbs the existing **Match Setlist button styling** follow-up (banked 2026-06-12, alert-system inc-9 gate) — fold both into this pass.
+
+Two are quick XAML sizing/style fixes (1, 3); (2) is a genuine UX distinction. Good cohesive next-session candidate.
+
 ### ~~Banked 2026-06-12 (import normalization)~~ (DONE 2026-06-17)
 - **Strip leading track-number prefix before canonical song matching:**
   - **Done:** Shipped as the pure `TrackNumberPrefix.Strip` helper + contract (`21ecfa8`) and its match-key wiring into `NormalizationService.Normalize` (`0d6381f`, manual import gate PASS). Hypothesis confirmed (Phase A): the regression was the leading-track-number strip lost when matching moved from the now-dead `MetadataService.CleanTitle` to `TitleStructureParser`. Option B (match-key only) — the stored FLAC tag/`RawTitle` are untouched; a false strip merely misses the lookup and the original survives in the dialog. Open question resolved: stripped+matched titles **auto-resolve** (skip the dialog). Intended boundary: bare-space auto-resolve (`01 Bertha`) fires only on the **Normalize** path (which carries a track number to gate it), not the Match Setlist path — by design; separator/disc-token forms auto-resolve everywhere. `songs.json` verified clean (no prefix pollution, no digit-leading titles). Spec: [track-number-prefix-normalization.md](track-number-prefix-normalization.md).
@@ -19,7 +27,7 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 
 ### Banked 2026-06-12 (alert-system increment-9 gate)
 - **Advanced Search song criteria not wired to any result:** the Contains / Exclude / Sequence tabs collect `SelectedSongs`/`ExcludedSongs`/`SongSequence` into public properties, but the caller (`HeaderBar_AdvancedSearchRequested`, `ShellWindow.xaml.cs:316`) calls `dialog.ShowDialog()` and discards the result — nothing reads the criteria, so a song search closes the dialog with no visible effect. Only the Track Search tab (its own in-dialog grid) works. Pre-existing (predates the alert sweep). Fix: consume the criteria after `ShowDialog()` and filter the library grid / present results.
-- **Match Setlist button styling:** the Match Setlist button in the `EditMetadataView` toolbar renders washed-out / unreadable (owner screenshots 2026-06-12). Restyle for contrast against the dark toolbar.
+- **Match Setlist button styling:** the Match Setlist button in the `EditMetadataView` toolbar renders washed-out / unreadable (owner screenshots 2026-06-12). Restyle for contrast against the dark toolbar. **Folded into "Import action-bar UI pass" (2026-06-20) — address there.**
 - **OS SaveFileDialog OverwritePrompt chimes:** the Manage Songs export (and other `SaveFileDialog` pickers) raise the native overwrite-confirm, which chimes — outside the in-window alert sweep (Ruling: file/folder pickers are out of scope). Consider an in-window confirm after the picker returns if the chime bothers. Surfaced 2026-06-12 (inc-9 gate).
 
 ### Banked 2026-06-12 (alert-system increment-7 gate)
