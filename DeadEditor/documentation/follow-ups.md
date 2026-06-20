@@ -10,7 +10,7 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 
 ### Import action-bar UI pass (Surfaced 2026-06-20)
 The Import view's top action bar needs a visual/UX cleanup. Three issues:
-1. **MusicBrainz button** — label text is vertically clipped (bottom of "MusicBrainz" cut off). Button height/padding/line-height doesn't accommodate the label.
+1. ~~**MusicBrainz button** — label text is vertically clipped (bottom of "MusicBrainz" cut off). Button height/padding/line-height doesn't accommodate the label.~~ **DONE 2026-06-20:** the button set `Height="28"` (too short for `FontSize="16"` + AccentButton padding) while every sibling is `Height="32"`; set to 32 to restore label headroom and row-align the cluster. Manual WPF gate PASS.
 2. **Workflow stepper** (Load → Enrich → Clean → Structure → Import) is styled almost identically to the action buttons below it, so it reads as a row of interactive controls rather than a non-interactive process-flow indicator. Restyle as a clearly non-clickable stepper/breadcrumb that maps to the workflow the action buttons drive.
 3. **Match Setlist button** — styling inconsistent with the blue sibling action buttons (light/washed-out). Refines/absorbs the existing **Match Setlist button styling** follow-up (banked 2026-06-12, alert-system inc-9 gate) — fold both into this pass.
 

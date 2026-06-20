@@ -155,7 +155,7 @@
                             Background="#252526" CornerRadius="3"
                             Padding="3" Margin="0,0,6,0">
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="MusicBrainzButton" Content="MusicBrainz" Height="28"
+                            <Button x:Name="MusicBrainzButton" Content="MusicBrainz" Height="32"
                                     Style="{StaticResource AccentButton}"
                                     Click="MusicBrainzButton_Click" Margin="0,0,8,0" FontSize="16"
                                     ToolTip="Lookup album on MusicBrainz"/>
