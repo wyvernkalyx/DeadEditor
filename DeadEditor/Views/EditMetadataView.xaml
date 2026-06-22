@@ -67,19 +67,17 @@
                             Click="NormalizeButton_Click" Margin="0,0,6,0" FontSize="16"
                             ToolTip="Normalize song titles using fuzzy matching"/>
                     <Button x:Name="RenumberButton" Content="Renumber" Height="32"
+                            Style="{StaticResource TertiaryButton}"
                             Click="RenumberButton_Click" Margin="0,0,6,0" FontSize="16"
-                            Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
-                            Padding="12,6" Cursor="Hand"
                             ToolTip="Renumber tracks sequentially (disc-aware)"/>
                     <Button x:Name="MatchSetlistButton" Content="Match Setlist" Height="32"
+                            Style="{StaticResource AccentButton}"
                             Click="MatchSetlistButton_Click" Margin="0,0,6,0" FontSize="16"
-                            Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
-                            Padding="12,6" Cursor="Hand" IsEnabled="False"
+                            IsEnabled="False"
                             ToolTip="No setlist data for this date"/>
                     <Button x:Name="MusicBrainzButton" Content="&#x1F50E; MusicBrainz" Height="32"
+                            Style="{StaticResource AccentButton}"
                             Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
-                            Background="#3C3C3C" Foreground="#FFFFFF" BorderBrush="#555555"
-                            Padding="12,6" Cursor="Hand"
                             ToolTip="Look up album on MusicBrainz"/>
                 </StackPanel>
 

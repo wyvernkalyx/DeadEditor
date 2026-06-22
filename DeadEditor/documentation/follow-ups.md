@@ -12,7 +12,7 @@ Issues identified but not yet fixed. Each entry: brief description, where it sur
 The Import view's top action bar needs a visual/UX cleanup. Three issues:
 1. ~~**MusicBrainz button** — label text is vertically clipped (bottom of "MusicBrainz" cut off). Button height/padding/line-height doesn't accommodate the label.~~ **DONE 2026-06-20:** the button set `Height="28"` (too short for `FontSize="16"` + AccentButton padding) while every sibling is `Height="32"`; set to 32 to restore label headroom and row-align the cluster. Manual WPF gate PASS.
 2. **Workflow stepper** (Load → Enrich → Clean → Structure → Import) is styled almost identically to the action buttons below it, so it reads as a row of interactive controls rather than a non-interactive process-flow indicator. Restyle as a clearly non-clickable stepper/breadcrumb that maps to the workflow the action buttons drive.
-3. **Match Setlist button** — styling inconsistent with the blue sibling action buttons (light/washed-out). Refines/absorbs the existing **Match Setlist button styling** follow-up (banked 2026-06-12, alert-system inc-9 gate) — fold both into this pass. **PARTIAL 2026-06-20:** the ImportView root is fixed — `AccentButton` (which ImportView's Match Setlist uses) gained a `ControlTemplate` whose disabled state renders an intentional muted-badge treatment instead of system washed-out gray, so the disabled Match Setlist now reads as deliberately inactive. The EditMetadataView root remains: its Match Setlist is inline-gray (`#3C3C3C`), not an AccentButton, so it stays gray next to the blue Normalize — to be harmonized in the next commit. Sub-item (3) stays open until that lands.
+3. **Match Setlist button** — styling inconsistent with the blue sibling action buttons (light/washed-out). Refines/absorbs the existing **Match Setlist button styling** follow-up (banked 2026-06-12, alert-system inc-9 gate) — fold both into this pass. **DONE 2026-06-20:** both roots fixed. ImportView root (`05b7c8f`): `AccentButton` gained a `ControlTemplate` whose disabled state renders an intentional muted-badge treatment instead of system washed-out gray. EditMetadataView root (this commit): its Renumber/Match Setlist/MusicBrainz were one-off inline gray; harmonized to the centralized shared styles matching ImportView's role convention (Renumber -> TertiaryButton ghost; Match Setlist & MusicBrainz -> AccentButton; Normalize already AccentButton), so the disabled Match Setlist now inherits the same muted-badge treatment. Sub-item (2) stepper remains open; (1) was closed in `813cde6`.
 
 Two are quick XAML sizing/style fixes (1, 3); (2) is a genuine UX distinction. Good cohesive next-session candidate.
 
@@ -26,6 +26,15 @@ but the key carries two meanings. Disambiguate by renaming one (e.g. the dialog 
 Out of scope for the import UI pass; own concern. Surfaced during the AccentButton
 centralization (Commit 2 of the import action-bar pass), which left PrimaryButton local
 for exactly this reason.
+
+### Button label vertical centering (Tertiary/Primary) (Surfaced 2026-06-20)
+`AccentButton` labels were re-centered in `05b7c8f` (Padding `12,6` -> `12,4`) when it
+gained a `ControlTemplate` — the 16pt label was overflowing low within the consumers'
+fixed `Height=32`. `TertiaryButton` and `PrimaryButton` share `Height=32` / `FontSize=16`
+/ `Padding 12,6` and likely show the same slight off-centering — NOT confirmed visually.
+Confirm in the running app; if labels look off, apply the same adjustment (`TertiaryButton`
+via its template padding, `PrimaryButton` via its style). Lived-demand: don't fix unless
+observed.
 
 ### ~~Banked 2026-06-12 (import normalization)~~ (DONE 2026-06-17)
 - **Strip leading track-number prefix before canonical song matching:**
