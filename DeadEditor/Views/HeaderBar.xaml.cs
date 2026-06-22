@@ -376,7 +376,18 @@ namespace DeadEditor
         {
             if (_currentEditView != null)
             {
-                await _currentEditView.SaveChangesAsync();
+                // Disable while the save runs so rapid repeat-clicks can't queue overlapping
+                // saves (the view's _isSaving guard is the authoritative backstop; this is
+                // the visible feedback). Re-enabled in finally so a failed save stays usable.
+                SaveChangesButton.IsEnabled = false;
+                try
+                {
+                    await _currentEditView.SaveChangesAsync();
+                }
+                finally
+                {
+                    SaveChangesButton.IsEnabled = true;
+                }
             }
         }
 

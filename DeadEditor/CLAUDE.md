@@ -818,6 +818,10 @@ Without fuzzy matching, you'd need hundreds of aliases per song. With 2-characte
 
 ## Conventions for AI Assistants
 
+### Interacting with the User
+
+Ask decisions and clarifications as **numbered questions in your reply text** — the user answers in chat. Do **not** use interactive popup/dialog question prompts for planning or clarification. This keeps the decision trail in the conversation and matches how the user works.
+
 ### When Modifying Code
 
 **CRITICAL:** Before modifying ANY file, read the relevant documentation from the [Documentation Handbook](#documentation-handbook) first.

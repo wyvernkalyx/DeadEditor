@@ -3,6 +3,7 @@ using NAudio.Wave;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 
 namespace DeadEditor.Services
 {
@@ -25,6 +26,11 @@ namespace DeadEditor.Services
         // Singleton instance
         private static AudioPlayerService? _instance;
         private static readonly object _lock = new object();
+
+        // Serializes every guarded FLAC write window app-wide (see WithFileReleased).
+        // App-wide via static: there is one playback singleton today, but writes target
+        // files, not the player, so the gate belongs to the write activity, not an instance.
+        private static readonly SemaphoreSlim _writeGate = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Gets the singleton instance of AudioPlayerService.
@@ -301,49 +307,66 @@ namespace DeadEditor.Services
             var pathSet = new System.Collections.Generic.HashSet<string>(
                 paths ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
 
-            // Nothing loaded, or the loaded file isn't a write target: run the action
-            // untouched so unrelated saves never interrupt playback.
-            if (_currentFilePath == null || !pathSet.Contains(_currentFilePath))
-            {
-                action();
-                return;
-            }
-
-            // The loaded file is about to be written — capture state (position must be
-            // read before Stop() disposes the reader), then release the handle.
-            var capturedTrack = _currentTrack;
-            var capturedPosition = CurrentPosition;
-            var capturedState = _playbackState;
-
-            Stop();  // disposes AudioFileReader/WaveOutEvent and nulls _currentFilePath
-
+            // Serialize every guarded write window app-wide: only one caller may be
+            // inside its action() (the FLAC write) at a time. This closes the whole
+            // concurrent-writer class (save+save, save+fingerprint, save+MBID) that
+            // produced the "used by another process" data-loss lock — TagLib opens the
+            // file for exclusive write in Save(), so two overlapping writers collide.
+            // Non-reentrant SemaphoreSlim is safe: no action passed here re-enters
+            // WithFileReleased (verified). Callers run this inside Task.Run, so the
+            // blocking Wait() only ever parks a background thread, never the UI thread.
+            _writeGate.Wait();
             try
             {
-                action();
+                // Nothing loaded, or the loaded file isn't a write target: run the action
+                // untouched so unrelated saves never interrupt playback. Still serialized:
+                // this branch also performs the write, so it must hold the gate.
+                if (_currentFilePath == null || !pathSet.Contains(_currentFilePath))
+                {
+                    action();
+                    return;
+                }
+
+                // The loaded file is about to be written — capture state (position must be
+                // read before Stop() disposes the reader), then release the handle.
+                var capturedTrack = _currentTrack;
+                var capturedPosition = CurrentPosition;
+                var capturedState = _playbackState;
+
+                Stop();  // disposes AudioFileReader/WaveOutEvent and nulls _currentFilePath
+
+                try
+                {
+                    action();
+                }
+                finally
+                {
+                    // Restore the player even if the action threw, so a failed write does
+                    // not leave playback dead. (capturedTrack/Stopped are defensive: when
+                    // _currentFilePath was non-null the state is Playing or Paused.)
+                    if (capturedTrack != null)
+                    {
+                        if (capturedState == PlaybackState.Playing)
+                        {
+                            Play(capturedTrack);
+                            Seek(capturedPosition);
+                        }
+                        else if (capturedState == PlaybackState.Paused)
+                        {
+                            // No load-without-play primitive exists, so reload via Play()
+                            // then re-pause at the captured position. The reader starts
+                            // briefly before Pause(), producing a short audible blip —
+                            // accepted trade-off until a true paused-load is added.
+                            Play(capturedTrack);
+                            Seek(capturedPosition);
+                            Pause();
+                        }
+                    }
+                }
             }
             finally
             {
-                // Restore the player even if the action threw, so a failed write does
-                // not leave playback dead. (capturedTrack/Stopped are defensive: when
-                // _currentFilePath was non-null the state is Playing or Paused.)
-                if (capturedTrack != null)
-                {
-                    if (capturedState == PlaybackState.Playing)
-                    {
-                        Play(capturedTrack);
-                        Seek(capturedPosition);
-                    }
-                    else if (capturedState == PlaybackState.Paused)
-                    {
-                        // No load-without-play primitive exists, so reload via Play()
-                        // then re-pause at the captured position. The reader starts
-                        // briefly before Pause(), producing a short audible blip —
-                        // accepted trade-off until a true paused-load is added.
-                        Play(capturedTrack);
-                        Seek(capturedPosition);
-                        Pause();
-                    }
-                }
+                _writeGate.Release();
             }
         }
 

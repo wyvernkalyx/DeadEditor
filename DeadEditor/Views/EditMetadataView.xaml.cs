@@ -36,6 +36,13 @@ namespace DeadEditor
         private bool _isUpdating = false;
         private bool _hasUnsavedChanges = false;
 
+        // Re-entrancy guard for the save path. Both entry points — the HeaderBar Save
+        // button and VerifyButton_Click — funnel through SaveChangesAsync, so guarding
+        // here makes a second (e.g. rapid-click or Verify-while-saving) invocation a
+        // no-op. Backstops the app-wide WithFileReleased write gate against the UI ever
+        // launching overlapping writes in the first place.
+        private bool _isSaving = false;
+
         // Issues surfaced in the validation banner above the metadata grid.
         // Refreshed on load, cell edits, drag-to-reorder, renumber, and any batch
         // operation that mutates disc/track numbers or song titles.
@@ -822,6 +829,14 @@ namespace DeadEditor
                 return;
             }
 
+            // Re-entrancy guard: a save already in flight makes any second invocation
+            // (rapid Save clicks, or Verify firing while a save runs) a no-op, so the UI
+            // can never launch overlapping FLAC writes. WithFileReleased serializes at the
+            // file layer regardless; this stops the duplicate work earlier and feeds the
+            // button-disable below.
+            if (_isSaving) return;
+            _isSaving = true;
+
             try
             {
                 StatusTextBlock.Text = "Writing metadata to files...";
@@ -990,6 +1005,10 @@ namespace DeadEditor
                 ProgressBar.Visibility = Visibility.Collapsed;
                 StatusTextBlock.Text = $"Save failed: {ex.Message}";
                 App.Alerts.Notify($"Error saving changes:\n\n{ex.Message}", AlertSeverity.Error, "Save Failed");
+            }
+            finally
+            {
+                _isSaving = false;
             }
         }
 
