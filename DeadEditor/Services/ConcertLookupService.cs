@@ -27,6 +27,14 @@ namespace DeadEditor.Services
         private static readonly Lazy<ConcertLookupService> _instance = new(() => new ConcertLookupService());
         public static ConcertLookupService Instance => _instance.Value;
 
+        /// <summary>
+        /// True once the singleton has been created (the ~2,300-file load has run). Reads the Lazy's
+        /// <see cref="Lazy{T}.IsValueCreated"/>, which does NOT force the load — so callers can branch
+        /// cold (first access this session, show a please-wait overlay and pre-warm off the UI thread)
+        /// vs warm (already loaded, go straight to the fast path) without paying the load just to ask.
+        /// </summary>
+        public static bool IsLoaded => _instance.IsValueCreated;
+
         private readonly Dictionary<string, ConcertReference> _concerts;
         private readonly List<string> _sortedDates;
 

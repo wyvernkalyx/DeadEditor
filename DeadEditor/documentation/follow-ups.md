@@ -84,10 +84,11 @@ observed.
 - **Proposed fix:** Update or drop that doc row so the inventory reflects reality. Documentation-only.
 - **Surfaced:** Alert-system inventory (2026-06-11).
 
-### Cold-start concert load (~17s cold, ~0.6s warm)
-- **What:** The first `ConcertLookupService` load after a reboot/cache flush took **16,758ms** for 2,293 files; the immediate second run took **583ms** (measured 2026-06-10). Steady-state is fine — this is **NOT** a reopening of the closed Settings-perf item.
-- **Possible mitigation (only if it ever bites):** kick the load on a background thread shortly after startup so the cache is warm before first Concerts use.
-- **Surfaced:** 2026-06-10.
+### ~~Cold-start concert load (~17s cold, ~0.6s warm) — UI-thread freeze~~ (DONE 2026-06-23)
+- **What:** The first `ConcertLookupService` load after a reboot/cache flush took **16,758ms** for 2,293 files; the immediate second run took **583ms** (measured 2026-06-10). Steady-state is fine. The pain was that this cold load ran **synchronously on the UI thread** the first time Edit Metadata opened (reached via `LoadData -> RefreshUI -> UpdateMatchSetlistButton -> ShowLookupService.GetSetlist`, which sources from `ConcertLookupService`), freezing the app for seconds with no feedback — and the frozen-but-interactive-looking window let queued clicks pile up, which enabled the concurrent-save file lock (fixed separately in `2912161`).
+- **Done:** Added `ConcertLookupService.IsLoaded` (reads the `Lazy`'s `IsValueCreated` without forcing the load) and a cold-gate in `EditMetadataView_Loaded`: on a cold open it pre-warms the cache on a background thread (`Task.Run`) behind the modal status overlay (`App.Alerts.RunWithStatusAsync`, the Commit-A service) before running the synchronous `LoadData`. Cold opens now show an indeterminate "Loading concert database…" dialog while the UI thread stays responsive; warm opens skip it and stay silent on the fast (~0.6s) path. The modal scrim also blocks interaction during the load, closing the click-into-not-ready-view window. WPF gate passed 2026-06-23 (cold shows the animating dialog without freezing; warm silent; interaction blocked behind the scrim; no save regression).
+- **Residual (accepted):** the sub-second per-file TagLib read inside `LoadData` (the 25-file folder read) stays synchronous. Backgrounding all of `LoadData` is a possible future item only if that residual ever bites (bigger blast radius — touches `RefreshUI`/`UpdateMatchSetlistButton` direct-UI writes).
+- **Surfaced:** 2026-06-10. **Resolved:** 2026-06-23.
 
 ### ~~SetlistFetcher arg-parser guard~~ (DONE 2026-06-11)
 - **Done:** Inline parse loop (`Program.cs:11-22`, `args.Length - 1` bound, positional next-token,
