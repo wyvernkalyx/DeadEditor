@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace DeadEditor.Services
@@ -32,6 +33,14 @@ namespace DeadEditor.Services
         Decline,
         Cancel
     }
+
+    /// <summary>
+    /// One mid-operation status report pushed through the <see cref="IProgress{T}"/> the work
+    /// delegate receives from <see cref="IAlertService.RunWithStatusAsync"/>. Carries the new
+    /// message line to show under the title in the please-wait overlay (alert-system-spec.md
+    /// § Status overlay). A record struct because it is a tiny, immutable value passed frequently.
+    /// </summary>
+    public readonly record struct StatusUpdate(string Message);
 
     /// <summary>
     /// Shell-wide alert surface (alert-system-spec.md). Slice 1 implements <see cref="Notify"/>
@@ -93,6 +102,24 @@ namespace DeadEditor.Services
         /// on the UI thread. Used by the Import info-file viewer (#33).
         /// </summary>
         void ShowReadPanel(string title, string content);
+
+        /// <summary>
+        /// Run a long, blocking operation behind a silent, in-window modal status overlay
+        /// (alert-system-spec.md § Status overlay): a full-shell dimmed scrim + centered card with an
+        /// indeterminate spinner, the <paramref name="title"/>, and an optional <paramref name="message"/>
+        /// line. Shows the overlay, awaits <paramref name="work"/> (which may hop to a background
+        /// thread), and guarantees the overlay is hidden in <c>finally</c> — on success or exception.
+        /// The exception is rethrown so the caller can surface a banner if the work fails.
+        /// <para>
+        /// <paramref name="work"/> receives an <see cref="IProgress{T}"/> of <see cref="StatusUpdate"/>
+        /// for mid-operation message updates; the progress object is created on the UI thread so its
+        /// reports marshal back automatically. Overlapping scopes are reference-counted: the overlay
+        /// hides only when the LAST concurrent scope completes, and the displayed title/message is
+        /// last-write-wins. The overlay is non-cancelable (no Esc, no buttons). Must be called on the
+        /// UI thread.
+        /// </para>
+        /// </summary>
+        Task RunWithStatusAsync(string title, Func<IProgress<StatusUpdate>, Task> work, string? message = null);
     }
 
     /// <summary>
@@ -130,5 +157,31 @@ namespace DeadEditor.Services
     public interface IReadPanelHost
     {
         void Show(string title, string content);
+    }
+
+    /// <summary>
+    /// The visual status host the <see cref="AlertService"/> drives for the please-wait overlay
+    /// (alert-system-spec.md § Status overlay). Implemented by the WPF dimmed-scrim overlay in the
+    /// shell; kept as an interface so the service layer does not depend on the view type. All members
+    /// are always invoked on the UI thread (the service marshals).
+    /// <para>
+    /// These imperative members are internal plumbing — they are deliberately NOT on the public
+    /// <see cref="IAlertService"/> surface, which exposes only the scoped
+    /// <see cref="IAlertService.RunWithStatusAsync"/> primitive that owns show/update/hide pairing.
+    /// </para>
+    /// </summary>
+    public interface IStatusHost
+    {
+        /// <summary>True while the overlay is on screen.</summary>
+        bool IsShowing { get; }
+
+        /// <summary>Show the overlay with a title and an optional message line.</summary>
+        void ShowStatus(string title, string? message);
+
+        /// <summary>Replace the message line mid-operation (reveals it if it was collapsed).</summary>
+        void UpdateStatus(string message);
+
+        /// <summary>Collapse the whole overlay.</summary>
+        void HideStatus();
     }
 }

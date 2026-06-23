@@ -51,6 +51,11 @@ namespace DeadEditor
             // info-file viewer (#33).
             AlertService.Instance.RegisterReadPanelHost(ReadPanel);
 
+            // Wire the please-wait status overlay (alert-system-spec.md § Status overlay), driven by
+            // App.Alerts.RunWithStatusAsync. Registered alongside the other hosts; no caller is wired
+            // yet (Commit B brings the concert-load cold gate).
+            AlertService.Instance.RegisterStatusHost(StatusHost);
+
             _settings = LibrarySettings.Load();
             _navigationService = new NavigationService();
 
@@ -153,6 +158,17 @@ namespace DeadEditor
                     ConfirmHost.ConfirmByKeyboard();
                 else if (e.Key == Key.Escape)
                     ConfirmHost.CancelByKeyboard();
+                e.Handled = true;
+                return;
+            }
+
+            // Status overlay gate (alert-system-spec.md § Status overlay): the please-wait surface is
+            // NON-CANCELABLE, so while it is showing swallow EVERY key — no Esc dismiss, and no shell
+            // shortcut (Space=play, Ctrl+F, Delete, Esc=GoBack) may fire behind the scrim. ConfirmHost
+            // (above it at Z 100) is gated first, so a confirm can still own the keyboard if one ever
+            // surfaces above the status overlay.
+            if (StatusHost.IsShowing)
+            {
                 e.Handled = true;
                 return;
             }

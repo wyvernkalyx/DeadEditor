@@ -314,6 +314,58 @@ that the shell redesign set out to eliminate).
 
 ---
 
+## Status overlay (please-wait) — added 2026-06-23
+
+A fourth in-window surface, built on the same scrim+card mold as the confirm/read hosts but for a
+different job: a **modal "please wait" overlay** for long, blocking operations (the cold
+concert-database load; future media import) that otherwise leave the app looking hung. It is the one
+host with **no decision and no result** — pure please-wait chrome.
+
+**Host stack (Z-order).** The status overlay rides the existing `AlertService` host stack inside
+`ShellWindow`, slotted between the read panel and the confirm host:
+
+| Host | `Panel.ZIndex` | Role |
+|------|----------------|------|
+| `AlertBannerHost` | 10 | banner notifications (bucket A) |
+| `ReadPanelHost` | 50 | scrollable read panel (bucket C) |
+| **`StatusHost`** | **75** | **please-wait status overlay** |
+| `ConfirmHost` | 100 | blocking decisions (bucket B) |
+
+Z 75 sits **above** the read panel (so it dims everything informational) but **below** the confirm
+host (so a blocking *decision* can still surface above a please-wait).
+
+**Service surface.** Extends the existing `IAlertService` — no parallel singleton:
+
+```csharp
+Task RunWithStatusAsync(string title, Func<IProgress<StatusUpdate>, Task> work, string? message = null);
+public readonly record struct StatusUpdate(string Message);
+```
+
+`RunWithStatusAsync` owns the show (on the UI thread, same marshalling as `Notify`), creates a
+UI-thread `Progress<StatusUpdate>` so `work`'s mid-operation reports marshal back automatically, awaits
+`work`, and **guarantees Hide in `finally`** (success or exception — the exception rethrows so a caller
+can surface an error banner). Overlapping scopes are **reference-counted** so the overlay hides only
+when the **last** concurrent scope completes; the displayed title/message is **last-write-wins**. The
+imperative `ShowStatus`/`UpdateStatus`/`HideStatus` live on the internal `IStatusHost` (mirroring
+`IConfirmHost`/`IReadPanelHost`) — they are **not** on the public `IAlertService` surface, which exposes
+only the scoped `RunWithStatusAsync` primitive.
+
+**Visual.** Full-bleed scrim matching the sibling hosts (`#CC000000`); centered card `#2D2D30`, 0.5px
+`#3F3F46` border, `CornerRadius=12`; an **indeterminate** accent (`#1177BB`) spinner ring; title
+(`#E0E0E0`), and an optional message line (`#888888`) collapsed when empty. **Indeterminate only** —
+a determinate/percent bar is **deferred** (it would require refactoring `ConcertLookupService` out of
+its `Lazy` ctor). **Non-cancelable**: no close button, no Esc; the shell's `PreviewKeyDown` **swallows
+every key** while `StatusHost.IsShowing` (consistent with how `ConfirmHost` swallows). Silent by
+construction (no `MessageBeep`/`SystemSounds`), like the other hosts.
+
+**Verification.** Infrastructure-only at landing — `Views/StatusHost` has no caller in the commit that
+introduces it, so there is no user-visible change yet; it is gated by unit tests on
+`RunWithStatusAsync` (show/hide pairing, hide-on-exception, the overlap refcount, last-write-wins). The
+visual appearance + `Progress` UI-marshalling are verified by the WPF gate of the **first consumer**
+(the concert-load cold gate in `EditMetadataView`), which lands in a follow-up commit.
+
+---
+
 ## Rollout plan
 Five increments, lowest-risk / highest-annoyance first. A and B never interleave (Ruling 5).
 

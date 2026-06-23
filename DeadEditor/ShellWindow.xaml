@@ -69,6 +69,17 @@
                          x:Name="ReadPanel"
                          Panel.ZIndex="50"/>
 
+        <!-- In-window status overlay (alert-system-spec.md § Status overlay): full-shell dimmed scrim
+             + centered card with an indeterminate spinner for long/blocking operations (the cold
+             concert-database load; future media import). Spans the whole shell at ZIndex 75 — ABOVE
+             the read panel (50) but BELOW the confirm host (100), so a blocking DECISION can still
+             surface above a please-wait. Non-cancelable; the shell swallows every key while it shows.
+             Collapsed when idle. No caller is wired yet (Commit B). -->
+        <views:StatusHost Grid.Column="0" Grid.Row="0"
+                         Grid.ColumnSpan="2" Grid.RowSpan="4"
+                         x:Name="StatusHost"
+                         Panel.ZIndex="75"/>
+
         <!-- In-window confirm host (alert-system-spec.md Ruling 2): full-shell dimmed scrim +
              centered card for bucket-B blocking decisions. Spans every column and row (sidebar,
              header, content, playlist, player) at a higher Z than the banner layer (ZIndex 10) so a

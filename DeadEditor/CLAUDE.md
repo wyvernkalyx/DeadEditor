@@ -836,6 +836,7 @@ Ask decisions and clarifications as **numbered questions in your reply text** �
   - Bad: `if (artist == "Grateful Dead")`
   - Good: Use `PrimaryArtistName` from settings or artist-agnostic logic
 - **Shared button styles:** `AccentButton` and `TertiaryButton` are centralized in `App.xaml` as shared resources (Tertiary was promoted on its second consumer, EditMetadataView's Renumber); new views consume them rather than re-declaring. `PrimaryButton` is NOT centralized - the key is overloaded (ImportView green vs. dialog blue) and must be disambiguated first (see follow-ups).
+- **Long/blocking operations:** wrap them in `await App.Alerts.RunWithStatusAsync(title, work, message?)` — a reusable modal "please wait" status overlay that rides the AlertService host stack at `Panel.ZIndex=75` (between the read panel at 50 and the confirm host at 100, so a confirm can still surface above it). It owns the show, an `IProgress<StatusUpdate>` for mid-operation message updates, the overlapping-scope refcount (last-write-wins on the title; hides only when the last scope completes), and a guaranteed Hide in `finally` (success or exception; the exception rethrows). Indeterminate spinner only — a determinate bar is deferred. The overlay is non-cancelable and swallows all keys while showing (`Views/StatusHost`, see `documentation/alert-system-spec.md` § Status overlay).
 
 **Documentation-First Workflow:**
 1. **Check [Documentation Lookup Table](#documentation-lookup-table)** - Find the relevant doc file
