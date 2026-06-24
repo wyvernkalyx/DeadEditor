@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
@@ -1361,20 +1362,12 @@ namespace DeadEditor
                 // Download artwork
                 if (!string.IsNullOrEmpty(release.ArtworkUrl))
                 {
-                    try
+                    var artworkData = await ArtworkDownloader.DownloadAsync(release.ArtworkUrl);
+                    if (artworkData != null && artworkData.Length > 0 && _albumInfo != null)
                     {
-                        using var httpClient = new System.Net.Http.HttpClient();
-                        var artworkData = await httpClient.GetByteArrayAsync(release.ArtworkUrl);
-                        if (artworkData != null && artworkData.Length > 0 && _albumInfo != null)
-                        {
-                            _albumInfo.ArtworkData = artworkData;
-                            _albumInfo.ArtworkMimeType = "image/jpeg";
-                            UpdateArtworkDisplay();
-                        }
-                    }
-                    catch
-                    {
-                        // Artwork download failed — not critical
+                        _albumInfo.ArtworkData = artworkData;
+                        _albumInfo.ArtworkMimeType = "image/jpeg";
+                        UpdateArtworkDisplay();
                     }
                 }
 
