@@ -1416,8 +1416,7 @@ namespace DeadEditor
                 ProgressBar.Value = 0;
 
                 var librarySettings = LibrarySettings.Load();
-                var musicBrainzService = new MusicBrainzService("asa4wLQhwJ", librarySettings);
-                var fingerprintService = new FingerprintService(musicBrainzService);
+                var fingerprintService = new FingerprintService(librarySettings);
 
                 var trackList = _tracks.Select(t => t.Track).ToList();
 

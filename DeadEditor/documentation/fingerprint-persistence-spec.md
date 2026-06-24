@@ -78,9 +78,25 @@ This is deliberately a non-blocking warning. Fingerprinting is value-add; blocki
 
 ## 6. API Changes
 
-### `MusicBrainzService.GetFingerprintAsync` — visibility
+### fpcalc runner — relocated to `FingerprintService` (severed from `MusicBrainzService`)
 
-Changed from `private` to `public`. The method has no instance state beyond `_librarySettings.FpcalcPath`, and exposing it as a building block is justified by the import pipeline's need.
+The fpcalc runner was originally `MusicBrainzService.GetFingerprintAsync` (promoted from
+`private` to `public` to feed the import pipeline). It has since been **severed** out of
+`MusicBrainzService` entirely so per-track fingerprinting no longer depends on that class:
+
+```csharp
+// Now (public static on FingerprintService):
+public static async Task<string?> ComputeFingerprintAsync(string filePath, string? fpcalcPath)
+```
+
+The runner was self-contained — its only `MusicBrainzService` dependency was reading
+`_librarySettings.FpcalcPath`, now passed in as the `fpcalcPath` parameter. Behavior is
+preserved exactly: `InvalidOperationException` when the path is null/empty, `FileNotFoundException`
+when it points at a missing file (the sticky fpcalc-unavailable fast-fail depends on these
+exact types), the same `ProcessStartInfo`, and the same `FINGERPRINT=`-line parse.
+`MusicBrainzService`'s lookup methods (`LookupAlbumAsync`, `LookupAllReleasesAsync`) now call
+`FingerprintService.ComputeFingerprintAsync(track.FilePath, _librarySettings.FpcalcPath)`
+directly; no shim remains on `MusicBrainzService`.
 
 ### `LibraryImportService` constructor
 
@@ -180,7 +196,7 @@ public record FingerprintBatchResult(
 
 public class FingerprintService
 {
-    public FingerprintService(MusicBrainzService musicBrainzService);
+    public FingerprintService(LibrarySettings librarySettings);
 
     public Task<FingerprintBatchResult> PrecomputeFingerprintsAsync(
         IList<TrackInfo> tracks,
@@ -188,12 +204,22 @@ public class FingerprintService
         Func<TrackInfo, Task>? onTrackComplete = null);
 
     public static void WriteFingerprintToTrackFile(TrackInfo track);
+
+    public static Task<string?> ComputeFingerprintAsync(string filePath, string? fpcalcPath);
 }
 ```
 
+- The constructor takes `LibrarySettings` (not `MusicBrainzService`) since the fpcalc runner
+  was severed into this class (§ 6). It reads `_librarySettings.FpcalcPath` and passes it to
+  `ComputeFingerprintAsync`. The import path constructs the service inline as
+  `new FingerprintService(LibrarySettings.Load())` from within `PrecomputeFingerprints` —
+  matching the established in-codebase pattern (`MetadataService.ReadAlbumInfo`, `PathGuard`,
+  `PlayerBar` all `Load()` inline) rather than threading a new `LibrarySettings` dependency
+  through `LibraryImportService`'s constructor. The Edit Metadata path passes the
+  `LibrarySettings.Load()` already in scope.
 - The service stamps `track.AcoustIdFingerprint` in memory; **disk writing is caller-responsibility** so the import path can rely on its existing `WriteMetadataWithRetry` full-tag pass while the Edit Metadata path can do a focused per-field write.
 - `onTrackComplete` is invoked exactly once per *newly computed* fingerprint (not for skipped-existing or failed tracks). The Edit Metadata caller passes a callback that wraps `FingerprintService.WriteFingerprintToTrackFile` in `Task.Run` so the synchronous TagLib save runs off the UI thread.
-- On the first fpcalc-unavailable failure, the service sets a sticky flag so subsequent tracks skip the `GetFingerprintAsync` attempt and fail fast.
+- On the first fpcalc-unavailable failure, the service sets a sticky flag so subsequent tracks skip the `ComputeFingerprintAsync` attempt and fail fast.
 
 ### 10.3 `LibraryImportService` refactor
 
@@ -220,7 +246,7 @@ Styling matches the sidebar's secondary-button idiom (170px wide, 12pt, muted pa
 `FingerprintButton_Click` ([Views/EditMetadataView.xaml.cs](../Views/EditMetadataView.xaml.cs)):
 
 1. Disables the button, shows the `ProgressBar` in determinate mode (`Maximum = _tracks.Count`).
-2. Constructs `MusicBrainzService` per-click (mirrors `MusicBrainzButton_Click`'s pattern) and wraps it in a fresh `FingerprintService`.
+2. Constructs a fresh `FingerprintService` per-click from `LibrarySettings.Load()` (no `MusicBrainzService` involved — the fpcalc runner was severed into `FingerprintService`, § 6).
 3. Builds an `IProgress` reporter via `new Progress<...>(...)`. Because `Progress<T>` captures the construction-time `SynchronizationContext`, callbacks fire on the UI thread. The lambda updates `StatusTextBlock.Text`, advances `ProgressBar.Value`, and calls `UpdateFingerprintSummary()` — all UI-safe.
 4. Awaits `PrecomputeFingerprintsAsync` inside `Task.Run` so the entire batch runs off the UI thread. The `onTrackComplete` callback re-wraps `FingerprintService.WriteFingerprintToTrackFile` in `Task.Run` so the synchronous TagLib save also runs on the thread pool.
 5. After completion, sets a final status message:

@@ -8,6 +8,16 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Fingerprint timing vs. match-before-import (Surfaced 2026-06-24)
+Fingerprinting currently runs at import (`PrecomputeFingerprints`), aligned with the
+source -> library boundary (read operates on un-owned source files; import is where a file
+is committed to the managed library). Stored fingerprints are presently display-only — no
+fingerprint-keyed matcher consumes them yet. Open question for the future
+fingerprint-matching arc: once a fingerprint-keyed identify/match consumer exists, should
+fingerprinting move earlier (read/scan time) to enable match-before-import? Do not act until
+that consumer is designed — acting now would build for a non-existent consumer. Surfaced
+during the fpcalc-runner sever (relocating the runner into `FingerprintService`).
+
 ### Edit Metadata save-lock (Surfaced + fixed 2026-06-22)
 **DONE (this commit):** Saving could fail with "the process cannot access the file ... because it is being used by another process," losing the edit. Root cause was concurrency, not a held handle: the save path had no re-entrancy guard and `AudioPlayerService.WithFileReleased` did not serialize, so a second save (or a fingerprint / MBID write) could enter its write `action()` while the first still held the FLAC open for exclusive write (TagLib `Flac.File.Save` opens write-exclusive). Fix: a static `SemaphoreSlim(1,1)` inside `WithFileReleased` serializes every guarded write window app-wide (closing the whole save+save / save+fingerprint / save+MBID class), plus an `_isSaving` re-entrancy guard on `EditMetadataView.SaveChangesAsync` (covers both entry points — HeaderBar Save and `VerifyButton_Click`) with the HeaderBar Save button disabled during the save. Regression gate: `AudioPlayerServiceWriteGateTests.WithFileReleased_ConcurrentWritersOnSameFile_DoNotCollide` (fails pre-fix, passes after). `MetadataService.WriteMetadata` per-track disposal was already correct and is unchanged.
 

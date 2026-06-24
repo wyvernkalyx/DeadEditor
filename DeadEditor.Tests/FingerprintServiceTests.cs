@@ -10,7 +10,7 @@ namespace DeadEditor.Tests;
 
 /// <summary>
 /// Tests for the shared <see cref="FingerprintService"/>. Coverage focuses on the
-/// offline path (MusicBrainzService with no FpcalcPath) — the success path requires
+/// offline path (LibrarySettings with no FpcalcPath) — the success path requires
 /// real audio plus fpcalc.exe and is not unit-testable, mirroring the gap in
 /// <see cref="LibraryImportServiceFingerprintTests"/>.
 /// </summary>
@@ -24,7 +24,7 @@ public class FingerprintServiceTests
     [Fact]
     public async Task PrecomputeFingerprintsAsync_AllTracksAlreadyFingerprinted_SkipsAll()
     {
-        var service = new FingerprintService(CreateOfflineMusicBrainzService());
+        var service = CreateOfflineFingerprintService();
         var tracks = new List<TrackInfo>
         {
             new() { FilePath = "/dev/null/a", AcoustIdFingerprint = PreexistingFingerprint },
@@ -48,7 +48,7 @@ public class FingerprintServiceTests
     [Fact]
     public async Task PrecomputeFingerprintsAsync_FpcalcNotConfigured_FailsAttempted_SetsFpcalcAvailableFalse()
     {
-        var service = new FingerprintService(CreateOfflineMusicBrainzService());
+        var service = CreateOfflineFingerprintService();
         var tracks = new List<TrackInfo>
         {
             new() { FilePath = "/dev/null/a" }, // bare — will attempt and fail
@@ -67,7 +67,7 @@ public class FingerprintServiceTests
     [Fact]
     public async Task PrecomputeFingerprintsAsync_ReportsProgress()
     {
-        var service = new FingerprintService(CreateOfflineMusicBrainzService());
+        var service = CreateOfflineFingerprintService();
         var tracks = new List<TrackInfo>
         {
             new() { FilePath = "/dev/null/a" },
@@ -93,13 +93,34 @@ public class FingerprintServiceTests
     [Fact]
     public async Task PrecomputeFingerprintsAsync_EmptyTrackList_ReturnsZeroCounts()
     {
-        var service = new FingerprintService(CreateOfflineMusicBrainzService());
+        var service = CreateOfflineFingerprintService();
         var result = await service.PrecomputeFingerprintsAsync(new List<TrackInfo>());
 
         Assert.Equal(0, result.Computed);
         Assert.Equal(0, result.SkippedExisting);
         Assert.Equal(0, result.Failed);
         Assert.True(result.FpcalcAvailable, "no fpcalc determination was made (no tracks)");
+    }
+
+    // ===== ComputeFingerprintAsync (exception contract) =====
+    // Pins the two exception types PrecomputeFingerprintsAsync's sticky-flag fast-fail
+    // depends on. The runner uses string.IsNullOrEmpty, so null/empty => unconfigured
+    // (InvalidOperationException) and any non-empty-but-missing path => FileNotFoundException.
+
+    [Fact]
+    public async Task ComputeFingerprintAsync_PathNullOrEmpty_ThrowsInvalidOperation()
+    {
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            () => FingerprintService.ComputeFingerprintAsync("/dev/null/track.flac", null));
+    }
+
+    [Fact]
+    public async Task ComputeFingerprintAsync_PathPointsAtMissingFile_ThrowsFileNotFound()
+    {
+        var missing = Path.Combine(Path.GetTempPath(), "deadeditor-no-such-fpcalc-" + Guid.NewGuid().ToString("N") + ".exe");
+
+        await Assert.ThrowsAsync<FileNotFoundException>(
+            () => FingerprintService.ComputeFingerprintAsync("/dev/null/track.flac", missing));
     }
 
     // ===== WriteFingerprintToTrackFile =====
@@ -177,8 +198,9 @@ public class FingerprintServiceTests
 
     // ===== Helpers =====
 
-    private static MusicBrainzService CreateOfflineMusicBrainzService()
-        => new MusicBrainzService("test-key", new LibrarySettings());
+    // Empty FpcalcPath => the "fpcalc not configured" path, exercising the offline behavior.
+    private static FingerprintService CreateOfflineFingerprintService()
+        => new FingerprintService(new LibrarySettings());
 
     private static string? ReadXiphFingerprint(string filePath)
     {

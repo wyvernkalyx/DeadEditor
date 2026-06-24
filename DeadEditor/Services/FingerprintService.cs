@@ -25,11 +25,11 @@ namespace DeadEditor.Services
     /// </summary>
     public class FingerprintService
     {
-        private readonly MusicBrainzService _musicBrainzService;
+        private readonly LibrarySettings _librarySettings;
 
-        public FingerprintService(MusicBrainzService musicBrainzService)
+        public FingerprintService(LibrarySettings librarySettings)
         {
-            _musicBrainzService = musicBrainzService;
+            _librarySettings = librarySettings;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace DeadEditor.Services
         /// correct as long as the audio hasn't been re-encoded externally.
         ///
         /// On the first fpcalc-unavailable failure (InvalidOperationException or
-        /// FileNotFoundException from <see cref="MusicBrainzService.GetFingerprintAsync"/>),
+        /// FileNotFoundException from <see cref="ComputeFingerprintAsync"/>),
         /// a sticky flag is set so subsequent tracks fail fast without retrying fpcalc.
         /// </remarks>
         public async Task<FingerprintBatchResult> PrecomputeFingerprintsAsync(
@@ -78,7 +78,7 @@ namespace DeadEditor.Services
 
                 try
                 {
-                    track.AcoustIdFingerprint = await _musicBrainzService.GetFingerprintAsync(track.FilePath);
+                    track.AcoustIdFingerprint = await ComputeFingerprintAsync(track.FilePath, _librarySettings.FpcalcPath);
 
                     if (string.IsNullOrEmpty(track.AcoustIdFingerprint))
                     {
@@ -160,6 +160,71 @@ namespace DeadEditor.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"[FINGERPRINT] Error writing tag for {track.FilePath}: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Runs fpcalc.exe (Chromaprint) at <paramref name="fpcalcPath"/> against
+        /// <paramref name="filePath"/> and returns the parsed Chromaprint fingerprint
+        /// (the <c>FINGERPRINT=</c> line), or <c>null</c> if fpcalc produced no fingerprint.
+        /// </summary>
+        /// <remarks>
+        /// Throws <see cref="InvalidOperationException"/> when <paramref name="fpcalcPath"/>
+        /// is null/empty (fpcalc unconfigured) and <see cref="FileNotFoundException"/> when it
+        /// points at a missing file. <see cref="PrecomputeFingerprintsAsync"/> relies on these
+        /// exact exception types to set its sticky fpcalc-unavailable flag.
+        /// </remarks>
+        public static async Task<string?> ComputeFingerprintAsync(string filePath, string? fpcalcPath)
+        {
+            try
+            {
+                // Validate fpcalc path is configured
+                if (string.IsNullOrEmpty(fpcalcPath))
+                {
+                    throw new InvalidOperationException("fpcalc.exe path not configured. Please set the path in Settings.");
+                }
+
+                // Validate fpcalc.exe exists at configured path
+                if (!File.Exists(fpcalcPath))
+                {
+                    throw new FileNotFoundException($"fpcalc.exe not found at configured path: {fpcalcPath}. Please verify the path in Settings.");
+                }
+
+                Console.WriteLine($"Using fpcalc at: {fpcalcPath}");
+
+                // Run fpcalc to get fingerprint
+                var process = new System.Diagnostics.Process
+                {
+                    StartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = fpcalcPath,
+                        Arguments = $"\"{filePath}\"",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                var output = await process.StandardOutput.ReadToEndAsync();
+                await process.WaitForExitAsync();
+
+                // Parse output for FINGERPRINT= line
+                var lines = output.Split('\n');
+                foreach (var line in lines)
+                {
+                    if (line.StartsWith("FINGERPRINT="))
+                    {
+                        return line.Substring("FINGERPRINT=".Length).Trim();
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating fingerprint: {ex.Message}");
+                throw; // Re-throw to allow caller to handle
             }
         }
     }

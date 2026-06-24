@@ -72,7 +72,7 @@ namespace DeadEditor.Services
                     try
                     {
                         Console.WriteLine($"\n--- Processing: {track.FileName} ---");
-                        var fingerprint = await GetFingerprintAsync(track.FilePath);
+                        var fingerprint = await FingerprintService.ComputeFingerprintAsync(track.FilePath, _librarySettings.FpcalcPath);
 
                         if (!string.IsNullOrEmpty(fingerprint))
                         {
@@ -243,7 +243,7 @@ namespace DeadEditor.Services
                     try
                     {
                         Console.WriteLine($"\n--- Processing: {track.FileName} ---");
-                        var fingerprint = await GetFingerprintAsync(track.FilePath);
+                        var fingerprint = await FingerprintService.ComputeFingerprintAsync(track.FilePath, _librarySettings.FpcalcPath);
 
                         if (!string.IsNullOrEmpty(fingerprint))
                         {
@@ -291,60 +291,6 @@ namespace DeadEditor.Services
             {
                 Console.WriteLine($"Error looking up releases: {ex.Message}");
                 return null;
-            }
-        }
-
-        public async Task<string?> GetFingerprintAsync(string filePath)
-        {
-            try
-            {
-                // Validate fpcalc path is configured
-                if (string.IsNullOrEmpty(_librarySettings.FpcalcPath))
-                {
-                    throw new InvalidOperationException("fpcalc.exe path not configured. Please set the path in Settings.");
-                }
-
-                // Validate fpcalc.exe exists at configured path
-                if (!File.Exists(_librarySettings.FpcalcPath))
-                {
-                    throw new FileNotFoundException($"fpcalc.exe not found at configured path: {_librarySettings.FpcalcPath}. Please verify the path in Settings.");
-                }
-
-                Console.WriteLine($"Using fpcalc at: {_librarySettings.FpcalcPath}");
-
-                // Run fpcalc to get fingerprint
-                var process = new System.Diagnostics.Process
-                {
-                    StartInfo = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = _librarySettings.FpcalcPath,
-                        Arguments = $"\"{filePath}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true
-                    }
-                };
-
-                process.Start();
-                var output = await process.StandardOutput.ReadToEndAsync();
-                await process.WaitForExitAsync();
-
-                // Parse output for FINGERPRINT= line
-                var lines = output.Split('\n');
-                foreach (var line in lines)
-                {
-                    if (line.StartsWith("FINGERPRINT="))
-                    {
-                        return line.Substring("FINGERPRINT=".Length).Trim();
-                    }
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error generating fingerprint: {ex.Message}");
-                throw; // Re-throw to allow caller to handle
             }
         }
 

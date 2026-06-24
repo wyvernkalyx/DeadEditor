@@ -39,7 +39,7 @@ public async Task<AlbumLookupResult?> LookupAlbumAsync(List<TrackInfo> tracks)
 
 1. **Sort tracks** by DiscNumber then TrackNumber and **take last 4** for fingerprinting — bonus tracks on reissues/expanded editions appear at the end, giving better matches for those editions
 2. **For each track:**
-   - Generate fingerprint using fpcalc.exe → `GetFingerprintAsync()`
+   - Generate fingerprint using fpcalc.exe → `FingerprintService.ComputeFingerprintAsync()`
    - Query AcoustID API with fingerprint → `QueryAcoustIdAsync()`
    - Extract MusicBrainz recording ID from response
    - Collect recording IDs (line 46-81)
@@ -125,7 +125,7 @@ public async Task<List<ReleaseOption>?> LookupAllReleasesAsync(List<TrackInfo> t
 
 1. **Sort tracks** by DiscNumber then TrackNumber and **take last 4** for fingerprinting — bonus tracks on reissues/expanded editions appear at the end
 2. **For each track:**
-   - Generate fingerprint → `GetFingerprintAsync()`
+   - Generate fingerprint → `FingerprintService.ComputeFingerprintAsync()`
    - Query AcoustID → `QueryAcoustIdAsync()`
    - Collect recording IDs
 3. **Find common releases** across all recordings → `FindCommonReleasesAsync()`
@@ -197,47 +197,17 @@ public async Task<List<ReleaseOption>?> GetAllReleasesAsync(string recordingId)
 
 ---
 
+## fpcalc Fingerprinting (relocated)
+
+The fpcalc.exe runner **no longer lives in `MusicBrainzService`.** It was severed into
+`FingerprintService.ComputeFingerprintAsync(string filePath, string? fpcalcPath)` (public
+static) so per-track fingerprinting does not depend on `MusicBrainzService`. The lookup
+methods above (`LookupAlbumAsync`, `LookupAllReleasesAsync`) call the relocated static
+directly, passing `_librarySettings.FpcalcPath`. The runner's behavior (the two exception
+types, the `ProcessStartInfo`, the `FINGERPRINT=`-line parse) is unchanged — see
+[fingerprint-persistence-spec.md](fingerprint-persistence-spec.md) § 6.
+
 ## Private Helper Methods
-
-### GetFingerprintAsync
-
-**Signature:**
-```csharp
-private async Task<string?> GetFingerprintAsync(string filePath)
-```
-
-**Purpose:** Generate AcoustID fingerprint using fpcalc.exe (Chromaprint library).
-
-**Business Logic:**
-
-1. **Get configured fpcalc.exe path** from `LibrarySettings.FpcalcPath`
-2. **Validate path** (throws exception if not configured or file doesn't exist):
-   - If `FpcalcPath` is empty or null → Throw `InvalidOperationException` with message:
-     ```
-     "fpcalc.exe path not configured. Please set the path in Settings."
-     ```
-   - If file doesn't exist at configured path → Throw `FileNotFoundException` with message:
-     ```
-     "fpcalc.exe not found at configured path: {FpcalcPath}. Please verify the path in Settings."
-     ```
-3. **Execute fpcalc.exe**:
-   - Arguments: `"<filePath>"`
-   - Redirect stdout, no window
-   - Wait for process completion
-4. **Parse output** for `FINGERPRINT=<value>` line
-5. **Return fingerprint string** or null if no fingerprint in output
-
-**Error Handling:**
-- **Throws `InvalidOperationException`** if fpcalc.exe path not configured (user action required)
-- **Throws `FileNotFoundException`** if configured path doesn't exist (user action required)
-- Catches process execution exceptions and returns `null` (logs to console)
-- Returns `null` if no fingerprint found in output
-
-**Console Logging:** Logs fpcalc execution, output parsing
-
-**Changed from Previous Version:** Previously searched for fpcalc.exe in multiple locations and silently returned null if not found. Now uses user-configured path from Settings and throws clear exceptions if not configured.
-
----
 
 ### QueryAcoustIdAsync
 

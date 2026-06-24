@@ -150,7 +150,7 @@ namespace DeadEditor.Services
         private int PrecomputeFingerprints(List<TrackInfo> tracks,
             IProgress<(int current, int total, string message)>? progress)
         {
-            var fingerprintService = new FingerprintService(_musicBrainzService);
+            var fingerprintService = new FingerprintService(LibrarySettings.Load());
             var result = fingerprintService
                 .PrecomputeFingerprintsAsync(tracks, progress)
                 .GetAwaiter()
