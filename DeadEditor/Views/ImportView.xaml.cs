@@ -99,7 +99,7 @@ namespace DeadEditor
             _normalizationService = new NormalizationService();
             _librarySettings = LibrarySettings.Load();
             _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
-            _libraryImportService = new LibraryImportService(_metadataService, _musicBrainzService);
+            _libraryImportService = new LibraryImportService(_metadataService);
 
             TracksDataGrid.ItemsSource = _tracks;
             WorkflowStepperControl.Stages = _stages;

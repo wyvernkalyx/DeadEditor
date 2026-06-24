@@ -52,7 +52,7 @@ public class LibraryImportServiceManifestTests
                 SongName = "Morning Dew",
             };
 
-            var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
+            var service = new LibraryImportService(new MetadataService());
             service.ImportToLibrary(libraryRoot, album, new List<TrackInfo> { track });
 
             // The library-side filename per ComputeLibraryFilename for an
@@ -117,7 +117,7 @@ public class LibraryImportServiceManifestTests
                 SongName = "Box of Rain",
             };
 
-            var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
+            var service = new LibraryImportService(new MetadataService());
             service.ImportToLibrary(libraryRoot, album, new List<TrackInfo> { track });
 
             // OfficialRelease format omits the date suffix.
@@ -139,9 +139,6 @@ public class LibraryImportServiceManifestTests
     }
 
     // ===== Helpers (mirroring LibraryImportServiceFingerprintTests) =====
-
-    private static MusicBrainzService CreateOfflineMusicBrainzService()
-        => new MusicBrainzService("test-key", new LibrarySettings());
 
     private static string? FindManifestFile(string libraryRoot)
     {

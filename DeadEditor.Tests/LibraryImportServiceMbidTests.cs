@@ -44,7 +44,7 @@ public class LibraryImportServiceMbidTests
                 SongName = "Test Song",
             };
 
-            var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
+            var service = new LibraryImportService(new MetadataService());
             service.ImportToLibrary(libraryRoot, album, new List<TrackInfo> { track });
 
             var importedFile = FindImportedFlacFile(libraryRoot);
@@ -84,7 +84,7 @@ public class LibraryImportServiceMbidTests
                 SongName = "Test Song",
             };
 
-            var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
+            var service = new LibraryImportService(new MetadataService());
             service.ImportToLibrary(libraryRoot, album, new List<TrackInfo> { track });
 
             var importedFile = FindImportedFlacFile(libraryRoot);
@@ -99,14 +99,6 @@ public class LibraryImportServiceMbidTests
             SafeDeleteDirectory(libraryRoot);
         }
     }
-
-    /// <summary>
-    /// Builds a MusicBrainzService whose FpcalcPath is unset, so the import pipeline's
-    /// fingerprint pre-step takes the "fpcalc not configured" path and skips silently.
-    /// Tests that exercise the import write path without exercising fpcalc.
-    /// </summary>
-    private static MusicBrainzService CreateOfflineMusicBrainzService()
-        => new MusicBrainzService("test-key", new LibrarySettings());
 
     private static AlbumInfo BuildTestAlbumInfo() => new()
     {

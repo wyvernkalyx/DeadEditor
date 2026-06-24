@@ -40,13 +40,11 @@ namespace DeadEditor.Services
     public class LibraryImportService
     {
         private readonly MetadataService _metadataService;
-        private readonly MusicBrainzService _musicBrainzService;
         private readonly ManifestService _manifestService = new();
 
-        public LibraryImportService(MetadataService metadataService, MusicBrainzService musicBrainzService)
+        public LibraryImportService(MetadataService metadataService)
         {
             _metadataService = metadataService;
-            _musicBrainzService = musicBrainzService;
         }
 
         /// <summary>

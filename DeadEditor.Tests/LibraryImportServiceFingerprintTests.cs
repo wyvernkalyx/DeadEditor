@@ -13,8 +13,8 @@ namespace DeadEditor.Tests;
 /// the in-memory value is empty (matching the MBID write-or-preserve pattern from Commit 1).
 ///
 /// fpcalc-driven end-to-end fingerprint computation is intentionally NOT exercised here —
-/// the minimal FLAC fixture has no decodable audio frames. The MusicBrainzService passed in
-/// has no FpcalcPath, so the fingerprint pre-step takes the "fpcalc not configured" path.
+/// the minimal FLAC fixture has no decodable audio frames. With no FpcalcPath configured,
+/// the fingerprint pre-step takes the "fpcalc not configured" path.
 /// </summary>
 public class LibraryImportServiceFingerprintTests
 {
@@ -43,7 +43,7 @@ public class LibraryImportServiceFingerprintTests
                 AcoustIdFingerprint = TestFingerprint,
             };
 
-            var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
+            var service = new LibraryImportService(new MetadataService());
             service.ImportToLibrary(libraryRoot, album, new List<TrackInfo> { track });
 
             var importedFile = FindImportedFlacFile(libraryRoot);
@@ -82,7 +82,7 @@ public class LibraryImportServiceFingerprintTests
                 AcoustIdFingerprint = null,
             };
 
-            var service = new LibraryImportService(new MetadataService(), CreateOfflineMusicBrainzService());
+            var service = new LibraryImportService(new MetadataService());
             service.ImportToLibrary(libraryRoot, album, new List<TrackInfo> { track });
 
             var importedFile = FindImportedFlacFile(libraryRoot);
@@ -97,13 +97,6 @@ public class LibraryImportServiceFingerprintTests
             SafeDeleteDirectory(libraryRoot);
         }
     }
-
-    /// <summary>
-    /// Builds a MusicBrainzService whose FpcalcPath is unset, so the import pipeline's
-    /// fingerprint pre-step takes the "fpcalc not configured" path and skips silently.
-    /// </summary>
-    private static MusicBrainzService CreateOfflineMusicBrainzService()
-        => new MusicBrainzService("test-key", new LibrarySettings());
 
     private static AlbumInfo BuildTestAlbumInfo() => new()
     {
