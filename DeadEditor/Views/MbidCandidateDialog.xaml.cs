@@ -25,6 +25,15 @@ namespace DeadEditor.Views
         public ReleaseOption? SelectedRelease { get; set; }
     }
 
+    // Relocated here from the deleted MbidMigrationService (MusicBrainz-removal arc) so the
+    // dialog keeps building; both this enum and the dialog are removed together in commit 6.
+    public enum CandidateAction
+    {
+        None,
+        Confirm,
+        Skip
+    }
+
     public partial class MbidCandidateDialog : Window
     {
         private readonly List<ReleaseOption> _candidates;

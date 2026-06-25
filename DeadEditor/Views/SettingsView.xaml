@@ -49,8 +49,8 @@
             </Grid>
 
             <!-- fpcalc.exe Path -->
-            <TextBlock Text="fpcalc.exe Path (MusicBrainz Fingerprinting)" FontSize="14" Margin="0,0,0,4"/>
-            <TextBlock Text="Required for MusicBrainz audio fingerprinting. Download from https://acoustid.org/chromaprint"
+            <TextBlock Text="fpcalc.exe Path (Audio Fingerprinting)" FontSize="14" Margin="0,0,0,4"/>
+            <TextBlock Text="Required for audio fingerprinting. Download from https://acoustid.org/chromaprint"
                        FontSize="12" Foreground="#888888" Margin="0,0,0,6"/>
             <Grid Margin="0,0,0,18">
                 <Grid.ColumnDefinitions>
@@ -63,7 +63,7 @@
 
             <!-- Primary Artist Name -->
             <TextBlock Text="Primary Artist Name" FontSize="14" Margin="0,0,0,4"/>
-            <TextBlock Text="Leave empty to show all artists from MusicBrainz matches"
+            <TextBlock Text="Default artist for imports and new songs when none is otherwise set."
                        FontSize="12" Foreground="#888888" Margin="0,0,0,6"/>
             <TextBox x:Name="PrimaryArtistTextBox" Height="34" Margin="0,0,0,18"/>
 
@@ -137,12 +137,6 @@
                         Height="38" HorizontalAlignment="Left"/>
                 <TextBlock x:Name="EnrichProgressText" Text="" FontSize="14" Foreground="#AACCFF" VerticalAlignment="Center" Margin="14,0,0,0"/>
             </StackPanel>
-
-            <TextBlock Text="Tag each album with its MusicBrainz release ID. Walks the library, looks up releases via fingerprint or name search, and writes the MBID after your confirmation."
-                       FontSize="14" Foreground="#888888" TextWrapping="Wrap" Margin="0,8,0,14"/>
-
-            <Button x:Name="MbidMigrationButton" Content="MBID Migration..." Click="MbidMigrationButton_Click"
-                    Height="38" HorizontalAlignment="Left" Margin="0,0,0,8"/>
 
             <!-- Separator -->
             <Border BorderBrush="#3F3F46" BorderThickness="0,1,0,0" Margin="0,25,0,25"/>

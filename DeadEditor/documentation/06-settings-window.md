@@ -1,5 +1,13 @@
 # Feature Documentation: Settings Window
 
+> **MusicBrainz removed (2026-06).** The Settings "MBID Migration..." button and its
+> description block were removed along with the `MbidMigrationService` / `MbidMigrationView`
+> subsystem (MusicBrainz-removal arc). The **fpcalc.exe Path** field stays but is no longer
+> MusicBrainz-specific — fingerprinting is now MB-independent. **Primary Artist Name** stays
+> but is a default-artist setting (applied to imports and new songs), **not** a MusicBrainz
+> search filter. The MusicBrainz-search workflows and edge-cases below are retained as the
+> historical record; full prose reconciliation lands with the doc sweep at the end of the arc.
+
 ## Purpose
 
 The **Settings Window** is the central configuration hub for DeadEditor, providing access to library path settings, primary artist configuration, song database management, and data reset operations. Users configure the single library root, launch song management dialogs, and can perform destructive operations like resetting all data. This window serves as the gateway to AddSongDialog and ManageSongsDialog, maintaining the separation between configuration (Settings) and viewing (Library Browser).
@@ -37,13 +45,13 @@ A centered modal dialog (650x400px, resizable with minimum 500x350) with vertica
   - Read-only TextBox showing current path
   - "Browse..." button to select folder
   - All album types (audience recordings and official releases) live under this single root
-- **fpcalc.exe Path (MusicBrainz Fingerprinting):**
+- **fpcalc.exe Path (Audio Fingerprinting):**
   - Read-only TextBox showing current path to fpcalc.exe
   - "Browse..." button to select .exe file
-  - Helper text: "Required for MusicBrainz audio fingerprinting. Download from https://acoustid.org/chromaprint"
+  - Helper text: "Required for audio fingerprinting. Download from https://acoustid.org/chromaprint"
 - **Primary Artist Name:**
   - Editable TextBox (optional field)
-  - Helper text: "(Leave empty to show all artists from MusicBrainz matches)"
+  - Helper text: "Default artist for imports and new songs when none is otherwise set."
 
 **Separator (horizontal line)**
 

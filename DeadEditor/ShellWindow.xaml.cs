@@ -325,10 +325,6 @@ namespace DeadEditor
             {
                 HeaderBar.ShowBoxSetWizardHeader(wizardView);
             }
-            else if (view is MbidMigrationView)
-            {
-                HeaderBar.ShowSettingsHeader();
-            }
             else if (view is SettingsView)
             {
                 HeaderBar.ShowSettingsHeader();
@@ -866,14 +862,6 @@ namespace DeadEditor
             }
 
             _navigationService.NavigateToRoot(_settingsView);
-        }
-
-        public void NavigateToMbidMigration()
-        {
-            // Get library shows for the migration view
-            var libraryShows = _libraryView?.Shows?.ToList() ?? new List<LibraryShow>();
-            var migrationView = new Views.MbidMigrationView(libraryShows);
-            _navigationService.NavigateTo(migrationView);
         }
 
         /// <summary>

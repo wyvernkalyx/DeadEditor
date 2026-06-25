@@ -6,8 +6,8 @@ namespace DeadEditor.Models
     public class LibrarySettings
     {
         public string LibraryRootPath { get; set; } = "";              // Single library root — all albums stored under {Artist}/{AlbumFolder}/
-        public string FpcalcPath { get; set; } = "";                   // Path to fpcalc.exe (Chromaprint) for MusicBrainz fingerprinting
-        public string PrimaryArtistName { get; set; } = "Grateful Dead"; // Primary artist for MusicBrainz filtering
+        public string FpcalcPath { get; set; } = "";                   // Path to fpcalc.exe (Chromaprint) for audio fingerprinting
+        public string PrimaryArtistName { get; set; } = "Grateful Dead"; // Default artist for imports and new songs when none is otherwise set
         public string? LastBoxSetName { get; set; }                    // Remember last box set name for faster imports
         public bool DismissedFpcalcWarning { get; set; } = false;      // User has dismissed the fpcalc.exe startup warning
         public int VolumePercent { get; set; } = 75;                     // Volume slider 0-100, persisted between sessions

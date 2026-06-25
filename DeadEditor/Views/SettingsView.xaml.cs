@@ -124,12 +124,6 @@ namespace DeadEditor
 
         // ===== LIBRARY MAINTENANCE =====
 
-        private void MbidMigrationButton_Click(object sender, RoutedEventArgs e)
-        {
-            var shell = Window.GetWindow(this) as ShellWindow;
-            shell?.NavigateToMbidMigration();
-        }
-
         private async void ReenrichButton_Click(object sender, RoutedEventArgs e)
         {
             // Bucket-B confirm (alert-system-spec.md #39). Branch mapping preserved from the old
