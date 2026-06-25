@@ -186,3 +186,12 @@ observed.
   `ConcertLookupService.Evict(date)` after recycling `{date}.json`, removing the entry from
   both `_concerts` and `_sortedDates`. Both `Evict` and `NotifySaved` are idempotent (no throw
   on an absent key).
+
+### Import action bar: "Import to Library" section and styling (Surfaced 2026-06-25)
+The "Import to Library" action should be its own section in the import action bar (alongside the View Info / Import to Library grouping) and styled as a blue button consistent with the other primary actions. Surfaced during the commit-3 (MB UI removal) manual gate. Belongs to the deferred stepper / action-bar review arc.
+
+### Import action bar: button order (Surfaced 2026-06-25)
+Proposed order, as stated by Gregg: Read - Open Folder - Match Setlist - Normalize - Import | Tools section: Open Folder - Renumber - View Info. NOTE: "Open Folder" appears in both the main row and the Tools section as written — clarify whether intentional or a typo when this arc is picked up; recorded verbatim, not deduplicated. The post-MB-removal action bar is simpler, which makes the ordering cleaner to settle. Belongs to the stepper / action-bar review arc.
+
+### Canonical song naming: Weather Report Suite variants (Surfaced 2026-06-25)
+Observation (tentative — Gregg's lean, not a locked rule): "Weather Report Suite" appears in multiple title variants (e.g. "Weather Report Suite: Prelude/Part 1/Part 2 (Let It Grow)"). Lean is to collapse to just "Weather Report Suite" and "Let It Grow", treating Prelude/Part 1/Part 2 as always part of the Weather Report Suite. NOT a precise rule yet — needs its own read-only diagnosis to define the canonical names in songs.json, pin the normalizer/alias behavior, and assess impact on already-matched tracks before any change. Unrelated to MB removal; recorded here only because it surfaced during the commit-3 gate. Ties to the "own canonical song names" direction.

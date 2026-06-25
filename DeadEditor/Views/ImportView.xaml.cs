@@ -28,7 +28,7 @@ namespace DeadEditor
     /// ImportView - Concert Import UserControl for the Shell
     ///
     /// Provides the full import pipeline:
-    ///   Select Folder → Read → MusicBrainz → Normalize → Renumber → Write / Import to Library
+    ///   Select Folder → Read → Normalize → Renumber → Write / Import to Library
     ///
     /// State is preserved when the user switches away to Library / Settings and returns.
     /// Fires ImportCompleted when a concert is successfully imported so ShellWindow can
@@ -46,7 +46,6 @@ namespace DeadEditor
         private readonly MetadataService _metadataService;
         private readonly NormalizationService _normalizationService;
         private readonly LibraryImportService _libraryImportService;
-        private readonly MusicBrainzService _musicBrainzService;
         private LibrarySettings _librarySettings;
 
         // ===== DATA =====
@@ -72,16 +71,14 @@ namespace DeadEditor
         // ===== WORKFLOW STEPPER STATE =====
 
         /// <summary>
-        /// Cached "any source file carried an MBID at folder-load time, OR a
-        /// MusicBrainz lookup has been applied this session." Drives the Enrich
-        /// stage. Updated on folder-load (one-shot file scan) and flipped to
-        /// true after a successful MusicBrainz apply. Reset by ClearView.
+        /// Cached "any source file carried an MBID at folder-load time." Drives the
+        /// Enrich stage. Updated on folder-load (one-shot file scan). Reset by ClearView.
         /// </summary>
         private bool _mbidPresentInSource;
 
         /// <summary>
         /// Backing collection for the workflow stepper. Recomputed by
-        /// <see cref="RefreshStepper"/> at folder-load, post-MusicBrainz,
+        /// <see cref="RefreshStepper"/> at folder-load,
         /// post-Normalize, post-Match-Setlist, post-Import, and on ClearView.
         /// Per-cell edits do not refresh — stages are too coarse-grained for
         /// keystroke updates to matter.
@@ -99,7 +96,6 @@ namespace DeadEditor
             _metadataService = new MetadataService();
             _normalizationService = new NormalizationService();
             _librarySettings = LibrarySettings.Load();
-            _musicBrainzService = new MusicBrainzService("asa4wLQhwJ", _librarySettings);
             _libraryImportService = new LibraryImportService(_metadataService);
 
             TracksDataGrid.ItemsSource = _tracks;
@@ -1202,223 +1198,6 @@ namespace DeadEditor
             }
 
             RefreshStepper();
-        }
-
-        private async void MusicBrainzButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_tracks.Count == 0)
-            {
-                await ShowNotificationAsync("No Tracks", "No tracks loaded. Please select a folder first.");
-                return;
-            }
-
-            // Decide between MBID-driven re-match and fingerprinting.
-            // The "Re-fingerprint" checkbox forces fingerprinting for this session
-            // even when source files already carry MBID tags.
-            bool forceFingerprint = ReFingerprintCheckBox.IsChecked == true;
-
-            if (!forceFingerprint)
-            {
-                var perTrackMbids = _tracks
-                    .Select(vm =>
-                    {
-                        try { return MbidModalHelper.ReadMbidFromFile(vm.Track.FilePath); }
-                        catch { return null; }
-                    })
-                    .ToList();
-
-                var modal = MbidModalHelper.ComputeModal(perTrackMbids);
-                if (modal.AnyPresent && !string.IsNullOrEmpty(modal.ModalMbid))
-                {
-                    await LookupByExistingMbidAsync(modal.ModalMbid, modal.AllAgree);
-                    return;
-                }
-            }
-
-            await LookupByFingerprintAsync();
-        }
-
-        private async Task LookupByFingerprintAsync()
-        {
-            try
-            {
-                MusicBrainzButton.IsEnabled = false;
-                ProgressBar.Visibility = Visibility.Visible;
-                ProgressBar.IsIndeterminate = true;
-                StatusTextBlock.Text = "Looking up album on MusicBrainz...";
-
-                var trackList = _tracks.Select(t => t.Track).ToList();
-                var releases = await _musicBrainzService.LookupAllReleasesAsync(trackList, trackList.Count);
-
-                ProgressBar.Visibility = Visibility.Collapsed;
-                MusicBrainzButton.IsEnabled = true;
-
-                if (releases == null || releases.Count == 0)
-                {
-                    await ShowNotificationAsync("Not Found",
-                        "Could not identify this album using audio fingerprinting.\n\n" +
-                        "Possible reasons:\n" +
-                        "• fpcalc.exe not configured (check Settings)\n" +
-                        "• Album not in MusicBrainz database\n" +
-                        "• Audio fingerprints don't match\n\n" +
-                        "Please enter the information manually.");
-                    StatusTextBlock.Text = "Album lookup failed";
-                    return;
-                }
-
-                var selector = new ReleaseSelectorDialog("Select MusicBrainz Release", releases);
-                if (selector.ShowDialog() == true && selector.SelectedRelease != null)
-                {
-                    await ApplyMusicBrainzData(selector.SelectedRelease);
-                }
-                else
-                {
-                    StatusTextBlock.Text = "Album lookup cancelled";
-                }
-            }
-            catch (Exception ex)
-            {
-                ProgressBar.Visibility = Visibility.Collapsed;
-                MusicBrainzButton.IsEnabled = true;
-                await ShowNotificationAsync("Error", $"Error looking up album: {ex.Message}");
-                StatusTextBlock.Text = "Album lookup error";
-            }
-        }
-
-        private async Task LookupByExistingMbidAsync(string mbid, bool allAgree)
-        {
-            try
-            {
-                MusicBrainzButton.IsEnabled = false;
-                ProgressBar.Visibility = Visibility.Visible;
-                ProgressBar.IsIndeterminate = true;
-
-                var shortMbid = mbid.Length >= 8 ? mbid.Substring(0, 8) : mbid;
-                StatusTextBlock.Text = allAgree
-                    ? $"Looking up MBID {shortMbid}…"
-                    : $"⚠ Tracks have inconsistent MBIDs; using {shortMbid}…";
-
-                var tracks = await _musicBrainzService.GetReleaseTracksAsync(mbid);
-
-                ProgressBar.Visibility = Visibility.Collapsed;
-                MusicBrainzButton.IsEnabled = true;
-
-                var stub = new ReleaseOption
-                {
-                    ReleaseId = mbid,
-                    Title = _albumInfo?.AlbumName ?? "",
-                    Artist = _albumInfo?.Artist ?? "",
-                    Year = _albumInfo?.Year ?? "",
-                    TotalTrackCount = tracks?.Count
-                };
-
-                var selector = new ReleaseSelectorDialog("Confirm MusicBrainz Release", new List<ReleaseOption> { stub });
-                if (selector.ShowDialog() == true && selector.SelectedRelease != null)
-                {
-                    await ApplyMusicBrainzData(selector.SelectedRelease);
-                }
-                else
-                {
-                    StatusTextBlock.Text = "MBID lookup cancelled";
-                }
-            }
-            catch (Exception ex)
-            {
-                ProgressBar.Visibility = Visibility.Collapsed;
-                MusicBrainzButton.IsEnabled = true;
-                await ShowNotificationAsync("Error", $"Error looking up MBID: {ex.Message}");
-                StatusTextBlock.Text = "MBID lookup error";
-            }
-        }
-
-        private async Task ApplyMusicBrainzData(ReleaseOption release)
-        {
-            try
-            {
-                StatusTextBlock.Text = "Fetching release tracks...";
-
-                var tracks = await _musicBrainzService.GetReleaseTracksAsync(release.ReleaseId);
-
-                _isUpdating = true;
-                ArtistTextBox.Text = release.Artist;
-                AlbumNameTextBox.Text = release.Title;
-                YearTextBox.Text = release.Year.ToString();
-                // A MusicBrainz hit IS an official release by definition.
-                // Set Type explicitly here so the import flow doesn't fall
-                // through to AudienceRecording validation (which would
-                // demand a performance date the studio album doesn't have).
-                AlbumTypeComboBox.SelectedIndex = 2;
-                _isUpdating = false;
-
-                if (_albumInfo != null)
-                {
-                    _albumInfo.Artist = release.Artist;
-                    _albumInfo.AlbumName = release.Title;
-                    _albumInfo.Year = release.Year.ToString();
-                    _albumInfo.Type = AlbumType.OfficialRelease;
-                    _albumInfo.MusicBrainzReleaseId = release.ReleaseId;
-                }
-
-                // Download artwork
-                if (!string.IsNullOrEmpty(release.ArtworkUrl))
-                {
-                    var artworkData = await ArtworkDownloader.DownloadAsync(release.ArtworkUrl);
-                    if (artworkData != null && artworkData.Length > 0 && _albumInfo != null)
-                    {
-                        _albumInfo.ArtworkData = artworkData;
-                        _albumInfo.ArtworkMimeType = "image/jpeg";
-                        UpdateArtworkDisplay();
-                    }
-                }
-
-                // Match track titles by disc + position
-                if (tracks != null && tracks.Count > 0)
-                {
-                    int matchedCount = 0;
-
-                    foreach (var localTrack in _tracks)
-                    {
-                        var mbTrack = tracks.FirstOrDefault(t =>
-                            t.DiscNumber == localTrack.DiscNumber &&
-                            t.Position == localTrack.TrackNumber);
-
-                        if (mbTrack != null)
-                        {
-                            var (cleanName, mbSegue, _) = _metadataService.ParseTitleAndDate(mbTrack.Title, _albumInfo?.AlbumDate);
-                            localTrack.Track.SongName = cleanName;
-                            localTrack.Track.HasSegue = mbSegue;
-                            localTrack.Track.IsMatched = true;
-                            localTrack.Track.IsModified = true;
-                            localTrack.UpdateDisplayTitle();
-                            matchedCount++;
-                        }
-                    }
-
-                    string confidence = (matchedCount == _tracks.Count && _tracks.Count == tracks.Count)
-                        ? "High" : "Medium";
-                    StatusTextBlock.Text =
-                        $"MusicBrainz: Found {release.Title} ({release.Year}) — " +
-                        $"{matchedCount}/{_tracks.Count} tracks matched (confidence: {confidence})";
-                }
-                else
-                {
-                    StatusTextBlock.Text =
-                        $"MusicBrainz: Found {release.Title} ({release.Year}) — No track data";
-                }
-
-                TracksDataGrid.Items.Refresh();
-                UpdateAlbumPreview();
-
-                // We just applied an MBID-driven release. Mark the source as
-                // enriched and refresh the stepper so Enrich flips to Completed.
-                _mbidPresentInSource = true;
-                RefreshStepper();
-            }
-            catch (Exception ex)
-            {
-                await ShowNotificationAsync("Error", $"Error applying MusicBrainz data: {ex.Message}");
-                StatusTextBlock.Text = "Error applying MusicBrainz data";
-            }
         }
 
         private async void ImportButton_Click(object sender, RoutedEventArgs e)

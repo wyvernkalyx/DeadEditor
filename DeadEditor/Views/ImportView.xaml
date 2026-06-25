@@ -104,24 +104,6 @@
 
                 <!-- Cluster 2: Enrichment -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <!-- MusicBrainz + Re-fingerprint visually grouped as one unit -->
-                    <Border BorderBrush="#3F3F46" BorderThickness="1"
-                            Background="#252526" CornerRadius="3"
-                            Padding="3" Margin="0,0,6,0">
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="MusicBrainzButton" Content="MusicBrainz" Height="32"
-                                    Style="{StaticResource AccentButton}"
-                                    Click="MusicBrainzButton_Click" Margin="0,0,8,0" FontSize="16"
-                                    ToolTip="Lookup album on MusicBrainz"/>
-                            <CheckBox x:Name="ReFingerprintCheckBox"
-                                      Content="Re-fingerprint"
-                                      Foreground="#CCCCCC"
-                                      FontSize="13"
-                                      VerticalAlignment="Center"
-                                      Margin="0,0,6,0"
-                                      ToolTip="Ignore any existing MusicBrainz ID in source files and identify the release by audio fingerprint instead."/>
-                        </StackPanel>
-                    </Border>
                     <Button x:Name="NormalizeButton" Content="Normalize" Height="32"
                             Style="{StaticResource AccentButton}"
                             Click="NormalizeButton_Click" FontSize="16"

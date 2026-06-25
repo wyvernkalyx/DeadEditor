@@ -2,6 +2,16 @@
 
 **Status:** Mostly shipped. Core redesign is live in Views/ImportView.xaml (the file replaced the original MainWindow plan). Date auto-append rule revised in this commit; code consolidation onto the new rule is the next commit. Remaining outstanding: editable Folder Name Preview + reset (↻) button + FolderNameOverride/CustomFolderName — not yet built.
 
+> **MusicBrainz removed (2026-06).** The 🔎 MusicBrainz lookup button, its
+> Re-fingerprint checkbox, the fingerprint/MBID lookup, and the release-selector
+> apply path were removed from ImportView as part of the MusicBrainz-removal arc.
+> The action bar no longer carries a MusicBrainz button. The Enrich stepper stage
+> now reflects only **pre-existing** `MUSICBRAINZ_ALBUMID` tags found in source
+> files at folder-load (a pure tag scan) — there is no longer any in-app way to
+> acquire an MBID from the import view. The MusicBrainz sections below are retained
+> as the historical redesign record; full prose reconciliation lands with the doc
+> sweep at the end of the removal arc.
+
 ## Overview
 
 Complete redesign of MainWindow (the import/metadata editor screen) to replace the current side-panel layout with a streamlined, dBpowerAmp-inspired interface. The goal is a single-screen workflow where what you see is what gets written to files.
@@ -25,7 +35,7 @@ The window is organized top-to-bottom:
 ┌─────────────────────────────────────────────────────────────┐
 │ [Select Folder…]  [folder path display]                     │  ← Folder Bar
 ├─────────────────────────────────────────────────────────────┤
-│ [Read] [🔎 MusicBrainz] [✨ Normalize] [Renumber] │ [View Info] │ status │ [Write] [Import] [Cancel] │  ← Action Bar
+│ [Read] [✨ Normalize] [Renumber] │ [View Info] │ status │ [Write] [Import] [Cancel] │  ← Action Bar  (MusicBrainz button removed)
 ├───────────────────────────────────────────────┬─────────────┤
 │ Artist | Date | Venue | City,ST | Album | Year│             │  ← Album Info Bar
 ├───────────────────────────────────────────────┤  Artwork    │
