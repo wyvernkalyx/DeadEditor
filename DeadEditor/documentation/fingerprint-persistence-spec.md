@@ -150,7 +150,15 @@ The Track Info dialog ([TrackInfoDialog.xaml.cs](../TrackInfoDialog.xaml.cs)) sh
 
 ### 9.2 Edit Metadata view (album-level summary)
 
-The Edit Metadata view ([Views/EditMetadataView.xaml](../Views/EditMetadataView.xaml)) operates at album level, so showing one fingerprint in its sidebar would misrepresent the data. Instead, the sidebar carries a **coverage summary** beneath the existing MBID row:
+The Edit Metadata view ([Views/EditMetadataView.xaml](../Views/EditMetadataView.xaml)) operates at album level, so showing one fingerprint in its sidebar would misrepresent the data. Instead, the sidebar carries a **coverage summary**:
+
+> **MBID row removed (2026-06).** This summary originally sat *beneath an MBID row*
+> that displayed `MusicBrainzReleaseId`. As part of the MusicBrainz-removal arc, the
+> MBID sidebar display (and its copy button) were removed — with the MusicBrainz
+> lookup/apply path gone, the field could never be newly populated. Under orphan
+> policy (a) the `MUSICBRAINZ_ALBUMID` **tag is still preserved on disk** and still
+> round-trips via `WriteMbidToTracks` on save; only the dead *display* is gone. The
+> FINGERPRINTS summary is now the top item in this sidebar group.
 
 - **Label:** `FINGERPRINTS`
 - **Three states**, computed in `RefreshUI` by counting `_tracks` where `Track.AcoustIdFingerprint` is not null/whitespace:

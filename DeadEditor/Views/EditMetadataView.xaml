@@ -75,10 +75,6 @@
                             Click="MatchSetlistButton_Click" Margin="0,0,6,0" FontSize="16"
                             IsEnabled="False"
                             ToolTip="No setlist data for this date"/>
-                    <Button x:Name="MusicBrainzButton" Content="&#x1F50E; MusicBrainz" Height="32"
-                            Style="{StaticResource AccentButton}"
-                            Click="MusicBrainzButton_Click" Margin="0,0,6,0" FontSize="16"
-                            ToolTip="Look up album on MusicBrainz"/>
                 </StackPanel>
 
                 <!-- Right: Normalization status -->
@@ -476,29 +472,6 @@
                             Background="{StaticResource MarkerAmberAccent}"
                             Visibility="Collapsed"
                             IsHitTestVisible="False"/>
-                </Grid>
-
-                <!-- MBID display -->
-                <Label Content="MBID" Foreground="#999999" FontSize="11"
-                       Padding="0" Margin="0,12,0,2" HorizontalAlignment="Center"/>
-                <Grid HorizontalAlignment="Center" Width="170">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="MbidDisplayText"
-                               Text="—"
-                               Foreground="#888888"
-                               FontSize="11"
-                               VerticalAlignment="Center"
-                               TextTrimming="CharacterEllipsis"
-                               ToolTip="MusicBrainz Release ID"/>
-                    <Button x:Name="MbidCopyButton" Grid.Column="1"
-                            Content="&#x1F4CB;" FontSize="11"
-                            Background="Transparent" Foreground="#888888"
-                            BorderThickness="0" Cursor="Hand" Padding="4,0"
-                            Click="MbidCopyButton_Click" Visibility="Collapsed"
-                            ToolTip="Copy MBID to clipboard"/>
                 </Grid>
 
                 <!-- Fingerprint summary -->
