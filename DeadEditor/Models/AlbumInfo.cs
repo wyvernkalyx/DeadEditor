@@ -99,7 +99,7 @@ namespace DeadEditor.Models
 
         public string Edition { get; set; }            // Optional edition info (preserved as separate field)
 
-        public string? MusicBrainzReleaseId { get; set; }  // MB release MBID (UUID), set by ReleaseSelectorDialog selection
+        public string? MusicBrainzReleaseId { get; set; }  // MB release MBID (UUID); read from MUSICBRAINZ_ALBUMID tag and preserved on write (orphan policy)
 
         // Computed property for album title (adapts based on Type)
         public string AlbumTitle
