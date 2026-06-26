@@ -128,31 +128,14 @@ namespace DeadEditor
 
         private async void EditMetadataView_Loaded(object sender, RoutedEventArgs e)
         {
-            // Cold-gate: the first concert-database access this session triggers the lazy ~2,300-file
-            // load. That load is reached synchronously from LoadData -> RefreshUI ->
-            // UpdateMatchSetlistButton -> ShowLookupService.GetSetlist (which sources from
-            // ConcertLookupService), so without this it would freeze the UI thread for seconds with no
-            // feedback. On a cold open, pre-warm the cache on a background thread behind the modal
-            // status overlay; the scrim also blocks the click-into-not-ready-view window. Warm opens
-            // skip this entirely and stay silent on the fast path.
-            if (!ConcertLookupService.IsLoaded)
-            {
-                try
-                {
-                    await App.Alerts.RunWithStatusAsync(
-                        "Loading concert database…",
-                        _ => Task.Run(() => ConcertLookupService.Instance),
-                        "First open this session — just a moment.");
-                }
-                catch (Exception ex)
-                {
-                    // Don't let the exception escape the async void handler unobserved; surface it on
-                    // the existing banner. LoadData still runs below (GetSetlist degrades gracefully to
-                    // a disabled Match Setlist button if the data truly failed to load).
-                    App.Alerts.Notify($"Could not load concert data: {ex.Message}",
-                        AlertSeverity.Error, "Concert Data");
-                }
-            }
+            // Cold-gate the lazy ~2,300-file concert load behind the status overlay before LoadData ->
+            // RefreshUI -> UpdateMatchSetlistButton -> ShowLookupService.GetSetlist (which sources from
+            // ConcertLookupService) makes its first synchronous touch; without it the UI thread would
+            // freeze for seconds with no feedback. The scrim also blocks the click-into-not-ready-view
+            // window. No-op once warm (silent fast path); load failures are swallowed and bannered so
+            // LoadData still runs (GetSetlist degrades to a disabled Match Setlist button). The shared
+            // helper owns this idiom verbatim — see Helpers/ConcertDataGate.
+            await ConcertDataGate.EnsureLoadedAsync();
 
             // Warm now (cache is loaded): the TagLib read + UpdateMatchSetlistButton -> GetSetlist is
             // the fast (~sub-second) path. The 25-file read stays synchronous by design.

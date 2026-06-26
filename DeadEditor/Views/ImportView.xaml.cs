@@ -298,6 +298,12 @@ namespace DeadEditor
                     _tracks.Add(new TrackInfoViewModel(track, _albumInfo, isEditMode: false));
                 }
 
+                // Cold-gate the lazy ~2,300-file concert load behind the status overlay before
+                // RefreshUI -> UpdateMatchSetlistButton -> GetSetlist makes its first synchronous
+                // touch; no-op once warm. Covers every read entry point (Read button, drag-drop,
+                // path load) since they all funnel through here. See Helpers/ConcertDataGate.
+                await ConcertDataGate.EnsureLoadedAsync();
+
                 // Refresh all bound UI fields
                 RefreshUI();
 

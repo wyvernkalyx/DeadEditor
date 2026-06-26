@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using DeadEditor.Views;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -484,7 +486,7 @@ namespace DeadEditor
             NavigateToLibrary();
         }
 
-        private void SidebarPanel_NavigationRequested(object sender, string destination)
+        private async void SidebarPanel_NavigationRequested(object sender, string destination)
         {
             switch (destination)
             {
@@ -501,7 +503,7 @@ namespace DeadEditor
                     NavigateToReleases();
                     break;
                 case "Concerts":
-                    NavigateToConcerts();
+                    await NavigateToConcerts();
                     break;
                 case "BoxSets":
                     NavigateToBoxSets();
@@ -588,12 +590,16 @@ namespace DeadEditor
             _navigationService.NavigateToRoot(_releasesView);
         }
 
-        private void NavigateToConcerts()
+        private async Task NavigateToConcerts()
         {
             if (_concertsView == null)
             {
                 _concertsView = new ConcertDatabaseView();
             }
+
+            // Cold-gate the lazy ~2,300-file concert load behind the status overlay before the
+            // synchronous LoadConcerts touch below; no-op once warm. See Helpers/ConcertDataGate.
+            await ConcertDataGate.EnsureLoadedAsync();
 
             _concertsView.LoadConcerts();
 
@@ -846,7 +852,7 @@ namespace DeadEditor
                 ConcertLookupService.Instance.Evict(concert.Date);
 
                 // Navigate back to concerts grid
-                NavigateToConcerts();
+                await NavigateToConcerts();
             }
             catch (Exception ex)
             {

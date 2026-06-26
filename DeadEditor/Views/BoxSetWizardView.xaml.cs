@@ -555,7 +555,7 @@ namespace DeadEditor
         /// non-destructive: no dedup, existing rows never cleared or renumbered. Silent on
         /// success (the appended rows are the feedback); messages only on an invalid date or
         /// when no setlist exists for the date.</summary>
-        private void PullSetlistButton_Click(object sender, RoutedEventArgs e)
+        private async void PullSetlistButton_Click(object sender, RoutedEventArgs e)
         {
             var date = PullDateTextBox.Text.Trim();
 
@@ -564,6 +564,12 @@ namespace DeadEditor
                 App.Alerts.Notify("Enter a date as yyyy-MM-dd.", AlertSeverity.Warning, "Invalid Date");
                 return;
             }
+
+            // Cold-gate the lazy ~2,300-file concert load behind the status overlay before the
+            // synchronous GetSetlist touch below; no-op once warm. Box Sets navigation does not warm
+            // the concert cache, so Pull is the first concert access on this path. See
+            // Helpers/ConcertDataGate.
+            await ConcertDataGate.EnsureLoadedAsync();
 
             var sets = ShowLookupService.Instance.GetSetlist(date);
             if (sets == null)
