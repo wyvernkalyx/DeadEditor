@@ -1,5 +1,12 @@
 # MainWindow — Concert Import & Metadata Editor
 
+> **MusicBrainz removed (2026-06).** This document predates the MusicBrainz-removal arc and
+> describes a MusicBrainz lookup/apply step in the import workflow (button, release selector,
+> AcoustID/`MusicBrainzService`, MBID apply) that **no longer exists** — the service and dialogs
+> were deleted and the import/Edit UI surfaces removed. Audio fingerprinting (Chromaprint via
+> `fpcalc`) survives independently. The MusicBrainz references below are retained as the original
+> design record; the live import workflow no longer includes a MusicBrainz step.
+
 ## Purpose
 
 MainWindow is the concert import workflow hub for DeadEditor. It loads audio files from a folder, parses metadata from filenames and ID3 tags, normalizes song titles using fuzzy matching against the song database, and writes standardized metadata back to the files. The window supports two album types (`AudienceRecording` and `OfficialRelease`); `OfficialRelease` covers studio albums, official live releases, and box sets. After metadata preparation, concerts can be imported into the library with proper folder structure and naming conventions. The window also supports MusicBrainz integration via audio fingerprinting or manual search.

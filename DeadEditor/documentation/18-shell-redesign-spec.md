@@ -1,5 +1,11 @@
 # 18 — Shell Redesign Spec
 
+> **MusicBrainz removed (2026-06).** This spec predates the MusicBrainz-removal arc and still
+> lists MusicBrainz pieces as live — the `[MusicBrainz]` action-bar button, the `Read → MusicBrainz
+> → …` pipeline, `MusicBrainzService` (now deleted), and `ReleaseSelectorDialog` / `AlbumSearchDialog`
+> (deleted / never built). Those no longer exist; fingerprinting survives independently. The
+> references below are retained as the original shell-redesign design record.
+
 ## Overview
 
 Replace DeadEditor's multi-window architecture with a single-window shell. All views (Library, Import, Edit Metadata, Settings) become UserControls that swap within one main content area. The player bar and playlist are permanently docked at the bottom. No more separate windows, no more window management bugs.

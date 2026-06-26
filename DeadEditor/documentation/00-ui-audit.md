@@ -4,6 +4,11 @@
 **Purpose:** Documentation-first development - comprehensive audit of all windows, dialogs, and interactive elements
 **Status:** As-built documentation (no fixes applied)
 
+> **MusicBrainz removed (2026-06).** This audit is a point-in-time snapshot (2026-03-01) and
+> catalogs MusicBrainz UI that has since been removed (the import/Edit MusicBrainz buttons,
+> ReleaseSelectorDialog, AlbumSearchDialog, MbidCandidateDialog, MBID migration). Those surfaces
+> no longer exist; fingerprinting survives independently. Retained as a historical audit record.
+
 ---
 
 ## Table of Contents

@@ -428,8 +428,8 @@ The `LibrarySettings` class stores user preferences and configuration, including
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | `LibraryRootPath` | `string` | `""` | Single library root for all album types |
-| `FpcalcPath` | `string` | `""` | Path to fpcalc.exe (Chromaprint) for MusicBrainz fingerprinting |
-| `PrimaryArtistName` | `string` | `"Grateful Dead"` | Primary artist for MusicBrainz filtering |
+| `FpcalcPath` | `string` | `""` | Path to fpcalc.exe (Chromaprint) for audio fingerprinting |
+| `PrimaryArtistName` | `string` | `"Grateful Dead"` | Default artist for imports and new songs when none is otherwise set |
 | `LastBoxSetName` | `string?` | `null` | Last used box-set/collection name (for faster imports) |
 | `DismissedFpcalcWarning` | `bool` | `false` | User has dismissed the fpcalc.exe startup warning |
 
@@ -438,15 +438,15 @@ The `LibrarySettings` class stores user preferences and configuration, including
 - The previous separate `OfficialReleasesPath` setting was retired; see [13-library-import-service.md](13-library-import-service.md) and [19-folder-import-and-manifests.md](19-folder-import-and-manifests.md) for the rationale
 
 **Primary Artist Usage:**
-- Used by MusicBrainz search to filter results
+- Default artist applied at import and for new songs when none is otherwise set
 - Default: `"Grateful Dead"` (artist-agnostic by design)
 - User can change to any artist (e.g., `"Phish"`, `"Neil Young"`)
 
 **Fpcalc Path:**
 - Path to fpcalc.exe executable (Chromaprint library)
-- Required for MusicBrainz audio fingerprinting
+- Required for audio fingerprinting
 - Configured via Settings window (Browse button)
-- MusicBrainzService throws exception if not configured when fingerprinting attempted
+- The fingerprint step (`FingerprintService.ComputeFingerprintAsync`) throws if not configured when fingerprinting attempted
 - Download from: https://acoustid.org/chromaprint
 - Example: `"C:\\Tools\\fpcalc.exe"`
 

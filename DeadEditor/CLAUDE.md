@@ -75,28 +75,22 @@ When adding a new feature that writes to disk:
 | `Views/ConcertDatabaseView.xaml/.cs` | (inline — no separate doc) | - | Browse the Data/concerts/ reference database via ConcertLookupService |
 | `Views/ConcertDetailView.xaml/.cs` | (inline — no separate doc) | - | Per-concert detail: setlist + venue, setlist.fm link, and which owned library copies match the date |
 | `Views/EditSetlistView.xaml/.cs` | (inline — no separate doc) | - | Edit a concert's setlist; raises SaveCompleted so the shell refreshes |
-| `Views/MbidMigrationView.xaml/.cs` | [documentation/mbid-foundation-spec.md](documentation/mbid-foundation-spec.md) | - | MBID migration UI: album counts (total / already-tagged / needs-migration) and start/resume the run |
 | **Dialogs (modal, overlay shell)** | | | |
 | `AdvancedSearchDialog.xaml/.cs` | [documentation/03-advanced-search-dialog.md](documentation/03-advanced-search-dialog.md) | ~9,500 words | 3-tab search (Contains/Exclude/Sequence) |
 | `AddSongDialog.xaml/.cs` | [documentation/04-add-song-dialog.md](documentation/04-add-song-dialog.md) | ~7,600 words | Add songs to database with artist support |
 | `ManageSongsDialog.xaml/.cs` | [documentation/05-manage-songs-dialog.md](documentation/05-manage-songs-dialog.md) | ~8,200 words | Browse songs, filter, export to text |
-| `ReleaseSelectorDialog.xaml/.cs` | [documentation/07-release-selector-dialog.md](documentation/07-release-selector-dialog.md) | ~7,400 words | Select from multiple MusicBrainz releases |
-| `AlbumSearchDialog.xaml/.cs` | [documentation/08-album-search-dialog.md](documentation/08-album-search-dialog.md) | ~7,000 words | Manual MusicBrainz search by name |
 | `MatchToSongDialog.xaml/.cs` | [documentation/01-main-window.md](documentation/01-main-window.md) § Match to Song | - | Manual match unmatched track to setlist song with auto-alias |
-| `MbidCandidateDialog.xaml/.cs` | [documentation/mbid-foundation-spec.md](documentation/mbid-foundation-spec.md) | - | Pick a MusicBrainz release candidate and choose which fields (title/artist/year/track titles) to apply during MBID migration |
 | `TrackInfoDialog.xaml/.cs` | (inline — no separate doc) | - | Inspect one track: on-disk FLAC/MP3 tags plus in-memory import status (raw title, match, modified) |
 | `UnmatchedSongsDialog.xaml/.cs` | (inline — no separate doc) | - | Resolve tracks the normalizer left unmatched: per-track dropdown to assign the canonical song title |
 | **Services** | | | |
 | `MetadataService.cs` | [documentation/11-metadata-service.md](documentation/11-metadata-service.md) | ~8,000 words | ID3 tags, ParseAlbumTitle regex, box set vs official release |
 | `NormalizationService.cs` | [documentation/12-normalization-service.md](documentation/12-normalization-service.md) | ~7,000 words | 14-stage normalization, fuzzy matching, Levenshtein distance |
 | `LibraryImportService.cs` | [documentation/13-library-import-service.md](documentation/13-library-import-service.md) | ~5,000 words | Universal single-path library system, folder creation, metadata preservation |
-| `MusicBrainzService.cs` | [documentation/14-musicbrainz-service.md](documentation/14-musicbrainz-service.md) | ~9,500 words | AcoustID fingerprinting, fpcalc.exe, MusicBrainz API, rate limiting |
 | `ShowLookupService.cs` | (inline — no separate doc) | - | Loads Data/shows.json; setlist + venue lookup by yyyy-MM-dd (GetSetlist, GetSegue, GetDiscTrack, SuggestTrackNumber, GetSetlistSongCount, GetShowByDate, FormattedVenueLocation) |
 | `ReleaseLookupService.cs` | (inline — no separate doc) | - | Loads Data/releases.json, autocomplete for album/release names |
 | `ConcertLookupService.cs` | (inline — no separate doc) | - | O(1) per-date lookup over Data/concerts/; AppData-first with bundled fallback + first-run copy |
 | `ManifestService.cs` | [documentation/19-folder-import-and-manifests.md](documentation/19-folder-import-and-manifests.md) | - | Read/write sidecar JSON manifests capturing verified metadata for re-import |
-| `FingerprintService.cs` | [documentation/fingerprint-persistence-spec.md](documentation/fingerprint-persistence-spec.md) | - | AcoustID/Chromaprint fingerprint precompute + persistence to track files |
-| `MbidMigrationService.cs` | [documentation/mbid-foundation-spec.md](documentation/mbid-foundation-spec.md) | - | Orchestrate MBID migration: lookup, candidate confirmation, tag write, state persistence |
+| `FingerprintService.cs` | [documentation/fingerprint-persistence-spec.md](documentation/fingerprint-persistence-spec.md) | - | Chromaprint (fpcalc) fingerprint precompute + persistence to track files |
 | **Models** | | | |
 | `AlbumInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § AlbumInfo | ~11,000 words | Album metadata, type-based polymorphism, AlbumTitle format |
 | `TrackInfo.cs` | [documentation/15-data-model.md](documentation/15-data-model.md) § TrackInfo | ~11,000 words | Track metadata, segue notation, GetFinalMetadataTitle |
@@ -163,7 +157,7 @@ The `documentation/` folder now holds 41 files. Beyond the numbered specs above,
 - Library browsing → [02-library-browser.md](documentation/02-library-browser.md)
 - Advanced search → [03-advanced-search-dialog.md](documentation/03-advanced-search-dialog.md)
 - Song database management → [04-add-song-dialog.md](documentation/04-add-song-dialog.md), [05-manage-songs-dialog.md](documentation/05-manage-songs-dialog.md)
-- MusicBrainz integration → [14-musicbrainz-service.md](documentation/14-musicbrainz-service.md), [07-release-selector-dialog.md](documentation/07-release-selector-dialog.md), [08-album-search-dialog.md](documentation/08-album-search-dialog.md)
+- Audio fingerprinting → [fingerprint-persistence-spec.md](documentation/fingerprint-persistence-spec.md)
 
 **By Business Logic:**
 - Album title format (box set vs official release) → [15-data-model.md](documentation/15-data-model.md) § AlbumInfo, [11-metadata-service.md](documentation/11-metadata-service.md) § ParseAlbumTitle
@@ -201,7 +195,7 @@ The `documentation/` folder now holds 41 files. Beyond the numbered specs above,
   - `MetadataService` - ID3 tag reading/writing
   - `NormalizationService` - Song title normalization with fuzzy matching
   - `LibraryImportService` - Import concerts from folder structure
-  - `MusicBrainzService` - MusicBrainz API integration for official releases
+  - `FingerprintService` - Chromaprint (fpcalc) fingerprint precompute + persistence
 
 ---
 
@@ -465,7 +459,6 @@ documents the current state, not an endorsed end-state.
 - Normalize song titles using fuzzy matching
 - Auto-detect segues (e.g., "China Cat Sunflower > I Know You Rider")
 - Write standardized ID3 tags to files
-- MusicBrainz integration for official releases (select from multiple releases)
 
 ### 2. Library Browser
 - Grid view of all imported concerts
@@ -479,15 +472,12 @@ documents the current state, not an endorsed end-state.
 - Play concerts directly from library
 - Edit metadata of already-imported concerts
 
-### 3. MusicBrainz Integration (Official Releases)
-- Query MusicBrainz API for official release metadata via audio fingerprinting
-- **Release Selector Dialog** - Choose from multiple releases/editions of same album
-  - Example: "Workingman's Dead" (1970 original, 2003 remaster, 2020 deluxe edition)
-  - Each edition is treated as a separate album
-  - **Status:** Dialog UI implemented but not triggering (see Known Issues)
-- Pre-fill metadata fields for user validation
-- User corrects/validates before final save
-- **Dependencies:** Requires `fpcalc.exe` (Chromaprint) for audio fingerprinting
+### 3. Audio Fingerprinting
+- Per-track Chromaprint fingerprints computed via `fpcalc.exe` and persisted as `ACOUSTID_FINGERPRINT` tags ([FingerprintService](Services/FingerprintService.cs))
+- Computed at import (pre-step) and back-fillable per album via the Edit Metadata "🎵 Fingerprint" button
+- **Dependencies:** Requires `fpcalc.exe` (Chromaprint), path configured in Settings
+- **Note:** Fingerprints are currently display/persistence only — no fingerprint-keyed matcher consumes them yet (see [fingerprint-persistence-spec.md](documentation/fingerprint-persistence-spec.md))
+- *(MusicBrainz/AcoustID online lookup was removed; fingerprinting itself is independent of it.)*
 
 ### 4. Audio Playback
 - Play full concerts or individual tracks
@@ -578,13 +568,11 @@ documents the current state, not an endorsed end-state.
 - `MetadataService.cs` - ID3 tag reading/writing, info file import
 - `NormalizationService.cs` - Song title normalization, fuzzy matching, Levenshtein distance
 - `LibraryImportService.cs` - Concert import from folder structure
-- `MusicBrainzService.cs` - MusicBrainz API integration
 - `ShowLookupService.cs` - Setlist + venue lookup by date from Data/shows.json (GetSetlist / GetSegue / GetDiscTrack / SuggestTrackNumber / GetShowByDate / FormattedVenueLocation)
 - `ReleaseLookupService.cs` - Album name autocomplete from Data/releases.json
 - `ConcertLookupService.cs` - Per-date lookup over Data/concerts/ reference files
 - `ManifestService.cs` - Sidecar metadata manifests (verified state for re-import)
-- `FingerprintService.cs` - AcoustID/Chromaprint fingerprint precompute + persistence
-- `MbidMigrationService.cs` - MBID migration orchestration
+- `FingerprintService.cs` - Chromaprint (fpcalc) fingerprint precompute + persistence
 - `BoxSetService.cs` - BoxSetDefinition read/write/list/delete (AppData vs Data/box-sets)
 
 #### Shell + Views
@@ -601,16 +589,13 @@ documents the current state, not an endorsed end-state.
 - `Views/SongsView`, `ReleasesView` - songs.json / releases.json editors
 - `Views/ConcertDatabaseView`, `ConcertDetailView` - browse Data/concerts/
 - `Views/EditSetlistView` - edit a concert's setlist
-- `Views/MbidMigrationView` - MBID migration UI
 - `Views/BoxSetsView`, `BoxSetWizardView` - box-set list + authoring wizard
 
 #### Dialogs (modal)
 - `AdvancedSearchDialog.xaml/.cs` - 3-tab search (Contains/Exclude/Sequence)
 - `AddSongDialog.xaml/.cs` - Add songs on-the-fly
 - `ManageSongsDialog.xaml/.cs` - Browse/export song database
-- `ReleaseSelectorDialog.xaml/.cs` - Select from multiple MusicBrainz releases
 - `MatchToSongDialog.xaml/.cs` - Manual match unmatched track to setlist song with auto-alias
-- `MbidCandidateDialog.xaml/.cs` - Confirm a MusicBrainz release candidate (MBID migration)
 - `TrackInfoDialog.xaml/.cs` - Inspect one track's on-disk tags + import status
 - `UnmatchedSongsDialog.xaml/.cs` - Assign canonical titles to normalizer-unmatched tracks
 - `Views/PullCollisionDialog.xaml/.cs` - Replace/Append/Cancel for box-set pull-setlist
@@ -682,8 +667,6 @@ dotnet test DeadEditor.sln
 
 Each edition should be treated as a distinct album with its own metadata, even though they share the same base album name.
 
-**MusicBrainz Integration:** Use `ReleaseSelectorDialog` to let user choose which specific release/edition they're importing, then treat each as separate in the library.
-
 ### Track-Level Search with Album Context (Related Feature)
 **Goal:** Enable searching for specific performance dates within official releases
 
@@ -700,34 +683,6 @@ Each edition should be treated as a distinct album with its own metadata, even t
 ---
 
 ## Known Issues
-
-### MusicBrainz Release Selector Not Appearing
-**Status:** Dialog UI is implemented but never shows up during official release import
-
-**Possible Causes:**
-1. **fpcalc.exe missing** - Audio fingerprinting fails silently
-   - MusicBrainzService searches for fpcalc.exe in: current dir, parent dirs, system PATH
-   - Returns null if not found, causing lookup to fail
-   - Check: Is fpcalc.exe in `D:\Projects\fpcalc.exe`?
-
-2. **MusicBrainz API not returning multiple releases** - Only finds 1 release
-   - Code auto-selects single release without showing dialog
-   - May need to adjust filtering logic in `GetAllReleasesAsync()`
-   - Current filter: Only includes "Official" status and "Album" type
-
-3. **AcoustID API key issue** - Service initialization may be failing
-   - Check how `_musicBrainzService` is initialized in `ImportView` (ImportView.xaml.cs)
-   - Verify API key is valid
-
-**Expected Behavior:**
-- If 0 releases found → Error message
-- If 1 release found → Auto-select (no dialog)
-- If 2+ releases found → Show `ReleaseSelectorDialog`
-
-**Debug Steps:**
-1. Check console output for MusicBrainz logging (extensive Console.WriteLine statements exist)
-2. Verify fpcalc.exe location
-3. Test with known album that has multiple editions
 
 ### Minor UI Issue
 - The shell window (`ShellWindow`) sometimes opens in background at startup (requires Alt+Tab to bring forward)

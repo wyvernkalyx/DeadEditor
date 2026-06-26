@@ -2,6 +2,12 @@
 
 **Status:** Shipped, except §3.7 amber/yellow left-edge border + tooltip on unmatched track rows (the MarkerAmberAccent brush exists but is wired only to edited-field markers, not to an unmatched-row trigger). All other features in this spec are in production.
 
+> **MusicBrainz removed (2026-06).** This parity spec predates the MusicBrainz-removal arc and
+> references the Edit Metadata MusicBrainz button / lookup / MBID apply, which have been removed
+> (service and dialogs deleted; the MBID sidebar display hidden, the tag preserved per orphan
+> policy). Fingerprinting and the rest of Edit Metadata are unaffected. MusicBrainz references
+> below are retained as the original parity record.
+
 ## 1. Goals
 
 - Edit Metadata becomes a superset of Import's capabilities for already-imported albums

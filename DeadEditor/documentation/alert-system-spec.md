@@ -2,6 +2,12 @@
 
 **Status:** Implemented — close-out 2026-06-12 (buckets A/B/C converted); orphaned #9 dialog deleted 2026-06-19, zero `MessageBox.Show` remaining
 **Date:** 2026-06-11
+
+> **MusicBrainz removed (2026-06).** This spec catalogs converted MessageBox call-sites; several
+> of them lived in MusicBrainz code since deleted — #12 (`ReleaseSelectorDialog`), #27
+> (`EditMetadataView` existing-MBID confirm in `MusicBrainzButton_Click`), #34/#35
+> (`MbidMigrationView`). Those sites no longer exist. The catalog is retained as the historical
+> alert-migration record; the conversions themselves are unaffected.
 **Branch:** `feature/library-verification-surface`
 
 **Cross-references**

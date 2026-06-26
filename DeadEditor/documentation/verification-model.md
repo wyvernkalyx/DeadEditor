@@ -4,6 +4,12 @@
 
 **Status:** Partially formalized. The page-level verification model and its manifest storage shipped in the MVP wiring chain (commits `2415bfb` through `0d56b90`, 2026-05-18 through 2026-05-20). This stub retains the open architectural questions that the MVP did not resolve.
 
+> **MusicBrainz removed (2026-06).** Where this doc names MusicBrainz/AcoustID as an external
+> "Enrich" source or unverify trigger (the MusicBrainz Enrich/apply and MBID re-match paths), that
+> mechanism no longer exists — it was removed with the MusicBrainz arc. The verification model
+> itself (verified/unverified state, diff-at-save unverify, Match Setlist Enrich) is unaffected.
+> Treat MusicBrainz mentions below as historical provenance context, not a current source.
+
 **Authoritative reference:** [verification-and-manifest-wiring-design-memo.md](verification-and-manifest-wiring-design-memo.md) banks the resolved decisions. Read it for the page-level decision, the unverify-on-edit rule, the manifest-as-storage decision, and the diff-via-preview pattern for external-data interactions.
 
 **See also:** [audio-as-archive-design-memo.md](audio-as-archive-design-memo.md) § 2 (Trust hierarchy as workflow) and § 4 (Structure as verification stage) for the design framing this stub doc will eventually formalize.
