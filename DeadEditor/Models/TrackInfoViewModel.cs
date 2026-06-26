@@ -32,8 +32,18 @@ namespace DeadEditor
 
         private void Track_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(TrackInfo.SongName) || e.PropertyName == nameof(TrackInfo.Segue))
+            if (e.PropertyName == nameof(TrackInfo.SongName))
             {
+                // Mirror the model's change onto the VM so subscribers see direct
+                // model writes (Match Setlist / Normalize / Match-to-Song), not just
+                // edits via the VM proxy setter. The model setter is change-guarded,
+                // so this only fires on a real change (unverify-on-real-change).
+                OnPropertyChanged(nameof(SongName));
+                UpdateDisplayTitle();
+            }
+            else if (e.PropertyName == nameof(TrackInfo.Segue))
+            {
+                OnPropertyChanged(nameof(Segue));
                 UpdateDisplayTitle();
             }
             else if (e.PropertyName == nameof(TrackInfo.TrackDate))
