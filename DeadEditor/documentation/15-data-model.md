@@ -76,7 +76,15 @@ All fields are present on every `AlbumInfo` instance regardless of `Type`. Wheth
 | `ArtworkMimeType` | `string?` | MIME type of artwork | `"image/jpeg"` or `"image/png"` |
 | `InfoFileContent` | `string?` | Content of .txt info file | `"Source: AUD Charlie Miller\nLineage: ..."` |
 | `InfoFileName` | `string?` | Name of info file | `"gd77-05-08.txt"` |
-| `MusicBrainzReleaseId` | `string?` | MBID set when the user picks a release in `ReleaseSelectorDialog` | `"abcd-1234-…"` |
+| `MusicBrainzReleaseId` | `string?` | MBID read from the `MUSICBRAINZ_ALBUMID` tag at library scan. **Inert orphan field — see note below.** | `"abcd-1234-…"` |
+
+> **`MusicBrainzReleaseId` is a deliberately-preserved inert orphan (MusicBrainz-removal arc, 2026-06).** MusicBrainz was removed from DeadEditor; there is **no acquisition path** left that can newly populate this field or the `MUSICBRAINZ_ALBUMID` tag (the lookup, apply, MBID-migration, and manual-entry surfaces are all gone). Under **orphan policy (a) — leave the tag in place**, the field and tag are intentionally kept, not stripped:
+> - **Read:** `LibraryGridView` reads the existing `MUSICBRAINZ_ALBUMID` tag into `LibraryShow.MusicBrainzReleaseId` at scan.
+> - **Preserve-on-write:** `EditMetadataView.WriteMbidToTracks`, `LibraryImportService`, and `MetadataService.WriteMetadata` re-emit the value only when it is already non-empty (`if (IsNullOrEmpty) …` guards) — they never originate one. So an existing tag round-trips harmlessly through a save; a file without one stays without one.
+> - **Not displayed as a curated field:** the Edit-sidebar MBID display was removed with the MusicBrainz UI. `TrackInfoDialog` still lists `Release MBID` as one row of its **raw on-disk tag dump** (alongside the fingerprint) — that is a diagnostic read-out of disk state, not an actionable field.
+> - **Pinned by tests:** `MetadataServiceMbidTests` and `LibraryImportServiceMbidTests` assert the supplied-write and null-preserve round-trip — the guarantee that policy (a) holds.
+>
+> The dormant field is intentional; do not "clean it up" as dead code.
 
 **Compatibility aliases.** `Date`, `City`, `State`, `ReleaseYear`, `OfficialRelease`, and `BoxSetName` survive as read/write aliases on `AlbumInfo` and all map onto the unified fields above (e.g., `BoxSetName` is an alias for `AlbumName`, `Date` for `AlbumDate`, `City`/`State` parse `CityState`). New code should use the unified field names directly.
 
