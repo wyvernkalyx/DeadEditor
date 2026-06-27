@@ -51,6 +51,13 @@ namespace DeadEditor
                 UpdateDisplayTitle();
                 UpdateInheritedDate();
             }
+            else if (e.PropertyName == nameof(TrackInfo.IsModified))
+            {
+                // Mirror the model's IsModified change so the grid's modified-dot
+                // (bound to the VM) updates live on direct model writes (Match
+                // Setlist / Match-to-Song / cell edits), not just VM proxy setters.
+                OnPropertyChanged(nameof(IsModified));
+            }
         }
 
         public string DisplayTitle
@@ -141,6 +148,30 @@ namespace DeadEditor
         }
 
         public string Duration => Track.Duration;
+
+        // Read-only proxy for the grid's modified-dot. Notified via Track_PropertyChanged
+        // (model now raises IsModified) so the dot appears the instant a session edit flags
+        // the track. Set on the model, never directly here.
+        public bool IsModified => Track.IsModified;
+
+        // Drives the amber unmatched-row tint. Set by the view's
+        // RecomputeUnmatchedHighlights after a Match Setlist run (and cleared when a
+        // row is manually matched): true only when matching has run AND this track
+        // was left unplaced. False on fresh load, so the grid is never amber until a
+        // match actually runs.
+        private bool _showUnmatchedWarning;
+        public bool ShowUnmatchedWarning
+        {
+            get => _showUnmatchedWarning;
+            set
+            {
+                if (_showUnmatchedWarning != value)
+                {
+                    _showUnmatchedWarning = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public void UpdateDisplayTitle()
         {

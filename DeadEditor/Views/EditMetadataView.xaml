@@ -10,6 +10,7 @@
              Loaded="EditMetadataView_Loaded">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="#CCCCCC"/>
         </Style>
@@ -228,8 +229,7 @@
                           SelectionUnit="CellOrRowHeader"
                           Background="#1E1E1E"
                           Foreground="#FFFFFF"
-                          RowBackground="#1E1E1E"
-                          AlternatingRowBackground="#252526"
+                          AlternationCount="2"
                           BorderThickness="0"
                           HeadersVisibility="Column"
                           GridLinesVisibility="Horizontal"
@@ -290,6 +290,25 @@
                             <EventSetter Event="DragOver" Handler="Row_DragOver"/>
                             <EventSetter Event="Drop" Handler="Row_Drop"/>
                             <Setter Property="AllowDrop" Value="True"/>
+                            <!-- Row backgrounds are owned here (not via the DataGrid's
+                                 RowBackground/AlternatingRowBackground) so the amber
+                                 unmatched trigger shares one precedence channel and can
+                                 win. Base = normal row; AlternationIndex 1 = stripe;
+                                 amber trigger declared LAST so it wins when active. -->
+                            <Setter Property="Background" Value="#1E1E1E"/>
+                            <Style.Triggers>
+                                <!-- Alternating stripe (replaces AlternatingRowBackground). -->
+                                <DataTrigger Binding="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Self}}" Value="1">
+                                    <Setter Property="Background" Value="#252526"/>
+                                </DataTrigger>
+                                <!-- Amber tint for tracks left unmatched after a Match Setlist run.
+                                     Dim amber (validation-banner tone), readable under white text;
+                                     cell-level selection (#264F78) still paints above it. Declared
+                                     last so it overrides the alternation stripe. -->
+                                <DataTrigger Binding="{Binding ShowUnmatchedWarning}" Value="True">
+                                    <Setter Property="Background" Value="#3F2D1A"/>
+                                </DataTrigger>
+                            </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
 
@@ -306,9 +325,19 @@
                         <DataGridTemplateColumn Header="Title" Width="Auto" MinWidth="250">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding DisplayTitle}"
-                                               VerticalAlignment="Center"
-                                               Padding="4,0"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- Modified dot: soft blue, visible on both the
+                                             normal (#1E1E1E) and amber (#3F2D1A) row backgrounds. -->
+                                        <Ellipse Width="6" Height="6"
+                                                 Margin="2,0,4,0"
+                                                 VerticalAlignment="Center"
+                                                 Fill="#4FC1FF"
+                                                 ToolTip="Modified this session"
+                                                 Visibility="{Binding IsModified, Converter={StaticResource BoolToVis}}"/>
+                                        <TextBlock Text="{Binding DisplayTitle}"
+                                                   VerticalAlignment="Center"
+                                                   Padding="4,0"/>
+                                    </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             <DataGridTemplateColumn.CellEditingTemplate>

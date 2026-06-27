@@ -60,6 +60,30 @@ public class TrackInfoViewModelTests
     }
 
     [Fact]
+    public void TrackInfoViewModel_FlaggingModelIsModified_RaisesVmIsModified()
+    {
+        var (vm, raised) = MakeVm(new TrackInfo { IsModified = false });
+
+        // Direct model write (the path Match Setlist / cell edits take) must reach
+        // the grid's modified-dot, which binds to the VM's IsModified.
+        vm.Track.IsModified = true;
+
+        Assert.Contains(nameof(TrackInfoViewModel.IsModified), raised);
+        Assert.True(vm.IsModified);
+    }
+
+    [Fact]
+    public void TrackInfoViewModel_SettingModelIsModifiedToSameValue_DoesNotRaise()
+    {
+        var (vm, raised) = MakeVm(new TrackInfo { IsModified = false });
+
+        // Change-guarded model setter: re-writing false raises nothing.
+        vm.Track.IsModified = false;
+
+        Assert.DoesNotContain(nameof(TrackInfoViewModel.IsModified), raised);
+    }
+
+    [Fact]
     public void TrackInfoViewModel_SettingModelSegueToSameValue_DoesNotRaise()
     {
         var (vm, raised) = MakeVm(new TrackInfo { Segue = true });

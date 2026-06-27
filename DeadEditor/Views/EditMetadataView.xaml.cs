@@ -281,6 +281,9 @@ namespace DeadEditor
                 CaptureBaseline();
                 RecomputeAllMarkers();
 
+                // Initialize the amber tint to all-clear (match has not run yet).
+                RecomputeUnmatchedHighlights();
+
                 // Display managed folder path
                 var displayPath = _show.FolderPaths.Any() ? _show.FolderPaths.First() : _show.FolderPath;
                 FolderPathTextBox.Text = !string.IsNullOrEmpty(displayPath) ? displayPath : "(unknown)";
@@ -436,6 +439,22 @@ namespace DeadEditor
         {
             var baseline = _baselineValues.TryGetValue(fieldName, out var b) ? b : "";
             EditMarkers.SetIsDirty(tb, EditUnverifyRule.IsDirty(baseline, tb.Text ?? ""));
+        }
+
+        /// <summary>
+        /// Recomputes the amber unmatched-row tint for every track. A row goes amber
+        /// only when Match Setlist has run this session AND the track was left
+        /// unplaced (<c>IsMatched != true</c>) — never on fresh load, where every
+        /// track is unmatched. Mirrors the <see cref="RecomputeAllMarkers"/> pattern;
+        /// called after a match runs and after a manual Match-to-Song so a
+        /// just-matched row drops out of amber.
+        /// </summary>
+        private void RecomputeUnmatchedHighlights()
+        {
+            foreach (var vm in _tracks)
+            {
+                vm.ShowUnmatchedWarning = _matchSetlistHasRun && vm.Track.IsMatched != true;
+            }
         }
 
         /// <summary>
@@ -1604,6 +1623,9 @@ namespace DeadEditor
             _hasUnsavedChanges = true;
             RefreshValidation();
 
+            // This row just became matched — drop it out of the amber tint.
+            RecomputeUnmatchedHighlights();
+
             int remaining = _lastSetlistSongs.Count - _lastClaimedPositions.Count;
             StatusTextBlock.Text = $"Matched '{aliasCandidate}' → '{selectedSong.Canonical}'. {remaining} setlist songs remaining.";
         }
@@ -1679,6 +1701,9 @@ namespace DeadEditor
             TracksDataGrid.Items.Refresh();
             _hasUnsavedChanges = true;
             RefreshValidation();
+
+            // Match has run — paint unplaced tracks amber.
+            RecomputeUnmatchedHighlights();
 
             int unmatchedCount = _tracks.Count - matchCount;
             var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";

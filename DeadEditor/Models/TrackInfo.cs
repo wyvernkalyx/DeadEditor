@@ -6,6 +6,7 @@ namespace DeadEditor.Models
     public class TrackInfo : INotifyPropertyChanged
     {
         private bool? _isMatched;
+        private bool _isModified;
         private string _songName;
         private string _rawTitle;
         private string? _originalTitle;
@@ -135,7 +136,22 @@ namespace DeadEditor.Models
             }
         }
         public string Duration { get; set; }           // MM:SS format (read-only, from file)
-        public bool IsModified { get; set; }           // Has user made changes?
+
+        // IsModified with PropertyChanged notification (symmetric with IsMatched) so
+        // the Edit grid's per-row "modified" dot updates live the moment a session
+        // edit flags the track, without a manual grid refresh.
+        public bool IsModified
+        {
+            get => _isModified;
+            set
+            {
+                if (_isModified != value)
+                {
+                    _isModified = value;
+                    OnPropertyChanged(nameof(IsModified));
+                }
+            }
+        }
         public string? AcoustIdFingerprint { get; set; }  // ACOUSTID_FINGERPRINT (FLAC Xiph) / "Acoustid Fingerprint" TXXX (MP3). Persisted across import/write.
 
         // IsMatched with PropertyChanged notification for WPF DataTrigger binding
