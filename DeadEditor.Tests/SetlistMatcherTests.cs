@@ -495,6 +495,79 @@ public class SetlistMatcherTests
         }
     }
 
+    // ===== B2a: IsModified only on a real change (spec Sec. 6) =====
+    // A match that re-asserts the album's existing values must not flag
+    // modified (the "already-correct album shows unsaved changes" bug).
+
+    [Fact]
+    public void MatchedNoOp_NameAndSegueAlreadyEqual_IsMatchedButNotModified()
+    {
+        // Track already equals the setlist exactly: same canonical name, same segue.
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "Sugar Magnolia") }; // Segue defaults false
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "Sugar Magnolia", Canonical = "Sugar Magnolia", Position = 0, Segue = false },
+        };
+
+        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+
+        Assert.True(tracks[0].IsMatched);    // a setlist entry was claimed
+        Assert.False(tracks[0].IsModified);  // ...but nothing actually changed
+    }
+
+    [Fact]
+    public void MatchedNameOnlyChange_IsModified()
+    {
+        // Name canonicalizes (Watchtower -> All Along The Watchtower); segue unchanged.
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "Watchtower") }; // Segue false
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "All Along The Watchtower", Canonical = "All Along The Watchtower", Position = 0, Segue = false },
+        };
+
+        SetlistMatcher.MatchAndDecorate(tracks, setlist,
+            name => name == "Watchtower" ? "All Along The Watchtower" : name);
+
+        Assert.True(tracks[0].IsMatched);
+        Assert.True(tracks[0].IsModified);
+        Assert.Equal("All Along The Watchtower", tracks[0].SongName);
+    }
+
+    [Fact]
+    public void MatchedSegueOnlyChange_IsModified()
+    {
+        // Name already canonical; only the segue flips (false -> true).
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "Sugar Magnolia") }; // Segue false
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "Sugar Magnolia", Canonical = "Sugar Magnolia", Position = 0, Segue = true },
+        };
+
+        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+
+        Assert.True(tracks[0].IsMatched);
+        Assert.True(tracks[0].IsModified);
+        Assert.True(tracks[0].Segue);
+    }
+
+    [Fact]
+    public void PreexistingModified_NoOpMatch_StaysModified_NotCleared()
+    {
+        // A track the user already edited (IsModified true) matches as a no-op.
+        // Sec. 6: matching never clears IsModified.
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "Sugar Magnolia") };
+        tracks[0].IsModified = true; // a pre-existing edit
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "Sugar Magnolia", Canonical = "Sugar Magnolia", Position = 0, Segue = false },
+        };
+
+        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+
+        Assert.True(tracks[0].IsMatched);
+        Assert.True(tracks[0].IsModified); // left as-is, not cleared by the no-op match
+    }
+
     // ===== Helpers =====
 
     private static string? IdentityResolver(string s) => s;

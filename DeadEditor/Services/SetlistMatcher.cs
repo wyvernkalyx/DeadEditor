@@ -163,14 +163,19 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Performs the writes the original loop did at SetlistMatcher.cs:90-93
-        /// — SongName, Segue, IsMatched, IsModified — for every proposal in
+        /// Writes SongName, Segue, and IsMatched for every proposal in
         /// <paramref name="proposalSet"/>, and returns the <see cref="MatchResult"/>
         /// derived from it (MatchedCount = proposal count, SegueCount = proposals
         /// whose new segue is true, ClaimedPositions = the claimed set).
         ///
-        /// In B1 this applies all proposals unconditionally, exactly as today;
-        /// the B2 surface will hand it only the resolved subset.
+        /// IsModified is set only on a real change — when the proposal's new
+        /// SongName or Segue differs from its captured old value (spec Sec. 6).
+        /// A no-op match (the album already equals the setlist) leaves IsModified
+        /// untouched, so it is never spuriously raised and a pre-existing edit's
+        /// flag is never cleared.
+        ///
+        /// This still applies all proposals; the B2 surface will hand it only
+        /// the resolved subset.
         /// </summary>
         public static MatchResult Apply(ProposalSet proposalSet)
         {
@@ -182,7 +187,15 @@ namespace DeadEditor.Services
                 p.Track.SongName = p.NewSongName;
                 p.Track.Segue = p.NewSegue;
                 p.Track.IsMatched = true;
-                p.Track.IsModified = true;
+                // Flag modified only on a real change (spec Sec. 6): a match
+                // that re-asserts the album's existing values must not show
+                // unsaved changes. Never cleared here — a pre-existing edit's
+                // IsModified is left as-is.
+                if (!string.Equals(p.NewSongName, p.OldSongName, StringComparison.Ordinal)
+                    || p.NewSegue != p.OldSegue)
+                {
+                    p.Track.IsModified = true;
+                }
                 if (p.NewSegue) segues++;
             }
 
