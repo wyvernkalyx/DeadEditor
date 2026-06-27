@@ -8,6 +8,7 @@ namespace DeadEditor.Models
         private bool? _isMatched;
         private string _songName;
         private string _rawTitle;
+        private string? _originalTitle;
         private int _trackNumber;
         private int _discNumber = 1;
         private string _trackDate;
@@ -86,6 +87,23 @@ namespace DeadEditor.Models
                     _rawTitle = value;
                     OnPropertyChanged(nameof(RawTitle));
                 }
+            }
+        }
+
+        // The track's original title, captured once at load (the parsed original
+        // song name, before any Match Setlist / Normalize can change SongName).
+        // Display-only — read by Track Info's "Original Title". Unlike RawTitle,
+        // it is NOT a working buffer: ReconstructRawTitles never touches it, and it
+        // is never written on Save. Set-once: the first non-empty assignment sticks
+        // and later writes (e.g. a manifest override) are ignored, so it stays
+        // immutable for the lifetime of the in-memory track.
+        public string? OriginalTitle
+        {
+            get => _originalTitle;
+            set
+            {
+                if (string.IsNullOrEmpty(_originalTitle))
+                    _originalTitle = value;
             }
         }
         public string TrackDate

@@ -211,6 +211,10 @@ namespace DeadEditor
                 {
                     var (cleanName, parsedSegue, date) = _metadataService.ParseTitleAndDate(track.SongName, _albumInfo.AlbumDate);
                     track.SongName = cleanName;
+                    // Capture the parsed original song name once, before any
+                    // Match Setlist / Normalize can change SongName. Set-once on
+                    // TrackInfo, so a later manifest override does not move it.
+                    track.OriginalTitle = track.SongName;
                     track.HasSegue = parsedSegue;
                     if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(track.TrackDate))
                         track.TrackDate = date;

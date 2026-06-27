@@ -20,7 +20,7 @@ namespace DeadEditor
             // Section 2: Import Status (in-memory pipeline state)
             AddSectionHeader("Import Status");
             AddField("File Path", track.FilePath ?? "");
-            AddField("Original Title", track.RawTitle ?? track.Title ?? "");
+            AddField("Original Title", track.OriginalTitle ?? track.RawTitle ?? track.Title ?? "");
             AddField("Current Song Name", track.SongName ?? "");
             AddField("Is Matched", track.IsMatched == true ? "Yes" : "No");
             AddField("Is Modified", track.IsModified ? "Yes" : "No");
