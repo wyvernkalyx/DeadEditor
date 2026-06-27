@@ -1680,14 +1680,29 @@ namespace DeadEditor
             // (DiscNumber/TrackNumber preserved). The resolver mirrors Import's
             // Normalize -> GetOfficialTitle wiring.
             var trackList = _tracks.Select(vm => vm.Track).ToList();
-            var result = SetlistMatcher.MatchAndDecorate(
+
+            // B2b: route through the preview-before-apply review surface instead
+            // of a blind MatchAndDecorate. ComputeProposals -> review dialog ->
+            // Apply(edited subset). A null result means the user cancelled — the
+            // surface protects against the blind segue overwrite (1977-05-11).
+            var result = MatchReviewRunner.RunReview(
                 trackList,
                 matcherSetlist,
                 trackName =>
                 {
                     var normalized = _normalizationService.Normalize(trackName) ?? trackName;
                     return _normalizationService.GetOfficialTitle(normalized) ?? normalized;
-                });
+                },
+                Window.GetWindow(this));
+
+            if (result == null)
+            {
+                // Cancelled: apply nothing. Do not touch _lastClaimedPositions,
+                // _matchSetlistHasRun, the grid, amber highlights, or
+                // _hasUnsavedChanges — prior match state must persist intact.
+                StatusTextBlock.Text = "Match Setlist cancelled.";
+                return;
+            }
 
             int matchCount = result.MatchedCount;
             int segueCount = result.SegueCount;
