@@ -380,6 +380,121 @@ public class SetlistMatcherTests
         Assert.Null(editAlbum[2].IsMatched);
     }
 
+    // ===== B1 seam: ComputeProposals / Apply =====
+    // The split must be a pure internal seam: ComputeProposals writes nothing
+    // and captures correct old-to-new pairs; Apply(ComputeProposals(x)) is
+    // bit-for-bit equivalent to MatchAndDecorate(x).
+
+    [Fact]
+    public void ComputeProposals_WritesNothing_TracksUnmutated()
+    {
+        var tracks = SampleAlbum();
+        var setlist = SampleSetlist();
+        Func<string, string?> resolver = name => Aliases.TryGetValue(name, out var c) ? c : name;
+
+        // Snapshot the mutable fields ComputeProposals must NOT touch.
+        var beforeNames = tracks.Select(t => t.SongName).ToList();
+        var beforeSegues = tracks.Select(t => t.Segue).ToList();
+        var beforeMatched = tracks.Select(t => t.IsMatched).ToList();
+        var beforeModified = tracks.Select(t => t.IsModified).ToList();
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver);
+
+        Assert.NotEmpty(set.Proposals); // it did find matches...
+        for (int i = 0; i < tracks.Count; i++)
+        {
+            Assert.Equal(beforeNames[i], tracks[i].SongName);   // ...but wrote nothing
+            Assert.Equal(beforeSegues[i], tracks[i].Segue);
+            Assert.Equal(beforeMatched[i], tracks[i].IsMatched);
+            Assert.Equal(beforeModified[i], tracks[i].IsModified);
+        }
+    }
+
+    [Fact]
+    public void ComputeProposals_CapturesOldToNew_NameVariantAndBothSegueDirections()
+    {
+        // Track 1: name variant ("Watchtower" -> canonical) with a segue ADD (false -> true).
+        // Track 2: name already canonical with a segue REMOVE (true -> false).
+        var tracks = new List<TrackInfo>
+        {
+            MakeTrack(1, 1, "Watchtower"),
+            MakeTrack(1, 2, "Sugar Magnolia"),
+        };
+        tracks[1].Segue = true; // pre-existing segue the setlist would clear
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "All Along The Watchtower", Canonical = "All Along The Watchtower", Position = 0, Segue = true },
+            new() { Name = "Sugar Magnolia",           Canonical = "Sugar Magnolia",           Position = 1, Segue = false },
+        };
+        Func<string, string?> resolver = name => name == "Watchtower" ? "All Along The Watchtower" : name;
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver);
+
+        Assert.Equal(2, set.Proposals.Count);
+
+        var add = set.Proposals[0];
+        Assert.Same(tracks[0], add.Track);
+        Assert.Equal("Watchtower", add.OldSongName);
+        Assert.Equal("All Along The Watchtower", add.NewSongName);
+        Assert.False(add.OldSegue);
+        Assert.True(add.NewSegue);                       // segue add captured
+        Assert.Equal(new List<int> { 0 }, add.CoveredEntryIndices);
+
+        var remove = set.Proposals[1];
+        Assert.Same(tracks[1], remove.Track);
+        Assert.Equal("Sugar Magnolia", remove.OldSongName);
+        Assert.Equal("Sugar Magnolia", remove.NewSongName);
+        Assert.True(remove.OldSegue);
+        Assert.False(remove.NewSegue);                   // segue remove captured (the 1977-05-11 hazard)
+        Assert.Equal(new List<int> { 1 }, remove.CoveredEntryIndices);
+    }
+
+    [Fact]
+    public void ComputeProposals_CoveredEntryIndices_LengthOnePerSingleSongMatch()
+    {
+        var tracks = SampleAlbum();
+        var setlist = SampleSetlist();
+        Func<string, string?> resolver = name => Aliases.TryGetValue(name, out var c) ? c : name;
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver);
+
+        Assert.All(set.Proposals, p => Assert.Single(p.CoveredEntryIndices));
+        // The claimed set is the union of the per-proposal indices.
+        Assert.Equal(
+            set.Proposals.SelectMany(p => p.CoveredEntryIndices).ToHashSet(),
+            set.ClaimedPositions);
+    }
+
+    [Fact]
+    public void ApplyOfComputeProposals_EqualsMatchAndDecorate_SameFinalStateAndResult()
+    {
+        var setlist = SampleSetlist();
+        Func<string, string?> resolver = name => Aliases.TryGetValue(name, out var c) ? c : name;
+
+        var direct = SampleAlbum();
+        var seam = SampleAlbum();
+
+        var directResult = SetlistMatcher.MatchAndDecorate(direct, setlist, resolver);
+        var seamResult = SetlistMatcher.Apply(SetlistMatcher.ComputeProposals(seam, setlist, resolver));
+
+        // Identical MatchResult.
+        Assert.Equal(directResult.MatchedCount, seamResult.MatchedCount);
+        Assert.Equal(directResult.SegueCount, seamResult.SegueCount);
+        Assert.Equal(1, directResult.SegueCount); // pin the absolute value so a fixture edit can't revert this to a vacuous 0 == 0
+        Assert.Equal(directResult.ClaimedPositions, seamResult.ClaimedPositions);
+
+        // Identical final track state, field by field.
+        for (int i = 0; i < direct.Count; i++)
+        {
+            Assert.Equal(direct[i].SongName, seam[i].SongName);
+            Assert.Equal(direct[i].Segue, seam[i].Segue);
+            Assert.Equal(direct[i].IsMatched, seam[i].IsMatched);
+            Assert.Equal(direct[i].IsModified, seam[i].IsModified);
+            Assert.Equal(direct[i].DiscNumber, seam[i].DiscNumber);
+            Assert.Equal(direct[i].TrackNumber, seam[i].TrackNumber);
+        }
+    }
+
     // ===== Helpers =====
 
     private static string? IdentityResolver(string s) => s;

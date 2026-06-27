@@ -37,6 +37,43 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
+        /// One proposed decoration for a single matched track: the captured
+        /// old values (the track's current SongName/Segue) and the would-be
+        /// new values (the claimed setlist entry's canonical name/segue),
+        /// plus the setlist indices this track claims.
+        ///
+        /// <see cref="CoveredEntryIndices"/> is a <b>list</b> (length 1 for a
+        /// single-song match) so a future combined-track row can carry
+        /// <c>[i, i+1, ...]</c> with no model change — the one addition Sec.
+        /// 3.2 of the review-surface spec identifies as serving both the
+        /// review surface and combined-track matching.
+        ///
+        /// <see cref="Track"/> is the reference <see cref="Apply"/> writes
+        /// back to.
+        /// </summary>
+        public sealed class TrackProposal
+        {
+            public TrackInfo Track { get; init; } = null!;
+            public string OldSongName { get; init; } = "";
+            public string NewSongName { get; init; } = "";
+            public bool OldSegue { get; init; }
+            public bool NewSegue { get; init; }
+            public List<int> CoveredEntryIndices { get; init; } = new();
+        }
+
+        /// <summary>
+        /// The output of <see cref="ComputeProposals"/>: the per-track
+        /// proposals plus the claimed-at-compute set. Claiming is fixed here
+        /// and is independent of any later per-field accept/ignore (spec Sec.
+        /// 4.1) — <see cref="Apply"/> never re-opens a claim.
+        /// </summary>
+        public sealed class ProposalSet
+        {
+            public List<TrackProposal> Proposals { get; init; } = new();
+            public HashSet<int> ClaimedPositions { get; init; } = new();
+        }
+
+        /// <summary>
         /// For each track in <paramref name="tracks"/>, find the first
         /// unclaimed entry in <paramref name="setlist"/> whose canonical
         /// title matches the track's canonical. On match: set the track's
@@ -44,6 +81,11 @@ namespace DeadEditor.Services
         /// IsMatched=true and IsModified=true. On no match: leave the track
         /// untouched (do not flip IsMatched — Normalize's prior verdict
         /// stands).
+        ///
+        /// This is the thin compose of <see cref="ComputeProposals"/> +
+        /// <see cref="Apply"/>; it applies <b>every</b> proposal, preserving
+        /// the original blind-apply behavior. Per-field selection arrives in
+        /// the B2 review surface and routes through the same two methods.
         /// </summary>
         /// <param name="tracks">Audio tracks in grid order.</param>
         /// <param name="setlist">Flattened setlist with canonical titles.</param>
@@ -56,13 +98,28 @@ namespace DeadEditor.Services
             IReadOnlyList<SetlistEntry> setlist,
             Func<string, string?> resolveCanonical)
         {
+            return Apply(ComputeProposals(tracks, setlist, resolveCanonical));
+        }
+
+        /// <summary>
+        /// Runs the exact same name-gated, first-unclaimed match as
+        /// <see cref="MatchAndDecorate"/> but <b>writes nothing</b>. For each
+        /// matched track it captures the old (current) and would-be-new
+        /// SongName/Segue values and the claimed entry index, returning the
+        /// proposals and the claimed set. The input tracks are left
+        /// unmutated.
+        /// </summary>
+        public static ProposalSet ComputeProposals(
+            IReadOnlyList<TrackInfo> tracks,
+            IReadOnlyList<SetlistEntry> setlist,
+            Func<string, string?> resolveCanonical)
+        {
             if (tracks == null) throw new ArgumentNullException(nameof(tracks));
             if (setlist == null) throw new ArgumentNullException(nameof(setlist));
             if (resolveCanonical == null) throw new ArgumentNullException(nameof(resolveCanonical));
 
             var claimed = new HashSet<int>();
-            int matched = 0;
-            int segues = 0;
+            var proposals = new List<TrackProposal>();
 
             foreach (var track in tracks)
             {
@@ -87,19 +144,53 @@ namespace DeadEditor.Services
                 if (matchedIndex < 0) continue;
 
                 claimed.Add(matchedIndex);
-                track.SongName = setlist[matchedIndex].Canonical;
-                track.Segue = setlist[matchedIndex].Segue;
-                track.IsMatched = true;
-                track.IsModified = true;
-                matched++;
-                if (setlist[matchedIndex].Segue) segues++;
+                proposals.Add(new TrackProposal
+                {
+                    Track = track,
+                    OldSongName = track.SongName,
+                    NewSongName = setlist[matchedIndex].Canonical,
+                    OldSegue = track.Segue,
+                    NewSegue = setlist[matchedIndex].Segue,
+                    CoveredEntryIndices = new List<int> { matchedIndex },
+                });
+            }
+
+            return new ProposalSet
+            {
+                Proposals = proposals,
+                ClaimedPositions = claimed,
+            };
+        }
+
+        /// <summary>
+        /// Performs the writes the original loop did at SetlistMatcher.cs:90-93
+        /// — SongName, Segue, IsMatched, IsModified — for every proposal in
+        /// <paramref name="proposalSet"/>, and returns the <see cref="MatchResult"/>
+        /// derived from it (MatchedCount = proposal count, SegueCount = proposals
+        /// whose new segue is true, ClaimedPositions = the claimed set).
+        ///
+        /// In B1 this applies all proposals unconditionally, exactly as today;
+        /// the B2 surface will hand it only the resolved subset.
+        /// </summary>
+        public static MatchResult Apply(ProposalSet proposalSet)
+        {
+            if (proposalSet == null) throw new ArgumentNullException(nameof(proposalSet));
+
+            int segues = 0;
+            foreach (var p in proposalSet.Proposals)
+            {
+                p.Track.SongName = p.NewSongName;
+                p.Track.Segue = p.NewSegue;
+                p.Track.IsMatched = true;
+                p.Track.IsModified = true;
+                if (p.NewSegue) segues++;
             }
 
             return new MatchResult
             {
-                MatchedCount = matched,
+                MatchedCount = proposalSet.Proposals.Count,
                 SegueCount = segues,
-                ClaimedPositions = claimed,
+                ClaimedPositions = proposalSet.ClaimedPositions,
             };
         }
     }
