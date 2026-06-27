@@ -212,3 +212,11 @@ Read-only diagnosis at HEAD a389fec confirmed Match Setlist is name-gated (`trac
 - **Untested divergence cases (characterization gap).** `SetlistMatcherTests` covers extra-entries and in-order repeats, but not: compound/combined titles (Case B), split media against one setlist entry (Case C), or out-of-order/partial reprises (Case D segue sub-case). Characterization tests would lock in the "degrades to unmatched, never mis-names" guarantee against a future refactor.
 
 - **Wrong-segue-bool on a divergent reprise (narrow latent bug).** The one place Match Setlist can write wrong data: a song that repeats in the setlist with differing segue flags, where the media's coverage/order of the repeat diverges from the setlist, can inherit the earliest-unclaimed occurrence's `Segue` boolean — a wrong flag, never a wrong name. Low severity, untested. Promote to a fix only if a wrong reprise segue is observed in real media.
+
+### Match-to-Song: two follow-ups from the closed no-change investigation (Surfaced 2026-06-27)
+
+A read-only investigation of the right-click **Match to Song** path closed with no code change (the behavior is correct). Two items banked from it, both low-urgency and separate concerns:
+
+- **Empty-state legibility (low priority, legibility only).** When every setlist song is already claimed, the "Match to Song" right-click item is correctly suppressed — the matcher is name-gated, so an unmatched track on a fully-claimed show is an off-list artifact, not a mis-named song (confirmed read-only). The only wart is that the absence is silent. Optional minimal touch: on right-click of an unmatched track when no setlist songs remain, show a status line such as "all setlist songs placed; this track is off-list." This is not a missing feature — do **not** change matching logic.
+
+- **`MatchToSong_Click` skips `MaybeUnverifyAlbumEdit()`.** The handler sets `_hasUnsavedChanges` and `IsModified` but does not call `MaybeUnverifyAlbumEdit()` the way other edit paths do — a possible verified-state inconsistency to reconcile. Separate from the Match-to-Song UX above; verify whether a manual match should unverify the album before acting.
