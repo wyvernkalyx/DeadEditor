@@ -1624,8 +1624,13 @@ namespace DeadEditor
                 return;
             }
 
-            // Flatten setlist into ordered list with canonical names
+            // Flatten setlist into ordered list with canonical names. setlistSongs
+            // (tuples) feeds the Match-to-Song fallback via _lastSetlistSongs;
+            // matcherSetlist is the SetlistEntry list the shared pure matcher consumes.
+            // Mirrors ImportView's Match Setlist flow — both paths now decorate via
+            // the single SetlistMatcher.MatchAndDecorate (no inline claim loop).
             var setlistSongs = new List<(string Name, string Canonical, int Position, bool Segue)>();
+            var matcherSetlist = new List<SetlistMatcher.SetlistEntry>();
             int pos = 0;
             foreach (var set in setlist)
             {
@@ -1633,54 +1638,37 @@ namespace DeadEditor
                 {
                     var canonical = _normalizationService.GetOfficialTitle(song.Name) ?? song.Name;
                     setlistSongs.Add((song.Name, canonical, pos, song.Segue));
+                    matcherSetlist.Add(new SetlistMatcher.SetlistEntry
+                    {
+                        Name = song.Name,
+                        Canonical = canonical,
+                        Position = pos,
+                        Segue = song.Segue,
+                    });
                     pos++;
                 }
             }
 
-            var claimedPositions = new HashSet<int>();
-            int matchCount = 0;
-            int segueCount = 0;
-
-            foreach (var vm in _tracks)
-            {
-                var track = vm.Track;
-                var trackName = track.SongName;
-                if (string.IsNullOrEmpty(trackName)) continue;
-
-                var normalized = _normalizationService.Normalize(trackName);
-                var nameToMatch = normalized ?? trackName;
-                var trackCanonical = _normalizationService.GetOfficialTitle(nameToMatch) ?? nameToMatch;
-
-                int matchedIndex = -1;
-                for (int i = 0; i < setlistSongs.Count; i++)
+            // Model B: matched tracks get SongName/Segue/IsMatched/IsModified
+            // decoration; unmatched tracks are left entirely untouched
+            // (DiscNumber/TrackNumber preserved). The resolver mirrors Import's
+            // Normalize -> GetOfficialTitle wiring.
+            var trackList = _tracks.Select(vm => vm.Track).ToList();
+            var result = SetlistMatcher.MatchAndDecorate(
+                trackList,
+                matcherSetlist,
+                trackName =>
                 {
-                    if (claimedPositions.Contains(i)) continue;
+                    var normalized = _normalizationService.Normalize(trackName) ?? trackName;
+                    return _normalizationService.GetOfficialTitle(normalized) ?? normalized;
+                });
 
-                    if (string.Equals(trackCanonical, setlistSongs[i].Canonical, StringComparison.OrdinalIgnoreCase))
-                    {
-                        matchedIndex = i;
-                        break;
-                    }
-                }
-
-                if (matchedIndex < 0) continue;
-
-                // Confident match: update title and segue, but NOT disc/track numbers
-                claimedPositions.Add(matchedIndex);
-                track.SongName = setlistSongs[matchedIndex].Canonical;
-                track.IsMatched = true;
-                track.IsModified = true;
-                matchCount++;
-
-                // Always apply segue from setlist data
-                track.Segue = setlistSongs[matchedIndex].Segue;
-                if (setlistSongs[matchedIndex].Segue)
-                    segueCount++;
-            }
+            int matchCount = result.MatchedCount;
+            int segueCount = result.SegueCount;
 
             // Store state for Match to Song
             _lastSetlistSongs = setlistSongs;
-            _lastClaimedPositions = claimedPositions;
+            _lastClaimedPositions = result.ClaimedPositions;
             _matchSetlistHasRun = true;
 
             ReconstructRawTitles();
