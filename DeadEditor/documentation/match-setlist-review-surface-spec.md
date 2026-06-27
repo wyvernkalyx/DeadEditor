@@ -4,7 +4,7 @@ _Status: approved design. Document-before-implement per the handbook. Implementa
 
 ## 1. Problem
 
-Clicking Match Setlist silently mutates the grid. The user cannot see what changed, and the change can be destructive: the matcher does a blind, unconditional `track.Segue = entry.Segue` (SetlistMatcher.cs:91), so when the canonical source under-captured segues (common for this dataset; confirmed on 1977-05-11, where all 23 entries carry `segue: false`), a run of correct hand/import-derived segues is silently cleared. Five real segues were wiped in one click. The matcher also fires `track.IsModified = true` on every match (SetlistMatcher.cs:93), even for a track already equal to the setlist.
+Clicking Match Setlist silently mutates the grid. The user cannot see what changed, and the change can be destructive: the matcher does a blind, unconditional `track.Segue = NewSegue` (post-B1: `SetlistMatcher.Apply`, ~SetlistMatcher.cs:188), so when the canonical source under-captured segues (common for this dataset; confirmed on 1977-05-11, where all 23 entries carry `segue: false`), a run of correct hand/import-derived segues is silently cleared. Five real segues were wiped in one click. The pre-B1 matcher also fired `track.IsModified = true` on every match (the blind apply); B1 already replaced that with the on-real-change guard at `SetlistMatcher.Apply` (~SetlistMatcher.cs:194-198) — this spec's review surface narrows *which* fields apply, on top of that fix.
 
 The name-matching itself is safe (name-gated, never mis-names). The defect is the silent, unconditional apply.
 
@@ -25,7 +25,7 @@ Non-goals (this arc):
 
 ### 3.1 ComputeProposals / Apply split (inside SetlistMatcher)
 - `ComputeProposals(tracks, setlist, resolveCanonical)` runs the existing matching but writes nothing. For each matched track it captures the old values (track.SongName, track.Segue) and the would-be new values (entry canonical, entry segue), plus the entry indices it would claim. Returns a list of proposals plus the claimed set.
-- `Apply(proposals)` performs the writes that SetlistMatcher.cs:90-93 do today, for the resolved subset.
+- `Apply(proposals)` performs the SongName/Segue/IsMatched writes (post-B1 at ~SetlistMatcher.cs:187-189, with the IsModified-on-real-change guard at ~:194-198), for the resolved subset.
 - `MatchAndDecorate` becomes `Apply(ComputeProposals(...))` and returns the existing MatchResult unchanged, so both current callers (Import, Edit) are untouched.
 
 This is additive: a new method and a new proposal type alongside MatchResult. No old-to-new capture exists today (the loop is a blind write), so this adds the first one.
