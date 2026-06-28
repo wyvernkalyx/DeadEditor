@@ -33,7 +33,7 @@ public class SetlistMatcherTests
             new() { Name = "Sugar Magnolia",      Canonical = "Sugar Magnolia",      Position = 2, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(3, result.MatchedCount);
         Assert.Equal(1, result.SegueCount);
@@ -72,7 +72,7 @@ public class SetlistMatcherTests
             new() { Name = "Sugar Magnolia",      Canonical = "Sugar Magnolia",      Position = 2, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(3, result.MatchedCount);
 
@@ -103,7 +103,7 @@ public class SetlistMatcherTests
             new() { Name = "Bar", Canonical = "Bar", Position = 1, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(0, result.MatchedCount);
         Assert.Empty(result.ClaimedPositions);
@@ -135,7 +135,7 @@ public class SetlistMatcherTests
             new() { Name = "Playing in the Band", Canonical = "Playing in the Band", Position = 2, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(3, result.MatchedCount);
         Assert.Equal(new HashSet<int> { 0, 1, 2 }, result.ClaimedPositions);
@@ -164,7 +164,7 @@ public class SetlistMatcherTests
             new() { Name = "Song E", Canonical = "Song E", Position = 4, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(3, result.MatchedCount);
         Assert.Equal(new HashSet<int> { 0, 2, 4 }, result.ClaimedPositions);
@@ -194,7 +194,7 @@ public class SetlistMatcherTests
             new() { Name = "U.S. Blues",  Canonical = "U.S. Blues",  Position = 2, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(3, result.MatchedCount);
 
@@ -228,7 +228,8 @@ public class SetlistMatcherTests
         };
 
         var result = SetlistMatcher.MatchAndDecorate(tracks, setlist,
-            input => input == "Watchtower" ? "All Along The Watchtower" : input);
+            input => input == "Watchtower" ? "All Along The Watchtower" : input,
+            input => input == "Watchtower" ? "All Along The Watchtower" : null);
 
         Assert.Equal(1, result.MatchedCount);
         Assert.Equal("All Along The Watchtower", tracks[0].SongName);
@@ -244,14 +245,14 @@ public class SetlistMatcherTests
         var result1 = SetlistMatcher.MatchAndDecorate(
             new List<TrackInfo>(),
             new List<SetlistMatcher.SetlistEntry>(),
-            IdentityResolver);
+            IdentityResolver, IdentityResolver);
         Assert.Equal(0, result1.MatchedCount);
 
         var tracks = new List<TrackInfo> { MakeTrack(1, 1, "X") };
         var result2 = SetlistMatcher.MatchAndDecorate(
             tracks,
             new List<SetlistMatcher.SetlistEntry>(),
-            IdentityResolver);
+            IdentityResolver, IdentityResolver);
         Assert.Equal(0, result2.MatchedCount);
         Assert.Equal(1, tracks[0].TrackNumber); // untouched
     }
@@ -278,7 +279,7 @@ public class SetlistMatcherTests
             new() { Name = "Deal",       Canonical = "Deal",       Position = 1, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(2, result.MatchedCount);
         Assert.Equal("Crowd Banter", tracks[1].SongName);
@@ -304,7 +305,7 @@ public class SetlistMatcherTests
             new() { Name = "The Eleven",  Canonical = "The Eleven",  Position = 2, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(0, result.MatchedCount);
         Assert.Empty(result.ClaimedPositions);
@@ -333,7 +334,7 @@ public class SetlistMatcherTests
             new() { Name = "The Other One", Canonical = "The Other One", Position = 3, Segue = false },
         };
 
-        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.Equal(2, result.MatchedCount); // Bertha + one The Other One
         Assert.Equal("Unlabeled Jam", tracks[2].SongName);
@@ -357,8 +358,8 @@ public class SetlistMatcherTests
         var editAlbum = SampleAlbum();
         var setlist = SampleSetlist();
 
-        var importResult = SetlistMatcher.MatchAndDecorate(importAlbum, setlist, resolver);
-        var editResult = SetlistMatcher.MatchAndDecorate(editAlbum, setlist, resolver);
+        var importResult = SetlistMatcher.MatchAndDecorate(importAlbum, setlist, resolver, resolver);
+        var editResult = SetlistMatcher.MatchAndDecorate(editAlbum, setlist, resolver, resolver);
 
         Assert.Equal(importResult.MatchedCount, editResult.MatchedCount);
         Assert.Equal(importResult.SegueCount, editResult.SegueCount);
@@ -398,7 +399,7 @@ public class SetlistMatcherTests
         var beforeMatched = tracks.Select(t => t.IsMatched).ToList();
         var beforeModified = tracks.Select(t => t.IsModified).ToList();
 
-        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver);
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver, resolver);
 
         Assert.NotEmpty(set.Proposals); // it did find matches...
         for (int i = 0; i < tracks.Count; i++)
@@ -428,7 +429,7 @@ public class SetlistMatcherTests
         };
         Func<string, string?> resolver = name => name == "Watchtower" ? "All Along The Watchtower" : name;
 
-        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver);
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver, resolver);
 
         Assert.Equal(2, set.Proposals.Count);
 
@@ -456,7 +457,7 @@ public class SetlistMatcherTests
         var setlist = SampleSetlist();
         Func<string, string?> resolver = name => Aliases.TryGetValue(name, out var c) ? c : name;
 
-        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver);
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolver, resolver);
 
         Assert.All(set.Proposals, p => Assert.Single(p.CoveredEntryIndices));
         // The claimed set is the union of the per-proposal indices.
@@ -474,8 +475,8 @@ public class SetlistMatcherTests
         var direct = SampleAlbum();
         var seam = SampleAlbum();
 
-        var directResult = SetlistMatcher.MatchAndDecorate(direct, setlist, resolver);
-        var seamResult = SetlistMatcher.Apply(SetlistMatcher.ComputeProposals(seam, setlist, resolver));
+        var directResult = SetlistMatcher.MatchAndDecorate(direct, setlist, resolver, resolver);
+        var seamResult = SetlistMatcher.Apply(SetlistMatcher.ComputeProposals(seam, setlist, resolver, resolver));
 
         // Identical MatchResult.
         Assert.Equal(directResult.MatchedCount, seamResult.MatchedCount);
@@ -509,7 +510,7 @@ public class SetlistMatcherTests
             new() { Name = "Sugar Magnolia", Canonical = "Sugar Magnolia", Position = 0, Segue = false },
         };
 
-        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.True(tracks[0].IsMatched);    // a setlist entry was claimed
         Assert.False(tracks[0].IsModified);  // ...but nothing actually changed
@@ -526,7 +527,8 @@ public class SetlistMatcherTests
         };
 
         SetlistMatcher.MatchAndDecorate(tracks, setlist,
-            name => name == "Watchtower" ? "All Along The Watchtower" : name);
+            name => name == "Watchtower" ? "All Along The Watchtower" : name,
+            name => name == "Watchtower" ? "All Along The Watchtower" : null);
 
         Assert.True(tracks[0].IsMatched);
         Assert.True(tracks[0].IsModified);
@@ -543,7 +545,7 @@ public class SetlistMatcherTests
             new() { Name = "Sugar Magnolia", Canonical = "Sugar Magnolia", Position = 0, Segue = true },
         };
 
-        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.True(tracks[0].IsMatched);
         Assert.True(tracks[0].IsModified);
@@ -562,10 +564,149 @@ public class SetlistMatcherTests
             new() { Name = "Sugar Magnolia", Canonical = "Sugar Magnolia", Position = 0, Segue = false },
         };
 
-        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver);
+        SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
 
         Assert.True(tracks[0].IsMatched);
         Assert.True(tracks[0].IsModified); // left as-is, not cleared by the no-op match
+    }
+
+    // ===== Two-pass combined-track matching (spec 5.3) =====
+
+    // Resolver that knows the single songs A/B/C but NOT any combined string, so a combined name
+    // like "A>B" falls through the direct gate and reaches the decomposer's atomicity guard as a
+    // non-resolving (splittable) name.
+    private static readonly Dictionary<string, string> ComboKnown =
+        new(System.StringComparer.OrdinalIgnoreCase) { { "A", "A" }, { "B", "B" }, { "C", "C" } };
+
+    private static string? ComboResolver(string s) => ComboKnown.TryGetValue(s, out var v) ? v : null;
+
+    // Echoing variant mirroring the production direct-match resolver (returns the input on a miss).
+    // Wired as resolveCanonical so the two-pass tests exercise the real two-resolver contract.
+    private static string? ComboEcho(string s) => ComboKnown.TryGetValue(s, out var v) ? v : s;
+
+    private static SetlistMatcher.SetlistEntry Entry(string name, int pos, bool segue = false) =>
+        new() { Name = name, Canonical = name, Position = pos, Segue = segue };
+
+    [Fact]
+    public void TwoPass_HappyPath_CombineAndDirect_AllMatched()
+    {
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "A>B"), MakeTrack(1, 2, "C") };
+        var setlist = new List<SetlistMatcher.SetlistEntry> { Entry("A", 0), Entry("B", 1), Entry("C", 2) };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, ComboEcho, ComboResolver);
+
+        Assert.Equal(new HashSet<int> { 0, 1, 2 }, set.ClaimedPositions);
+        Assert.Equal(2, set.Proposals.Count);
+
+        var combine = set.Proposals.Single(p => p.CoveredEntryIndices.Count == 2);
+        Assert.Equal(new List<int> { 0, 1 }, combine.CoveredEntryIndices);
+        Assert.Equal("A > B", combine.NewSongName);
+
+        var direct = set.Proposals.Single(p => p.CoveredEntryIndices.Count == 1);
+        Assert.Equal(new List<int> { 2 }, direct.CoveredEntryIndices);
+        Assert.Equal("C", direct.NewSongName);
+
+        var result = SetlistMatcher.Apply(set);
+        Assert.Equal(2, result.MatchedCount);
+    }
+
+    [Theory]
+    [InlineData("A>B", "A")]   // combine first
+    [InlineData("A", "A>B")]   // direct first
+    public void TwoPass_DirectA_Wins_RegardlessOfOrder(string first, string second)
+    {
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, first), MakeTrack(1, 2, second) };
+        var setlist = new List<SetlistMatcher.SetlistEntry> { Entry("A", 0), Entry("B", 1) };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, ComboEcho, ComboResolver);
+
+        // Direct A claims 0; the combine's run [0,1] is blocked by the claimed 0, so it never matches.
+        Assert.Single(set.Proposals);
+        var direct = set.Proposals[0];
+        Assert.Equal("A", direct.NewSongName);
+        Assert.Equal(new List<int> { 0 }, direct.CoveredEntryIndices);
+        Assert.Equal(new HashSet<int> { 0 }, set.ClaimedPositions);
+    }
+
+    [Theory]
+    [InlineData("A>B", "B")]
+    [InlineData("B", "A>B")]
+    public void TwoPass_DirectB_Wins_RegardlessOfOrder(string first, string second)
+    {
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, first), MakeTrack(1, 2, second) };
+        var setlist = new List<SetlistMatcher.SetlistEntry> { Entry("A", 0), Entry("B", 1) };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, ComboEcho, ComboResolver);
+
+        // Direct B claims 1; the combine's run [0,1] is blocked, so it never matches.
+        Assert.Single(set.Proposals);
+        var direct = set.Proposals[0];
+        Assert.Equal("B", direct.NewSongName);
+        Assert.Equal(new List<int> { 1 }, direct.CoveredEntryIndices);
+        Assert.Equal(new HashSet<int> { 1 }, set.ClaimedPositions);
+    }
+
+    [Fact]
+    public void TwoPass_CombineNewSegue_IsLastCoveredEntrySegue_NotFirst()
+    {
+        // First covered entry segues, last does not: NewSegue must follow the LAST (boundary) entry.
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "A>B") };
+        var setlist = new List<SetlistMatcher.SetlistEntry> { Entry("A", 0, segue: true), Entry("B", 1, segue: false) };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, ComboEcho, ComboResolver);
+
+        var combine = Assert.Single(set.Proposals);
+        Assert.Equal(new List<int> { 0, 1 }, combine.CoveredEntryIndices);
+        Assert.False(combine.NewSegue); // last entry's segue, not the first's true
+    }
+
+    [Fact]
+    public void TwoPass_ThreeComponentCombine_ClaimsWholeRun()
+    {
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "A>B>C") };
+        var setlist = new List<SetlistMatcher.SetlistEntry> { Entry("A", 0), Entry("B", 1), Entry("C", 2) };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, ComboEcho, ComboResolver);
+
+        var combine = Assert.Single(set.Proposals);
+        Assert.Equal(new List<int> { 0, 1, 2 }, combine.CoveredEntryIndices);
+        Assert.Equal("A > B > C", combine.NewSongName);
+        Assert.Equal(new HashSet<int> { 0, 1, 2 }, set.ClaimedPositions);
+    }
+
+    [Fact]
+    public void TwoPass_ProductionResolverSemantics_StillDecomposes_RegressionGuard()
+    {
+        // The slice-3 gate bug: the call sites pass an ECHOING resolveCanonical (returns the input
+        // on a miss). If that same resolver is (wrongly) used for decomposition, the atomicity guard
+        // sees the whole combined name "resolve" and never splits. This test wires the resolvers as
+        // production does — echoing for direct match, null-on-unknown for decomposition — and asserts
+        // the combine still decomposes. It FAILS on the single-echoing-resolver wiring.
+        var known = new Dictionary<string, string>(System.StringComparer.OrdinalIgnoreCase)
+        {
+            { "Help On The Way", "Help On The Way" },
+            { "Slipknot!", "Slipknot!" },
+            { "Franklin's Tower", "Franklin's Tower" },
+        };
+        Func<string, string?> echoing = s => known.TryGetValue(s, out var v) ? v : s;     // echoes on miss
+        Func<string, string?> officialOrNull = s => known.TryGetValue(s, out var v) ? v : null;
+
+        var tracks = new List<TrackInfo>
+        {
+            MakeTrack(1, 1, "Help On The Way/Slipknot!"),
+            MakeTrack(1, 2, "Franklin's Tower"),
+        };
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            Entry("Help On The Way", 0), Entry("Slipknot!", 1), Entry("Franklin's Tower", 2),
+        };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, echoing, officialOrNull);
+
+        var combine = set.Proposals.Single(p => p.CoveredEntryIndices.Count == 2);
+        Assert.Equal(new List<int> { 0, 1 }, combine.CoveredEntryIndices);
+        Assert.Equal("Help On The Way > Slipknot!", combine.NewSongName);
+        Assert.Equal(new HashSet<int> { 0, 1, 2 }, set.ClaimedPositions);
     }
 
     // ===== Helpers =====

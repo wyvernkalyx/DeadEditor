@@ -96,9 +96,10 @@ namespace DeadEditor.Services
         public static MatchResult MatchAndDecorate(
             IReadOnlyList<TrackInfo> tracks,
             IReadOnlyList<SetlistEntry> setlist,
-            Func<string, string?> resolveCanonical)
+            Func<string, string?> resolveCanonical,
+            Func<string, string?> resolveOfficialOrNull)
         {
-            return Apply(ComputeProposals(tracks, setlist, resolveCanonical));
+            return Apply(ComputeProposals(tracks, setlist, resolveCanonical, resolveOfficialOrNull));
         }
 
         /// <summary>
@@ -108,19 +109,35 @@ namespace DeadEditor.Services
         /// SongName/Segue values and the claimed entry index, returning the
         /// proposals and the claimed set. The input tracks are left
         /// unmutated.
+        ///
+        /// Two resolvers, by deliberate contract: <paramref name="resolveCanonical"/> is the
+        /// direct-match resolver and may ECHO its input on a miss (the call sites'
+        /// Normalize-then-GetOfficialTitle-or-input chain) — pass 1 only equality-compares the
+        /// result against setlist canonicals, so an echo can never spuriously match.
+        /// <paramref name="resolveOfficialOrNull"/> MUST return null on an unknown name
+        /// (GetOfficialTitle semantics): pass 2 hands it to <see cref="CombinedTrackDecomposer"/>,
+        /// whose atomicity guard (5.1) and component-validation gate (5.2) both depend on null
+        /// meaning "not a known song". Passing an echoing resolver here would make every combined
+        /// name look atomic and split nothing — the slice-3 gate bug this contract prevents.
         /// </summary>
         public static ProposalSet ComputeProposals(
             IReadOnlyList<TrackInfo> tracks,
             IReadOnlyList<SetlistEntry> setlist,
-            Func<string, string?> resolveCanonical)
+            Func<string, string?> resolveCanonical,
+            Func<string, string?> resolveOfficialOrNull)
         {
             if (tracks == null) throw new ArgumentNullException(nameof(tracks));
             if (setlist == null) throw new ArgumentNullException(nameof(setlist));
             if (resolveCanonical == null) throw new ArgumentNullException(nameof(resolveCanonical));
+            if (resolveOfficialOrNull == null) throw new ArgumentNullException(nameof(resolveOfficialOrNull));
 
             var claimed = new HashSet<int>();
             var proposals = new List<TrackProposal>();
 
+            // Pass 1 (direct greedy): each track claims the first unclaimed entry whose Canonical
+            // equals the track's canonical. High-confidence exact matches establish all claims first
+            // so a later combine can never steal a position a direct match wanted (spec 5.3).
+            var matchedTracks = new HashSet<TrackInfo>();
             foreach (var track in tracks)
             {
                 var trackName = track.SongName;
@@ -144,6 +161,7 @@ namespace DeadEditor.Services
                 if (matchedIndex < 0) continue;
 
                 claimed.Add(matchedIndex);
+                matchedTracks.Add(track);
                 proposals.Add(new TrackProposal
                 {
                     Track = track,
@@ -152,6 +170,44 @@ namespace DeadEditor.Services
                     OldSegue = track.Segue,
                     NewSegue = setlist[matchedIndex].Segue,
                     CoveredEntryIndices = new List<int> { matchedIndex },
+                });
+            }
+
+            // Pass 2 (claim-aware decomposition): for each still-unmatched track, try to decompose a
+            // combined name (e.g. "Help On The Way/Slipknot!") into a contiguous run of still-unclaimed
+            // official entries. A combine claims the WHOLE run; its NewSongName is the covered canonical
+            // names joined with " > " (11.3) and its NewSegue is the LAST covered entry's boundary segue
+            // (internal segues are informational only, 3.1). Order-independent: direct matches already
+            // claimed their positions in pass 1 (spec 5.3).
+            var officialCanonicalNames = new List<string>(setlist.Count);
+            foreach (var entry in setlist)
+                officialCanonicalNames.Add(entry.Canonical);
+
+            foreach (var track in tracks)
+            {
+                if (matchedTracks.Contains(track)) continue;
+
+                var trackName = track.SongName;
+                if (string.IsNullOrEmpty(trackName)) continue;
+
+                var run = CombinedTrackDecomposer.Decompose(
+                    trackName, officialCanonicalNames, resolveOfficialOrNull, claimed);
+                if (run == null || run.Count < 2) continue;
+
+                var coveredNames = new List<string>(run.Count);
+                foreach (var idx in run)
+                    coveredNames.Add(setlist[idx].Canonical);
+
+                claimed.UnionWith(run);
+                matchedTracks.Add(track);
+                proposals.Add(new TrackProposal
+                {
+                    Track = track,
+                    OldSongName = track.SongName,
+                    NewSongName = string.Join(" > ", coveredNames),
+                    OldSegue = track.Segue,
+                    NewSegue = setlist[run[run.Count - 1]].Segue,
+                    CoveredEntryIndices = new List<int>(run),
                 });
             }
 

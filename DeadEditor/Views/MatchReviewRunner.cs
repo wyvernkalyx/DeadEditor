@@ -23,9 +23,11 @@ namespace DeadEditor
             IReadOnlyList<TrackInfo> tracks,
             IReadOnlyList<SetlistMatcher.SetlistEntry> setlist,
             Func<string, string?> resolveCanonical,
+            Func<string, string?> resolveOfficialOrNull,
             Window? owner = null)
         {
-            var proposals = SetlistMatcher.ComputeProposals(tracks, setlist, resolveCanonical);
+            var proposals = SetlistMatcher.ComputeProposals(
+                tracks, setlist, resolveCanonical, resolveOfficialOrNull);
             var vm = new MatchReviewViewModel(proposals);
             var win = new MatchReviewWindow(vm) { Owner = owner };
 

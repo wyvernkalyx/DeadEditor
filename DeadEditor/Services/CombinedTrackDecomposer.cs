@@ -28,7 +28,8 @@ namespace DeadEditor.Services
         /// order, or null if the name is atomic (resolves whole), splits into fewer than two
         /// components, has a component that does not normalize to a real song, or whose components
         /// are not a contiguous in-order run of <paramref name="officialCanonicalNames"/>.
-        /// First contiguous run only — claim-aware selection among multiple runs is slice 3's job.
+        /// First contiguous run only. Claim-blind — equivalent to the claim-aware overload with an
+        /// empty claimed set; pure tests use this form.
         /// </summary>
         /// <param name="mediaName">The combined media track name as it appears on the recording.</param>
         /// <param name="officialCanonicalNames">The setlist entries' Canonical names, in order.</param>
@@ -37,9 +38,26 @@ namespace DeadEditor.Services
             string mediaName,
             IReadOnlyList<string> officialCanonicalNames,
             Func<string, string?> resolveOfficial)
+            => Decompose(mediaName, officialCanonicalNames, resolveOfficial, EmptyClaimed);
+
+        /// <summary>
+        /// Claim-aware overload (spec 5.3): returns the first contiguous run that equals the
+        /// components AND contains no position in <paramref name="claimedPositions"/>, or null. The
+        /// matcher's pass 2 passes the positions already claimed by direct matches, so a combine can
+        /// never claim a position a direct match took. All other rules (atomicity guard, split,
+        /// component normalization, contiguity) are identical to the claim-blind form.
+        /// </summary>
+        /// <param name="claimedPositions">Official positions already claimed; windows overlapping any
+        /// are skipped.</param>
+        public static IReadOnlyList<int>? Decompose(
+            string mediaName,
+            IReadOnlyList<string> officialCanonicalNames,
+            Func<string, string?> resolveOfficial,
+            ISet<int> claimedPositions)
         {
             if (resolveOfficial == null) throw new ArgumentNullException(nameof(resolveOfficial));
             if (officialCanonicalNames == null) throw new ArgumentNullException(nameof(officialCanonicalNames));
+            if (claimedPositions == null) throw new ArgumentNullException(nameof(claimedPositions));
             if (string.IsNullOrEmpty(mediaName)) return null;
 
             // 1. Atomicity guard (5.1): a whole name that resolves to a known title/alias is atomic
@@ -69,15 +87,18 @@ namespace DeadEditor.Services
             // A single normalized component is the direct gate's job, not a combine.
             if (componentOfficials.Count < 2) return null;
 
-            // 4. Contiguity (5.2): find the first contiguous in-order window equal to the components.
-            //    No match (non-adjacent or reordered) returns null.
-            return FindContiguousRun(componentOfficials, officialCanonicalNames);
+            // 4. Contiguity (5.2): find the first contiguous in-order window equal to the components
+            //    with no claimed position. No match (non-adjacent, reordered, or fully claimed) -> null.
+            return FindContiguousRun(componentOfficials, officialCanonicalNames, claimedPositions);
         }
 
+        private static readonly ISet<int> EmptyClaimed = new HashSet<int>();
+
         // First contiguous window [i .. i+k-1] of officialCanonicalNames whose entries equal
-        // components in order (OrdinalIgnoreCase, matching the matcher). null when none.
+        // components in order (OrdinalIgnoreCase, matching the matcher) AND contains no claimed
+        // position. null when none.
         private static IReadOnlyList<int>? FindContiguousRun(
-            List<string> components, IReadOnlyList<string> officialCanonicalNames)
+            List<string> components, IReadOnlyList<string> officialCanonicalNames, ISet<int> claimedPositions)
         {
             int k = components.Count;
             int last = officialCanonicalNames.Count - k;
@@ -86,7 +107,9 @@ namespace DeadEditor.Services
                 bool allMatch = true;
                 for (int j = 0; j < k; j++)
                 {
-                    if (!string.Equals(components[j], officialCanonicalNames[i + j],
+                    // Skip the whole window if any position in it is already claimed.
+                    if (claimedPositions.Contains(i + j) ||
+                        !string.Equals(components[j], officialCanonicalNames[i + j],
                             StringComparison.OrdinalIgnoreCase))
                     {
                         allMatch = false;

@@ -145,4 +145,59 @@ public class CombinedTrackDecomposerTests
         var result = CombinedTrackDecomposer.Decompose("Sugaree", official, Resolve);
         Assert.Null(result);
     }
+
+    // ===== Claim-aware overload (spec 5.3) =====
+
+    [Fact]
+    public void ClaimAware_EmptyClaimed_SameAsThreeArg()
+    {
+        var official = new[] { "X", "A", "B" };
+        var claimAware = CombinedTrackDecomposer.Decompose("A > B", official, Resolve, new HashSet<int>());
+        var threeArg = CombinedTrackDecomposer.Decompose("A > B", official, Resolve);
+        Assert.Equal(new[] { 1, 2 }, claimAware);
+        Assert.Equal(threeArg, claimAware);
+    }
+
+    [Fact]
+    public void ClaimAware_FirstWindowClaimed_ReturnsNextWindow()
+    {
+        // "A > B" matches at [0,1] and again at [2,3]; [0,1] overlaps a claimed index, so the
+        // next non-overlapping window is returned.
+        var official = new[] { "A", "B", "A", "B" };
+        var result = CombinedTrackDecomposer.Decompose("A > B", official, Resolve, new HashSet<int> { 1 });
+        Assert.Equal(new[] { 2, 3 }, result);
+    }
+
+    [Fact]
+    public void ClaimAware_AllWindowsClaimed_ReturnsNull()
+    {
+        var official = new[] { "A", "B", "A", "B" };
+        var result = CombinedTrackDecomposer.Decompose("A > B", official, Resolve, new HashSet<int> { 1, 3 });
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void ClaimAware_SoleWindowPartiallyClaimed_ReturnsNull()
+    {
+        var official = new[] { "X", "A", "B" };
+        var result = CombinedTrackDecomposer.Decompose("A > B", official, Resolve, new HashSet<int> { 2 });
+        Assert.Null(result);
+    }
+
+    // ===== Resolver contract: WHY decomposition needs null-on-unknown (slice-3 gate fix) =====
+
+    [Fact]
+    public void EchoingResolver_AtomicityGuardFires_ReturnsNull_NullOnUnknown_ReturnsRun()
+    {
+        // An echoing resolver (returns the input on a miss, like the production direct-match
+        // resolver) makes the WHOLE combined name "resolve", so the atomicity guard treats it as
+        // atomic and never splits. A null-on-unknown resolver lets it decompose. This pins why the
+        // matcher passes a SEPARATE null-on-unknown resolver to the decomposer.
+        var official = new[] { "A", "B" };
+        Func<string, string?> echoing = s => Known.TryGetValue(s, out var v) ? v : s;
+        Func<string, string?> nullOnUnknown = s => Known.TryGetValue(s, out var v) ? v : null;
+
+        Assert.Null(CombinedTrackDecomposer.Decompose("A > B", official, echoing));
+        Assert.Equal(new[] { 0, 1 }, CombinedTrackDecomposer.Decompose("A > B", official, nullOnUnknown));
+    }
 }

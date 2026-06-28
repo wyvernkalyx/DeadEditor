@@ -1688,10 +1688,18 @@ namespace DeadEditor
             var result = MatchReviewRunner.RunReview(
                 trackList,
                 matcherSetlist,
+                // Direct-match resolver: may echo the input on a miss (pass-1 only equality-compares).
                 trackName =>
                 {
                     var normalized = _normalizationService.Normalize(trackName) ?? trackName;
                     return _normalizationService.GetOfficialTitle(normalized) ?? normalized;
+                },
+                // Decomposition resolver: same Normalize, but null on unknown (no echo) so the
+                // decomposer's atomicity guard + component validation work (slice-3 gate fix).
+                trackName =>
+                {
+                    var normalized = _normalizationService.Normalize(trackName) ?? trackName;
+                    return _normalizationService.GetOfficialTitle(normalized);
                 },
                 Window.GetWindow(this));
 
