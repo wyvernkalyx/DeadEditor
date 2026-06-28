@@ -1171,14 +1171,30 @@ namespace DeadEditor
             // TrackNumber preserved). The audio's position in the recording is
             // the archival truth.
             var trackList = _tracks.Select(vm => vm.Track).ToList();
-            var result = SetlistMatcher.MatchAndDecorate(
+
+            // B2b: route through the preview-before-apply review surface instead
+            // of a blind MatchAndDecorate (mirrors Edit). ComputeProposals ->
+            // review dialog -> Apply(edited subset). A null result means the user
+            // cancelled — the surface protects against the blind segue overwrite.
+            var result = MatchReviewRunner.RunReview(
                 trackList,
                 matcherSetlist,
                 trackName =>
                 {
                     var normalized = _normalizationService.Normalize(trackName) ?? trackName;
                     return _normalizationService.GetOfficialTitle(normalized) ?? normalized;
-                });
+                },
+                Window.GetWindow(this));
+
+            if (result == null)
+            {
+                // Cancelled: apply nothing. Leave _lastSetlistSongs,
+                // _lastClaimedPositions, _lastMatchDate, the grid, the stepper,
+                // and prior status untouched — the Import flow stays on its
+                // current step with no partial state.
+                StatusTextBlock.Text = "Match Setlist cancelled.";
+                return;
+            }
 
             // Store state for the Match to Song manual-match dialog (right-click
             // on unmatched tracks).
