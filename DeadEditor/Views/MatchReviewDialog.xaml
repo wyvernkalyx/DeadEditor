@@ -40,6 +40,7 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -47,64 +48,87 @@
 
         <TextBlock Grid.Row="0" Text="Review Match Setlist changes"
                    FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"
-                   Margin="0,0,0,12"/>
+                   Margin="0,0,0,4"/>
 
-        <!-- One row per visible (non-no-op) proposal. Per-field Accept/Ignore. -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <!-- Legend: what the per-row checkboxes mean. Behavior-neutral. -->
+        <TextBlock Grid.Row="1"
+                   Text="Checked = use the setlist's value.  Unchecked = keep the current value."
+                   Foreground="#9A9A9A" FontSize="12" Margin="0,0,0,12"/>
+
+        <!-- One row per visible (non-no-op) proposal. Only the field(s) that
+             actually changed are shown — a segue-only row carries no name
+             control, and vice versa. Per-field Accept/Ignore. -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding VisibleRows}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="#333333" BorderThickness="0,0,0,1"
                                 Padding="0,8">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="48"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-
-                                <!-- Track number -->
-                                <TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-                                           Text="{Binding Track.DisplayTrackNumber}"
-                                           Foreground="#888888" VerticalAlignment="Center"/>
-
-                                <!-- SongName field: Old -> editable New, Accept checkbox -->
-                                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal"
-                                            Margin="0,0,0,4">
-                                    <TextBlock Text="{Binding OldSongName}" Foreground="#999999"
+                            <StackPanel>
+                                <!-- Row header: the track's CURRENT identity, mirroring the
+                                     album-detail grid behind the dialog (plain TrackNumber +
+                                     DiscNumber, song title, duration) — never a setlist-derived
+                                     or disc-concatenated number. -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                    <TextBlock Text="{Binding TrackNumberDisplay}"
+                                               Foreground="#C8C8C8" FontWeight="SemiBold"
                                                VerticalAlignment="Center"/>
-                                    <TextBlock Text="  →  " Foreground="#666666"
-                                               VerticalAlignment="Center"/>
-                                    <TextBox Text="{Binding EditableSongName, UpdateSourceTrigger=PropertyChanged}"
-                                             Width="240" Background="#2D2D30" Foreground="#FFFFFF"
-                                             BorderBrush="#3F3F46" Padding="4,2"
-                                             VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding TrackTitleDisplay}"
+                                               Foreground="#FFFFFF" FontWeight="SemiBold"
+                                               Margin="14,0,0,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding TrackDurationDisplay}"
+                                               Foreground="#888888"
+                                               Margin="14,0,0,0" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <CheckBox Grid.Column="2" Grid.Row="0" Content="Accept name"
-                                          Foreground="#CCCCCC" VerticalAlignment="Center"
-                                          Margin="12,0,0,4"
-                                          IsChecked="{Binding IsSongNameAccepted}"/>
 
-                                <!-- Segue field: Old -> New, Accept checkbox -->
-                                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
-                                    <TextBlock Text="Segue: " Foreground="#999999"
-                                               VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding OldSegue}" Foreground="#999999"
-                                               VerticalAlignment="Center"/>
-                                    <TextBlock Text="  →  " Foreground="#666666"
-                                               VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding NewSegue}" Foreground="#FFFFFF"
-                                               VerticalAlignment="Center"/>
+                                <!-- Proposed change line(s), indented under the header -->
+                                <StackPanel Margin="18,0,0,0">
+                                    <!-- Name field: shown only when the name changed -->
+                                    <Grid Margin="0,0,0,4"
+                                          Visibility="{Binding SongNameChanged, Converter={StaticResource BoolToVis}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <TextBlock Text="{Binding OldSongName}" Foreground="#999999"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="  →  " Foreground="#666666"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding EditableSongName, UpdateSourceTrigger=PropertyChanged}"
+                                                     Width="240" Background="#2D2D30" Foreground="#FFFFFF"
+                                                     BorderBrush="#3F3F46" Padding="4,2"
+                                                     VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <CheckBox Grid.Column="1" Content="Accept name"
+                                                  Foreground="#CCCCCC" VerticalAlignment="Center"
+                                                  Margin="12,0,0,0"
+                                                  IsChecked="{Binding IsSongNameAccepted}"/>
+                                    </Grid>
+
+                                    <!-- Segue field: shown only when the segue changed -->
+                                    <Grid Visibility="{Binding SegueChanged, Converter={StaticResource BoolToVis}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <TextBlock Text="Segue: " Foreground="#999999"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding OldSegue}" Foreground="#999999"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="  →  " Foreground="#666666"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding NewSegue}" Foreground="#FFFFFF"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <CheckBox Grid.Column="1" Content="Accept segue"
+                                                  Foreground="#CCCCCC" VerticalAlignment="Center"
+                                                  Margin="12,0,0,0"
+                                                  IsChecked="{Binding IsSegueAccepted}"/>
+                                    </Grid>
                                 </StackPanel>
-                                <CheckBox Grid.Column="2" Grid.Row="1" Content="Accept segue"
-                                          Foreground="#CCCCCC" VerticalAlignment="Center"
-                                          Margin="12,0,0,0"
-                                          IsChecked="{Binding IsSegueAccepted}"/>
-                            </Grid>
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -112,11 +136,11 @@
         </ScrollViewer>
 
         <!-- Collapsed no-op count, shown only when there are hidden rows. -->
-        <TextBlock Grid.Row="2" Text="{Binding HiddenSummary}"
+        <TextBlock Grid.Row="3" Text="{Binding HiddenSummary}"
                    Foreground="#888888" FontStyle="Italic" Margin="0,12,0,0"
                    Visibility="{Binding HasHidden, Converter={StaticResource BoolToVis}}"/>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal"
+        <StackPanel Grid.Row="4" Orientation="Horizontal"
                     HorizontalAlignment="Right" Margin="0,16,0,0">
             <Button Content="Apply" Width="110" Margin="0,0,10,0"
                     Style="{StaticResource PrimaryButton}"

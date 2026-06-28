@@ -44,6 +44,74 @@ public class MatchReviewViewModelTests
         Assert.False(row.IsNoOp);
     }
 
+    // ===== ReviewRowViewModel: per-field changed flags =====
+
+    [Fact]
+    public void Row_SongNameChanged_TrueWhenNamesDiffer_FalseWhenEqual()
+    {
+        var changed = new ReviewRowViewModel(MakeProposal(
+            "Watchtower", "All Along The Watchtower", false, false));
+        Assert.True(changed.SongNameChanged);
+
+        var equal = new ReviewRowViewModel(MakeProposal(
+            "Sugar Magnolia", "Sugar Magnolia", false, true));
+        Assert.False(equal.SongNameChanged);
+    }
+
+    [Fact]
+    public void Row_SegueChanged_TrueForFlip_FalseWhenEqual()
+    {
+        var added = new ReviewRowViewModel(MakeProposal(
+            "China Cat Sunflower", "China Cat Sunflower", false, true));
+        Assert.True(added.SegueChanged);
+
+        var removed = new ReviewRowViewModel(MakeProposal(
+            "Scarlet Begonias", "Scarlet Begonias", true, false));
+        Assert.True(removed.SegueChanged);
+
+        var equal = new ReviewRowViewModel(MakeProposal(
+            "Eyes Of The World", "Eyes Of The World", true, true));
+        Assert.False(equal.SegueChanged);
+    }
+
+    // ===== ReviewRowViewModel: current-identity pass-throughs (mirror the grid) =====
+
+    [Fact]
+    public void Row_IdentityDisplays_MirrorUnderlyingTrackInfo()
+    {
+        var track = new TrackInfo
+        {
+            FilePath = "/fake/t.flac",
+            FileName = "t.flac",
+            DiscNumber = 2,
+            TrackNumber = 9,
+            SongName = "Eyes Of The World",
+            Duration = "12:34",
+        };
+        var proposal = new SetlistMatcher.TrackProposal
+        {
+            Track = track,
+            OldSongName = "Eyes Of The World",
+            NewSongName = "Eyes Of The World",
+            OldSegue = true,
+            NewSegue = false,
+            CoveredEntryIndices = new List<int> { 0 },
+        };
+
+        var row = new ReviewRowViewModel(proposal);
+
+        // Uses the grid's plain TrackNumber + DiscNumber (9 / 2), NOT the
+        // disc-concatenated DisplayTrackNumber ("209").
+        Assert.Equal("#9 · Disc 2", row.TrackNumberDisplay);
+        Assert.Equal("Eyes Of The World", row.TrackTitleDisplay);
+        Assert.Equal("12:34", row.TrackDurationDisplay);
+
+        // Reflects current state: a renumber before the dialog is mirrored.
+        track.TrackNumber = 1;
+        track.DiscNumber = 1;
+        Assert.Equal("#1 · Disc 1", row.TrackNumberDisplay);
+    }
+
     // ===== ReviewRowViewModel: segue resolution =====
 
     [Fact]
@@ -131,7 +199,7 @@ public class MatchReviewViewModelTests
         Assert.Equal(2, vm.VisibleRows.Count);
         Assert.Equal(1, vm.HiddenCount);
         Assert.True(vm.HasHidden);
-        Assert.Equal("1 tracks already match", vm.HiddenSummary);
+        Assert.Equal("1 track already matches", vm.HiddenSummary);
         Assert.Equal(3, vm.AllRows.Count);
     }
 
@@ -147,6 +215,23 @@ public class MatchReviewViewModelTests
         Assert.Equal(0, vm.HiddenCount);
         Assert.False(vm.HasHidden);
         Assert.Equal("0 tracks already match", vm.HiddenSummary);
+    }
+
+    [Fact]
+    public void Container_HiddenSummary_SingularForOne_PluralOtherwise()
+    {
+        var visible = MakeProposal("Watchtower", "All Along The Watchtower", false, false);
+
+        var oneHidden = new MatchReviewViewModel(MakeSet(
+            visible,
+            MakeProposal("Sugar Magnolia", "Sugar Magnolia", false, false)));
+        Assert.Equal("1 track already matches", oneHidden.HiddenSummary);
+
+        var twoHidden = new MatchReviewViewModel(MakeSet(
+            visible,
+            MakeProposal("Sugar Magnolia", "Sugar Magnolia", false, false),
+            MakeProposal("Eyes Of The World", "Eyes Of The World", true, true)));
+        Assert.Equal("2 tracks already match", twoHidden.HiddenSummary);
     }
 
     // ===== MatchReviewViewModel: BuildEditedProposalSet =====

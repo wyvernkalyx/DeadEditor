@@ -48,9 +48,12 @@ namespace DeadEditor
         /// <summary>Whether the collapsed no-op line should show at all.</summary>
         public bool HasHidden => HiddenCount > 0;
 
-        /// <summary>The collapsed-count line for the hidden no-op rows. Exact
-        /// wording is a deferred UX detail (spec §10).</summary>
-        public string HiddenSummary => $"{HiddenCount} tracks already match";
+        /// <summary>The collapsed-count line for the hidden no-op rows, with
+        /// grammatical singular/plural. Exact wording is a deferred UX detail
+        /// (spec §10).</summary>
+        public string HiddenSummary => HiddenCount == 1
+            ? "1 track already matches"
+            : $"{HiddenCount} tracks already match";
 
         /// <summary>
         /// Builds a fresh <see cref="SetlistMatcher.ProposalSet"/> from the

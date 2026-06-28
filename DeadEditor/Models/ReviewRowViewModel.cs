@@ -40,6 +40,27 @@ namespace DeadEditor
         /// <summary>The audio track this row decorates (for display + write-back).</summary>
         public TrackInfo Track => _source.Track;
 
+        // --- Current-identity pass-throughs (mirror the album-detail grid) ---
+        // These read the SAME TrackInfo fields the EditMetadataView grid binds
+        // (# = TrackNumber, Disc = DiscNumber, Title = SongName, Time = Duration)
+        // so the dialog header can never diverge from the grid behind it. They
+        // deliberately do NOT use the disc-concatenated DisplayTrackNumber or any
+        // setlist-derived/renumbered value. Read live, so a Renumber before
+        // Match Setlist is reflected here too.
+
+        /// <summary>The track's current number as the grid shows it: plain
+        /// TrackNumber and DiscNumber (the grid's "#" and "Disc" columns),
+        /// never the disc-concatenated DisplayTrackNumber.</summary>
+        public string TrackNumberDisplay => $"#{Track.TrackNumber} · Disc {Track.DiscNumber}";
+
+        /// <summary>The track's current song title (the grid's Title column in
+        /// edit mode = SongName, falling back to Title).</summary>
+        public string TrackTitleDisplay =>
+            string.IsNullOrEmpty(Track.SongName) ? Track.Title : Track.SongName;
+
+        /// <summary>The track's duration as the grid's Time column shows it.</summary>
+        public string TrackDurationDisplay => Track.Duration;
+
         public string OldSongName { get; }
         public string NewSongName { get; }
         public bool OldSegue { get; }
@@ -110,12 +131,22 @@ namespace DeadEditor
             set => SegueDecision = value ? ReviewDecision.Accept : ReviewDecision.Ignore;
         }
 
+        /// <summary>True when the proposed SongName actually differs from the
+        /// current one (Ordinal). Drives showing the name sub-block in the
+        /// dialog so a segue-only row carries no redundant name control.</summary>
+        public bool SongNameChanged =>
+            !string.Equals(OldSongName, NewSongName, System.StringComparison.Ordinal);
+
+        /// <summary>True when the proposed Segue differs from the current one.
+        /// Drives showing the segue sub-block in the dialog.</summary>
+        public bool SegueChanged => OldSegue != NewSegue;
+
         /// <summary>A row is a no-op only by conjunction (spec §4): the name is
         /// unchanged AND the segue is unchanged. A name-equal row whose segue
-        /// would change is NOT a no-op and stays visible.</summary>
-        public bool IsNoOp =>
-            string.Equals(OldSongName, NewSongName, System.StringComparison.Ordinal)
-            && OldSegue == NewSegue;
+        /// would change is NOT a no-op and stays visible. (Equivalently: a row
+        /// is visible when <see cref="SongNameChanged"/> or
+        /// <see cref="SegueChanged"/>.)</summary>
+        public bool IsNoOp => !SongNameChanged && !SegueChanged;
 
         /// <summary>The resolved SongName: the editable value when Accepted,
         /// the captured Old value when Ignored.</summary>
