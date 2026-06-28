@@ -111,4 +111,88 @@ public class ConcertReferenceSerializationTests
         Assert.Equal("San Francisco, CA", restored.FormattedLocation);
         Assert.Equal(2, restored.SongCount);
     }
+
+    // ===== Alias setlists (alias-setlists-spec.md §3.2) =====
+
+    private static ConcertReference SampleWithAlias()
+    {
+        var concert = SampleConcert();
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Id = "ofv-1",
+            Label = "One From The Vault",
+            Entries =
+            {
+                new AliasEntry { CoveredOfficialIndices = { 1, 2 } },
+                new AliasEntry { CoveredOfficialIndices = { 10, 11 } },
+            }
+        });
+        return concert;
+    }
+
+    [Fact]
+    public void AliasSetlists_RoundTrip_PreservesCoverageInOrder()
+    {
+        var json = CanonicalJson.Serialize(SampleWithAlias());
+        var restored = JsonConvert.DeserializeObject<ConcertReference>(json, CanonicalJson.Settings);
+
+        Assert.NotNull(restored);
+        var alias = Assert.Single(restored!.AliasSetlists);
+        Assert.Equal("ofv-1", alias.Id);
+        Assert.Equal("One From The Vault", alias.Label);
+        Assert.Equal(2, alias.Entries.Count);
+        Assert.Equal(new[] { 1, 2 }, alias.Entries[0].CoveredOfficialIndices);
+        Assert.Equal(new[] { 10, 11 }, alias.Entries[1].CoveredOfficialIndices);
+    }
+
+    [Fact]
+    public void AliasSetlists_LegacyRead_IsEmptyNonNull()
+    {
+        // A concert JSON with NO aliasSetlists key (every existing fetcher-sourced file). Deserialize
+        // through the real load path's default settings (ConcertLookupService.LoadConcerts).
+        const string legacy = """
+            { "date": "1971-05-30", "venue": "Winterland", "hasSetlist": true }
+            """;
+
+        var restored = JsonConvert.DeserializeObject<ConcertReference>(legacy);
+
+        Assert.NotNull(restored);
+        Assert.NotNull(restored!.AliasSetlists);
+        Assert.Empty(restored.AliasSetlists);
+    }
+
+    [Fact]
+    public void AliasSetlists_Serialize_UsesCamelCaseKeys()
+    {
+        var json = CanonicalJson.Serialize(SampleWithAlias());
+        var root = JObject.Parse(json);
+
+        var aliases = Assert.IsType<JArray>(root["aliasSetlists"]);
+        var alias = Assert.IsType<JObject>(aliases[0]);
+        var entries = Assert.IsType<JArray>(alias["entries"]);
+        var entry = Assert.IsType<JObject>(entries[0]);
+        Assert.NotNull(entry["coveredOfficialIndices"]);
+
+        // PascalCase variants must not leak.
+        Assert.DoesNotContain("AliasSetlists", json);
+        Assert.DoesNotContain("CoveredOfficialIndices", json);
+    }
+
+    [Fact]
+    public void AliasSetlists_Empty_OmittedFromJson()
+    {
+        var json = CanonicalJson.Serialize(SampleConcert());
+
+        // Neither casing may appear when the list is empty (ShouldSerializeAliasSetlists).
+        Assert.DoesNotContain("aliasSetlists", json);
+        Assert.DoesNotContain("AliasSetlists", json);
+    }
+
+    [Fact]
+    public void AliasSetlists_Populated_PresentInJson()
+    {
+        var json = CanonicalJson.Serialize(SampleWithAlias());
+
+        Assert.Contains("aliasSetlists", json);
+    }
 }
