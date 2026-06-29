@@ -30,6 +30,15 @@ namespace DeadEditor.Models
     public class ManifestTrack
     {
         public string Filename { get; set; } = "";
+
+        /// <summary>
+        /// Order-independent composite key "{immediateFolderName}/{filename}" identifying the track's
+        /// managed file. Disambiguates same-bare-name tracks across the folders of a multi-folder
+        /// (merged) album so the read overlay applies each row to its own track. Absent on legacy
+        /// (pre-Fix-B) manifests, where it deserializes to "" and the read falls back to bare Filename.
+        /// </summary>
+        public string RelativePath { get; set; } = "";
+
         public int TrackNumber { get; set; }
         public int DiscNumber { get; set; }
         public string Title { get; set; } = "";

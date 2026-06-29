@@ -573,16 +573,17 @@ namespace DeadEditor
                 _isUpdating = false;
             }
 
-            // Track-level overrides matched by filename
-            var byName = manifest.Tracks
-                .Where(mt => !string.IsNullOrEmpty(mt.Filename))
-                .ToDictionary(mt => mt.Filename, StringComparer.OrdinalIgnoreCase);
+            // Track-level overrides matched by the composite RelativePath (exact for multi-folder
+            // albums), falling back to bare filename for legacy manifests. The resolver is
+            // duplicate-tolerant, so a legacy multi-folder bare-name collision no longer throws the
+            // ToDictionary it used to (it self-heals on next save, which writes relativePath).
+            var resolveOverride = ManifestService.BuildOverrideResolver(manifest);
 
             foreach (var track in rawTracks)
             {
-                var filename = Path.GetFileName(track.FilePath);
-                if (string.IsNullOrEmpty(filename)) continue;
-                if (!byName.TryGetValue(filename, out var mt)) continue;
+                if (string.IsNullOrEmpty(track.FilePath)) continue;
+                var mt = resolveOverride(track.FilePath);
+                if (mt == null) continue;
 
                 track.SongName = mt.SongName ?? "";
                 track.TrackDate = mt.TrackDate ?? "";

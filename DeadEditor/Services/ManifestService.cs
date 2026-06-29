@@ -72,6 +72,10 @@ namespace DeadEditor.Services
                 Tracks = tracks.Select(t => new ManifestTrack
                 {
                     Filename = Path.GetFileName(t.FilePath),
+                    // Composite key from the MANAGED path. Both callers ensure t.FilePath is the
+                    // managed path at this point: the Edit write loads tracks from the library, and
+                    // WriteManifestAfterImport sets t.FilePath to the managed target before calling.
+                    RelativePath = ComputeManifestRelativePath(t.FilePath),
                     TrackNumber = t.TrackNumber,
                     DiscNumber = t.DiscNumber,
                     Title = t.DisplayTitle ?? t.Title ?? "",
@@ -179,6 +183,64 @@ namespace DeadEditor.Services
                     jObject["manifestSavedAt"] = legacy;
                 }
             }
+        }
+
+        /// <summary>
+        /// Order-independent composite key "{immediateFolderName}/{filename}" for a track's managed
+        /// path. Unlike a path relative to a (scan-order-dependent) primary folder, this is stable
+        /// across loads and distinct for same-named tracks in different folders of a merged album.
+        /// Always uses "/" so write and read keys match regardless of OS separator. Pure.
+        /// </summary>
+        public static string ComputeManifestRelativePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return "";
+            var file = Path.GetFileName(filePath);
+            var dir = Path.GetDirectoryName(filePath);
+            var folder = string.IsNullOrEmpty(dir) ? "" : Path.GetFileName(dir);
+            return string.IsNullOrEmpty(folder) ? file : folder + "/" + file;
+        }
+
+        /// <summary>
+        /// Builds a duplicate-tolerant override resolver for a manifest: given a track's managed
+        /// FilePath, returns the matching <see cref="ManifestTrack"/> (or null). Prefers the
+        /// composite <see cref="ManifestTrack.RelativePath"/> (exact for multi-folder albums) and
+        /// falls back to bare <see cref="ManifestTrack.Filename"/> for legacy manifests. Both lookups
+        /// are group-and-first so a legacy multi-folder bare-name collision never throws (it
+        /// self-heals on the next save, which writes RelativePath). Pure — unit-testable without the view.
+        /// </summary>
+        public static Func<string, ManifestTrack?> BuildOverrideResolver(AlbumManifest manifest)
+        {
+            var byComposite = manifest.Tracks
+                .Where(mt => !string.IsNullOrEmpty(mt.RelativePath))
+                .GroupBy(mt => mt.RelativePath, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+            var filenameGroups = manifest.Tracks
+                .Where(mt => !string.IsNullOrEmpty(mt.Filename))
+                .GroupBy(mt => mt.Filename, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var byFilename = filenameGroups.ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+            var collapsed = filenameGroups.Count(g => g.Count() > 1);
+            if (collapsed > 0)
+            {
+                Debug.WriteLine($"[MANIFEST] {collapsed} duplicate bare-filename group(s) collapsed on read " +
+                    "(legacy multi-folder manifest); applying first row each. Self-heals on next save (writes relativePath).");
+            }
+
+            return filePath =>
+            {
+                var composite = ComputeManifestRelativePath(filePath);
+                if (!string.IsNullOrEmpty(composite) && byComposite.TryGetValue(composite, out var byComp))
+                    return byComp;
+
+                var file = Path.GetFileName(filePath);
+                if (!string.IsNullOrEmpty(file) && byFilename.TryGetValue(file, out var byFile))
+                    return byFile;
+
+                return null;
+            };
         }
     }
 }
