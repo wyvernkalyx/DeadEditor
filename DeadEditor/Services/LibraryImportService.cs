@@ -85,7 +85,7 @@ namespace DeadEditor.Services
             // .GetAwaiter().GetResult(). Already on a background thread (Task.Run from ImportView).
             int fingerprintFailures = PrecomputeFingerprints(tracks, progress);
 
-            ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
+            var resolvedNames = ImportTracksToFolder(targetFolder, albumInfo, tracks, ref processedTracks, totalTracks, progress);
 
             if (fingerprintFailures > 0)
             {
@@ -105,10 +105,11 @@ namespace DeadEditor.Services
             // Without the mutation, Path.GetFileName(t.FilePath) inside ManifestService
             // would emit source filenames and the EditMetadataView read-back would silently
             // fail to apply track-level overrides.
-            WriteManifestAfterImport(targetFolder, albumInfo, tracks);
+            WriteManifestAfterImport(targetFolder, albumInfo, tracks, resolvedNames);
         }
 
-        private void WriteManifestAfterImport(string targetFolder, AlbumInfo albumInfo, List<TrackInfo> tracks)
+        private void WriteManifestAfterImport(string targetFolder, AlbumInfo albumInfo, List<TrackInfo> tracks,
+            IReadOnlyDictionary<TrackInfo, string> resolvedNames)
         {
             var isOfficialRelease = albumInfo.Type == AlbumType.OfficialRelease;
             var originalPaths = tracks.Select(t => t.FilePath).ToList();
@@ -116,7 +117,13 @@ namespace DeadEditor.Services
             {
                 for (int i = 0; i < tracks.Count; i++)
                 {
-                    var fileName = ComputeLibraryFilename(tracks[i], albumInfo, isOfficialRelease, dateForTitle: null);
+                    // Use the filename the copy loop actually wrote (which honors the
+                    // within-import collision guard's (2)/(3) rename), so the manifest
+                    // matches what is on disk. Fall back to a recompute only if a track
+                    // was somehow not copied.
+                    var fileName = resolvedNames.TryGetValue(tracks[i], out var resolved)
+                        ? resolved
+                        : ComputeLibraryFilename(tracks[i], albumInfo, isOfficialRelease, dateForTitle: null);
                     tracks[i].FilePath = Path.Combine(targetFolder, fileName);
                 }
 
@@ -159,12 +166,27 @@ namespace DeadEditor.Services
         /// <summary>
         /// Imports tracks to a specific folder
         /// </summary>
-        private void ImportTracksToFolder(string targetFolder, AlbumInfo albumInfo, List<TrackInfo> tracks,
+        /// <summary>
+        /// Copies and tags every track into <paramref name="targetFolder"/> and returns the
+        /// managed filename actually written for each track. Within a single import, two distinct
+        /// tracks that derive the same <see cref="ComputeLibraryFilename"/> name (e.g. a multi-disc
+        /// release whose disc-relative track numbers repeat) would otherwise silently overwrite each
+        /// other via <c>File.Copy(overwrite:true)</c>; the batch-scoped collision guard renames the
+        /// second to "name (2)" so no track's audio is lost. The returned map lets the manifest
+        /// writer record the real on-disk name rather than recomputing the un-renamed one.
+        /// </summary>
+        private Dictionary<TrackInfo, string> ImportTracksToFolder(string targetFolder, AlbumInfo albumInfo, List<TrackInfo> tracks,
             ref int processedTracks, int totalTracks, IProgress<(int current, int total, string message)>? progress, string? dateForTitle = null)
         {
             // OfficialRelease type covers both studio albums and live official releases (Dave's Picks, etc.)
             // Both use filenames without date; only AudienceRecording gets date in filename
             var isOfficialRelease = albumInfo.Type == AlbumType.OfficialRelease;
+
+            // Filename(s) already written in THIS import. A first use keeps its name (a pre-existing
+            // file from a prior import is intentionally overwritten — idempotent re-import); a second
+            // use within this batch is the data-loss case and is renamed.
+            var resolvedNames = new Dictionary<TrackInfo, string>();
+            var usedThisBatch = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             // Copy and write metadata for each track
             foreach (var track in tracks)
@@ -172,7 +194,19 @@ namespace DeadEditor.Services
                 processedTracks++;
                 progress?.Report((processedTracks, totalTracks, $"Importing track {processedTracks} of {totalTracks}: {track.SongName ?? track.Title}"));
 
-                var newFileName = ComputeLibraryFilename(track, albumInfo, isOfficialRelease, dateForTitle);
+                var desiredFileName = ComputeLibraryFilename(track, albumInfo, isOfficialRelease, dateForTitle);
+                var newFileName = ResolveImportTargetName(
+                    desiredFileName, usedThisBatch, name => File.Exists(Path.Combine(targetFolder, name)));
+                usedThisBatch.Add(newFileName);
+                resolvedNames[track] = newFileName;
+
+                if (!string.Equals(newFileName, desiredFileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Always a latent bug (two tracks derived the same managed name); surface it.
+                    Debug.WriteLine($"[IMPORT] Within-import name collision: \"{desiredFileName}\" already used this import; " +
+                        $"copying as \"{newFileName}\" to avoid overwriting another track (data-loss guard).");
+                }
+
                 var targetPath = Path.Combine(targetFolder, newFileName);
 
                 Debug.WriteLine($"[IMPORT] Copying: {track.FilePath} → {targetPath}");
@@ -227,6 +261,8 @@ namespace DeadEditor.Services
                     track.FilePath = originalPath;
                 }
             }
+
+            return resolvedNames;
         }
 
         /// <summary>
@@ -703,23 +739,63 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Finds a non-colliding filename by appending (2), (3), etc.
+        /// Finds a non-colliding full path by appending (2), (3), etc. to the filename.
         /// </summary>
         private static string FindNonCollidingName(string targetPath)
         {
             var dir = Path.GetDirectoryName(targetPath)!;
-            var nameWithoutExt = Path.GetFileNameWithoutExtension(targetPath);
-            var ext = Path.GetExtension(targetPath);
+            var fileName = Path.GetFileName(targetPath);
+            var free = FirstFreeName(fileName, candidate => File.Exists(Path.Combine(dir, candidate)));
+            return Path.Combine(dir, free);
+        }
+
+        /// <summary>
+        /// Resolves the final on-disk filename for one track in a batch copy. The FIRST use of a
+        /// name within a single import keeps the name as-is — a pre-existing file from a prior
+        /// import is intentionally overwritten (idempotent re-import). A SECOND use of the same
+        /// name within the same import is two distinct tracks deriving the same
+        /// "{TrackNumber:D2} - {SongName}" (the data-loss case) and is renamed to "name (2)",
+        /// "name (3)", … avoiding both names already used this batch and any file already on disk.
+        /// Pure: existence is injected via <paramref name="fileExists"/> so the data-loss-critical
+        /// logic is unit-testable without touching the file system.
+        /// </summary>
+        /// <param name="desiredFileName">The name <see cref="ComputeLibraryFilename"/> produced.</param>
+        /// <param name="usedThisBatch">Names already written this import (OrdinalIgnoreCase).</param>
+        /// <param name="fileExists">True if a file with the given name already exists in the target folder.</param>
+        internal static string ResolveImportTargetName(
+            string desiredFileName,
+            ISet<string> usedThisBatch,
+            Func<string, bool> fileExists)
+        {
+            // Not yet used this import: keep the name. Overwriting a prior import's file with the
+            // same name is the intended idempotent re-import, so File.Exists is NOT consulted here.
+            if (!usedThisBatch.Contains(desiredFileName))
+                return desiredFileName;
+
+            // Used this import already: distinct track, same derived name — rename to dodge both the
+            // names taken this batch and any pre-existing file (so the (2) can't clobber either).
+            return FirstFreeName(desiredFileName, candidate => usedThisBatch.Contains(candidate) || fileExists(candidate));
+        }
+
+        /// <summary>
+        /// Returns the first "name (n).ext" (n = 2, 3, …) for which <paramref name="isTaken"/> is
+        /// false, or the original <paramref name="fileName"/> after an upper bound. Shared by the
+        /// audio batch resolver and the non-audio rename path so the (2)/(3) scheme lives once.
+        /// </summary>
+        private static string FirstFreeName(string fileName, Func<string, bool> isTaken)
+        {
+            var nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+            var ext = Path.GetExtension(fileName);
 
             for (int n = 2; n < 1000; n++)
             {
-                var candidate = Path.Combine(dir, $"{nameWithoutExt} ({n}){ext}");
-                if (!File.Exists(candidate))
+                var candidate = $"{nameWithoutExt} ({n}){ext}";
+                if (!isTaken(candidate))
                     return candidate;
             }
 
-            // Extremely unlikely — fall back to overwrite
-            return targetPath;
+            // Extremely unlikely — fall back to the original name.
+            return fileName;
         }
 
         /// <summary>
