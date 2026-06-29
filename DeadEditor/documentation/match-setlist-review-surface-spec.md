@@ -46,6 +46,7 @@ Invoked by Match Setlist in both Import and Edit (both call the converged matche
 - Resolution is PER FIELD, not per row. Each row carries two independently-resolvable decisions: one for SongName (variant to canonical) and one for Segue (add or remove). A track can have its name normalized while its segue is left alone; this is exactly the 1977-05-11 case (canonicalize the title AND propose clearing a real segue in the same track). A single row-level toggle would force losing one or the other, so per-field accept/ignore is required for the Sec. 5 defaults to protect segues on mixed rows.
 - For each field: Accept (take new) or Ignore (keep existing). The SongName field is presented as an editable value seeded with the proposed canonical name, so the user can take it, ignore it, or hand-tune it (covers any concatenation/alias need without a separate mode).
 - No-op rows hidden, by conjunction: a row is hidden only when BOTH SongName Old == New AND Segue Old == New. A row whose name already matches but whose segue would change is NOT a no-op and stays visible. Hidden rows show as a collapsed count ("N tracks already match"); they are never written and never flagged modified.
+- Combined rows (CoveredEntryIndices.Count > 1) are exempt from this conjunction hiding per alias-setlists-spec.md section 6.1 (shipped slice 4 Piece 1).
 - Apply writes only the accepted/edited fields. Ignored fields are left exactly as they were.
 
 ### 4.1 Claiming is fixed at compute (invariant; do not "fix")

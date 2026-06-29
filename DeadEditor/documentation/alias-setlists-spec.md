@@ -1,6 +1,6 @@
-# Alias Setlists — Spec (for review) — v4
+# Alias Setlists — Spec (for review) — v5
 
-Status: DRAFT under active implementation (slices 1-2 committed). Schema additive only.
+Status: DRAFT under active implementation (slices 1-3 plus slice 4 Piece 1 committed). Schema additive only.
 Revision history:
 - v2: Gregg's audit Q2-Q6 answers.
 - v3: slice-0 probe folded (atomicity guard 5.1; persist seam (b) 4; PathGuard does not gate concert
@@ -9,6 +9,9 @@ Revision history:
   real harm is persistent amber + P1 numbering drift, and the fix is clearing amber. 11.3 resolved
   (derive NewSongName, join covered official names with " > ", always). Two-pass matcher structure
   (5.3). Combined review rows are always shown, exempt from no-op hiding (6.1).
+- v5: slice 3 committed (31e95ed, two-pass matcher integration); slice 4 Piece 1 committed (6c27656,
+  combined rows exempt from no-op hiding); docs reconciled to shipped code (this revision). Section 7
+  numbering marked UNBUILT (design under review).
 Arc type: generative. Grounding: Phase A audit + slice-0 probe + slice-3 Phase A at `ca873c7`.
 Repo authoritative; each slice opens with a narrow read-only check before edits.
 
@@ -128,7 +131,7 @@ overstatement - the value is clearing amber and recording the combine, not unblo
 ### 6.1 Promote-from-media (primary)
 Matcher detects+decomposes+validates -> a **combined review row** in the B2b review surface -> human
 confirms once -> alias persisted via seam (b). **Combined rows are ALWAYS shown, exempt from the
-review surface's no-op hiding** (`ReviewRowViewModel.cs:149`): a combine where the source already used
+review surface's no-op hiding** (the `IsNoOp` predicate at `ReviewRowViewModel.cs:149`, overridden by `IsCombined` at `ReviewRowViewModel.cs:156` and applied in the `MatchReviewViewModel` pre-filter at lines 36-37): a combine where the source already used
 `>` would derive to an identical string (a name no-op) yet still must be confirmed, because the human
 is confirming the *combine* (coverage of multiple official entries), not a text diff. Confirmation is
 gated on `CoveredEntryIndices.Count > 1`, not on a name change. (Slice 4.)
@@ -140,9 +143,13 @@ confirmation is the human gate.
 A gesture in `EditSetlistView` to mark a contiguous run of official entries as a combined alias,
 through the same seam (b). (Slice 6.)
 
-## 7. Display - P1 fix (slice 4)
+## 7. Display - P1 fix (slice 4) -- UNBUILT (design under review)
 
-A media track matched via a combine drives matched/review numbering off the alias's coverage (N media
+STATUS: not implemented. ReviewRowViewModel.TrackNumberDisplay (:54) is unchanged and reads the
+media track number. The coverage-driven scheme described below is proposed only and is under
+review; do not treat it as settled.
+
+A media track matched via a combine would drive matched/review numbering off the alias's coverage (N media
 tracks against N collapsed positions), so numbering is 1:1. NOTE: nothing today consumes coverage for
 numbering - `ReviewRowViewModel.TrackNumberDisplay` (:54) reads the media track's own number - so the
 1:1 fix needs new display wiring driven off `CoveredEntryIndices`. (Slice 4.)
@@ -175,13 +182,14 @@ Seam (b) preserves `Verified` (whole-object write; the Edit diff-baseline ignore
 - **Slice 1: DONE (`ab15b1c`).** Additive `AliasSetlists` model + round-trip + 5 tests.
 - **Slice 2: DONE (`ca873c7`).** `CombinedTrackDecomposer` (atomicity guard, split, contiguity) + 12
   tests.
-- **Slice 3 (next): matcher integration.** Two-pass `ComputeProposals` (5.3): claim-aware decomposer
+- **Slice 3: DONE (`31e95ed`) - matcher integration.** Two-pass `ComputeProposals` (5.3): claim-aware decomposer
   overload (pure + tests) + pass-2 wiring building combined proposals (derived `>` name, last-entry
   segue, whole-run claim) + amber clearing via `Apply` (5.4). Unit tests for the overload and the
   two-pass behavior; **WPF manual gate** (first behavior change visible on screen). Doc: this spec
   revision lands with it if not already committed.
-- **Slice 4: review-surface wiring.** Combined rows always shown (6.1, exempt from no-op hiding) +
-  1:1 coverage-driven numbering (7) + promote-from-media confirm-to-register. WPF gate.
+- **Slice 4: review-surface wiring.** Piece 1 DONE (`6c27656`) -- combined rows always shown (6.1,
+  exempt from no-op hiding); WPF gate cleared. Pending: coverage-driven numbering (7, UNBUILT /
+  under review) + promote-from-media confirm-to-register.
 - **Slice 5: alias persistence.** `PersistAliasSetlist` seam (b). WPF gate.
 - **Slice 6: setlist-editor authoring** (6.2). WPF gate.
 
