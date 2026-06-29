@@ -229,3 +229,45 @@ Pre-existing, independent of the alias arc. `AudioPlayerService.LoadFile` (`Audi
 
 ### Stale library entries point at a wiped/missing managed folder (Surfaced 2026-06-28)
 Pre-existing, independent of the alias arc. Surfaced after the managed library was cleared during diagnosis: the library is filesystem-derived (no DB), so a row whose folder has since been deleted/moved is "stale" only transiently — but in-session caches (`_shows`, and any captured `FolderPaths`) can still point at a folder that no longer exists, leading to empty reads or, combined with the item above, a player crash. Fix direction: a library rescan/cleanup pass that drops or flags entries whose `FolderPaths` no longer exist on disk (and re-validates before play/edit).
+
+### Fingerprint-keyed combine recognition (Layer B) (Surfaced 2026-06-29)
+Banked from the slice-5 alias persistence design. Recognize an *incoming* combined track against
+known decompositions by acoustic fingerprint, so a faithful combined pressing is matched/confirmed
+automatically rather than by manual review each time. This is the consumer half of the deferred
+fingerprint-matching arc (cf. "Fingerprint timing vs. match-before-import", 2026-06-24, which banks
+the *when-to-compute* question for the same arc). Keep it **Layer B**: read per-track fingerprints
+already stored in the manifest (`ManifestTrack.AcoustIdFingerprint`); a fingerprint must **not** enter
+the concert authority file (Layer A stays performance-only — slice 5 deliberately keyed aliases by
+date + covered indices, no fingerprint). Prerequisites: (a) the fpcalc leading-portion gap below;
+(b) a fuzzy matcher with a tuned threshold — exact string-equality over raw Chromaprint is too brittle
+across re-encodes, and **no** fingerprint comparison/lookup exists today (all current uses are
+compute/write/read/display only). Do not act until both prerequisites and a concrete consumer are
+designed.
+
+### fpcalc leading-portion gap (Surfaced 2026-06-29)
+`FingerprintService.ComputeFingerprintAsync` invokes fpcalc with no `-length` argument
+(`FingerprintService.cs:201`), so Chromaprint fingerprints only the sampled leading portion of a file,
+not its full span. Long combined/medley tracks (often 10–30 min) therefore fingerprint only their
+opening, so two distinct combines that share an opening song can produce confusable fingerprints.
+Prerequisite to any combined-track fingerprint use (the entry above). Surfaced during the slice-5
+fingerprint-keyed-alias feasibility check.
+
+### Release version-tracking arc (Surfaced 2026-06-29)
+Distinguish *versions* of a release — including re-releases that bundle one or more live concerts
+(plus possibly studio tracks). Today nothing canonical distinguishes versions: `releases.json` is
+name-only (series templates + standalone name strings, no ids, no track-level setlist), and the app
+separates versions only by the typed `AlbumName`/`Edition` string (e.g. `Europe '72` vs
+`Europe '72 (2003 Reissue)`). Needs (a) a canonical version identity — **not** the severed/optional
+MusicBrainz release id, which is absent on most imports — and (b) the release-match upgrade
+(`releases.json` from name-only to track-level authority). Separate from the alias arc: slice 5
+deliberately scoped aliases to per-concert, date-keyed canonical data and dropped version-keying.
+Studio-album portions of a bundled release remain out of alias reach until this lands (no track-level
+authority to alias against).
+
+### Concert-file write concurrency guard (Surfaced 2026-06-29)
+No `SemaphoreSlim`/`_isSaving` analog exists for concert-JSON-file writes. (The 2026-06-22 "Edit
+Metadata save-lock" guard serializes FLAC **audio** writes via `AudioPlayerService.WithFileReleased`;
+it does **not** cover the concert `Data/concerts/{date}.json` writes, which today only EditSetlistView
+performs, UI-thread-serialized and bare.) Once slice 5 adds `PersistAliasSetlist`, `EditSetlistView`
+and the matcher/import path become **two writers of the same concert file** — consider a shared write
+guard covering both before they can race. Surfaced during the slice-5 persistence diagnosis.

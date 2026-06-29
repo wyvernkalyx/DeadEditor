@@ -1,6 +1,6 @@
-# Alias Setlists — Spec (for review) — v5
+# Alias Setlists — Spec (for review) — v6
 
-Status: DRAFT under active implementation (slices 1-3 plus slice 4 Piece 1 committed). Schema additive only.
+Status: DRAFT under active implementation (slices 1-3 plus slice 4 Piece 1 committed; slice 5 model settled). Schema additive only.
 Revision history:
 - v2: Gregg's audit Q2-Q6 answers.
 - v3: slice-0 probe folded (atomicity guard 5.1; persist seam (b) 4; PathGuard does not gate concert
@@ -12,6 +12,13 @@ Revision history:
 - v5: slice 3 committed (31e95ed, two-pass matcher integration); slice 4 Piece 1 committed (6c27656,
   combined rows exempt from no-op hiding); docs reconciled to shipped code (this revision). Section 7
   numbering marked UNBUILT (design under review).
+- v6: slice-5 persistence model settled. Aliases are canonical reference data — a confirmed combine
+  is keyed by performance DATE and covered official indices alone (no version key, no fingerprint on
+  the alias), committed into the concert authority file via the date-keyed seam (b), with a
+  dev-aware commit-ready write (`DEADEDITOR_DEV=1` -> repo-source `Data/concerts/`, AppData
+  otherwise). One shared `AliasSetlist` per concert; idempotent append (dedup by covered-index set).
+  Fingerprint-keyed combine recognition and the release version-tracking arc are banked as separate
+  arcs in follow-ups.md, not part of slice 5. Section 4 rewritten.
 Arc type: generative. Grounding: Phase A audit + slice-0 probe + slice-3 Phase A at `ca873c7`.
 Repo authoritative; each slice opens with a narrow read-only check before edits.
 
@@ -61,13 +68,47 @@ the trailing/boundary segue of the combined entry.
 Sparse overlay; singleton runs implicit. `ShouldSerializeAliasSetlists` omits an empty list. Plain
 mutable class matching `ConcertReference` convention.
 
-## 4. Persistence - seam (b), AppData atomic write
+## 4. Persistence - seam (b), canonical date-keyed write
 
-`ConcertLookupService.PersistAliasSetlist(date, aliasEntry)`: `GetConcertByDate` -> append ->
-`CanonicalJson.Serialize` -> atomic temp+rename into AppData concerts path -> `NotifySaved`. Reachable
-from both consumers (import has only the date; Edit has `_concert.Date`); the editor-writer seam is
-unreachable from import. **PathGuard does NOT gate concert writes** (it gates library audio only);
-discipline is AppData-first atomic temp+rename.
+Aliases are **canonical reference data**, not per-user local enrichment. A confirmed combine is
+committed into the concert authority file (`Data/concerts/{date}.json`) and ships to all users.
+Persistence is keyed by **performance DATE alone** - no version key and no fingerprint on the alias.
+(Fingerprint-keyed recognition and release version-tracking are deferred; see follow-ups.md.)
+
+**Seam (b):** `ConcertLookupService.PersistAliasSetlist(string date, AliasEntry aliasEntry)`. Both
+the import and edit call sites hold only a date; the service resolves the concert internally via its
+date-keyed cache (`GetConcertByDate`). An `AliasEntry` is exactly `{ CoveredOfficialIndices }` -
+canonical indices into the shared official setlist, identical for every user. Reachable from both
+consumers (import has only the date; Edit has `_concert.Date`); the slice-6 editor-writer seam is
+unreachable from import.
+
+**Grouping - one shared `AliasSetlist` per concert.** Confirmed entries accumulate into the single
+`AliasSetlist`'s `Entries`. `Id`/`Label` remain optional provenance notes, **NOT discriminators** -
+nothing keys on them. Append is **idempotent**: re-confirming a combine whose `CoveredOfficialIndices`
+set already exists is a no-op (dedup by that index set). Two recordings that combine the same official
+run yield the same entry (no collision); recordings that combine differently yield distinct entries
+that coexist.
+
+**Commit-ready write (dev-aware).** Alias persistence lands in repo-source `Data/concerts/` under
+`DEADEDITOR_DEV=1` (commit-ready for the maintainer), falling back to AppData otherwise.
+`ConcertLookupService` becomes dev-aware via a single `ActiveConcertsPath` switch governing **both
+load and write** (mirroring `BoxSetService`), so a dev-mode write and the in-memory cache cannot
+diverge. **PathGuard does NOT gate concert writes** (it gates library audio only) - concerts are app
+data, outside the managed library.
+
+**Write mechanics.** Append the entry to the cached **live** `ConcertReference` in place (the cache
+holds the live instance, so it stays coherent), serialize via `CanonicalJson`, write atomically
+(temp + rename) to `{ActiveConcertsPath}/{date}.json`, then `NotifySaved(date, concert)`. The
+in-memory append is **transactional**: if the disk write throws, roll back the append so the cache
+never holds an alias that is not on disk.
+
+**Verification** remains **NOT** hard-gated on matching (unchanged, §8): a combine's value is clearing
+the spurious amber unmatched warning and recording the combine - not unblocking any gate.
+
+**Commit shape.** Slice 5 lands across separate commits, one concern each: (i) make
+`ConcertLookupService` dev-aware (the `ActiveConcertsPath` switch over load + write); (ii)
+`PersistAliasSetlist` + tests; (iii) surface confirmed combines out of `MatchReviewRunner.RunReview`
+and wire the import/edit seams, with the WPF manual gate.
 
 ## 5. Match predicate - "official OR any registered alias"
 
@@ -190,7 +231,13 @@ Seam (b) preserves `Verified` (whole-object write; the Edit diff-baseline ignore
 - **Slice 4: review-surface wiring.** Piece 1 DONE (`6c27656`) -- combined rows always shown (6.1,
   exempt from no-op hiding); WPF gate cleared. Pending: coverage-driven numbering (7, UNBUILT /
   under review) + promote-from-media confirm-to-register.
-- **Slice 5: alias persistence.** `PersistAliasSetlist` seam (b). WPF gate.
+- **Slice 5: alias persistence (model settled, §4).** Canonical per-concert combine persistence keyed
+  by performance date + covered official indices (no fingerprint, no version key), committed into the
+  concert authority file and commit-ready via the `DEADEDITOR_DEV` dev-aware concert path. One shared
+  `AliasSetlist` per concert; idempotent append (dedup by covered-index set). Lands across three
+  commits: (i) make `ConcertLookupService` dev-aware (`ActiveConcertsPath` over load + write); (ii)
+  `PersistAliasSetlist` seam (b) + tests; (iii) surface confirmed combines from
+  `MatchReviewRunner.RunReview` + wire the import/edit seams. WPF gate.
 - **Slice 6: setlist-editor authoring** (6.2). WPF gate.
 
 ## 11. Open questions for Gregg
