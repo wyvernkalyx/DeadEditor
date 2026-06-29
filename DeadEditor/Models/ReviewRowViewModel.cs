@@ -148,6 +148,13 @@ namespace DeadEditor
         /// <see cref="SegueChanged"/>.)</summary>
         public bool IsNoOp => !SongNameChanged && !SegueChanged;
 
+        /// <summary>True when this row collapses 2+ official setlist entries into
+        /// one media file. A combine is always shown for confirmation, exempt from
+        /// no-op hiding (spec §6.1): the human confirms the <i>combine</i>
+        /// (coverage of multiple official entries), not a text diff, so even a
+        /// name-no-op combine must surface.</summary>
+        public bool IsCombined => Source.CoveredEntryIndices.Count > 1;
+
         /// <summary>The resolved SongName: the editable value when Accepted,
         /// the captured Old value when Ignored.</summary>
         public string EffectiveSongName =>

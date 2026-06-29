@@ -234,6 +234,61 @@ public class MatchReviewViewModelTests
         Assert.Equal("2 tracks already match", twoHidden.HiddenSummary);
     }
 
+    // ===== MatchReviewViewModel: combined rows always shown (spec §6.1) =====
+
+    [Fact]
+    public void Container_CombinedNoOpRow_AlwaysVisible_NotCounted()
+    {
+        // Spec §6.1: a combine (CoveredEntryIndices.Count > 1) is confirmed even
+        // when its derived name and segue equal the existing tag (a name no-op) —
+        // the human confirms the combine, not a text diff.
+        var combinedNoOp = MakeProposal(
+            "Help On The Way > Slipknot!", "Help On The Way > Slipknot!",
+            oldSegue: false, newSegue: false,
+            covered: new List<int> { 0, 1 });
+
+        var vm = new MatchReviewViewModel(MakeSet(combinedNoOp));
+
+        var row = Assert.Single(vm.VisibleRows);
+        Assert.True(row.IsNoOp);     // name + segue unchanged
+        Assert.True(row.IsCombined); // but it's a combine -> exempt
+        Assert.Equal(0, vm.HiddenCount);
+        Assert.False(vm.HasHidden);
+    }
+
+    [Fact]
+    public void Container_SingleEntryNoOpRow_StillHidden()
+    {
+        // Guard against over-exempting: a single-entry no-op (Count == 1) is hidden.
+        var singleNoOp = MakeProposal(
+            "Sugar Magnolia", "Sugar Magnolia", false, false,
+            covered: new List<int> { 0 });
+
+        var vm = new MatchReviewViewModel(MakeSet(singleNoOp));
+
+        Assert.False(vm.AllRows[0].IsCombined);
+        Assert.True(vm.AllRows[0].IsNoOp);
+        Assert.Empty(vm.VisibleRows);
+        Assert.Equal(1, vm.HiddenCount);
+    }
+
+    [Fact]
+    public void Container_CombinedChangedRow_VisibleAsBefore()
+    {
+        // Regression guard: a combine that DID rename is visible exactly as before.
+        var combinedChanged = MakeProposal(
+            "Help On The Way/Slipknot!", "Help On The Way > Slipknot!",
+            oldSegue: false, newSegue: false,
+            covered: new List<int> { 0, 1 });
+
+        var vm = new MatchReviewViewModel(MakeSet(combinedChanged));
+
+        var row = Assert.Single(vm.VisibleRows);
+        Assert.False(row.IsNoOp);
+        Assert.True(row.IsCombined);
+        Assert.Equal(0, vm.HiddenCount);
+    }
+
     // ===== MatchReviewViewModel: BuildEditedProposalSet =====
 
     [Fact]

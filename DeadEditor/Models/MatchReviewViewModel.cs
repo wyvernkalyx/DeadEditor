@@ -31,8 +31,10 @@ namespace DeadEditor
             AllRows = proposalSet.Proposals
                 .Select(p => new ReviewRowViewModel(p))
                 .ToList();
-            VisibleRows = AllRows.Where(r => !r.IsNoOp).ToList();
-            HiddenCount = AllRows.Count(r => r.IsNoOp);
+            // A combined row is always shown for confirmation, exempt from no-op
+            // hiding (spec §6.1). A row is hidden iff it is a no-op AND not a combine.
+            VisibleRows = AllRows.Where(r => !r.IsNoOp || r.IsCombined).ToList();
+            HiddenCount = AllRows.Count(r => r.IsNoOp && !r.IsCombined);
         }
 
         /// <summary>Every row, including no-ops (the rebuild needs them all).</summary>
