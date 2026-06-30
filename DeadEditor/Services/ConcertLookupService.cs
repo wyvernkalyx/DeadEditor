@@ -51,37 +51,125 @@ namespace DeadEditor.Services
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "DeadEditor", "concerts");
 
+        // Build-output bundled concerts: bin/<config>/<tfm>/Data/concerts/. In distributed mode this
+        // is the first-run seed for AppData; in dev mode it is the fallback when no repo root can be
+        // located by walking up for a .sln. Mirrors BoxSetService._buildOutputBoxSetsPath.
+        private static readonly string _buildOutputConcertsPath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory, "Data", "concerts");
+
+        // Lazy so the repo-walk fires once, only when BundledConcertsPath is first accessed. In dev
+        // mode it resolves the repo-source Data/concerts/; in distributed mode it short-circuits to
+        // the build-output path. Mirrors BoxSetService._bundledBoxSetsPath.
+        private static readonly Lazy<string> _bundledConcertsPath = new(() =>
+        {
+            if (IsDevMode)
+            {
+                var repoSourcePath = TryResolveRepoSourceDataPath();
+                if (repoSourcePath != null) return repoSourcePath;
+            }
+            return _buildOutputConcertsPath;
+        });
+
+        /// <summary>
+        /// The bundled concerts location. In distributed mode (the default), the build-output
+        /// directory next to the running exe, used as the first-run seed for AppData. In dev mode
+        /// (<c>DEADEDITOR_DEV=1</c>), resolves to the repo-source <c>DeadEditor/Data/concerts/</c> if
+        /// running from a checkout, so edits land in the repo and are immediately visible to
+        /// <c>git status</c>. Falls back to the build-output path if no repo root can be located.
+        /// Mirrors <c>BoxSetService.BundledBoxSetsPath</c>.
+        /// </summary>
+        public static string BundledConcertsPath => _bundledConcertsPath.Value;
+
+        /// <summary>True when the <c>DEADEDITOR_DEV</c> environment variable is set to <c>"1"</c>.
+        /// Read on every access (mirrors <c>BoxSetService.IsDevMode</c>).</summary>
+        private static bool IsDevMode =>
+            string.Equals(Environment.GetEnvironmentVariable("DEADEDITOR_DEV"), "1", StringComparison.Ordinal);
+
+        /// <summary>
+        /// The directory all concert reads and writes target in the current mode: repo-source
+        /// <c>Data/concerts/</c> in dev mode (commit-ready), <see cref="AppDataConcertsPath"/>
+        /// otherwise. The single switch governing BOTH the load (constructor below) and every
+        /// write/delete/display site, so a dev-mode write and the in-memory cache cannot diverge.
+        /// <c>DEADEDITOR_DEV</c> is a launch-time toggle that does not change mid-process, so the
+        /// per-access env read here stays consistent with the load-time selection (the singleton
+        /// loads once). Mirrors <c>BoxSetService.ActiveBoxSetsPath</c>.
+        /// </summary>
+        public static string ActiveConcertsPath => IsDevMode ? BundledConcertsPath : AppDataConcertsPath;
+
+        /// <summary>
+        /// In dev mode, resolves the repo-source <c>Data/concerts/</c> directory by walking up from
+        /// the running exe's <see cref="AppDomain.CurrentDomain.BaseDirectory"/> looking for a
+        /// directory containing a <c>.sln</c> file. Returns null if no such root is found (caller
+        /// falls back to the build-output path). Fail-closed: a found <c>.sln</c> whose expected
+        /// project layout is absent returns null rather than guessing. Mirrors
+        /// <c>BoxSetService.TryResolveRepoSourceDataPath</c>.
+        /// </summary>
+        private static string? TryResolveRepoSourceDataPath()
+        {
+            var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            while (dir != null)
+            {
+                if (dir.GetFiles("*.sln").Length > 0)
+                {
+                    var candidate = Path.Combine(dir.FullName, "DeadEditor", "Data", "concerts");
+                    if (Directory.Exists(candidate))
+                    {
+                        Debug.WriteLine($"[CONCERTS] Dev mode resolved to repo source: {candidate}");
+                        return candidate;
+                    }
+                    // sln found but the expected project layout isn't there — fail closed.
+                    return null;
+                }
+                dir = dir.Parent;
+            }
+            return null;
+        }
+
         private ConcertLookupService()
         {
             var sw = Stopwatch.StartNew();
 
-            var appDataDir = AppDataConcertsPath;
-            var bundledDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "concerts");
-
-            // Determine which directory to load from
-            bool appDataExists = Directory.Exists(appDataDir) &&
-                                 Directory.GetFiles(appDataDir, "*.json").Length > 0;
-            bool bundledExists = Directory.Exists(bundledDir) &&
-                                 Directory.GetFiles(bundledDir, "*.json").Length > 0;
-
-            if (!appDataExists && bundledExists)
+            // Dev-aware path selection (the single ActiveConcertsPath switch). DEADEDITOR_DEV is a
+            // launch-time toggle that does not change mid-process, so the per-access env read in
+            // ActiveConcertsPath (used by the write/delete sites) stays consistent with this
+            // load-time selection — the singleton loads once.
+            if (IsDevMode)
             {
-                // First run: copy bundled concerts to AppData
-                CopyBundledToAppData(bundledDir, appDataDir);
-                ConcertsPath = appDataDir;
-            }
-            else if (appDataExists)
-            {
-                ConcertsPath = appDataDir;
-            }
-            else if (bundledExists)
-            {
-                ConcertsPath = bundledDir;
+                // Dev mode: read AND write repo-source Data/concerts/ directly (commit-ready),
+                // bypassing AppData entirely — NO first-run seeding (the dev no-op, mirroring
+                // BoxSetService.EnsureInitialized returning early in dev mode).
+                ConcertsPath = ActiveConcertsPath;
             }
             else
             {
-                ConcertsPath = appDataDir; // Will be empty but path is set
-                Debug.WriteLine($"[CONCERTS] Warning: no concerts found in {appDataDir} or {bundledDir}");
+                var appDataDir = AppDataConcertsPath;
+                var bundledDir = _buildOutputConcertsPath;
+
+                // Determine which directory to load from
+                bool appDataExists = Directory.Exists(appDataDir) &&
+                                     Directory.GetFiles(appDataDir, "*.json").Length > 0;
+                bool bundledExists = Directory.Exists(bundledDir) &&
+                                     Directory.GetFiles(bundledDir, "*.json").Length > 0;
+
+                if (!appDataExists && bundledExists)
+                {
+                    // First run: copy bundled concerts to AppData
+                    CopyBundledToAppData(bundledDir, appDataDir);
+                    ConcertsPath = appDataDir;
+                }
+                else if (appDataExists)
+                {
+                    ConcertsPath = appDataDir;
+                }
+                else if (bundledExists)
+                {
+                    ConcertsPath = bundledDir;
+                }
+                else
+                {
+                    ConcertsPath = appDataDir; // Will be empty but path is set
+                    Debug.WriteLine($"[CONCERTS] Warning: no concerts found in {appDataDir} or {bundledDir}");
+                }
             }
 
             _concerts = LoadConcerts(ConcertsPath);

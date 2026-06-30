@@ -31,12 +31,13 @@ namespace DeadEditor
             FpcalcPathTextBox.Text = _librarySettings.FpcalcPath;
             PrimaryArtistTextBox.Text = _librarySettings.PrimaryArtistName;
 
-            // Show concert database path (read-only info). Use the static AppData accessor
-            // rather than Instance.ConcertsPath: the latter materializes the Lazy<> singleton,
-            // running the full 2,293-file concert load synchronously on the UI thread just to
-            // display a directory string. ConcertsPath always resolves to AppDataConcertsPath
-            // in every reachable load branch, so this shows the same path without the load.
-            ConcertDbPathTextBox.Text = ConcertLookupService.AppDataConcertsPath;
+            // Show concert database path (read-only info). Use the static ActiveConcertsPath
+            // accessor rather than Instance.ConcertsPath: the latter materializes the Lazy<>
+            // singleton, running the full 2,293-file concert load synchronously on the UI thread
+            // just to display a directory string. ActiveConcertsPath is static/load-free and is
+            // the same switch the constructor loads from, so it shows the accurate directory
+            // (repo-source under DEADEDITOR_DEV, AppData otherwise) without forcing the load.
+            ConcertDbPathTextBox.Text = ConcertLookupService.ActiveConcertsPath;
         }
 
         // ===== PATH SELECTION =====

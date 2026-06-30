@@ -838,7 +838,7 @@ namespace DeadEditor
 
             try
             {
-                var filePath = Path.Combine(ConcertLookupService.AppDataConcertsPath, $"{concert.Date}.json");
+                var filePath = Path.Combine(ConcertLookupService.ActiveConcertsPath, $"{concert.Date}.json");
                 if (File.Exists(filePath))
                 {
                     Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(

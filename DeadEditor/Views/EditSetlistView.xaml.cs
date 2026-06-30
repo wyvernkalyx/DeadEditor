@@ -296,7 +296,7 @@ namespace DeadEditor
             // Write to AppData concerts directory (atomic: temp file + rename)
             try
             {
-                var concertsDir = ConcertLookupService.AppDataConcertsPath;
+                var concertsDir = ConcertLookupService.ActiveConcertsPath;
                 Directory.CreateDirectory(concertsDir);
 
                 var targetPath = Path.Combine(concertsDir, $"{date}.json");
