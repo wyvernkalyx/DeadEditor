@@ -64,6 +64,15 @@ namespace DeadEditor
         private HashSet<int>? _lastClaimedPositions;
         /// <summary>The date used for the last Match Setlist run.</summary>
         private string? _lastMatchDate;
+        /// <summary>
+        /// Confirmed combines (Count&gt;1 covered runs) captured from the last Match Setlist
+        /// confirm, mapped to the persistence model. Carried to the import-commit point so the
+        /// alias is persisted only when the album irrevocably commits to the library
+        /// (alias-setlists-spec.md §4, Option B) — not at Match-confirm, so an abandoned preview
+        /// writes no canonical reference data. Keyed against <see cref="_lastMatchDate"/> via
+        /// <see cref="ShouldPersistCombines"/> so a stale match cannot persist for a different album.
+        /// </summary>
+        private List<AliasEntry>? _lastConfirmedCombines;
 
         /// <summary>Pre-populated concert metadata for click-to-import from Concerts view.</summary>
         private (string Date, string Venue, string CityState)? _prePopulatedConcert;
@@ -424,6 +433,10 @@ namespace DeadEditor
             _albumInfo = null;
             _currentFolderPath = null;
             _mbidPresentInSource = false;
+            // Drop the stashed import-commit combines so a cleared/next import cannot persist them.
+            // (The broader _lastMatch* stale-stash cleanup is banked separately; Option B's equality
+            // gate already neutralizes a stale _lastMatchDate, so only the new stash is reset here.)
+            _lastConfirmedCombines = null;
             ArtistTextBox.Text = "";
             AlbumDateTextBox.Text = "";
             VenueTextBox.Text = "";
@@ -1124,6 +1137,23 @@ namespace DeadEditor
             MatchSetlistButton.ToolTip = "No setlist data for this date";
         }
 
+        /// <summary>
+        /// Safety gate for Option B import-commit alias persistence (alias-setlists-spec.md §4).
+        /// Returns true iff there are stashed confirmed combines AND the album being committed is the
+        /// one that was matched, at the date it was matched against — so a stale match (match album A,
+        /// then import a different album B without re-matching) cannot persist A's coverage for B.
+        /// Pure + static so the safety-critical logic is unit-testable without WPF.
+        /// </summary>
+        internal static bool ShouldPersistCombines(
+            string? lastMatchDate,
+            string? currentAlbumDate,
+            IReadOnlyList<AliasEntry>? stash)
+        {
+            if (stash == null || stash.Count == 0) return false;
+            if (string.IsNullOrEmpty(lastMatchDate)) return false;
+            return string.Equals(lastMatchDate, currentAlbumDate, StringComparison.Ordinal);
+        }
+
         private async void MatchSetlistButton_Click(object sender, RoutedEventArgs e)
         {
             if (_tracks.Count == 0 || _albumInfo == null)
@@ -1209,6 +1239,14 @@ namespace DeadEditor
             _lastSetlistSongs = setlistSongs;
             _lastClaimedPositions = result.ClaimedPositions;
             _lastMatchDate = date;
+
+            // Stash the confirmed combines (Count>1 covered runs) mapped to the persistence model.
+            // These are NOT persisted here — Option B persists at the irrevocable library-commit
+            // point (ImportButton_Click), so an abandoned import preview writes no canonical
+            // reference data (alias-setlists-spec.md §4).
+            _lastConfirmedCombines = result.ConfirmedCombines
+                .Select(p => new AliasEntry { CoveredOfficialIndices = p.CoveredEntryIndices })
+                .ToList();
 
             TracksDataGrid.Items.Refresh();
 
@@ -1331,6 +1369,55 @@ namespace DeadEditor
                         sourcePath,
                         conflictCallback);
                 });
+
+                // ===== Option B: import-commit alias persistence (alias-setlists-spec.md §4) =====
+                // The library write above is the irrevocable-commit point; we are past every abandon
+                // path. Persist the confirmed combines stashed at Match-confirm as canonical aliases,
+                // but ONLY when the album just committed is the one that was matched (and at the date
+                // it was matched against) — ShouldPersistCombines guards a stale match from persisting
+                // for a different album. A failed/abandoned import never reaches here, so it writes
+                // nothing. PersistAliasSetlist is sync + does file I/O, so the loop runs off the UI
+                // thread, mirroring the Edit seam.
+                if (ShouldPersistCombines(_lastMatchDate, _albumInfo.Date?.Trim(), _lastConfirmedCombines))
+                {
+                    var combinesToPersist = _lastConfirmedCombines!;
+                    var persistDate = _lastMatchDate!;
+                    int persistedCount = 0;
+                    try
+                    {
+                        await Task.Run(() =>
+                        {
+                            foreach (var entry in combinesToPersist)
+                            {
+                                var outcome = ConcertLookupService.Instance.PersistAliasSetlist(persistDate, entry);
+                                switch (outcome)
+                                {
+                                    case AliasPersistResult.Persisted:
+                                        persistedCount++;
+                                        break;
+                                    case AliasPersistResult.DuplicateNoOp:
+                                        break; // idempotent re-confirm — silent, nothing written
+                                    case AliasPersistResult.ConcertNotFound:
+                                        Debug.WriteLine($"[ALIAS] No concert cached for {persistDate}; combine not persisted.");
+                                        break;
+                                }
+                            }
+                        });
+
+                        if (persistedCount > 0)
+                            StatusTextBlock.Text += $" ({persistedCount} combine{(persistedCount == 1 ? "" : "s")} recorded)";
+                    }
+                    catch (Exception ex)
+                    {
+                        // The service rethrows on a disk-write failure (the in-memory append is rolled
+                        // back). Surface it via the import notification convention; do not let it
+                        // escape the async void handler or undo the successful library import.
+                        Debug.WriteLine($"[ALIAS] Combine persistence failed for {persistDate}: {ex.Message}");
+                        StatusTextBlock.Text += " (combine aliases not saved)";
+                        await ShowNotificationAsync("Alias Save Failed",
+                            $"The import succeeded, but the combined-track aliases could not be saved:\n\n{ex.Message}");
+                    }
+                }
 
                 ProgressBar.Visibility = Visibility.Collapsed;
                 // Build final status combining audio tracks and any non-audio files

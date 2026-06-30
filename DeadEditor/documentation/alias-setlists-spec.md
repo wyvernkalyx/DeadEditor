@@ -110,9 +110,20 @@ the spurious amber unmatched warning and recording the combine - not unblocking 
 `PersistAliasSetlist` + tests; (iii) surface confirmed combines out of `Apply`
 (`MatchResult.ConfirmedCombines`, the `Count>1` proposals) and wire the **EDIT seam**
 (`EditMetadataView` Match Setlist → `PersistAliasSetlist` per confirmed combine), with the WPF manual
-gate. **Option A: Import-side persistence is deferred** — to avoid writing canonical reference data
-from an abandonable import preview, the Import seam keeps confirming combines for the in-memory apply
-only; persisting at the point import commits to the library is a banked follow-up.
+gate; (iv) **Option B — wire the IMPORT seam.** Import-side persistence fires at the
+**irrevocable library-commit point** (`ImportButton_Click`, after `ImportToLibrary` returns and
+before `ClearView`), NOT at Match-confirm — so an abandoned import preview (cancel at the confirm
+prompt, navigate away, or a failed import) writes **no** canonical reference data. The confirmed
+combines are stashed at Match-confirm (`_lastConfirmedCombines`, mapped to `AliasEntry`) and carried
+to commit. A pure equality gate, `ImportView.ShouldPersistCombines(lastMatchDate, currentAlbumDate,
+stash)`, persists **only** when the album being committed is the one that was matched, at the date it
+was matched against (ordinal date equality) — so a stale match (match album A, then import a
+different album B without re-matching) cannot persist A's coverage for B; on a mismatch the persist is
+skipped **silently** (an import side effect the user did not explicitly request). The persist loop and
+result tally (`Persisted` → status suffix; `DuplicateNoOp` silent; `ConcertNotFound` defensive log)
+mirror the Edit seam, with the import notification convention on failure. WPF manual gate. **Note:**
+`Apply` already surfaces `MatchResult.ConfirmedCombines` (commit iii), so commit (iv) adds no matcher
+change — only the ImportView stash + gate + commit-point loop.
 
 ## 5. Match predicate - "official OR any registered alias"
 

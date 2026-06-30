@@ -8,13 +8,34 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
-### Import-seam alias persistence at import-commit (Surfaced 2026-06-30)
+### ~~Import-seam alias persistence at import-commit~~ (Surfaced 2026-06-30; DONE 2026-06-30)
 Option A (slice-5 commit iii) wired only the EDIT seam to persist confirmed combines via
-`PersistAliasSetlist`. Import-side persistence is deferred: persist confirmed combines at the point
+`PersistAliasSetlist`. Import-side persistence was deferred: persist confirmed combines at the point
 import COMMITS to the library (not at Match-confirm), so an abandonable import preview writes no
-canonical reference data. Needs a Phase A on whether the confirmed-combines list survives from the
-Match Setlist review to the import-commit point — today it lives only in the match handler's
-`MatchResult`, and the Import handler currently confirms combines for the in-memory apply only.
+canonical reference data.
+
+**Done (slice-5 commit iv, Option B):** Phase A confirmed coverage does NOT survive to commit
+(`result.ConfirmedCombines` lived only in the discarded `MatchResult` local; `TrackInfo` carries no
+covered-index field; `ImportButton_Click` never re-runs matching). Fix: `ImportView` stashes the
+confirmed combines at Match-confirm (`_lastConfirmedCombines`, mapped to `AliasEntry`) and persists
+them at the irrevocable library-commit point (after `ImportToLibrary` returns, before `ClearView`),
+gated by the pure `ImportView.ShouldPersistCombines(lastMatchDate, currentAlbumDate, stash)` — which
+persists only when the album being committed is the one that was matched at the date it was matched
+against (ordinal equality), so a stale match cannot persist for a different album; a mismatch skips
+silently. Abandoned/failed imports never reach the loop, so they write nothing. Tally mirrors the Edit
+seam (`Persisted` → status suffix; `DuplicateNoOp` silent; `ConcertNotFound` defensive log) with the
+import notification convention on failure. Predicate unit-tested (`ImportViewCombinePersistTests`);
+end-to-end disk write + abandon-writes-nothing + wrong-album guard verified by the two-pass WPF gate.
+
+### ImportView stale-stash cleanup (Surfaced 2026-06-30)
+`ImportView.ClearView` does NOT null `_lastMatchDate` / `_lastSetlistSongs` / `_lastClaimedPositions`,
+so they persist across folder loads (a latent pre-existing gap — a stale match's state outlives the
+album it was computed for). Option B's new `_lastConfirmedCombines` stash IS cleared in `ClearView`,
+and the `ShouldPersistCombines` equality gate (`_lastMatchDate == currentAlbumDate`) already
+neutralizes a stale `_lastMatchDate` for the persistence path, so this is harmless today. Worth a
+dedicated cleanup that resets the whole `_lastMatch*` cluster on folder load / `ClearView` (and the
+Match-to-Song right-click menu already self-guards on `vm.Track.IsMatched != true`, so no behavior
+depends on the staleness). Scoped out of Option B deliberately to keep that commit single-concern.
 
 ### Backlog stocktake at slice-5 close (Surfaced 2026-06-30)
 When slice 5 finishes, do a consolidated read-only review of all banked follow-up items (here and in
@@ -280,6 +301,10 @@ authority to alias against).
 No `SemaphoreSlim`/`_isSaving` analog exists for concert-JSON-file writes. (The 2026-06-22 "Edit
 Metadata save-lock" guard serializes FLAC **audio** writes via `AudioPlayerService.WithFileReleased`;
 it does **not** cover the concert `Data/concerts/{date}.json` writes, which today only EditSetlistView
-performs, UI-thread-serialized and bare.) Once slice 5 adds `PersistAliasSetlist`, `EditSetlistView`
-and the matcher/import path become **two writers of the same concert file** — consider a shared write
-guard covering both before they can race. Surfaced during the slice-5 persistence diagnosis.
+performs, UI-thread-serialized and bare.) Slice 5 added `PersistAliasSetlist`, now reached from BOTH
+the Edit seam (commit iii) and the **Import seam (commit iv, Option B)** — so `EditSetlistView`, the
+Edit-metadata Match Setlist handler, and the import-commit path are **three writers of the same
+concert file**. Analysis is unchanged: a shared write guard covering all of them is still wanted
+before they can race (each is UI-thread-driven today, so a cross-surface race needs concurrent flows,
+but the guard is the durable fix). Surfaced during the slice-5 persistence diagnosis; updated at the
+Option-B import-seam wiring (2026-06-30).
