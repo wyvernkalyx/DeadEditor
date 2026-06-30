@@ -125,4 +125,92 @@ public class ConcertLookupServiceCacheTests
         Assert.Null(ex);
         Assert.Equal(1, svc.Count);
     }
+
+    // ===== Alias persistence: pure in-memory append/dedup (TryAppendAliasEntry) =====
+    // These exercise the dedup/append logic with ZERO I/O (alias-setlists-spec.md §4). The
+    // successful-Persisted disk write + rollback are NOT unit-tested here (they would dirty
+    // AppData / repo-source) — that path rides commit (iii)'s WPF gate.
+
+    [Fact]
+    public void TryAppendAliasEntry_NoExistingAliases_CreatesSingleSetlistAndAppends()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" };
+
+        var added = ConcertLookupService.TryAppendAliasEntry(
+            concert, new AliasEntry { CoveredOfficialIndices = { 1, 2 } });
+
+        Assert.True(added);
+        Assert.Single(concert.AliasSetlists);              // one shared AliasSetlist created
+        Assert.Single(concert.AliasSetlists[0].Entries);
+        Assert.Equal(new[] { 1, 2 }, concert.AliasSetlists[0].Entries[0].CoveredOfficialIndices);
+    }
+
+    [Fact]
+    public void TryAppendAliasEntry_DuplicateCoveredRun_ReturnsFalseAndDoesNotMutate()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+
+        var added = ConcertLookupService.TryAppendAliasEntry(
+            concert, new AliasEntry { CoveredOfficialIndices = { 1, 2 } });
+
+        Assert.False(added);                               // dedup by order-sensitive index set
+        Assert.Single(concert.AliasSetlists);
+        Assert.Single(concert.AliasSetlists[0].Entries);   // nothing appended
+    }
+
+    [Fact]
+    public void TryAppendAliasEntry_DifferentCoveredRun_AppendsToSameSingleSetlist()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+
+        var added = ConcertLookupService.TryAppendAliasEntry(
+            concert, new AliasEntry { CoveredOfficialIndices = { 5, 6 } });
+
+        Assert.True(added);
+        Assert.Single(concert.AliasSetlists);              // STILL one shared AliasSetlist
+        Assert.Equal(2, concert.AliasSetlists[0].Entries.Count);
+        Assert.Equal(new[] { 5, 6 }, concert.AliasSetlists[0].Entries[1].CoveredOfficialIndices);
+    }
+
+    // ===== Alias persistence: no-write paths of PersistAliasSetlist =====
+
+    [Fact]
+    public void PersistAliasSetlist_UnknownDate_ReturnsConcertNotFound()
+    {
+        var svc = Seed("1971-05-30");
+
+        // No concert cached for this date — returns before any write, no file fabricated.
+        var result = svc.PersistAliasSetlist(
+            "1999-12-31", new AliasEntry { CoveredOfficialIndices = { 1, 2 } });
+
+        Assert.Equal(AliasPersistResult.ConcertNotFound, result);
+    }
+
+    [Fact]
+    public void PersistAliasSetlist_DuplicateEntry_ReturnsDuplicateNoOpWithoutWriting()
+    {
+        // Seed a concert that ALREADY contains the entry, so the dedup hit precedes any write —
+        // no disk I/O, no AppData/repo pollution.
+        var concert = new ConcertReference { Date = "1971-05-30", Venue = "Winterland" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+        var svc = new ConcertLookupService(new[] { concert });
+
+        var result = svc.PersistAliasSetlist(
+            "1971-05-30", new AliasEntry { CoveredOfficialIndices = { 1, 2 } });
+
+        Assert.Equal(AliasPersistResult.DuplicateNoOp, result);
+        Assert.Single(concert.AliasSetlists);              // unchanged in memory
+        Assert.Single(concert.AliasSetlists[0].Entries);
+    }
 }

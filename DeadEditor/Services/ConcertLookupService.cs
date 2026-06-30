@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using Newtonsoft.Json;
 using System;
@@ -22,6 +23,23 @@ namespace DeadEditor.Services
     /// On first run, if concerts exist in Data/ but not AppData, copies them over.
     /// Thread-safe, lazily loaded singleton. Once loaded, read-only.
     /// </summary>
+    /// <summary>
+    /// Outcome of <see cref="ConcertLookupService.PersistAliasSetlist"/>. Lets the commit-(iii)
+    /// import/edit seam distinguish a fresh write from an idempotent no-op from a missing concert,
+    /// so it can message correctly (silent on a dup; a notice on a date with no concert file).
+    /// </summary>
+    public enum AliasPersistResult
+    {
+        /// <summary>A new combine was appended and the concert file was rewritten.</summary>
+        Persisted,
+
+        /// <summary>The combine's covered-index set already existed — nothing written (idempotent).</summary>
+        DuplicateNoOp,
+
+        /// <summary>No concert is cached for the date — nothing written, no file fabricated.</summary>
+        ConcertNotFound
+    }
+
     public class ConcertLookupService
     {
         private static readonly Lazy<ConcertLookupService> _instance = new(() => new ConcertLookupService());
@@ -323,6 +341,118 @@ namespace DeadEditor.Services
             var idx = _sortedDates.BinarySearch(date);
             if (idx < 0)
                 _sortedDates.Insert(~idx, date);
+        }
+
+        /// <summary>
+        /// Persists a confirmed combine alias into the concert authority file (seam (b),
+        /// alias-setlists-spec.md §4). The combine is keyed by performance <paramref name="date"/>
+        /// alone; <paramref name="aliasEntry"/> carries only the covered official indices. Appends
+        /// to the single shared <see cref="AliasSetlist"/> for the concert (created on first alias),
+        /// idempotent by covered-index set, then writes atomically to
+        /// <see cref="ActiveConcertsPath"/>/{date}.json (dev-aware, commit-ready under
+        /// <c>DEADEDITOR_DEV</c>). The in-memory append is transactional: a failed disk write rolls
+        /// the append back so the cache never holds an alias that is not on disk, then rethrows
+        /// (the UI seam in commit (iii) catches and messages — mirrors <c>BoxSetService.Write</c>).
+        /// No fabrication: an unknown date returns <see cref="AliasPersistResult.ConcertNotFound"/>
+        /// without creating a file (§4/§6). Returns <see cref="AliasPersistResult.DuplicateNoOp"/>
+        /// for an idempotent re-confirm — nothing is written, the file's mtime is untouched.
+        /// SYNC (matches <c>BoxSetService.Write</c> and the rest of this service); a UI-thread
+        /// caller wraps in <c>Task.Run</c>.
+        /// </summary>
+        public AliasPersistResult PersistAliasSetlist(string date, AliasEntry aliasEntry)
+        {
+            // Non-throwing guards, matching GetConcertByDate / Evict / NotifySaved.
+            if (string.IsNullOrEmpty(date) || aliasEntry == null)
+                return AliasPersistResult.ConcertNotFound;
+
+            // The cache holds the live instance; null means no concert file for this date — do NOT
+            // fabricate one (spec §4/§6). GetConcertByDate does not take _writeLock, so calling it
+            // before acquiring the lock below is not re-entrant.
+            var concert = GetConcertByDate(date);
+            if (concert == null)
+                return AliasPersistResult.ConcertNotFound;
+
+            // In-memory dedup + append under the cache lock (consistent with the other post-load
+            // cache mutations). The disk I/O is deliberately OUTSIDE the lock — file I/O must not be
+            // held across the lock that the UI thread's reads contend on.
+            bool containerCreated;
+            lock (_writeLock)
+            {
+                bool hadContainer = concert.AliasSetlists.Count > 0;
+                if (!TryAppendAliasEntry(concert, aliasEntry))
+                    return AliasPersistResult.DuplicateNoOp; // idempotent — skip the write entirely
+                containerCreated = !hadContainer;
+            }
+
+            try
+            {
+                // Serialize the now-mutated live concert and write atomically (temp + delete +
+                // rename) to the dev-aware path. Same pattern as EditSetlistView / BoxSetService.
+                var json = CanonicalJson.Serialize(concert);
+                Directory.CreateDirectory(ActiveConcertsPath);
+
+                var targetPath = Path.Combine(ActiveConcertsPath, $"{date}.json");
+                var tempPath = targetPath + ".tmp";
+
+                File.WriteAllText(tempPath, json);
+                if (File.Exists(targetPath))
+                    File.Delete(targetPath);
+                File.Move(tempPath, targetPath);
+            }
+            catch
+            {
+                // Transactional rollback: remove the just-appended entry (by reference), and the
+                // container too if THIS call created it and it is now empty — so the cache never
+                // holds an alias that is not on disk. Then rethrow for the UI seam to surface.
+                lock (_writeLock)
+                {
+                    var target = concert.AliasSetlists.FirstOrDefault();
+                    if (target != null)
+                    {
+                        target.Entries.Remove(aliasEntry);
+                        if (containerCreated && target.Entries.Count == 0)
+                            concert.AliasSetlists.Remove(target);
+                    }
+                }
+                throw;
+            }
+
+            // Date is unchanged, so this is a cache no-op; retained for symmetry with the
+            // EditSetlistView save pattern.
+            NotifySaved(date, concert);
+            return AliasPersistResult.Persisted;
+        }
+
+        /// <summary>
+        /// Pure in-memory append/dedup for a confirmed combine alias — ZERO I/O. Finds the single
+        /// shared <see cref="AliasSetlist"/> for the concert (alias-setlists-spec.md §4); if any
+        /// existing entry's <see cref="AliasEntry.CoveredOfficialIndices"/> is order-sensitive
+        /// <see cref="System.Linq.Enumerable.SequenceEqual{T}(IEnumerable{T}, IEnumerable{T})"/> to
+        /// <paramref name="entry"/>'s (covered runs are contiguous ascending, so order is identity),
+        /// returns <c>false</c> with no mutation. Otherwise creates the <see cref="AliasSetlist"/>
+        /// if absent (Id/Label left as default provenance values — NOT discriminators), appends
+        /// <paramref name="entry"/>, and returns <c>true</c>. Internal so the cache/dedup logic is
+        /// unit-testable without touching disk (via InternalsVisibleTo).
+        /// </summary>
+        internal static bool TryAppendAliasEntry(ConcertReference concert, AliasEntry entry)
+        {
+            var target = concert.AliasSetlists.FirstOrDefault();
+
+            if (target != null &&
+                target.Entries.Any(e =>
+                    e.CoveredOfficialIndices.SequenceEqual(entry.CoveredOfficialIndices)))
+            {
+                return false; // dedup: this covered run is already recorded
+            }
+
+            if (target == null)
+            {
+                target = new AliasSetlist();
+                concert.AliasSetlists.Add(target);
+            }
+
+            target.Entries.Add(entry);
+            return true;
         }
 
         /// <summary>Get all concert dates, sorted ascending.</summary>
