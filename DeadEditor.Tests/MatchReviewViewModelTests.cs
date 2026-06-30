@@ -381,6 +381,22 @@ public class MatchReviewViewModelTests
         Assert.Equal(new List<int> { 5 }, built.Proposals[0].CoveredEntryIndices);
     }
 
+    [Fact]
+    public void Build_PreservesCombinedCoveredEntryIndices()
+    {
+        // A combine (Count>1) must carry its FULL covered run through the rebuild, so the
+        // edit seam persists the correct coverage as a canonical alias (alias-setlists-spec.md §4).
+        var source = MakeProposal(
+            "Help On The Way/Slipknot!", "Help On The Way > Slipknot!", false, false,
+            covered: new List<int> { 3, 4 });
+        var set = MakeSet(source);
+
+        var vm = new MatchReviewViewModel(set);
+        var built = vm.BuildEditedProposalSet();
+
+        Assert.Equal(new List<int> { 3, 4 }, built.Proposals[0].CoveredEntryIndices);
+    }
+
     // ===== Helpers =====
 
     private static SetlistMatcher.TrackProposal MakeProposal(

@@ -1633,7 +1633,7 @@ namespace DeadEditor
 
         // ===== MATCH SETLIST =====
 
-        private void MatchSetlistButton_Click(object sender, RoutedEventArgs e)
+        private async void MatchSetlistButton_Click(object sender, RoutedEventArgs e)
         {
             if (_tracks.Count == 0 || _albumInfo == null)
             {
@@ -1735,6 +1735,51 @@ namespace DeadEditor
                 ? $". {unmatchedCount} unmatched \u2014 right-click to match manually."
                 : "";
             StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
+
+            // Persist confirmed combines as canonical aliases (alias-setlists-spec.md \u00a74, seam (b);
+            // Option A wires the EDIT seam only). EVERY Count>1 combine is recorded regardless of the
+            // SongName/Segue accept-ignore state \u2014 the alias records coverage, not the displayed
+            // name. PersistAliasSetlist is sync and does file I/O, so the loop runs off the UI thread.
+            // The date was guarded non-empty at the top of this handler and resolves to a cached
+            // concert (the same source GetSetlist read), so ConcertNotFound is defensive only.
+            if (result.ConfirmedCombines.Count > 0)
+            {
+                int persistedCount = 0;
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        foreach (var p in result.ConfirmedCombines)
+                        {
+                            var entry = new AliasEntry { CoveredOfficialIndices = p.CoveredEntryIndices };
+                            var outcome = ConcertLookupService.Instance.PersistAliasSetlist(date, entry);
+                            switch (outcome)
+                            {
+                                case AliasPersistResult.Persisted:
+                                    persistedCount++;
+                                    break;
+                                case AliasPersistResult.DuplicateNoOp:
+                                    break; // idempotent re-confirm \u2014 silent, nothing written
+                                case AliasPersistResult.ConcertNotFound:
+                                    Debug.WriteLine($"[ALIAS] No concert cached for {date}; combine not persisted.");
+                                    break;
+                            }
+                        }
+                    });
+
+                    if (persistedCount > 0)
+                        StatusTextBlock.Text += $" ({persistedCount} combine{(persistedCount == 1 ? "" : "s")} recorded)";
+                }
+                catch (Exception ex)
+                {
+                    // The service rethrows on a disk-write failure (the in-memory append is rolled
+                    // back). Surface it via the Edit save-failure pattern; do not let it escape the
+                    // async void handler.
+                    StatusTextBlock.Text = $"Combine aliases not saved: {ex.Message}";
+                    App.Alerts.Notify($"Error saving combine aliases:\n\n{ex.Message}",
+                        AlertSeverity.Error, "Alias Save Failed");
+                }
+            }
         }
 
         // ===== DRAG-TO-REORDER =====

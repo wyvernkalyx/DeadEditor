@@ -709,6 +709,61 @@ public class SetlistMatcherTests
         Assert.Equal(new HashSet<int> { 0, 1, 2 }, set.ClaimedPositions);
     }
 
+    // ===== MatchResult.ConfirmedCombines (slice 5 commit iii, alias-persistence seam) =====
+    // Apply surfaces the applied proposals that cover 2+ official entries so the edit seam can
+    // persist them as canonical aliases. Single-song matches are excluded; empty when none.
+
+    [Fact]
+    public void Apply_PopulatesConfirmedCombines_OnlyCountGreaterThanOne()
+    {
+        // One combine ("A>B" -> [0,1]) plus one single-song direct match ("C" -> [2]).
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "A>B"), MakeTrack(1, 2, "C") };
+        var setlist = new List<SetlistMatcher.SetlistEntry> { Entry("A", 0), Entry("B", 1), Entry("C", 2) };
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, ComboEcho, ComboResolver);
+        var result = SetlistMatcher.Apply(set);
+
+        // Exactly the combine — the single-song match is not a confirmed combine.
+        var combine = Assert.Single(result.ConfirmedCombines);
+        Assert.Equal(new List<int> { 0, 1 }, combine.CoveredEntryIndices);
+        Assert.Equal("A > B", combine.NewSongName);
+    }
+
+    [Fact]
+    public void Apply_TwoCombines_BothSurfaced()
+    {
+        // Two independent combines: "A>B" -> [0,1] and "C>D" -> [2,3].
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "A>B"), MakeTrack(1, 2, "C>D") };
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            Entry("A", 0), Entry("B", 1), Entry("C", 2), Entry("D", 3),
+        };
+        // Extend the combo-known set so "D" resolves as a single song for this test.
+        static string? resolveNull(string s) =>
+            new Dictionary<string, string>(System.StringComparer.OrdinalIgnoreCase)
+            { { "A", "A" }, { "B", "B" }, { "C", "C" }, { "D", "D" } }.TryGetValue(s, out var v) ? v : null;
+        static string? resolveEcho(string s) => resolveNull(s) ?? s;
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, resolveEcho, resolveNull);
+        var result = SetlistMatcher.Apply(set);
+
+        Assert.Equal(2, result.ConfirmedCombines.Count);
+        Assert.All(result.ConfirmedCombines, p => Assert.Equal(2, p.CoveredEntryIndices.Count));
+    }
+
+    [Fact]
+    public void Apply_NoCombines_ConfirmedCombinesEmpty()
+    {
+        var tracks = SampleAlbum();
+        var setlist = SampleSetlist();
+        Func<string, string?> resolver = name => Aliases.TryGetValue(name, out var c) ? c : name;
+
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, resolver, resolver);
+
+        Assert.NotEqual(0, result.MatchedCount); // it did match single songs...
+        Assert.Empty(result.ConfirmedCombines);  // ...but recorded no combines
+    }
+
     // ===== Helpers =====
 
     private static string? IdentityResolver(string s) => s;

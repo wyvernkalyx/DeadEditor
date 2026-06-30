@@ -1,6 +1,7 @@
 using DeadEditor.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DeadEditor.Services
 {
@@ -34,6 +35,17 @@ namespace DeadEditor.Services
             public int MatchedCount { get; init; }
             public int SegueCount { get; init; }
             public HashSet<int> ClaimedPositions { get; init; } = new();
+
+            /// <summary>
+            /// The applied proposals that collapse 2+ official entries into one media track
+            /// (<see cref="TrackProposal.CoveredEntryIndices"/> count &gt; 1). The alias-persistence
+            /// seam reads each one's covered run to record a confirmed combine
+            /// (alias-setlists-spec.md §4); single-song matches are not included. Element type is
+            /// <see cref="TrackProposal"/> by design — the matcher stays free of the persistence
+            /// model (<c>AliasEntry</c>). Empty by default, so consumers that ignore it are
+            /// unaffected.
+            /// </summary>
+            public IReadOnlyList<TrackProposal> ConfirmedCombines { get; init; } = new List<TrackProposal>();
         }
 
         /// <summary>
@@ -260,6 +272,11 @@ namespace DeadEditor.Services
                 MatchedCount = proposalSet.Proposals.Count,
                 SegueCount = segues,
                 ClaimedPositions = proposalSet.ClaimedPositions,
+                // Surface the confirmed combines (covered runs of 2+ official entries) so the
+                // alias-persistence seam can record them; single-song matches are excluded.
+                ConfirmedCombines = proposalSet.Proposals
+                    .Where(p => p.CoveredEntryIndices.Count > 1)
+                    .ToList(),
             };
         }
     }

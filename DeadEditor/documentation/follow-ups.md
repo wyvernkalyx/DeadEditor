@@ -8,6 +8,18 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Import-seam alias persistence at import-commit (Surfaced 2026-06-30)
+Option A (slice-5 commit iii) wired only the EDIT seam to persist confirmed combines via
+`PersistAliasSetlist`. Import-side persistence is deferred: persist confirmed combines at the point
+import COMMITS to the library (not at Match-confirm), so an abandonable import preview writes no
+canonical reference data. Needs a Phase A on whether the confirmed-combines list survives from the
+Match Setlist review to the import-commit point — today it lives only in the match handler's
+`MatchResult`, and the Import handler currently confirms combines for the in-memory apply only.
+
+### Backlog stocktake at slice-5 close (Surfaced 2026-06-30)
+When slice 5 finishes, do a consolidated read-only review of all banked follow-up items (here and in
+`alias-setlists-spec.md`) to re-triage what is still relevant before moving on.
+
 ### Fingerprint timing vs. match-before-import (Surfaced 2026-06-24)
 Fingerprinting currently runs at import (`PrecomputeFingerprints`), aligned with the
 source -> library boundary (read operates on un-owned source files; import is where a file

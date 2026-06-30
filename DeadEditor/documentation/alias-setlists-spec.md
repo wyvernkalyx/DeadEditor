@@ -107,8 +107,12 @@ the spurious amber unmatched warning and recording the combine - not unblocking 
 
 **Commit shape.** Slice 5 lands across separate commits, one concern each: (i) make
 `ConcertLookupService` dev-aware (the `ActiveConcertsPath` switch over load + write); (ii)
-`PersistAliasSetlist` + tests; (iii) surface confirmed combines out of `MatchReviewRunner.RunReview`
-and wire the import/edit seams, with the WPF manual gate.
+`PersistAliasSetlist` + tests; (iii) surface confirmed combines out of `Apply`
+(`MatchResult.ConfirmedCombines`, the `Count>1` proposals) and wire the **EDIT seam**
+(`EditMetadataView` Match Setlist → `PersistAliasSetlist` per confirmed combine), with the WPF manual
+gate. **Option A: Import-side persistence is deferred** — to avoid writing canonical reference data
+from an abandonable import preview, the Import seam keeps confirming combines for the in-memory apply
+only; persisting at the point import commits to the library is a banked follow-up.
 
 ## 5. Match predicate - "official OR any registered alias"
 
