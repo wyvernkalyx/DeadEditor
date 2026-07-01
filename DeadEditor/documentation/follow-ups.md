@@ -8,6 +8,14 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Setlist-editor combine REMOVAL (Surfaced 2026-06-30)
+Slice 6 ships combine AUTHORING only (spec §6.2): the setlist editor can mark a contiguous within-set
+run as a combined alias, but there is no author-side undo of a recorded combine. Net-new work: an
+`internal static bool TryRemoveAliasEntry(concert, coveredIndices)` mirror of `TryAppendAliasEntry`
+(remove-by-covered-set, single-`AliasSetlist` aware) plus a remove affordance in `EditSetlistView`
+(the alias display is read-only today). Deferred from slice 6 to keep it single-concern; likely wanted
+soon once authoring exists and a mis-authored combine needs backing out without hand-editing the JSON.
+
 ### ~~Import-seam alias persistence at import-commit~~ (Surfaced 2026-06-30; DONE 2026-06-30)
 Option A (slice-5 commit iii) wired only the EDIT seam to persist confirmed combines via
 `PersistAliasSetlist`. Import-side persistence was deferred: persist confirmed combines at the point

@@ -39,6 +39,20 @@ namespace DeadEditor
         private List<EditableTrack> _tracks = new();
         private bool _hasUnsavedChanges;
 
+        // Combine aliases authored this session, STAGED — not applied to the live cached _concert
+        // until Save (alias-setlists-spec.md §6.2). Mirrors how grid edits stage in _tracks: the
+        // editor's atomic Save applies these via ConcertLookupService.TryAppendAliasEntry just before
+        // the whole-object serialize, and Cancel simply drops the buffer so the cache stays clean
+        // (the property the earlier click-time-mutation design broke).
+        private readonly List<AliasEntry> _pendingAliasEntries = new();
+
+        // Distinct from _hasUnsavedChanges: tracks only STRUCTURAL/content edits since the last Save
+        // (Add/Remove/Normalize/cell edits — anything routed through OnEditorChanged). It gates the
+        // combine dirty-block: CoveredOfficialIndices are positional, so authoring may run only
+        // against the persisted positions. Staging a combine moves no positions, so it does NOT set
+        // this flag — multiple combines can be authored in one session.
+        private bool _structuralEditsSinceSave;
+
         // Structural labels for set assignment UI — these are display values, not song data
         private static readonly string[] SetChoices =
             { "Set 1", "Set 2", "Set 3", "Encore", "Encore 2" };
@@ -119,6 +133,7 @@ namespace DeadEditor
             _suppressChangeTracking = false;
             _baselineJson = BuildSnapshotJson();
             RefreshVerifyControls();
+            RefreshAliasDisplay();
         }
 
         private void Track_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -135,6 +150,7 @@ namespace DeadEditor
         {
             if (_suppressChangeTracking) return;
             _hasUnsavedChanges = true;
+            _structuralEditsSinceSave = true;
             RefreshVerifyControls();
         }
 
@@ -200,6 +216,93 @@ namespace DeadEditor
             BottomStatusText.Text = $"{_tracks.Count} tracks";
         }
 
+        // ===== COMBINE AUTHORING (alias-setlists-spec.md §6.2) =====
+
+        /// <summary>
+        /// Authors a combined alias from the selected contiguous within-set run. STAGES it into
+        /// <see cref="_pendingAliasEntries"/> — does NOT mutate the live cached <c>_concert</c> here;
+        /// the editor's existing atomic Save applies the buffer via
+        /// <see cref="ConcertLookupService.TryAppendAliasEntry"/>, and Cancel drops it. Refused while
+        /// structural edits are unsaved (positions may have moved). Invalid selections and dedup hits
+        /// report an inline message and author nothing.
+        /// </summary>
+        private void CombineSelectedButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Dirty-block: author only against the persisted setlist positions. Staged combines do
+            // not set _structuralEditsSinceSave, so authoring multiple combines in one session is OK.
+            if (_structuralEditsSinceSave)
+            {
+                StatusText.Text = "Save your setlist changes before combining.";
+                return;
+            }
+
+            var rows = TracksDataGrid.SelectedItems.OfType<EditableTrack>()
+                .Select(t => new CombineRow(t.Position, t.Set))
+                .ToList();
+
+            var result = CombineSelectionRule.Evaluate(rows);
+            if (!result.IsValid)
+            {
+                StatusText.Text = result.Message;
+                return;
+            }
+
+            // Dedup against the UNION of recorded (cached) + pending (staged this session) runs, using
+            // the same SequenceEqual identity Save-time TryAppendAliasEntry applies.
+            var existingRuns = _concert.AliasSetlists
+                .SelectMany(a => a.Entries)
+                .Concat(_pendingAliasEntries)
+                .Select(en => (IReadOnlyList<int>)en.CoveredOfficialIndices);
+            if (CombineSelectionRule.IsDuplicateRun(existingRuns, result.CoveredOfficialIndices))
+            {
+                StatusText.Text = "That combine is already recorded.";
+                return;
+            }
+
+            _pendingAliasEntries.Add(new AliasEntry
+            {
+                CoveredOfficialIndices = result.CoveredOfficialIndices.ToList()
+            });
+
+            // Mark unsaved work (drives the Cancel-discard prompt) WITHOUT the structural flag.
+            _hasUnsavedChanges = true;
+            RefreshAliasDisplay();
+            StatusText.Text = $"Combined {result.CoveredOfficialIndices.Count} songs (applies on Save).";
+        }
+
+        /// <summary>
+        /// Refreshes the read-only combine display from the UNION of recorded (in
+        /// <c>_concert.AliasSetlists</c>) and pending (staged this session) entries, so authoring is
+        /// not blind and dedup is visible. Read-only — removal is deferred (follow-ups.md).
+        /// </summary>
+        private void RefreshAliasDisplay()
+        {
+            var runs = _concert.AliasSetlists
+                .SelectMany(a => a.Entries)
+                .Concat(_pendingAliasEntries)
+                .Select(en => en.CoveredOfficialIndices)
+                .ToList();
+
+            if (runs.Count == 0)
+            {
+                AliasCombinesText.Text = "No recorded combines.";
+                return;
+            }
+
+            AliasCombinesText.Text = "Combines: " + string.Join("    ", runs.Select(DescribeRun));
+        }
+
+        /// <summary>Renders a covered run as "Song &gt; Song (firstPos–lastPos)" for display.</summary>
+        private string DescribeRun(List<int> coveredIndices)
+        {
+            if (coveredIndices.Count == 0) return "(empty)";
+
+            var names = coveredIndices.Select(i =>
+                _tracks.FirstOrDefault(t => t.Position == i + 1)?.SongName ?? $"#{i + 1}");
+            var range = $"{coveredIndices.Min() + 1}–{coveredIndices.Max() + 1}";
+            return $"{string.Join(" > ", names)} ({range})";
+        }
+
         // ===== NORMALIZE =====
 
         private void NormalizeButton_Click(object sender, RoutedEventArgs e)
@@ -223,7 +326,11 @@ namespace DeadEditor
             StatusText.Text = normalized > 0
                 ? $"Normalized {normalized} song{(normalized == 1 ? "" : "s")}"
                 : "All songs already normalized";
-            if (normalized > 0) _hasUnsavedChanges = true;
+            if (normalized > 0)
+            {
+                _hasUnsavedChanges = true;
+                _structuralEditsSinceSave = true; // renames change song identity at a position
+            }
             RefreshVerifyControls();
         }
 
@@ -302,6 +409,14 @@ namespace DeadEditor
                 var targetPath = Path.Combine(concertsDir, $"{date}.json");
                 var tempPath = targetPath + ".tmp";
 
+                // Apply staged combine aliases onto the live _concert immediately BEFORE serialize, so
+                // the authored runs ride the existing whole-object write (alias-setlists-spec.md §6.2,
+                // staged authoring). ConcertSnapshot.Project does not touch AliasSetlists, so the
+                // applied entries survive the projection above. TryAppendAliasEntry dedups, so a retry
+                // after a failed write re-applies harmlessly; the buffer is cleared only on success.
+                foreach (var entry in _pendingAliasEntries)
+                    ConcertLookupService.TryAppendAliasEntry(_concert, entry);
+
                 // Canonical camelCase, indented, computed keys dropped — matches the bundled
                 // concerts/ schema (shared with BoxSetService via CanonicalJson).
                 var json = CanonicalJson.Serialize(_concert);
@@ -336,6 +451,12 @@ namespace DeadEditor
                 _originalDate = date;
 
                 _hasUnsavedChanges = false;
+                // The staged combines are now persisted on _concert; clear the buffer (so a re-save
+                // does not re-walk them) and the structural-edit flag (Save is the new baseline, so
+                // authoring is allowed again). Refresh the display to the now-recorded state.
+                _pendingAliasEntries.Clear();
+                _structuralEditsSinceSave = false;
+                RefreshAliasDisplay();
 
                 // Re-baseline: the saved editor state is the new reference, so a reopened-or-reused
                 // view does not see phantom dirt. Refresh the verify surface to the persisted state.

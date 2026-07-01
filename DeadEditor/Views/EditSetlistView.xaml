@@ -80,6 +80,13 @@
                         BorderBrush="#555555" BorderThickness="1"
                         Padding="12,6" Cursor="Hand" FontSize="14"
                         Margin="0,0,8,0"/>
+                <Button x:Name="CombineSelectedButton" Content="Combine Selected"
+                        Click="CombineSelectedButton_Click"
+                        Background="#3E3E42" Foreground="#CCCCCC"
+                        BorderBrush="#555555" BorderThickness="1"
+                        Padding="12,6" Cursor="Hand" FontSize="14"
+                        Margin="0,0,8,0"
+                        ToolTip="Select a contiguous run within one set, then combine it into an alias"/>
                 <TextBlock x:Name="StatusText" Text=""
                            Foreground="#888888" FontSize="14"
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
@@ -261,8 +268,13 @@
             </DataGrid>
         </Border>
 
-        <!-- Row 3: Status bar -->
-        <TextBlock Grid.Row="3" x:Name="BottomStatusText" Text=""
-                   Foreground="#888888" FontSize="13" Margin="0,8,0,0"/>
+        <!-- Row 3: Status bar + read-only recorded/pending combine display -->
+        <StackPanel Grid.Row="3" Margin="0,8,0,0">
+            <TextBlock x:Name="BottomStatusText" Text=""
+                       Foreground="#888888" FontSize="13"/>
+            <TextBlock x:Name="AliasCombinesText" Text=""
+                       Foreground="#888888" FontSize="12" Margin="0,4,0,0"
+                       TextWrapping="Wrap"/>
+        </StackPanel>
     </Grid>
 </UserControl>

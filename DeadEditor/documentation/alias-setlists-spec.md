@@ -195,9 +195,35 @@ gated on `CoveredEntryIndices.Count > 1`, not on a name change. (Slice 4.)
 Why not auto-persist: deriving an alias from media then verifying against it is circular. The
 confirmation is the human gate.
 
-### 6.2 Setlist editor (secondary)
-A gesture in `EditSetlistView` to mark a contiguous run of official entries as a combined alias,
-through the same seam (b). (Slice 6.)
+### 6.2 Setlist editor (secondary) — SHIPPED (slice 6)
+A gesture in `EditSetlistView` to mark a contiguous run of official entries as a combined alias.
+**Implemented via STAGED authoring through the editor's existing atomic Save, NOT seam (b).** The
+editor holds the *live cached* `_concert`, and its Save/Cancel contract depends on `_concert` being
+untouched until Save (grid edits stage in `_tracks`; Cancel does no rollback). So authoring follows
+the same staging model rather than calling `PersistAliasSetlist` (which would be a second writer of
+the same file and would leave a phantom alias in the cache on Cancel):
+
+- **Gesture (Option A):** Extended multi-select rows in `TracksDataGrid` + a "Combine Selected"
+  button in the action strip, mirroring the existing Delete-via-`SelectedItems` idiom.
+- **Validity (pure `Helpers/CombineSelectionRule`):** a run is valid iff the selected row Positions
+  are distinct, contiguous ascending (`max - min == count - 1`), length ≥ 2, AND within a single set.
+  Cross-set-boundary runs are rejected for v1 — **open Q11.1 resolved to within-set for v1.** Row
+  Position `p` maps to official index `p - 1` (the matcher-side `CoveredEntryIndices` convention).
+- **Staging + apply-at-Save:** a valid, non-duplicate run is staged into a view-local
+  `_pendingAliasEntries` buffer (dedup checked against the UNION of recorded `_concert.AliasSetlists`
+  entries plus pending). The editor's existing Save applies each buffered entry via the shared pure
+  helper `ConcertLookupService.TryAppendAliasEntry(_concert, entry)` immediately before the
+  whole-object serialize, then clears the buffer on success. `ConcertSnapshot.Project` does not touch
+  `AliasSetlists`, so applied entries ride the existing write untouched. **Cancel** drops the buffer
+  and leaves `_concert`/the cache clean — the combine is discarded in memory and on disk.
+- **Dirty-block (index stability):** `CoveredOfficialIndices` are positional, so authoring is refused
+  while there are unsaved *structural* edits (Add/Remove/Normalize/cell edits) — tracked by a
+  dedicated `_structuralEditsSinceSave` flag, distinct from the editor's unsaved-work flag. Staging a
+  combine moves no positions and does NOT set that flag, so multiple combines can be authored per
+  session; structural edits require a Save before authoring resumes.
+- **Read-only display:** a read-only line shows the union of recorded + pending combines (covered song
+  names + position range), so authoring is not blind and dedup is visible. Removal is deferred
+  (follow-ups.md).
 
 ## 7. Display - P1 fix (slice 4) -- UNBUILT (design under review)
 
@@ -253,16 +279,22 @@ Seam (b) preserves `Verified` (whole-object write; the Edit diff-baseline ignore
   commits: (i) make `ConcertLookupService` dev-aware (`ActiveConcertsPath` over load + write); (ii)
   `PersistAliasSetlist` seam (b) + tests; (iii) surface confirmed combines from
   `MatchReviewRunner.RunReview` + wire the import/edit seams. WPF gate.
-- **Slice 6: setlist-editor authoring** (6.2). WPF gate.
+- **Slice 6: setlist-editor authoring — DONE** (6.2). Option-A gesture (Extended multi-select +
+  "Combine Selected") in `EditSetlistView`; pure `Helpers/CombineSelectionRule` validity predicate
+  (contiguous within-set run, length ≥ 2, row→index `p-1`); STAGED authoring applied at the editor's
+  existing atomic Save via `TryAppendAliasEntry` (NOT seam (b), NOT click-time mutation of the live
+  cached concert), so Cancel cleanly discards; structural-edit dirty-block; minimal read-only union
+  display. Open Q11.1 resolved to within-set for v1. Removal deferred (follow-ups.md). WPF gate.
 
 ## 11. Open questions for Gregg
 
 Resolved: 11.1 (one-click; moot - no gate); probe Q1 (no concert unverify); probe Q2 (guard via
 normalization); 11.3 (derive `NewSongName`, join with `>`, always); combined rows always shown;
-two-pass structure. Remaining (slice-local):
+two-pass structure; cross-set-boundary combines (RESOLVED slice 6 → **within-set for v1**; the
+setlist-editor validity predicate rejects cross-set runs, and the matcher's decomposer already only
+forms within-set runs). Remaining (slice-local):
 
-1. **Cross-set-boundary combines.** Allow a combine run to span a set boundary, or restrict v1 to
-   within-set runs? Lean: within-set for v1; flag cross-set for review.
+- (none open)
 
 ---
 
