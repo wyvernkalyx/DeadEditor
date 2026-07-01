@@ -8,13 +8,22 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
-### Setlist-editor combine REMOVAL (Surfaced 2026-06-30)
-Slice 6 ships combine AUTHORING only (spec §6.2): the setlist editor can mark a contiguous within-set
-run as a combined alias, but there is no author-side undo of a recorded combine. Net-new work: an
-`internal static bool TryRemoveAliasEntry(concert, coveredIndices)` mirror of `TryAppendAliasEntry`
-(remove-by-covered-set, single-`AliasSetlist` aware) plus a remove affordance in `EditSetlistView`
-(the alias display is read-only today). Deferred from slice 6 to keep it single-concern; likely wanted
-soon once authoring exists and a mis-authored combine needs backing out without hand-editing the JSON.
+### Setlist-editor combine REMOVAL (Surfaced 2026-06-30; helper DONE 2026-07-01, UI HELD)
+Slice 6 ships combine AUTHORING only (spec §6.2): the setlist editor can mark a contiguous
+within-set run as a combined alias, with no author-side undo of a recorded combine. Two pieces:
+- (a) TryRemoveAliasEntry(concert, coveredIndices) helper -- DONE (R1, e0cc2e7): internal static
+  mirror of TryAppendAliasEntry; remove-by-covered-set (SequenceEqual), single-AliasSetlist aware,
+  drops the shared container when its last entry is removed (keeps the concert file byte-pristine).
+  Unit-tested (7 cases incl. a byte-pristine serialize assertion).
+- (b) Remove affordance in EditSetlistView -- BUILT, HELD, WPF GATE UNRUN (R2): per-entry display
+  rework (AliasRowBuilder + read-only rows) with a trailing X to stage a removal and a restore/undo
+  toggle on staged rows; a _pendingAliasRemovals staged buffer applied at the editor atomic Save
+  (mirroring authoring), gated behind the unsaved-structural-edits dirty-block, Cancel discards.
+  Built + unit-tested (AliasRowBuilderTests), but the mandatory WPF manual gate was never run (the
+  first attempt used a 1:1 fixture with no combine to exercise; the session pivoted to gap B and the
+  unmatched-track work before re-gating). Held uncommitted in the working tree; per the UI-verification
+  memo it cannot commit until the gate is cleared on a real multi-entry-combine fixture. On hold: no
+  lived demand for removal yet, and its forward value is blocked on gap B below.
 
 ### ~~Import-seam alias persistence at import-commit~~ (Surfaced 2026-06-30; DONE 2026-06-30)
 Option A (slice-5 commit iii) wired only the EDIT seam to persist confirmed combines via
@@ -35,6 +44,14 @@ seam (`Persisted` → status suffix; `DuplicateNoOp` silent; `ConcertNotFound` d
 import notification convention on failure. Predicate unit-tested (`ImportViewCombinePersistTests`);
 end-to-end disk write + abandon-writes-nothing + wrong-album guard verified by the two-pass WPF gate.
 
+### ~~Surface unmatched tracks in the Match Setlist review~~ (Surfaced + DONE 2026-07-01)
+Done (b5a9ed2): the review dialog was built only from matched-track proposals, so an unmatched track
+produced no row and was invisible inside the dialog (only signal: the amber grid highlight + an
+out-of-dialog status line). MatchReviewRunner now derives the unmatched subset (tracks minus each
+proposal .Track, by reference identity, via the pure UnmatchedTracks.Compute) and the review VM renders
+a read-only Unmatched section above the already-match summary. No matcher change; shared runner covers
+Import + Edit. Not originally a backlog item -- recorded so history is complete.
+
 ### ImportView stale-stash cleanup (Surfaced 2026-06-30)
 `ImportView.ClearView` does NOT null `_lastMatchDate` / `_lastSetlistSongs` / `_lastClaimedPositions`,
 so they persist across folder loads (a latent pre-existing gap — a stale match's state outlives the
@@ -45,9 +62,10 @@ dedicated cleanup that resets the whole `_lastMatch*` cluster on folder load / `
 Match-to-Song right-click menu already self-guards on `vm.Track.IsMatched != true`, so no behavior
 depends on the staleness). Scoped out of Option B deliberately to keep that commit single-concern.
 
-### Backlog stocktake at slice-5 close (Surfaced 2026-06-30)
-When slice 5 finishes, do a consolidated read-only review of all banked follow-up items (here and in
-`alias-setlists-spec.md`) to re-triage what is still relevant before moving on.
+### ~~Backlog stocktake at slice-5 close~~ (Surfaced 2026-06-30; DONE 2026-07-01)
+Discharged by the 2026-07-01 read-only stocktake: follow-ups.md reconciled against the last three
+commits (R1 e0cc2e7, A b5a9ed2, held R2), the combine-REMOVAL entry updated, and gaps B / detail-view
+display / nav-link banked.
 
 ### Fingerprint timing vs. match-before-import (Surfaced 2026-06-24)
 Fingerprinting currently runs at import (`PrecomputeFingerprints`), aligned with the
@@ -316,3 +334,27 @@ concert file**. Analysis is unchanged: a shared write guard covering all of them
 before they can race (each is UI-thread-driven today, so a cross-surface race needs concurrent flows,
 but the guard is the durable fix). Surfaced during the slice-5 persistence diagnosis; updated at the
 Option-B import-seam wiring (2026-06-30).
+
+### Combines are write-only: the matcher never reads aliasSetlists back (Surfaced 2026-07-01)
+The slice-5/6 combine authoring + persistence arc has NO read-side consumer. SetlistMatcher sources its
+setlist from ShowLookupService.GetSetlist -> ConcertSetlistAdapter.ToSetInfoList, which maps only the
+concert Sets; aliasSetlists is never consulted. So a recorded combine does NOT change whether any track
+matches on a re-match -- a faithful combined pressing confirmed once will re-derive as unmatched next
+time. The write path (authoring, PersistAliasSetlist, the import/edit seams) is complete and the
+concurrency-guard entry tracks its writers, but nothing closes the write->read loop, so the
+"verify once, never again" promise is not yet met for combines specifically. Deferred: closing it needs
+combine coverage folded into the matcher setlist (the ConcertSetlistAdapter seam) and interacts with the
+version-identity question. Cross-ref: Concert-file write concurrency guard; Fingerprint-keyed combine
+recognition (Layer B); Release version-tracking arc. Most consequential item exposed by the 2026-07-01
+stocktake.
+
+### Concert-detail-view read-only combine display (Surfaced 2026-07-01)
+ConcertDetailView (the read-only "what I know about this show" surface) renders the setlist but shows no
+recorded combines. Optional nicety: display the concert aliasSetlists there read-only, for at-a-glance
+visibility without entering the setlist editor. Evaluated during the combine-removal fork and deferred
+(removal itself landed on the editor side); build only if the at-a-glance view is wanted.
+
+### Import/metadata-editor -> concert-view navigation link (Surfaced 2026-07-01)
+Gregg's idea from the combine-removal discussion: a link/affordance from the import metadata editor
+(EditMetadataView) that pulls up the canonical concert detail view for the same date. Navigation
+convenience; separate concern from any combine work. Not started.
