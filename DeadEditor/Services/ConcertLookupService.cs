@@ -455,6 +455,48 @@ namespace DeadEditor.Services
             return true;
         }
 
+        /// <summary>
+        /// Pure in-memory removal mirror of <see cref="TryAppendAliasEntry"/> — ZERO I/O. Finds the
+        /// single shared <see cref="AliasSetlist"/> for the concert (alias-setlists-spec.md §4) and
+        /// removes the entry whose <see cref="AliasEntry.CoveredOfficialIndices"/> is order-sensitive
+        /// <see cref="System.Linq.Enumerable.SequenceEqual{T}(IEnumerable{T}, IEnumerable{T})"/> to
+        /// <paramref name="coveredIndices"/> (covered runs are contiguous ascending, so order is the
+        /// same identity append dedups on). Returns <c>false</c> with no mutation when the concert has
+        /// no alias container, the run is absent (idempotent no-op), or the inputs are null. When the
+        /// removed entry was the container's last, the empty <see cref="AliasSetlist"/> is dropped from
+        /// <see cref="ConcertReference.AliasSetlists"/> rather than left present-but-empty: an
+        /// empty-but-present container would serialize <c>"aliasSetlists":[{...,"entries":[]}]</c> noise
+        /// (<see cref="ConcertReference.ShouldSerializeAliasSetlists"/> only omits a <c>Count == 0</c>
+        /// list, and there is no <c>ShouldSerialize</c> on the container/entries), so dropping keeps an
+        /// otherwise-pristine concert file byte-clean — the same drop-when-empty
+        /// <see cref="PersistAliasSetlist"/>'s rollback already models. Returns <c>true</c> on a real
+        /// removal. Internal so the drop/dedup logic is unit-testable without touching disk (via
+        /// InternalsVisibleTo).
+        /// </summary>
+        internal static bool TryRemoveAliasEntry(ConcertReference concert, IReadOnlyList<int> coveredIndices)
+        {
+            if (concert?.AliasSetlists == null || coveredIndices == null)
+                return false;
+
+            var target = concert.AliasSetlists.FirstOrDefault();
+            if (target?.Entries == null)
+                return false;
+
+            var entry = target.Entries.FirstOrDefault(e =>
+                e.CoveredOfficialIndices.SequenceEqual(coveredIndices));
+            if (entry == null)
+                return false; // idempotent: this covered run is not recorded
+
+            target.Entries.Remove(entry);
+
+            // Drop the shared container when its last entry is removed (Q4) — keeps the concert file
+            // byte-pristine; an empty-but-present container would serialize as aliasSetlists noise.
+            if (target.Entries.Count == 0)
+                concert.AliasSetlists.Remove(target);
+
+            return true;
+        }
+
         /// <summary>Get all concert dates, sorted ascending.</summary>
         public IReadOnlyList<string> GetAllDates() => _sortedDates;
 

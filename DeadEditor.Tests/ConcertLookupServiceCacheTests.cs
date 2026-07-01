@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using Xunit;
@@ -178,6 +179,117 @@ public class ConcertLookupServiceCacheTests
         Assert.Single(concert.AliasSetlists);              // STILL one shared AliasSetlist
         Assert.Equal(2, concert.AliasSetlists[0].Entries.Count);
         Assert.Equal(new[] { 5, 6 }, concert.AliasSetlists[0].Entries[1].CoveredOfficialIndices);
+    }
+
+    // ===== Alias removal: pure in-memory removal/drop (TryRemoveAliasEntry) =====
+    // Mirror-symmetric to TryAppendAliasEntry, ZERO I/O. Removal identifies the entry by the same
+    // order-sensitive covered-index set append dedups on; removing a container's last entry DROPS the
+    // container so the concert file stays byte-pristine (alias-setlists-spec.md §4, Q4).
+
+    [Fact]
+    public void TryRemoveAliasEntry_ExistingEntryInMultiEntryContainer_RemovesOnlyThatEntry()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries =
+            {
+                new AliasEntry { CoveredOfficialIndices = { 1, 2 } },
+                new AliasEntry { CoveredOfficialIndices = { 5, 6 } }
+            }
+        });
+
+        var removed = ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 1, 2 });
+
+        Assert.True(removed);
+        Assert.Single(concert.AliasSetlists);              // container survives
+        Assert.Single(concert.AliasSetlists[0].Entries);   // only the matched entry gone
+        Assert.Equal(new[] { 5, 6 }, concert.AliasSetlists[0].Entries[0].CoveredOfficialIndices);
+    }
+
+    [Fact]
+    public void TryRemoveAliasEntry_LastEntry_DropsTheContainer()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+
+        var removed = ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 1, 2 });
+
+        Assert.True(removed);
+        Assert.Empty(concert.AliasSetlists);               // container dropped, not left empty
+    }
+
+    [Fact]
+    public void TryRemoveAliasEntry_LastEntryDropped_SerializesWithoutAliasSetlistsKey()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30", Venue = "Winterland" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+
+        ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 1, 2 });
+
+        // The whole reason for drop-vs-empty: no aliasSetlists noise in an otherwise-pristine file.
+        var json = CanonicalJson.Serialize(concert);
+        Assert.DoesNotContain("aliasSetlists", json);
+    }
+
+    [Fact]
+    public void TryRemoveAliasEntry_CoveredSetNotPresent_ReturnsFalseAndDoesNotMutate()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+
+        var removed = ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 5, 6 });
+
+        Assert.False(removed);                             // idempotent no-op
+        Assert.Single(concert.AliasSetlists);
+        Assert.Single(concert.AliasSetlists[0].Entries);
+    }
+
+    [Fact]
+    public void TryRemoveAliasEntry_NullAliasSetlists_ReturnsFalseWithoutThrowing()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30", AliasSetlists = null! };
+
+        var removed = ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 1, 2 });
+
+        Assert.False(removed);
+    }
+
+    [Fact]
+    public void TryRemoveAliasEntry_EmptyAliasSetlists_ReturnsFalseWithoutThrowing()
+    {
+        var concert = new ConcertReference { Date = "1971-05-30" }; // AliasSetlists initialized-empty
+
+        var removed = ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 1, 2 });
+
+        Assert.False(removed);
+        Assert.Empty(concert.AliasSetlists);
+    }
+
+    [Fact]
+    public void TryRemoveAliasEntry_ReorderedCoveredSet_DoesNotMatch()
+    {
+        // SequenceEqual is order-sensitive — mirror of append's identity contract. A reordered set
+        // is a different identity, so it must NOT match the recorded [1, 2] entry.
+        var concert = new ConcertReference { Date = "1971-05-30" };
+        concert.AliasSetlists.Add(new AliasSetlist
+        {
+            Entries = { new AliasEntry { CoveredOfficialIndices = { 1, 2 } } }
+        });
+
+        var removed = ConcertLookupService.TryRemoveAliasEntry(concert, new[] { 2, 1 });
+
+        Assert.False(removed);
+        Assert.Single(concert.AliasSetlists[0].Entries);   // untouched
     }
 
     // ===== Alias persistence: no-write paths of PersistAliasSetlist =====
