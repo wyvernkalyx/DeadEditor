@@ -1,3 +1,4 @@
+using DeadEditor.Models;
 using DeadEditor.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,16 @@ namespace DeadEditor
     {
         private readonly SetlistMatcher.ProposalSet _source;
 
-        public MatchReviewViewModel(SetlistMatcher.ProposalSet proposalSet)
+        /// <param name="unmatchedTracks">The tracks the compute produced no
+        /// proposal for, derived by the host from the full track list minus the
+        /// proposals' tracks (<see cref="Helpers.UnmatchedTracks"/>). Surfaced
+        /// read-only so the "N unmatched" flag lands inside the dialog rather than
+        /// only in the grid highlight/status line behind it. Optional (defaults to
+        /// empty) so callers/tests that only exercise the proposal rows are
+        /// unaffected.</param>
+        public MatchReviewViewModel(
+            SetlistMatcher.ProposalSet proposalSet,
+            IReadOnlyList<TrackInfo>? unmatchedTracks = null)
         {
             _source = proposalSet;
             AllRows = proposalSet.Proposals
@@ -35,6 +45,10 @@ namespace DeadEditor
             // hiding (spec §6.1). A row is hidden iff it is a no-op AND not a combine.
             VisibleRows = AllRows.Where(r => !r.IsNoOp || r.IsCombined).ToList();
             HiddenCount = AllRows.Count(r => r.IsNoOp && !r.IsCombined);
+
+            UnmatchedRows = (unmatchedTracks ?? new List<TrackInfo>())
+                .Select(t => new UnmatchedRowViewModel(t))
+                .ToList();
         }
 
         /// <summary>Every row, including no-ops (the rebuild needs them all).</summary>
@@ -56,6 +70,26 @@ namespace DeadEditor
         public string HiddenSummary => HiddenCount == 1
             ? "1 track already matches"
             : $"{HiddenCount} tracks already match";
+
+        /// <summary>The read-only Unmatched section rows: one per track the
+        /// compute produced no proposal for. Pure display — no accept/reject
+        /// state — because an unmatched track has nothing to accept; it is
+        /// resolved manually in the grid behind the dialog.</summary>
+        public IReadOnlyList<UnmatchedRowViewModel> UnmatchedRows { get; }
+
+        /// <summary>How many tracks went unmatched.</summary>
+        public int UnmatchedCount => UnmatchedRows.Count;
+
+        /// <summary>Whether the Unmatched section should show at all (mirrors
+        /// <see cref="HasHidden"/>).</summary>
+        public bool HasUnmatched => UnmatchedCount > 0;
+
+        /// <summary>The Unmatched section header line, with grammatical
+        /// singular/plural (mirrors <see cref="HiddenSummary"/>). Points the user
+        /// at the grid, where unmatched tracks are resolved manually.</summary>
+        public string UnmatchedSummary => UnmatchedCount == 1
+            ? "1 unmatched track — match manually in the grid"
+            : $"{UnmatchedCount} unmatched tracks — match manually in the grid";
 
         /// <summary>
         /// Builds a fresh <see cref="SetlistMatcher.ProposalSet"/> from the

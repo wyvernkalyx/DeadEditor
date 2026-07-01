@@ -289,6 +289,59 @@ public class MatchReviewViewModelTests
         Assert.Equal(0, vm.HiddenCount);
     }
 
+    // ===== MatchReviewViewModel: Unmatched section =====
+
+    [Fact]
+    public void Container_NoUnmatchedArg_HasUnmatchedFalse_EmptyRows()
+    {
+        // The optional ctor arg defaults to empty — proposal-only callers/tests
+        // are unaffected and the section stays hidden.
+        var vm = new MatchReviewViewModel(MakeSet(
+            MakeProposal("Watchtower", "All Along The Watchtower", false, false)));
+
+        Assert.Empty(vm.UnmatchedRows);
+        Assert.Equal(0, vm.UnmatchedCount);
+        Assert.False(vm.HasUnmatched);
+    }
+
+    [Fact]
+    public void Container_WithUnmatched_ExposesRows_AndHeaderLabels()
+    {
+        var unmatched = new TrackInfo
+        {
+            FilePath = "/fake/u.flac",
+            FileName = "u.flac",
+            DiscNumber = 1,
+            TrackNumber = 1,
+            SongName = "That's It For The Other One",
+            Duration = "8:00",
+        };
+
+        var vm = new MatchReviewViewModel(
+            MakeSet(MakeProposal("Watchtower", "All Along The Watchtower", false, false)),
+            new List<TrackInfo> { unmatched });
+
+        Assert.True(vm.HasUnmatched);
+        Assert.Equal(1, vm.UnmatchedCount);
+        var row = Assert.Single(vm.UnmatchedRows);
+        Assert.Equal("#1 · Disc 1", row.TrackNumberDisplay);
+        Assert.Equal("That's It For The Other One", row.TrackTitleDisplay);
+    }
+
+    [Fact]
+    public void Container_UnmatchedSummary_SingularForOne_PluralOtherwise()
+    {
+        var one = new MatchReviewViewModel(
+            MakeSet(MakeProposal("Watchtower", "All Along The Watchtower", false, false)),
+            new List<TrackInfo> { MakeBareTrack(1), });
+        Assert.Equal("1 unmatched track — match manually in the grid", one.UnmatchedSummary);
+
+        var two = new MatchReviewViewModel(
+            MakeSet(MakeProposal("Watchtower", "All Along The Watchtower", false, false)),
+            new List<TrackInfo> { MakeBareTrack(1), MakeBareTrack(2) });
+        Assert.Equal("2 unmatched tracks — match manually in the grid", two.UnmatchedSummary);
+    }
+
     // ===== MatchReviewViewModel: BuildEditedProposalSet =====
 
     [Fact]
@@ -422,6 +475,16 @@ public class MatchReviewViewModelTests
             CoveredEntryIndices = covered ?? new List<int> { 0 },
         };
     }
+
+    private static TrackInfo MakeBareTrack(int trackNumber)
+        => new TrackInfo
+        {
+            FilePath = "/fake/t.flac",
+            FileName = "t.flac",
+            DiscNumber = 1,
+            TrackNumber = trackNumber,
+            SongName = $"Song {trackNumber}",
+        };
 
     private static SetlistMatcher.ProposalSet MakeSet(params SetlistMatcher.TrackProposal[] proposals)
         => MakeSet(new[] { 0 }, proposals);

@@ -1,3 +1,4 @@
+using DeadEditor.Helpers;
 using DeadEditor.Models;
 using DeadEditor.Services;
 using System;
@@ -28,7 +29,13 @@ namespace DeadEditor
         {
             var proposals = SetlistMatcher.ComputeProposals(
                 tracks, setlist, resolveCanonical, resolveOfficialOrNull);
-            var vm = new MatchReviewViewModel(proposals);
+            // Derive the unmatched subset (tracks with no proposal) here — the
+            // matcher emits proposals for matched tracks only, so this is the sole
+            // seam that sees both the full track list and the proposals. Surfaced
+            // read-only inside the review dialog (both Import and Edit flow through
+            // RunReview).
+            var unmatched = UnmatchedTracks.Compute(tracks, proposals);
+            var vm = new MatchReviewViewModel(proposals, unmatched);
             var win = new MatchReviewWindow(vm) { Owner = owner };
 
             if (win.ShowDialog() != true)

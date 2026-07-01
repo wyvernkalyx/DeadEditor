@@ -44,6 +44,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Review Match Setlist changes"
@@ -135,12 +136,37 @@
             </ItemsControl>
         </ScrollViewer>
 
+        <!-- Read-only Unmatched section: tracks the compute produced no proposal
+             for (nothing to accept — resolved manually in the grid). Shown ABOVE
+             the hidden "already match" line, gated by HasUnmatched. Header +
+             stripped-down per-row identity mirroring the matched-row header, minus
+             every accept/edit control. -->
+        <StackPanel Grid.Row="3" Margin="0,12,0,0"
+                    Visibility="{Binding HasUnmatched, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="{Binding UnmatchedSummary}"
+                       Foreground="#D8A24A" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <ItemsControl ItemsSource="{Binding UnmatchedRows}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="18,2,0,2">
+                            <TextBlock Text="{Binding TrackNumberDisplay}"
+                                       Foreground="#C8C8C8" FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding TrackTitleDisplay}"
+                                       Foreground="#FFFFFF"
+                                       Margin="14,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
         <!-- Collapsed no-op count, shown only when there are hidden rows. -->
-        <TextBlock Grid.Row="3" Text="{Binding HiddenSummary}"
+        <TextBlock Grid.Row="4" Text="{Binding HiddenSummary}"
                    Foreground="#888888" FontStyle="Italic" Margin="0,12,0,0"
                    Visibility="{Binding HasHidden, Converter={StaticResource BoolToVis}}"/>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal"
+        <StackPanel Grid.Row="5" Orientation="Horizontal"
                     HorizontalAlignment="Right" Margin="0,16,0,0">
             <Button Content="Apply" Width="110" Margin="0,0,10,0"
                     Style="{StaticResource PrimaryButton}"
