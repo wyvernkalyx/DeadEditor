@@ -415,11 +415,14 @@ version-identity question. Cross-ref: Concert-file write concurrency guard; Fing
 recognition (Layer B); Release version-tracking arc. Most consequential item exposed by the 2026-07-01
 stocktake.
 
-### Concert-detail-view read-only combine display (Surfaced 2026-07-01)
-ConcertDetailView (the read-only "what I know about this show" surface) renders the setlist but shows no
-recorded combines. Optional nicety: display the concert aliasSetlists there read-only, for at-a-glance
-visibility without entering the setlist editor. Evaluated during the combine-removal fork and deferred
-(removal itself landed on the editor side); build only if the at-a-glance view is wanted.
+### ~~Concert-detail-view read-only combine display~~ (Surfaced 2026-07-01; DONE 2026-07-02)
+ConcertDetailView (the read-only "what I know about this show" surface) previously rendered the setlist
+but showed nothing about recorded combines, so a setlist with a known combine gave no indication of it
+without opening the editor. DONE (this commit): a read-only COMBINED TRACKS section now renders below
+the setlist when the concert has alias entries (hidden otherwise), built in code-behind alongside the
+existing setlist rendering. Entries render via the shared CombineLabel formatter landed with the
+combine-removal commit, so the editor and detail views show identical entry text. Lived demand was the
+prompt trigger. Read-only: no removal/editing affordance here (authoring/removal stay in the editor).
 
 ### Import/metadata-editor -> concert-view navigation link (Surfaced 2026-07-01)
 Gregg's idea from the combine-removal discussion: a link/affordance from the import metadata editor

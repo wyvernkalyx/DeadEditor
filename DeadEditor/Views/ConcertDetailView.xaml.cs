@@ -3,6 +3,7 @@ using DeadEditor.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -151,6 +152,57 @@ namespace DeadEditor
                     ? "\u26A1 1 heady version"
                     : $"\u26A1 {headyCount} heady versions";
                 HeadyCountText.Visibility = Visibility.Visible;
+            }
+
+            // Read-only combined-tracks section, appended below the setlist.
+            BuildCombinedTracksDisplay();
+        }
+
+        /// <summary>
+        /// Renders the concert's recorded combines (alias entries) as a read-only COMBINED TRACKS
+        /// section appended beneath the setlist. Each entry is shown in the same text form as the
+        /// setlist editor ("Dark Star &gt; St. Stephen &gt; The Eleven (7\u20139)") via the shared
+        /// <see cref="Helpers.CombineLabel.Describe"/>. Read-only \u2014 no removal/editing affordance.
+        /// The section is added only when the concert has at least one alias entry.
+        /// </summary>
+        private void BuildCombinedTracksDisplay()
+        {
+            var entries = _concert.AliasSetlists
+                .SelectMany(a => a.Entries)
+                .Where(en => en.CoveredOfficialIndices != null && en.CoveredOfficialIndices.Count > 0)
+                .ToList();
+            if (entries.Count == 0)
+                return;
+
+            // Flatten the official setlist in the same order the covered indices are numbered against
+            // (sets in order, songs in order) \u2014 mirrors EditSetlistView's _tracks build, so index i
+            // resolves to the same song both views show.
+            var flat = _concert.Sets.SelectMany(s => s.Songs).Select(s => s.Name).ToList();
+
+            // Header \u2014 same convention as the "SETLIST" panel title.
+            SetlistPanel.Children.Add(new TextBlock
+            {
+                Text = "COMBINED TRACKS",
+                Foreground = Brush("#E0E0E0"),
+                FontSize = 16,
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(0, 24, 0, 8)
+            });
+
+            foreach (var entry in entries)
+            {
+                var label = Helpers.CombineLabel.Describe(
+                    entry.CoveredOfficialIndices,
+                    i => i >= 0 && i < flat.Count ? flat[i] : $"#{i + 1}");
+
+                SetlistPanel.Children.Add(new TextBlock
+                {
+                    Text = label,
+                    Foreground = Brush("#E0E0E0"),
+                    FontSize = 15,
+                    Margin = new Thickness(8, 3, 0, 3),
+                    TextWrapping = TextWrapping.Wrap
+                });
             }
         }
 
