@@ -116,6 +116,9 @@ namespace DeadEditor
             TracksDataGrid.ItemsSource = _tracks;
             WorkflowStepperControl.Stages = _stages;
             RefreshStepper();
+
+            // Reference-panel "Edit setlist ↗" deep-link — the host owns navigation (spec §9).
+            SetlistPanel.EditSetlistRequested += OnEditSetlistRequested;
         }
 
         // ===== PUBLIC API =====
@@ -1222,6 +1225,41 @@ namespace DeadEditor
                 ? _lastClaimedPositions
                 : null;
             SetlistPanel.SetSetlist(projection, claimed);
+        }
+
+        /// <summary>
+        /// Handle the reference panel's "Edit setlist ↗" deep-link (reference-side-panel-spec.md §9).
+        /// Resolves the concert for the current album date and navigates to its detail view, from
+        /// which the user enters the existing Edit Setlist flow. A malformed date or a date with no
+        /// concert file shows a status message and does NOT navigate. No refresh-on-return hook —
+        /// the user re-Reads and Read re-populates the panel (spec §9, decision 8).
+        /// </summary>
+        private void OnEditSetlistRequested()
+        {
+            var date = AlbumDateTextBox.Text?.Trim();
+            bool wellFormed = !string.IsNullOrEmpty(date) && date.Length == 10
+                && System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$");
+            if (!wellFormed)
+            {
+                StatusTextBlock.Text = "Enter a valid date (yyyy-MM-dd) to edit its setlist.";
+                return;
+            }
+
+            var concert = ConcertLookupService.Instance.GetConcertByDate(date!);
+            if (concert == null)
+            {
+                StatusTextBlock.Text = $"No concert record for {date} to edit.";
+                return;
+            }
+
+            // Second arg (libraryShows) is null: Import has no per-date library-shows index like the
+            // Concerts list (ConcertDatabaseView._libraryShowsByDate). ConcertDetailView degrades
+            // gracefully when null — its library section offers the Import affordance
+            // (ConcertDetailView.xaml.cs:215). No refresh-on-return hook is wired (spec §9, dec 8).
+            if (Window.GetWindow(this) is ShellWindow shell)
+            {
+                shell.NavigateToConcertDetail(concert, null);
+            }
         }
 
         /// <summary>

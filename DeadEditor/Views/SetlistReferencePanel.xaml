@@ -27,10 +27,24 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header: song count -->
+                <!-- Header: song count + "Edit setlist" deep-link (spec §9). The link is shown
+                     only when the panel has entries; it raises EditSetlistRequested and the
+                     hosting view performs the navigation (the panel holds no date, §4). -->
                 <Border Grid.Row="0" Background="#2D2D30" Padding="10,6"
                         BorderBrush="#3F3F46" BorderThickness="0,0,0,1">
-                    <TextBlock x:Name="SetlistCountText" Foreground="#CCCCCC" FontSize="13"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" x:Name="SetlistCountText"
+                                   Foreground="#CCCCCC" FontSize="13" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" x:Name="EditSetlistButton"
+                                Click="EditSetlistButton_Click" Content="Edit setlist ↗"
+                                Background="Transparent" BorderThickness="0" Foreground="#5B9BD5"
+                                Cursor="Hand" Padding="0" FontSize="13" Visibility="Collapsed"
+                                ToolTip="Open this concert in the setlist editor"/>
+                    </Grid>
                 </Border>
 
                 <!-- Empty state -->

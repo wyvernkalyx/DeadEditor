@@ -8,6 +8,20 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Import-entry setlist deep-link passes libraryShows null (Surfaced 2026-07-02, LOW priority)
+OnEditSetlistRequested (ImportView) calls NavigateToConcertDetail(concert, null) because Import holds
+no per-date owned-copies index like the Concerts list (ConcertDatabaseView._libraryShowsByDate). So a
+concert-detail view reached FROM Import shows no owned-copy rows and degrades to its Import-Recording
+affordance (ConcertDetailView.BuildLibrarySection null-branch), even when owned copies for the date
+exist. Graceful, but a real difference from the Concerts-list entry point. Fix = resolve library shows
+for the date at deep-link time and pass them instead of null.
+
+### Extract a shared IsWellFormedDate predicate (Surfaced 2026-07-02, LOW priority)
+The same inline yyyy-MM-dd regex guard is duplicated at four ImportView sites (UpdateMatchSetlistButton,
+RefreshSetlistPanelAsync, AlbumDateTextBox_LostFocus, OnEditSetlistRequested). Extract one pure,
+unit-testable IsWellFormedDate(string?) predicate and route all four through it. Deferred from slice 3
+to avoid touching unrelated call sites in a wiring commit.
+
 ### Setlist-panel toggle strip + SETLIST label should move into SetlistReferencePanel (Surfaced 2026-07-02, MEDIUM priority)
 The collapsible toggle strip (labeled 24px edge) and the SETLIST header are currently host-side in
 ImportView, not inside the shared SetlistReferencePanel control. When slice 2 hosts the panel on

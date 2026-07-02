@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,10 +16,20 @@ namespace DeadEditor
     /// </summary>
     public partial class SetlistReferencePanel : System.Windows.Controls.UserControl
     {
+        /// <summary>
+        /// Raised when the user activates the header's "Edit setlist ↗" affordance. The hosting
+        /// view performs the concert-detail deep-link (reference-side-panel-spec.md §9); the panel
+        /// holds no date and performs no navigation (§4 contract).
+        /// </summary>
+        public event Action? EditSetlistRequested;
+
         public SetlistReferencePanel()
         {
             InitializeComponent();
         }
+
+        private void EditSetlistButton_Click(object sender, RoutedEventArgs e)
+            => EditSetlistRequested?.Invoke();
 
         /// <summary>
         /// Populate or refresh the Setlist tab. <paramref name="claimedPositions"/> is null pre-match
@@ -49,6 +60,8 @@ namespace DeadEditor
             bool hasEntries = rows.Count > 0;
             SetlistItems.Visibility = hasEntries ? Visibility.Visible : Visibility.Collapsed;
             EmptyState.Visibility = hasEntries ? Visibility.Collapsed : Visibility.Visible;
+            // Deep-link affordance is offered only when there is a setlist to edit (spec §9).
+            EditSetlistButton.Visibility = hasEntries ? Visibility.Visible : Visibility.Collapsed;
             SetlistCountText.Text = hasEntries
                 ? (rows.Count == 1 ? "1 song" : $"{rows.Count} songs")
                 : "";
