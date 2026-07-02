@@ -1,6 +1,6 @@
 # Reference Side-Panel (Setlist + Info File) — Design Spec
 
-_Status: approved design (Gregg-approved; grounded by a completed read-only Phase A). Document-before-implement per the handbook. Implementation follows in the five slices of §10. All file:line citations below are Phase-A-verified against HEAD `aa9b5da`; they are cited, not re-derived._
+_Status: approved design, revised after lived use. Slice 1 (read-only Setlist tab, Import) is **implemented** (uncommitted at time of this amendment; manual WPF gate in progress). This revision **supersedes the original §8 (in-panel Info tab)** with an external info-file open (§8) and **adds the setlist-editor deep-link** (§9), a pivot driven by the lived workflow of comparing the info file against the setlist editor. Document-before-implement per the handbook; implementation follows in the six slices of §11. All file:line citations are Phase-A-verified (slice-1 citations against HEAD `aa9b5da`; the amendment citations against the working tree at amendment time); they are cited, not re-derived._
 
 ## 1. Problem
 
@@ -15,8 +15,9 @@ The user wants both, docked beside the grid on both edit surfaces, plus the abil
 
 Goals:
 - One shared collapsible `SetlistReferencePanel` UserControl, docked between the track DataGrid and the right sidebar on BOTH `ImportView` and `EditMetadataView`.
-- **Setlist tab**: canonical setlist for the entered date (position, song, set label, segue), populated on date entry.
-- **Info File tab**: the folder's info `.txt`, read-only + copyable, no scrim.
+- **Setlist view**: canonical setlist for the entered date (position, song, set label, segue), populated on date entry.
+- **External info-file open**: open the folder's info `.txt` in the OS default editor (replaces the dropped in-panel Info tab; §8), so it can sit in its own window beside the setlist editor.
+- **Setlist-editor deep-link**: jump from the panel to the concert's setlist editor to fix source-data gaps, returning to a fresh panel via re-Read (§9).
 - Click-to-assign a setlist entry to the selected track, write-identical to the existing manual match.
 
 Non-goals (this arc):
@@ -36,18 +37,18 @@ The panel inserts as a **new middle column** between the track-DataGrid column a
 Collapse behavior:
 - Expanded width **~320px**; collapses to **0**.
 - Mechanism: an imperative `bool` toggle + chevron glyph swap, following the PlaylistPanel idiom (`PlaylistPanel.xaml.cs:184-199`) **adapted to horizontal column-Width collapse** (PlaylistPanel collapses a row `Height`; this collapses a column `Width`). No data binding, no animation, no DependencyProperty — parity with the existing idiom.
-- **No GridSplitter in v1** (banked as polish; §11). The existing views have no GridSplitter, so a fixed-width collapsible column is purely additive.
+- **No GridSplitter in v1** (banked as polish; §13). The existing views have no GridSplitter, so a fixed-width collapsible column is purely additive.
 
 The current 10px gutter (`Margin="0,0,10,0"` on the DataGrid Border on both views, `ImportView.xaml:251` / `EditMetadataView.xaml:196`) is preserved as the seam between grid and panel.
 
 ## 4. Shared control API
 
-`SetlistReferencePanel` is a UserControl hosting a 2-tab `TabControl` (Setlist, Info File). It **never writes `TrackInfo`, never touches dirty state, never reads a service singleton** — the hosting view owns all data-fetching and all writes. The control is a pure display + event surface.
+`SetlistReferencePanel` is a UserControl hosting the canonical setlist under a single **Setlist** panel header (the in-panel Info File tab is dropped, §8; the former 2-tab `TabControl` collapses cosmetically). It **never writes `TrackInfo`, never touches dirty state, never reads a service singleton** — the hosting view owns all data-fetching, all writes, and all navigation. The control is a pure display + event surface.
 
 API surface:
-- `SetSetlist(IReadOnlyList<SetlistEntryVm> entries, ISet<int>? claimedPositions)` — populate/refresh the Setlist tab. `claimedPositions` is `null` pre-match (nothing dimmed); a set post-match (dim members). Calling again with an updated set is the re-dim refresh path (used after a match run or a manual/panel assign).
-- `SetInfo(string fileName, string? content)` — populate the Info File tab (`content` null/empty → an empty-state message).
+- `SetSetlist(IReadOnlyList<SetlistEntryVm> entries, ISet<int>? claimedPositions)` — populate/refresh the Setlist view. `claimedPositions` is `null` pre-match (nothing dimmed); a set post-match (dim members). Calling again with an updated set is the re-dim refresh path (used after a match run or a manual/panel assign).
 - `event Action<int> AssignRequested` — raised with the flattened 0-based `Position` of the setlist entry the user chose to assign to the currently-selected track. The hosting view handles the write (§7). The panel does not know which track is selected.
+- `event Action EditSetlistRequested` — raised when the user activates the header's **"Edit setlist ↗"** affordance. The host performs the concert-detail deep-link (§9); the panel holds no date and does no navigation.
 
 `SetlistEntryVm` shape (one per flattened setlist entry):
 
@@ -76,7 +77,7 @@ Populate on the date field's **`LostFocus`** with a well-formed `yyyy-MM-dd` (`A
 ### 5.3 Cold-load guard (resolved decision)
 On a fresh Import view the Album-Info date field is editable **before** any folder Read, so `LostFocus → UpdateMatchSetlistButton → GetSetlist` can trigger the ~17s / 2,293-file cold `ConcertLookupService` load (`ConcertLookupService.cs:45-46`, `237-263`; residual noted at follow-ups.md:300). On the normal flow the cache is already warm — `ConcertDataGate.EnsureLoadedAsync()` is awaited before the date is editable on both surfaces (Import after folder Read, `ImportView.xaml.cs:310-317`; Edit in `_Loaded`, `EditMetadataView.xaml.cs:129-142`).
 
-**Decision:** guard the panel-population path with `ConcertDataGate.EnsureLoadedAsync` (`ConcertDataGate.cs:29-53`), awaited **asynchronously** — the population routine is `async`, awaits the gate (which short-circuits instantly when warm and, when cold, forces the load off the UI thread behind the existing shared status overlay), then calls `SetSetlist(...)`. The UI thread stays responsive; the cold load surfaces the **existing** overlay idiom rather than a bespoke panel spinner (this keeps one cold-load treatment app-wide). This deliberately reverses follow-ups.md:300's "don't await LostFocus," scoped narrowly to the new panel-population path (see §11 and report note).
+**Decision:** guard the panel-population path with `ConcertDataGate.EnsureLoadedAsync` (`ConcertDataGate.cs:29-53`), awaited **asynchronously** — the population routine is `async`, awaits the gate (which short-circuits instantly when warm and, when cold, forces the load off the UI thread behind the existing shared status overlay), then calls `SetSetlist(...)`. The UI thread stays responsive; the cold load surfaces the **existing** overlay idiom rather than a bespoke panel spinner (this keeps one cold-load treatment app-wide). This deliberately reverses follow-ups.md:300's "don't await LostFocus," scoped narrowly to the new panel-population path (see §12 and report note).
 
 ## 6. Claimed / dimmed lifecycle
 
@@ -101,7 +102,7 @@ Per-surface side effects attach in the hosting view **after** the core call, mir
 - **Edit only** (no Import counterpart): `ReconstructRawTitles()`, `_hasUnsavedChanges = true`, `RefreshValidation()`, `RecomputeUnmatchedHighlights()` (`EditMetadataView.xaml.cs:1636-1642`).
 
 ### 7.2 Retrofit the existing handlers (resolved decision)
-The two existing right-click Match-to-Song handlers are retrofitted onto this same core **in the same slice** that introduces it (slice 4). The panel's click/DnD assign path calls the identical core + the identical per-surface hooks. There must be **no third inline copy** of the write set.
+The two existing right-click Match-to-Song handlers are retrofitted onto this same core **in the same slice** that introduces it (slice 5). The panel's click/DnD assign path calls the identical core + the identical per-surface hooks. There must be **no third inline copy** of the write set.
 
 ### 7.3 Segue is set-true-only, never cleared (resolved decision)
 The core writes `Segue = true` only when the entry carries a segue; it never clears a segue — **write-identical to the current manual path**. This is deliberately different from the batch `SetlistMatcher.Apply`, which writes `Segue = NewSegue` (clear-capable, `SetlistMatcher.cs:248-281`). The "should a manual assign be able to clear a wrong segue" question is banked, not solved here.
@@ -109,44 +110,73 @@ The core writes `Segue = true` only when the entry carries a segue; it never cle
 ### 7.4 No unverify on assign (resolved decision)
 Edit-side assignment does **not** call `MaybeUnverifyAlbumEdit()` — parity with the existing manual handlers, which also don't (known gap, follow-ups.md:318). This feature neither fixes nor widens that gap; it stays banked as its own concern.
 
-## 8. Info tab
+## 8. External info-file open
 
-- Re-host the `ReadPanelHost` text recipe — a read-only, selectable, `IsReadOnlyCaretVisible`, `TextWrapping="NoWrap"`, Consolas `TextBox` (`ReadPanelHost.xaml:54-64`) — inside the second tab. The scrim **host** itself is not reusable (it is a full-shell overlay with Close/Esc modal semantics); only the TextBox is.
-- **Import**: feed `_albumInfo.InfoFileContent`, already populated by `MetadataService.ReadAlbumInfo` (`MetadataService.cs:339-340`). The existing View Info button (`ViewInfoButton_Click`, `ImportView.xaml.cs:1484-1495`) **retargets** from opening the scrim to expanding the panel + selecting the Info tab.
-- **Edit**: net-new disk read of the folder's first `.txt` at `_show.FolderPath` — `InfoFileContent` is `null` on this surface today (`EditMetadataView` builds `_albumInfo` by hand and never reads the `.txt`, `EditMetadataView.xaml.cs:176-201`). The tab is Edit's **only** entry point; no new button is added.
-- **Inherited fragility (banked, not fixed)**: the Edit read reproduces Import's "first `*.txt` wins" behavior. Inherited deliberately for parity; a multi-`.txt` disambiguation is out of scope.
+The in-panel Info tab is **dropped**. The info `.txt` is no longer hosted inside the panel; it opens in the OS default editor, so it can sit in its own window beside the setlist **editor** — the real comparison workflow (§9), which an in-panel tab could never serve.
 
-## 9. Drag-and-drop assignment
+- **Import**: retarget the existing **View Info** button (`ViewInfoButton_Click`, `ImportView.xaml.cs:1582`) from opening the `ReadPanelHost` scrim to opening the info `.txt` in the OS default editor via the codebase's shell-open idiom — `Process.Start(new ProcessStartInfo(path) { UseShellExecute = true })`, wrapped in try/catch-to-status (precedent: `OpenFolderButton_Click`, `ImportView.xaml.cs:1672-1686`). The path is `Path.Combine(_albumInfo.FolderPath, _albumInfo.InfoFileName)` (`AlbumInfo.cs:13,39`). The button stays disabled when there is no info file, mirroring the existing disable at `ImportView.xaml.cs:429`.
+- **Edit**: net-new — no info-file plumbing exists on this surface (`InfoFileContent` is `null`; `EditMetadataView` builds `_albumInfo` by hand and never calls `ReadAlbumInfo`). A net-new host affordance performs first-`*.txt` discovery over `_show.FolderPath` (`EditMetadataView.xaml.cs:29,122`) and the same shell-open. It inherits Import's **"first `.txt` wins"** behavior (still banked; multi-`.txt` disambiguation out of scope). A2 does not fix this affordance's placement — the now-single-tab Setlist panel header or a control in the existing right-column StackPanel are both viable; implementer's call, flagged (§13).
+- **Panel header**: with the Info tab gone, the panel's 2-tab `TabControl` collapses to a plain **Setlist** panel header (cosmetic). This may ride with this slice or bank if churny — implementer's call, flagged (§13).
+- **Rationale (recorded)**: the user's real workflow is side-by-side comparison of the info file with the setlist **editor** (a different view, §9), not the import grid. An in-panel tab cannot serve that; an external editor window can.
+
+## 9. Setlist-editor deep-link
+
+The panel exposes an explicit **"Edit setlist ↗"** affordance in its Setlist header — **not** a tab-click or row-click side effect (the panel stays a pure display + event surface, §4). Activating it raises `EditSetlistRequested`; the **host** performs the deep-link:
+
+1. Resolve the concert: `ConcertLookupService.Instance.GetConcertByDate(date)` (`ConcertLookupService.cs:266-273`, O(1) warm).
+2. **Null-guard**: no concert for the date → status message, no navigation.
+3. Navigate: `NavigateToConcertDetail(concert, ...)` (`ShellWindow.xaml.cs:742-746`), reached via the existing `Window.GetWindow(this) as ShellWindow` pattern.
+
+From the concert-detail view the user enters the existing **Edit Setlist** flow, saves, verifies, and navigates back.
+
+**Freshness on return needs no invalidation plumbing.** `ConcertLookupService` is a shared-live-instance cache: `EditSetlistView.SaveChangesAsync` mutates the same object that `GetSetlist` reads through (`EditSetlistView.xaml.cs:409-550`; `ShowLookupService.cs:202-209`). A fresh write is current immediately.
+
+**Resolved decision — no refresh-on-return hook.** The panel does not auto-refresh when Import becomes current again. The user's stated workflow is to hit **Read** and restart the import after fixing the setlist, and Read already re-invokes `RefreshSetlistPanelAsync` (`ImportView.xaml.cs:328`). A refresh-on-return hook (mirroring the Concerts grid's `RefreshFromCache`, `ShellWindow.xaml.cs:278-281`) is **banked** (§13) as the known small fix if a stale-panel-after-return ever bites. Lived-demand rule.
+
+**Kept-alive singleton is incidental, not load-bearing.** ImportView happens to be a kept-alive singleton (`ShellWindow.xaml.cs:29,553-572`), so in-progress import state survives the round-trip — but the design does not depend on it (the user re-Reads regardless). Note the asymmetry: `EditMetadataView` is reconstructed per entry (`ShellWindow.xaml.cs:469`), so an Edit-side round-trip would lose edits. The deep-link affordance is therefore **Import-first; the Edit-side affordance is banked** (§13).
+
+**Motivating case (segue ground truth).** Panel segue markers render correctly end-to-end (`ConcertSetlistAdapter.cs:54` → `SetlistProjection.cs:49` → `SetlistReferencePanel.xaml.cs:41`, `.xaml:67`). Observed missing markers — e.g. 1971-02-23, China Cat `>`, and Truckin' `>` Drums `>` The Other One `>` Wharf Rat — are gaps in the `Data/concerts/*.json` **source data**, not rendering bugs. Fixing them is exactly the deep-link → edit → save round-trip above; this is the feature's motivating validation case.
+
+## 10. Drag-and-drop assignment
 
 - Drop-side machinery already exists on **both** grids (drag-to-reorder), so drop-onto-a-track-row is established, not greenfield: `ImportView.xaml.cs:923-998` (`DoDragDrop` at `:951`, `Row_DragOver`/`Row_Drop` type-gated at `:959,:979`); `EditMetadataView.xaml:242,286-292` (`AllowDrop="True"` + row `EventSetter`s).
 - The setlist drag carries a **distinct payload type** (the `SetlistEntryVm`, not `TrackInfoViewModel`), so its `DragOver`/`Drop` branch never cross-triggers the reorder branch. `GetDataPresent` type-gating must match the payload type exactly — a mismatch is a **silent-fail** mode (documented in edit-metadata-viewmodel-migration-inspection-2026-04-25.md); keep the payloads distinct.
 - Net-new work is only the **drag source** on setlist rows (a ListBox/ItemsControl item calling `DoDragDrop`). The drop handler calls the §7 core + the same per-surface hooks as click-assign.
-- Ships **after** click-assign (slice 5), so assignment does not depend on DnD mechanics.
+- Ships **after** click-assign (slice 6, following click-assign in slice 5), so assignment does not depend on DnD mechanics.
 
-## 10. Slice plan
+## 11. Slice plan
 
 One concern per commit; WPF manual gate on every UI-visible slice; pure helpers unit-tested.
 
-1. **Read-only Setlist tab (Import).** Extract pure `BuildSetlistProjection` (§5.1) + retrofit `MatchSetlistButton_Click`'s inline flatten onto it; build `SetlistReferencePanel` with the read-only Setlist tab; host on Import; populate on date entry (§5.2) with the cold-load guard (§5.3); post-match dimming mirroring `_lastClaimedPositions` (§6). Unit tests on the projection. WPF gate.
+1. ✅ **Read-only Setlist tab (Import).** Implemented (uncommitted at time of amendment; manual gate in progress). Extract pure `BuildSetlistProjection` (§5.1) + retrofit `MatchSetlistButton_Click`'s inline flatten onto it; build `SetlistReferencePanel` with the read-only Setlist tab; host on Import; populate on date entry (§5.2) with the cold-load guard (§5.3); post-match dimming mirroring `_lastClaimedPositions` (§6). Unit tests on the projection. Unchanged.
 2. **Host the same control on Edit.** Nothing else — per-view host wiring only (§3). WPF gate.
-3. **Info tab.** TextBox recipe (§8); Import content feed + View Info retarget; Edit disk read. WPF gate.
-4. **Click-to-assign.** Extract the shared apply core (§7.1), retrofit BOTH existing Match-to-Song handlers onto it (§7.2), wire select-track → double-click-entry → `AssignRequested` → core + per-surface hooks. Unit tests on the core. WPF gate.
-5. **DnD assign.** Drag source on setlist rows + payload-typed drop branch calling the slice-4 core (§9). WPF gate.
+3. **Setlist-editor deep-link** (NEW). "Edit setlist ↗" event + host deep-link with null-guard; no refresh hook (§9). WPF gate = the manual round-trip: deep-link, fix a setlist (the 1971-02-23 segues are the fixture), save, back, re-Read, verify the panel + matcher see the fix.
+4. **External info-file open** (replaces the old Info-tab slice). Import: retarget the View Info button to shell-open (§8). Edit: net-new first-`.txt` discovery + shell-open. Optional: collapse the vestigial TabControl to a plain Setlist panel header. WPF gate.
+5. **Click-to-assign** (formerly slice 4, content unchanged). Extract the shared apply core (§7.1), retrofit BOTH existing Match-to-Song handlers onto it (§7.2), wire select-track → double-click-entry → `AssignRequested` → core + per-surface hooks. Unit tests on the core. WPF gate.
+6. **DnD assign** (formerly slice 5, content unchanged). Drag source on setlist rows + payload-typed drop branch calling the slice-5 core (§10). WPF gate.
 
-## 11. Decision record
+## 12. Decision record
 
 Resolved decisions carried into implementation, each with its one-line rationale:
 
 1. **Cold-load guard = async `ConcertDataGate.EnsureLoadedAsync` on the panel-population path** — keeps the UI responsive on the fresh-Import pre-Read cold hit (follow-ups.md:300) and reuses the one existing app-wide cold-load overlay; scoped reversal of "don't await LostFocus," limited to panel population (§5.3).
 2. **Shared apply core, pure over `TrackInfo`** — eliminates the inline write-set duplication so click, DnD, and right-click all write identically; per-surface side effects stay in the host where dirty/verify/validation state lives (§7.1).
-3. **Retrofit both existing Match-to-Song handlers onto the core in slice 4** — prevents a third inline copy of the write set and keeps all four assignment entry points convergent (§7.2).
+3. **Retrofit both existing Match-to-Song handlers onto the core in slice 5** — prevents a third inline copy of the write set and keeps all four assignment entry points convergent (§7.2).
 4. **Segue set-true-only, never cleared** — write-identical to today's manual path; the segue-clear question is a separate, banked concern, not silently changed by this feature (§7.3).
 5. **No `MaybeUnverifyAlbumEdit` on assign** — parity with the existing manual handlers (follow-ups.md:318); the feature neither fixes nor widens that banked gap (§7.4).
+6. **In-panel Info tab replaced by external shell-open** — the comparison target is the setlist editor, not the import grid; an external editor window serves side-by-side compare, an in-panel tab cannot (§8).
+7. **Deep-link via an explicit affordance, never a tab/row-click side effect** — the panel stays a pure display + event surface (§4, §9).
+8. **No refresh-on-return hook** — the user re-Reads by stated preference and Read already refreshes the panel; banked as the known small fix (§9, §13).
+9. **Two-shows-one-date banked as a separate data-model arc** — the panel and round-trip work within the one-show model (§13).
 
-## 12. Out of scope / banked
+## 13. Out of scope / banked
 
 - GridSplitter / user-resizable panel width (§3).
 - Manual-assign segue-clear semantics (§7.3).
 - `MaybeUnverifyAlbumEdit`-on-manual-assign (§7.4, follow-ups.md:318).
 - Multi-`.txt` info-file disambiguation (§8).
 - Combined/alias read-side matching — the panel shows the plain flattened setlist and is orthogonal to the aliasSetlists read-side arc (follow-ups.md "Combines: the matcher never reads aliasSetlists back").
+- **Refresh-on-return hook** for the Import panel (§9) — dropped by lived-demand; the known small fix (mirror the Concerts grid's `RefreshFromCache`) if a stale panel after a deep-link return ever bites.
+- **Two-shows-one-date model limitation**: `ConcertReference.MultiShow` is a bare marker (`ConcertReference.cs:21`); the flat `Sets`/`Tracks` with a fixed 5-label set axis (`EditSetlistView.xaml.cs:64-65`) cannot represent early + late shows as distinct shows (fixture: `Data/concerts/1970-01-03.json` line 215, one 15-song "Set"). A separate future concert-data arc; the panel and round-trip work within the one-show model. The user's working convention folds multiple shows on one date into the sets of a single concert record (within the existing five-label set axis), so this model-limitation arc is deprioritized, not blocking.
+- **Edit-side deep-link affordance** (§9 asymmetry) — Import-first because `EditMetadataView` is reconstructed per entry, so an Edit-side round-trip would lose in-progress edits.
+- **Vestigial-TabControl cleanup** if not taken in the external-open slice (§8).
