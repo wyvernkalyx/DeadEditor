@@ -286,6 +286,24 @@ Pre-existing, independent of the alias arc. Re-importing the same show can produ
 ### Player crashes on a missing file/dir (Surfaced 2026-06-28)
 Pre-existing, independent of the alias arc. `AudioPlayerService.LoadFile` (`AudioPlayerService.cs:133`) hands the path straight to NAudio with no existence check, so a missing file or folder throws `FileNotFoundException`/`DirectoryNotFoundException` unhandled and takes down the app. Fix direction: existence-check the path first and degrade to a graceful "file not found" notice (in-window banner) instead of throwing. Increasingly likely now that managed folders can be wiped/moved out from under stale entries (see next item).
 
+### No global DispatcherUnhandledException safety net (Surfaced 2026-07-01)
+App.xaml.cs registers no DispatcherUnhandledException / AppDomain.UnhandledException handler, so ANY
+unhandled UI-thread exception is a hard process termination, not just the (now-guarded) missing-file
+playback path. A catch-all net (log + silent in-window banner + e.Handled = true) would broadly reduce
+crash blast radius. NOT a drop-in: needs a deliberate call on which exceptions to swallow vs. let
+crash, and whether continuing after a caught exception is safe or risks masking a corrupt state (the
+atomic-write pattern mitigates data-loss risk, but not all cases). Wants its own small read-only
+diagnosis + decision; do not bundle it into a targeted fix. Banked while scoping the missing-file
+playback guard (4d0036b), which deliberately stayed scoped to playback and used a targeted guard +
+graceful skip instead of relying on a global net.
+
+### Playlist drag-and-drop reorder (Surfaced 2026-07-01, LOW priority)
+Let the user reorder songs in the playlist by drag-and-drop rather than only building order by
+add/remove. Gregg flagged as a future nice-to-have, low priority. Design note for when it is picked up:
+reordering interacts with segue-aware continuous-flow playback -- moving a track into or out of a
+segued run (e.g. Dark Star > St. Stephen > The Eleven) needs a defined rule for what happens to the
+segue grouping, so this wants a short design pass, not just a raw list-reorder gesture.
+
 ### Stale library entries point at a wiped/missing managed folder (Surfaced 2026-06-28)
 Pre-existing, independent of the alias arc. Surfaced after the managed library was cleared during diagnosis: the library is filesystem-derived (no DB), so a row whose folder has since been deleted/moved is "stale" only transiently — but in-session caches (`_shows`, and any captured `FolderPaths`) can still point at a folder that no longer exists, leading to empty reads or, combined with the item above, a player crash. Fix direction: a library rescan/cleanup pass that drops or flags entries whose `FolderPaths` no longer exist on disk (and re-validates before play/edit).
 
