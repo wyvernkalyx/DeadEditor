@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:DeadEditor.Controls"
+             xmlns:local="clr-namespace:DeadEditor"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1200"
              Background="#1E1E1E">
@@ -244,7 +245,8 @@
         <Grid Grid.Row="3" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>   <!-- Reference side-panel (Setlist) -->
+                <ColumnDefinition Width="Auto"/>   <!-- Artwork sidebar -->
             </Grid.ColumnDefinitions>
 
             <!-- Track List -->
@@ -496,8 +498,44 @@
                 </Border>
             </Grid>
 
+            <!-- Reference Side-Panel (Setlist) — collapsible, docked between grid and sidebar.
+                 Always-visible toggle strip + a body whose Width toggles 0 <-> 320 (spec §3). -->
+            <Grid Grid.Column="1" Margin="0,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Width="24" Background="#2D2D30"
+                        BorderBrush="#555555" BorderThickness="1">
+                    <Button x:Name="SetlistPanelToggle" Click="SetlistPanelToggle_Click"
+                            Background="Transparent" BorderThickness="0" Foreground="#CCCCCC"
+                            Cursor="Hand" Padding="0"
+                            ToolTip="Show/hide the setlist reference panel">
+                        <!-- Chevron atop a rotated SETLIST label so the always-visible 24px strip
+                             identifies itself when collapsed (slice-1 discoverability gate fix). -->
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                                    VerticalAlignment="Top" Margin="0,8,0,0">
+                            <TextBlock x:Name="SetlistPanelChevron" Text="▶" FontSize="14"
+                                       HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock Text="SETLIST" FontSize="12" Foreground="#999999"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.LayoutTransform>
+                                    <RotateTransform Angle="90"/>
+                                </TextBlock.LayoutTransform>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Border>
+
+                <Border Grid.Column="1" x:Name="SetlistPanelBody" Width="0"
+                        BorderBrush="#555555" BorderThickness="0,1,1,1" Background="#1E1E1E">
+                    <local:SetlistReferencePanel x:Name="SetlistPanel"/>
+                </Border>
+            </Grid>
+
             <!-- Artwork Panel -->
-            <Border Grid.Column="1" BorderBrush="#555555" BorderThickness="1"
+            <Border Grid.Column="2" BorderBrush="#555555" BorderThickness="1"
                     Background="#2D2D30" Padding="15" Width="450">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>

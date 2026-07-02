@@ -65,6 +65,12 @@ namespace DeadEditor
         /// <summary>The date used for the last Match Setlist run.</summary>
         private string? _lastMatchDate;
         /// <summary>
+        /// The setlist projection currently shown in the reference side-panel
+        /// (reference-side-panel-spec.md §5). Stored so a manual/panel re-dim can reuse it without
+        /// rebuilding, and so the match run and date-entry population share one source.
+        /// </summary>
+        private IReadOnlyList<SetlistEntryVm>? _lastSetlistProjection;
+        /// <summary>
         /// Confirmed combines (Count&gt;1 covered runs) captured from the last Match Setlist
         /// confirm, mapped to the persistence model. Carried to the import-commit point so the
         /// alias is persisted only when the album irrevocably commits to the library
@@ -316,6 +322,11 @@ namespace DeadEditor
                 // Refresh all bound UI fields
                 RefreshUI();
 
+                // Read fills the date programmatically (no LostFocus fires), so drive the reference
+                // side-panel from here too (reference-side-panel-spec.md §5.2 addendum). The concert
+                // cache was already warmed above, so this is instant.
+                await RefreshSetlistPanelAsync();
+
                 StatusTextBlock.Text = $"{_tracks.Count} tracks loaded";
 
                 // Update folder path display
@@ -447,6 +458,9 @@ namespace DeadEditor
             // (The broader _lastMatch* stale-stash cleanup is banked separately; Option B's equality
             // gate already neutralizes a stale _lastMatchDate, so only the new stash is reset here.)
             _lastConfirmedCombines = null;
+            // Clear the reference side-panel and its stashed projection on view reset.
+            _lastSetlistProjection = null;
+            SetlistPanel?.SetSetlist(System.Array.Empty<SetlistEntryVm>(), null);
             ArtistTextBox.Text = "";
             AlbumDateTextBox.Text = "";
             VenueTextBox.Text = "";
@@ -495,25 +509,31 @@ namespace DeadEditor
             }
         }
 
-        private void AlbumDateTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void AlbumDateTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             var date = AlbumDateTextBox.Text?.Trim();
-            if (string.IsNullOrEmpty(date) || date.Length != 10) return;
-            if (!System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$")) return;
-
-            var showInfo = ShowLookupService.Instance.GetShowByDate(date);
-            if (showInfo == null) return;
-
-            if (string.IsNullOrWhiteSpace(VenueTextBox.Text))
+            if (!string.IsNullOrEmpty(date) && date.Length == 10
+                && System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$"))
             {
-                VenueTextBox.Text = showInfo.Venue;
-            }
-            if (string.IsNullOrWhiteSpace(CityStateTextBox.Text))
-            {
-                CityStateTextBox.Text = showInfo.FormattedLocation;
+                var showInfo = ShowLookupService.Instance.GetShowByDate(date);
+                if (showInfo != null)
+                {
+                    if (string.IsNullOrWhiteSpace(VenueTextBox.Text))
+                    {
+                        VenueTextBox.Text = showInfo.Venue;
+                    }
+                    if (string.IsNullOrWhiteSpace(CityStateTextBox.Text))
+                    {
+                        CityStateTextBox.Text = showInfo.FormattedLocation;
+                    }
+
+                    UpdateMatchSetlistButton();
+                }
             }
 
-            UpdateMatchSetlistButton();
+            // Populate/clear the reference side-panel independent of the venue lookup, so a date
+            // with a setlist but no shows.json venue entry still shows it (reference-side-panel-spec.md §5.2).
+            await RefreshSetlistPanelAsync();
         }
 
         // ===== ALBUM NAME AUTOCOMPLETE =====
@@ -899,6 +919,11 @@ namespace DeadEditor
             // Mark this position as claimed
             _lastClaimedPositions.Add(selectedIndex);
 
+            // Re-dim the reference panel so the newly claimed entry greys out
+            // (reference-side-panel-spec.md §6). Projection is unchanged; only the claimed set grew.
+            if (_lastSetlistProjection != null)
+                SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions);
+
             // Auto-add alias to songs.json so future imports of the same variant
             // match automatically.
             var officialTitle = selectedSong.Canonical;
@@ -1148,6 +1173,76 @@ namespace DeadEditor
             MatchSetlistButton.ToolTip = "No setlist data for this date";
         }
 
+        // ===== REFERENCE SIDE-PANEL (Setlist) =====
+
+        private bool _setlistPanelExpanded = false;
+        private const double SetlistPanelExpandedWidth = 320;
+
+        /// <summary>
+        /// Populate the reference side-panel's Setlist tab from the current album date
+        /// (reference-side-panel-spec.md §5.2). Called on date LostFocus and post-Read. A malformed
+        /// or empty date, or a date with no setlist, clears the tab. Post-match dimming is applied
+        /// only when the current date is the one the last match ran against; otherwise the panel is
+        /// pure reference (§6). The cold-load guard (§5.3) keeps the UI responsive on a fresh-Import
+        /// pre-Read cold hit — instant when warm, the shared status overlay when cold.
+        /// </summary>
+        private async Task RefreshSetlistPanelAsync()
+        {
+            if (SetlistPanel == null) return; // defensive: before InitializeComponent completes
+
+            var date = AlbumDateTextBox.Text?.Trim();
+            bool wellFormed = !string.IsNullOrEmpty(date) && date.Length == 10
+                && System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$");
+
+            if (!wellFormed)
+            {
+                _lastSetlistProjection = null;
+                SetlistPanel.SetSetlist(System.Array.Empty<SetlistEntryVm>(), null);
+                return;
+            }
+
+            // Cold-load guard: no-op when warm; on a cold cache surfaces the shared status overlay
+            // off the UI thread (scoped reversal of follow-ups.md:300 for panel population, §5.3).
+            await ConcertDataGate.EnsureLoadedAsync();
+
+            var setlist = ShowLookupService.Instance.GetSetlist(date!);
+            if (setlist == null)
+            {
+                _lastSetlistProjection = null;
+                SetlistPanel.SetSetlist(System.Array.Empty<SetlistEntryVm>(), null);
+                return;
+            }
+
+            var projection = SetlistProjection.Build(setlist, _normalizationService.GetOfficialTitle);
+            _lastSetlistProjection = projection;
+
+            // Dim only when this date is the matched date; a stale claimed set must not dim a
+            // different date's setlist (§6 — no invented pre-match claim state).
+            var claimed = (_lastMatchDate == date && _lastClaimedPositions != null)
+                ? _lastClaimedPositions
+                : null;
+            SetlistPanel.SetSetlist(projection, claimed);
+        }
+
+        /// <summary>
+        /// Collapse/expand the reference panel body via an imperative Width toggle + chevron swap —
+        /// the PlaylistPanel idiom adapted to horizontal collapse (reference-side-panel-spec.md §3).
+        /// </summary>
+        private void SetlistPanelToggle_Click(object sender, RoutedEventArgs e)
+        {
+            _setlistPanelExpanded = !_setlistPanelExpanded;
+            if (_setlistPanelExpanded)
+            {
+                SetlistPanelBody.Width = SetlistPanelExpandedWidth;
+                SetlistPanelChevron.Text = "◀"; // ◀ (collapse)
+            }
+            else
+            {
+                SetlistPanelBody.Width = 0;
+                SetlistPanelChevron.Text = "▶"; // ▶ (expand)
+            }
+        }
+
         /// <summary>
         /// Safety gate for Option B import-commit alias persistence (alias-setlists-spec.md §4).
         /// Returns true iff there are stashed confirmed combines AND the album being committed is the
@@ -1183,29 +1278,24 @@ namespace DeadEditor
                 return;
             }
 
-            // Flatten setlist into ordered list with global position. The
-            // canonical name is what we compare against — setlist song names
-            // are run through GetOfficialTitle so aliases collapse to their
-            // canonical form before comparison.
-            var setlistSongs = new List<(string Name, string Canonical, int Position, bool Segue)>();
-            var matcherSetlist = new List<SetlistMatcher.SetlistEntry>();
-            int pos = 0;
-            foreach (var set in setlist)
-            {
-                foreach (var song in set.Songs)
+            // Flatten setlist into the shared projection (one 0-based global position across all
+            // sets; canonical = GetOfficialTitle(name) ?? name so aliases collapse before
+            // comparison). The pure SetlistProjection.Build is the single source the reference
+            // side-panel also consumes (reference-side-panel-spec.md §5.1); _lastSetlistSongs and
+            // matcherSetlist are thin adapters off it, preserving their existing tuple/entry shapes.
+            var projection = SetlistProjection.Build(setlist, _normalizationService.GetOfficialTitle);
+            var setlistSongs = projection
+                .Select(e => (e.Name, e.Canonical, e.Position, e.Segue))
+                .ToList();
+            var matcherSetlist = projection
+                .Select(e => new SetlistMatcher.SetlistEntry
                 {
-                    var canonical = _normalizationService.GetOfficialTitle(song.Name) ?? song.Name;
-                    setlistSongs.Add((song.Name, canonical, pos, song.Segue));
-                    matcherSetlist.Add(new SetlistMatcher.SetlistEntry
-                    {
-                        Name = song.Name,
-                        Canonical = canonical,
-                        Position = pos,
-                        Segue = song.Segue,
-                    });
-                    pos++;
-                }
-            }
+                    Name = e.Name,
+                    Canonical = e.Canonical,
+                    Position = e.Position,
+                    Segue = e.Segue,
+                })
+                .ToList();
 
             // Model B: matched tracks get SongName/Segue/IsMatched decoration;
             // unmatched tracks are left entirely untouched (DiscNumber and
@@ -1250,6 +1340,12 @@ namespace DeadEditor
             _lastSetlistSongs = setlistSongs;
             _lastClaimedPositions = result.ClaimedPositions;
             _lastMatchDate = date;
+
+            // Feed the reference side-panel and dim the entries the match claimed
+            // (reference-side-panel-spec.md §6). The projection is the same one _lastSetlistSongs
+            // was adapted from, so panel and match state stay in lockstep.
+            _lastSetlistProjection = projection;
+            SetlistPanel.SetSetlist(projection, _lastClaimedPositions);
 
             // Stash the confirmed combines (Count>1 covered runs) mapped to the persistence model.
             // These are NOT persisted here — Option B persists at the irrevocable library-commit

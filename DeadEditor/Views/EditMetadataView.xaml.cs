@@ -1665,30 +1665,24 @@ namespace DeadEditor
                 return;
             }
 
-            // Flatten setlist into ordered list with canonical names. setlistSongs
-            // (tuples) feeds the Match-to-Song fallback via _lastSetlistSongs;
-            // matcherSetlist is the SetlistEntry list the shared pure matcher consumes.
-            // Mirrors ImportView's Match Setlist flow — both paths now decorate via
-            // the single SetlistMatcher.MatchAndDecorate (no inline claim loop).
-            var setlistSongs = new List<(string Name, string Canonical, int Position, bool Segue)>();
-            var matcherSetlist = new List<SetlistMatcher.SetlistEntry>();
-            int pos = 0;
-            foreach (var set in setlist)
-            {
-                foreach (var song in set.Songs)
+            // Flatten setlist into the shared projection. setlistSongs (tuples) feeds the
+            // Match-to-Song fallback via _lastSetlistSongs; matcherSetlist is the SetlistEntry list
+            // the shared pure matcher consumes. Both are thin adapters off the single pure
+            // SetlistProjection.Build, the same source ImportView and the reference side-panel use
+            // (reference-side-panel-spec.md §5.1). Mirrors ImportView's Match Setlist flow.
+            var projection = SetlistProjection.Build(setlist, _normalizationService.GetOfficialTitle);
+            var setlistSongs = projection
+                .Select(e => (e.Name, e.Canonical, e.Position, e.Segue))
+                .ToList();
+            var matcherSetlist = projection
+                .Select(e => new SetlistMatcher.SetlistEntry
                 {
-                    var canonical = _normalizationService.GetOfficialTitle(song.Name) ?? song.Name;
-                    setlistSongs.Add((song.Name, canonical, pos, song.Segue));
-                    matcherSetlist.Add(new SetlistMatcher.SetlistEntry
-                    {
-                        Name = song.Name,
-                        Canonical = canonical,
-                        Position = pos,
-                        Segue = song.Segue,
-                    });
-                    pos++;
-                }
-            }
+                    Name = e.Name,
+                    Canonical = e.Canonical,
+                    Position = e.Position,
+                    Segue = e.Segue,
+                })
+                .ToList();
 
             // Model B: matched tracks get SongName/Segue/IsMatched/IsModified
             // decoration; unmatched tracks are left entirely untouched

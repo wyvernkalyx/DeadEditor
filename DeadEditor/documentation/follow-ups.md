@@ -8,6 +8,20 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Setlist-panel toggle strip + SETLIST label should move into SetlistReferencePanel (Surfaced 2026-07-02, MEDIUM priority)
+The collapsible toggle strip (labeled 24px edge) and the SETLIST header are currently host-side in
+ImportView, not inside the shared SetlistReferencePanel control. When slice 2 hosts the panel on
+EditMetadataView, keeping the strip host-side would duplicate it across both hosts. Extract the strip +
+label into the control, exposing an IsExpanded/toggle surface, so both hosts share one collapse
+affordance instead of copy-pasting it. Tied to spec slice 2 (host the panel on Edit).
+
+### Refresh-on-return hook for the Import setlist panel after a deep-link return (Surfaced 2026-07-02, LOW priority)
+When the concert setlist-editor deep-link (spec slice 3) returns to Import, the panel does not
+auto-refresh. Dropped by lived demand: the user re-Reads after fixing a setlist, and Read already
+re-populates the panel via RefreshSetlistPanelAsync. Banked as the known small fix (mirror the Concerts
+grid RefreshFromCache) if a stale panel after return ever bites. See spec reference-side-panel-spec.md
+sections 9 and 13.
+
 ### ~~Setlist-editor combine REMOVAL~~ (Surfaced 2026-06-30; DONE 2026-07-02)
 Slice 6 shipped combine AUTHORING (spec §6.2); this closes the author-side removal + display polish.
 Two pieces, both DONE:
