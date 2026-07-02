@@ -87,7 +87,7 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto" MinWidth="100"/>
-                <DataGridTextColumn Header="Album Name" Binding="{Binding AlbumName}" Width="Auto" MinWidth="150"/>
+                <DataGridTextColumn Header="Album Name" Binding="{Binding AlbumNameDisplay}" Width="Auto" MinWidth="150"/>
                 <DataGridTextColumn Header="Venue" Binding="{Binding Venue}" Width="Auto" MinWidth="120"/>
                 <DataGridTextColumn Header="City, State" Binding="{Binding Location}" Width="Auto" MinWidth="120"/>
                 <DataGridTextColumn Header="Tracks" Binding="{Binding TrackCount}" Width="Auto" MinWidth="60"/>

@@ -223,6 +223,16 @@ namespace DeadEditor.Models
         // Smart display properties that adapt based on type
         public string TypeIcon => Type == AlbumType.OfficialRelease ? "📀" : "🎸";
 
+        /// <summary>
+        /// Display value for the library grid's "Album Name" column and album-name search.
+        /// Official releases surface their real album name; audience recordings surface the
+        /// composed "Date - Venue - City, ST[ - Source]" that already lives in their ALBUM tag
+        /// (instead of a blank cell). Display-only — <see cref="AlbumName"/> and all persistence
+        /// are untouched. See <see cref="Helpers.AlbumDisplayName"/>.
+        /// </summary>
+        public string AlbumNameDisplay =>
+            Helpers.AlbumDisplayName.Compose(Type, Date, Venue, Location, AlbumName);
+
         public string PrimaryInfo =>
             Type == AlbumType.OfficialRelease
                 ? (!string.IsNullOrEmpty(OfficialRelease) ? OfficialRelease : AlbumName)

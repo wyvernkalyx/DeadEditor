@@ -420,9 +420,19 @@ namespace DeadEditor
 
             UpdateMatchSetlistButton();
             UpdateAlbumPreview();
+            UpdateAlbumFieldHint();
             UpdateAllTrackDisplayTitles();
 
             _isUpdating = false;
+        }
+
+        // Tooltip for the ALBUM / RELEASE field. Text + type logic live in the shared
+        // Helpers.AlbumFieldHint so ImportView and EditMetadataView stay in lockstep.
+        private void UpdateAlbumFieldHint()
+        {
+            if (AlbumNameTextBox == null) return;
+
+            AlbumNameTextBox.ToolTip = Helpers.AlbumFieldHint.ForType(_albumInfo?.Type);
         }
 
         private void ClearView()
@@ -594,6 +604,7 @@ namespace DeadEditor
             };
 
             UpdateAlbumPreview();
+            UpdateAlbumFieldHint();
         }
 
         private AlbumType InferAlbumType() => AlbumTypeInference.Infer(_albumInfo);

@@ -311,6 +311,9 @@ namespace DeadEditor
                 // Album type dropdown
                 AlbumTypeComboBox.SelectedIndex = _albumInfo.Type == AlbumType.OfficialRelease ? 1 : 0;
 
+                // ALBUM / RELEASE field hint switches with the selected type (mirrors ImportView).
+                UpdateAlbumFieldHint();
+
                 // Artwork
                 LoadArtwork();
             }
@@ -690,8 +693,19 @@ namespace DeadEditor
             _albumInfo.IsModified = true;
             _hasUnsavedChanges = true;
 
+            UpdateAlbumFieldHint();
             RecomputeAllMarkers();
             MaybeUnverifyAlbumEdit();
+        }
+
+        // ALBUM / RELEASE field tooltip switches with the view's TYPE selection: audience → a
+        // source/taper hint, official → the known-release search hint. Shared text + logic live in
+        // Helpers.AlbumFieldHint so this stays identical to ImportView.
+        private void UpdateAlbumFieldHint()
+        {
+            if (AlbumNameTextBox == null) return;
+
+            AlbumNameTextBox.ToolTip = Helpers.AlbumFieldHint.ForType(_albumInfo?.Type);
         }
 
         /// <summary>

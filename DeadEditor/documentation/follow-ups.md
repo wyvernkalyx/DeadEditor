@@ -47,6 +47,21 @@ virtualization/infinite-measure issues. A fixed-pixel `MaxHeight` works and is s
 number that misbehaves on tall windows (caps the grid short, re-opens dead space) -- declined. Revisit
 only on lived demand.
 
+### Library grid column definitions are duplicated (Surfaced 2026-07-02, MEDIUM priority)
+Album-mode columns are defined in two places: the XAML `LibraryGridView.xaml` `<DataGrid.Columns>`
+block AND the code-behind `SetAlbumColumns()`, which calls `Columns.Clear()` and rebuilds the columns
+on every grid load -- so the code-behind copy silently wins and the XAML copy is inert at runtime.
+This two-sources-of-truth split caused a shipped display fix to be dead-on-arrival: the audience
+Album Name change was applied to the XAML binding (`AlbumName` -> `AlbumNameDisplay`), but the live
+code-behind copy was missed, so the grid kept binding the raw `AlbumName`. It was caught only by the
+manual WPF gate, not by any test (no seam can assert a DataGrid column's binding path today). The
+one-token live fix landed in `SetAlbumColumns()`; this item banks the structural cause. Proposed fix:
+de-duplicate by having the code-behind consume a pure, unit-assertable `(Header, BindingPath)` column
+list (assert `Album Name -> AlbumNameDisplay` in a test), or delete the rebuild and make the XAML
+columns authoritative. Either way, preserve mode-switching: `SetDateColumns()` and
+`SetMissingShowColumns()` also `Clear()`/rebuild, so By-Date and Shows-I-Dont-Have modes must still
+swap column sets correctly.
+
 ### ~~Import-seam alias persistence at import-commit~~ (Surfaced 2026-06-30; DONE 2026-06-30)
 Option A (slice-5 commit iii) wired only the EDIT seam to persist confirmed combines via
 `PersistAliasSetlist`. Import-side persistence was deferred: persist confirmed combines at the point

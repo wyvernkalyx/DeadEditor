@@ -204,7 +204,7 @@ namespace DeadEditor
             ShowsDataGrid.Columns.Add(MakeVerificationColumn());
             ShowsDataGrid.Columns.Add(MakeHeadyColumn());
             ShowsDataGrid.Columns.Add(MakeColumn("Date", "Date", 100));
-            ShowsDataGrid.Columns.Add(MakeColumn("Album Name", "AlbumName", 150));
+            ShowsDataGrid.Columns.Add(MakeColumn("Album Name", "AlbumNameDisplay", 150));
             ShowsDataGrid.Columns.Add(MakeColumn("Venue", "Venue", 120));
             ShowsDataGrid.Columns.Add(MakeColumn("City, State", "Location", 120));
             ShowsDataGrid.Columns.Add(MakeColumn("Tracks", "TrackCount", 60));
@@ -808,7 +808,7 @@ namespace DeadEditor
                 || ContainsIgnoreCase(show.City, search)
                 || ContainsIgnoreCase(show.State, search)
                 || ContainsIgnoreCase(show.Location, search)
-                || ContainsIgnoreCase(show.AlbumName, search)
+                || ContainsIgnoreCase(show.AlbumNameDisplay, search)
                 || ContainsIgnoreCase(show.OfficialRelease, search)
                 || ContainsIgnoreCase(show.Edition, search)
                 || (show.ReleaseYear.HasValue && show.ReleaseYear.Value.ToString().Contains(search)))
