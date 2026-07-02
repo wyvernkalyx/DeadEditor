@@ -46,6 +46,13 @@ namespace DeadEditor
         // (the property the earlier click-time-mutation design broke).
         private readonly List<AliasEntry> _pendingAliasEntries = new();
 
+        // Recorded combines the user has staged for REMOVAL this session (covered-index sets), applied
+        // at the editor's atomic Save via ConcertLookupService.TryRemoveAliasEntry immediately before
+        // the whole-object serialize, then cleared on success. Disjoint from _pendingAliasEntries by
+        // construction: the ✕ on a pending-append row drops it from _pendingAliasEntries directly, so a
+        // covered set is never in both buffers. Cancel drops both (view teardown), mirroring authoring.
+        private readonly List<List<int>> _pendingAliasRemovals = new();
+
         // Distinct from _hasUnsavedChanges: tracks only STRUCTURAL/content edits since the last Save
         // (Add/Remove/Normalize/cell edits — anything routed through OnEditorChanged). It gates the
         // combine dirty-block: CoveredOfficialIndices are positional, so authoring may run only
@@ -59,6 +66,16 @@ namespace DeadEditor
 
         public string VenueName => _concert.Venue;
         public bool HasUnsavedChanges => _hasUnsavedChanges;
+
+        /// <summary>
+        /// Drives the combine-row ✕/↺ controls' enabled state. Removal/un-stage is refused while
+        /// structural edits are unsaved (Q3): the row labels derive from live <c>_tracks</c> positions
+        /// via <see cref="DescribeRun"/>, which go stale mid-structural-edit, so acting on a
+        /// stale-looking row is unsafe. Bound from the row DataTemplate via RelativeSource; re-read on
+        /// each <see cref="RefreshAliasDisplay"/> ItemsSource reassignment (which fires when the
+        /// structural flag toggles), so no change-notification is needed on this plain CLR property.
+        /// </summary>
+        public bool CombineControlsEnabled => !_structuralEditsSinceSave;
 
         /// <summary>Fired when save completes so the shell can refresh the detail view.</summary>
         public event EventHandler? SaveCompleted;
@@ -152,6 +169,9 @@ namespace DeadEditor
             _hasUnsavedChanges = true;
             _structuralEditsSinceSave = true;
             RefreshVerifyControls();
+            // The structural flag just flipped true — re-render the combine rows so their ✕/↺ controls
+            // disable (Q3 gate). Reassigning ItemsSource re-reads CombineControlsEnabled.
+            RefreshAliasDisplay();
         }
 
         private void MetadataField_TextChanged(object sender, TextChangedEventArgs e)
@@ -271,36 +291,78 @@ namespace DeadEditor
         }
 
         /// <summary>
-        /// Refreshes the read-only combine display from the UNION of recorded (in
-        /// <c>_concert.AliasSetlists</c>) and pending (staged this session) entries, so authoring is
-        /// not blind and dedup is visible. Read-only — removal is deferred (follow-ups.md).
+        /// Refreshes the combine display: builds per-entry rows via the pure
+        /// <see cref="AliasRowBuilder"/> from the net set — recorded (in <c>_concert.AliasSetlists</c>)
+        /// with those staged for removal flagged (kept, struck-through), plus pending appends staged
+        /// this session — and binds them to the ItemsControl. Reassigning ItemsSource re-realizes the
+        /// row controls so each button's <see cref="CombineControlsEnabled"/> binding re-reads the
+        /// structural gate. The whole COMBINED TRACKS section is hidden when the NET row list is empty
+        /// (a lone staged-for-removal row still renders, so it keeps the section visible).
         /// </summary>
         private void RefreshAliasDisplay()
         {
-            var runs = _concert.AliasSetlists
+            var recorded = _concert.AliasSetlists
                 .SelectMany(a => a.Entries)
-                .Concat(_pendingAliasEntries)
-                .Select(en => en.CoveredOfficialIndices)
-                .ToList();
+                .Select(en => (IReadOnlyList<int>)en.CoveredOfficialIndices);
+            var removals = _pendingAliasRemovals.Select(r => (IReadOnlyList<int>)r);
+            var appends = _pendingAliasEntries
+                .Select(en => (IReadOnlyList<int>)en.CoveredOfficialIndices);
 
-            if (runs.Count == 0)
-            {
-                AliasCombinesText.Text = "No recorded combines.";
-                return;
-            }
+            var rows = AliasRowBuilder.Build(recorded, removals, appends, DescribeRun);
 
-            AliasCombinesText.Text = "Combines: " + string.Join("    ", runs.Select(DescribeRun));
+            AliasRowsControl.ItemsSource = null;
+            AliasRowsControl.ItemsSource = rows;
+
+            // Show the whole COMBINED TRACKS section (header + rows) only when at least one recorded
+            // or pending combine exists; a lone staged-for-removal row still counts as a row, so it
+            // keeps the section visible (struck-through) rather than hiding it mid-stage.
+            CombineSection.Visibility = rows.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        /// <summary>Renders a covered run as "Song &gt; Song (firstPos–lastPos)" for display.</summary>
-        private string DescribeRun(List<int> coveredIndices)
+        /// <summary>
+        /// Row ✕/↺ handler. Branches on the row's origin/state to keep the append and removal buffers
+        /// disjoint: a pending-append row's ✕ drops it from <see cref="_pendingAliasEntries"/> (never a
+        /// removal); a staged-for-removal row's ↺ un-stages it from <see cref="_pendingAliasRemovals"/>;
+        /// a plain recorded row's ✕ stages it into <see cref="_pendingAliasRemovals"/>. Refused while
+        /// structural edits are unsaved (defensive — the button is also disabled in that state). Marks
+        /// unsaved work WITHOUT the structural flag (removal is position-stable), mirroring authoring.
+        /// </summary>
+        private void AliasRowActionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (coveredIndices.Count == 0) return "(empty)";
+            if (sender is not System.Windows.Controls.Button btn || btn.Tag is not AliasRow row)
+                return;
+            if (_structuralEditsSinceSave)
+                return;
 
-            var names = coveredIndices.Select(i =>
-                _tracks.FirstOrDefault(t => t.Position == i + 1)?.SongName ?? $"#{i + 1}");
-            var range = $"{coveredIndices.Min() + 1}–{coveredIndices.Max() + 1}";
-            return $"{string.Join(" > ", names)} ({range})";
+            if (row.IsPendingAppend)
+            {
+                var idx = _pendingAliasEntries.FindIndex(en =>
+                    en.CoveredOfficialIndices.SequenceEqual(row.CoveredIndices));
+                if (idx >= 0) _pendingAliasEntries.RemoveAt(idx);
+            }
+            else if (row.IsStagedForRemoval)
+            {
+                var idx = _pendingAliasRemovals.FindIndex(r => r.SequenceEqual(row.CoveredIndices));
+                if (idx >= 0) _pendingAliasRemovals.RemoveAt(idx);
+            }
+            else
+            {
+                _pendingAliasRemovals.Add(row.CoveredIndices.ToList());
+            }
+
+            _hasUnsavedChanges = true;
+            RefreshAliasDisplay();
+        }
+
+        /// <summary>
+        /// Renders a covered run as "Song &gt; Song (firstPos–lastPos)" for display, resolving each
+        /// covered index against the live edit grid. Delegates the string composition to the shared
+        /// <see cref="Helpers.CombineLabel.Describe"/> so the read-only detail view renders identically.
+        /// </summary>
+        private string DescribeRun(IReadOnlyList<int> coveredIndices)
+        {
+            return Helpers.CombineLabel.Describe(coveredIndices,
+                i => _tracks.FirstOrDefault(t => t.Position == i + 1)?.SongName ?? $"#{i + 1}");
         }
 
         // ===== NORMALIZE =====
@@ -332,6 +394,9 @@ namespace DeadEditor
                 _structuralEditsSinceSave = true; // renames change song identity at a position
             }
             RefreshVerifyControls();
+            // Renames shift the labels DescribeRun derives and flip the structural gate — re-render the
+            // combine rows so labels refresh and the ✕/↺ controls disable.
+            RefreshAliasDisplay();
         }
 
         private void TracksDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -409,11 +474,16 @@ namespace DeadEditor
                 var targetPath = Path.Combine(concertsDir, $"{date}.json");
                 var tempPath = targetPath + ".tmp";
 
-                // Apply staged combine aliases onto the live _concert immediately BEFORE serialize, so
-                // the authored runs ride the existing whole-object write (alias-setlists-spec.md §6.2,
-                // staged authoring). ConcertSnapshot.Project does not touch AliasSetlists, so the
-                // applied entries survive the projection above. TryAppendAliasEntry dedups, so a retry
-                // after a failed write re-applies harmlessly; the buffer is cleared only on success.
+                // Apply staged combine edits onto the live _concert immediately BEFORE serialize, so
+                // the authored/removed runs ride the existing whole-object write (alias-setlists-spec.md
+                // §6.2, staged authoring). ConcertSnapshot.Project does not touch AliasSetlists, so the
+                // applied changes survive the projection above. Removals run FIRST, then appends:
+                // removals-before-appends is self-healing — a removal that empties+drops the shared
+                // AliasSetlist container is re-created by a later append's FirstOrDefault()==null branch.
+                // Both helpers are idempotent (dedup / not-found no-op), so a retry after a failed write
+                // re-applies harmlessly; the buffers are cleared only on success.
+                foreach (var covered in _pendingAliasRemovals)
+                    ConcertLookupService.TryRemoveAliasEntry(_concert, covered);
                 foreach (var entry in _pendingAliasEntries)
                     ConcertLookupService.TryAppendAliasEntry(_concert, entry);
 
@@ -455,6 +525,7 @@ namespace DeadEditor
                 // does not re-walk them) and the structural-edit flag (Save is the new baseline, so
                 // authoring is allowed again). Refresh the display to the now-recorded state.
                 _pendingAliasEntries.Clear();
+                _pendingAliasRemovals.Clear();
                 _structuralEditsSinceSave = false;
                 RefreshAliasDisplay();
 

@@ -9,6 +9,7 @@
              Loaded="EditSetlistView_Loaded">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <Style TargetType="TextBlock" x:Key="LabelStyle">
             <Setter Property="Foreground" Value="#999999"/>
             <Setter Property="FontSize" Value="12"/>
@@ -268,13 +269,89 @@
             </DataGrid>
         </Border>
 
-        <!-- Row 3: Status bar + read-only recorded/pending combine display -->
+        <!-- Row 3: Status bar + COMBINED TRACKS section (recorded ✕ / staged-removal ↺ / pending-append ✕) -->
         <StackPanel Grid.Row="3" Margin="0,8,0,0">
             <TextBlock x:Name="BottomStatusText" Text=""
                        Foreground="#888888" FontSize="13"/>
-            <TextBlock x:Name="AliasCombinesText" Text=""
-                       Foreground="#888888" FontSize="12" Margin="0,4,0,0"
-                       TextWrapping="Wrap"/>
+
+            <!-- Combine section: flows beneath the grid, left-aligned. Header + rows shown only when
+                 recorded or pending combines exist (CombineSection.Visibility driven in code-behind
+                 by RefreshAliasDisplay). Header + entry text match the read-only detail view's
+                 COMBINED TRACKS treatment (16px SemiBold title, body-size entries). Each row is a
+                 left-aligned horizontal run so the ✕/↺ control sits immediately after the entry text
+                 rather than right-aligned across the row. -->
+            <StackPanel x:Name="CombineSection"
+                        HorizontalAlignment="Left"
+                        Margin="0,10,0,0"
+                        Visibility="Collapsed">
+                <TextBlock Text="COMBINED TRACKS"
+                           Foreground="#E0E0E0" FontSize="16" FontWeight="SemiBold"
+                           Margin="0,0,0,8"/>
+
+            <!-- One row per combine. ✕ stages a recorded combine for removal / drops a pending append;
+                 ↺ un-stages a removal. Controls disable (Q3) while structural edits are unsaved. -->
+            <ItemsControl x:Name="AliasRowsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="8,3,0,3"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Label}" FontSize="15"
+                                           VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPendingAppend}" Value="True">
+                                                    <Setter Property="Foreground" Value="#777777"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsStagedForRemoval}" Value="True">
+                                                    <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                                    <Setter Property="Foreground" Value="#6E6E6E"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text=" (applies on Save)" FontSize="15"
+                                           Foreground="#777777" VerticalAlignment="Center"
+                                           Visibility="{Binding IsPendingAppend, Converter={StaticResource BoolToVis}}"/>
+
+                            <Button VerticalAlignment="Center"
+                                    Click="AliasRowActionButton_Click"
+                                    Tag="{Binding}"
+                                    Width="24" Height="22" Padding="0" FontSize="13"
+                                    Cursor="Hand" Margin="8,0,0,0"
+                                    Background="#3E3E42" Foreground="#CCCCCC"
+                                    BorderBrush="#555555" BorderThickness="1"
+                                    ToolTipService.ShowOnDisabled="True"
+                                    IsEnabled="{Binding CombineControlsEnabled, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Content" Value="&#x2715;"/>
+                                        <Setter Property="ToolTip" Value="Remove this combine"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsStagedForRemoval}" Value="True">
+                                                <Setter Property="Content" Value="&#x21BA;"/>
+                                                <Setter Property="ToolTip" Value="Keep this combine (undo removal)"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsPendingAppend}" Value="True">
+                                                <Setter Property="ToolTip" Value="Discard this staged combine"/>
+                                            </DataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding CombineControlsEnabled, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="ToolTip" Value="Save your setlist changes before editing combines."/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -8,22 +8,44 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
-### Setlist-editor combine REMOVAL (Surfaced 2026-06-30; helper DONE 2026-07-01, UI HELD)
-Slice 6 ships combine AUTHORING only (spec §6.2): the setlist editor can mark a contiguous
-within-set run as a combined alias, with no author-side undo of a recorded combine. Two pieces:
+### ~~Setlist-editor combine REMOVAL~~ (Surfaced 2026-06-30; DONE 2026-07-02)
+Slice 6 shipped combine AUTHORING (spec §6.2); this closes the author-side removal + display polish.
+Two pieces, both DONE:
 - (a) TryRemoveAliasEntry(concert, coveredIndices) helper -- DONE (R1, e0cc2e7): internal static
   mirror of TryAppendAliasEntry; remove-by-covered-set (SequenceEqual), single-AliasSetlist aware,
   drops the shared container when its last entry is removed (keeps the concert file byte-pristine).
   Unit-tested (7 cases incl. a byte-pristine serialize assertion).
-- (b) Remove affordance in EditSetlistView -- BUILT, HELD, WPF GATE UNRUN (R2): per-entry display
-  rework (AliasRowBuilder + read-only rows) with a trailing X to stage a removal and a restore/undo
-  toggle on staged rows; a _pendingAliasRemovals staged buffer applied at the editor atomic Save
-  (mirroring authoring), gated behind the unsaved-structural-edits dirty-block, Cancel discards.
-  Built + unit-tested (AliasRowBuilderTests), but the mandatory WPF manual gate was never run (the
-  first attempt used a 1:1 fixture with no combine to exercise; the session pivoted to gap B and the
-  unmatched-track work before re-gating). Held uncommitted in the working tree; per the UI-verification
-  memo it cannot commit until the gate is cleared on a real multi-entry-combine fixture. On hold: no
-  lived demand for removal yet, and its forward value is blocked on gap B below.
+- (b) Remove affordance + display in EditSetlistView -- DONE (R2, this commit): each recorded combine
+  carries a per-entry removal X placed immediately adjacent to its entry text. Removals stage into a
+  _pendingAliasRemovals buffer with a restore/undo toggle on staged rows (struck-through, kept in the
+  list), applied only at the editor's atomic Save (mirroring authoring); Cancel genuinely discards.
+  The X is disabled by the unsaved-structural-edits dirty-block so it cannot run against shifted
+  positions. Row composition is the pure AliasRowBuilder (AliasRowBuilderTests). Display was polished
+  to a COMBINED TRACKS section whose header/entry typography matches the read-only detail view, with
+  entry rendering extracted to the shared pure CombineLabel formatter (CombineLabelTests, 5 cases) so
+  the editor and detail view render alias entries identically. WPF manual gate PASS on a real
+  multi-entry-combine fixture (Dark Star > St. Stephen > The Eleven, 1969-03-01): authoring, stage +
+  cancel, restore, partial removal, last-entry container drop, dirty-block disable, no-collateral,
+  plus a visual re-check after the typography pass.
+
+**Gap B still open (write-only combines):** removal + authoring + display are complete, but combines
+remain WRITE-ONLY -- the matcher has no read-side consumer, so a recorded combine still does not change
+re-match outcomes. See "Combines are write-only: the matcher never reads aliasSetlists back". Removal's
+forward value stays partly blocked on gap B.
+
+### Edit-view COMBINED TRACKS section is bottom-anchored, not flowing beneath the grid (Surfaced 2026-07-02, LOW priority)
+The setlist editor's COMBINED TRACKS section sits pinned at the window bottom rather than flowing
+directly beneath the setlist grid's last row (as the read-only detail view does), leaving dead space
+between the grid and the section when the setlist is short. Diagnosed during the display polish and
+declined; recorded so it is not re-litigated. Root cause: Row 2 (the DataGrid) is `*`-sized, which is
+exactly what gives the grid stable INTERNAL scrolling for long setlists. Making the section flow beneath
+requires the grid row to size to content (`Auto`), but a WPF DataGrid in an `Auto` row is handed
+infinite height -- it renders every row with NO scrollbar and overflows long setlists (a scroll
+regression). The two spec-compliant fixes are both known-bad: a dynamic `MaxHeight` bound to leftover
+space is a circular measure loop; an outer `ScrollViewer` around a content-sized DataGrid brings
+virtualization/infinite-measure issues. A fixed-pixel `MaxHeight` works and is stable but is a magic
+number that misbehaves on tall windows (caps the grid short, re-opens dead space) -- declined. Revisit
+only on lived demand.
 
 ### ~~Import-seam alias persistence at import-commit~~ (Surfaced 2026-06-30; DONE 2026-06-30)
 Option A (slice-5 commit iii) wired only the EDIT seam to persist confirmed combines via
