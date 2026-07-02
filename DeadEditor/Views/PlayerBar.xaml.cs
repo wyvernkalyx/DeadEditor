@@ -25,6 +25,7 @@ namespace DeadEditor
             // Subscribe to playback service events
             _player.PlaybackStateChanged += Player_PlaybackStateChanged;
             _player.TrackChanged += Player_TrackChanged;
+            _player.PlaybackFailed += Player_PlaybackFailed;
 
             // Set up update timer for seek bar
             _updateTimer = new DispatcherTimer
@@ -59,6 +60,7 @@ namespace DeadEditor
             // Cleanup when control is unloaded
             _player.PlaybackStateChanged -= Player_PlaybackStateChanged;
             _player.TrackChanged -= Player_TrackChanged;
+            _player.PlaybackFailed -= Player_PlaybackFailed;
             _updateTimer.Stop();
             _marqueeTimer.Stop();
         }
@@ -132,6 +134,17 @@ namespace DeadEditor
             {
                 UpdateTrackUI();
             });
+        }
+
+        private void Player_PlaybackFailed(object? sender, PlaybackFailedEventArgs e)
+        {
+            // Surface the service's missing-file signal as a quiet in-window banner. May be raised
+            // from NAudio's PlaybackStopped callback thread during auto-advance; App.Alerts.Notify
+            // marshals to the UI thread itself, so no explicit Dispatcher hop is required.
+            var name = string.IsNullOrWhiteSpace(e.Track?.SongName)
+                ? (e.Track?.FileName ?? "track")
+                : e.Track!.SongName;
+            App.Alerts.Notify($"File not found: {name}", AlertSeverity.Warning);
         }
 
         private void UpdatePlaybackUI()

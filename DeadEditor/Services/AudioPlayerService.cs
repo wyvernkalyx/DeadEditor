@@ -18,6 +18,24 @@ namespace DeadEditor.Services
     }
 
     /// <summary>
+    /// Raised when playback cannot start because a track's file is missing/moved. Carries the
+    /// offending track (may be null) and a human-readable reason. The service raises this instead
+    /// of throwing so a deleted-under-us file degrades gracefully; the UI (PlayerBar) surfaces it
+    /// as an in-window banner. Keeps the service UI-agnostic (mirrors the other event pattern).
+    /// </summary>
+    public class PlaybackFailedEventArgs : EventArgs
+    {
+        public TrackInfo? Track { get; }
+        public string Reason { get; }
+
+        public PlaybackFailedEventArgs(TrackInfo? track, string reason)
+        {
+            Track = track;
+            Reason = reason;
+        }
+    }
+
+    /// <summary>
     /// Singleton playback service managing global audio playback across all windows.
     /// Only one instance exists per application lifetime.
     /// </summary>
@@ -74,6 +92,9 @@ namespace DeadEditor.Services
         public event EventHandler<TimeSpan>? PositionChanged;
         public event EventHandler? TrackChanged;
         public event EventHandler? PlaybackStateChanged;
+        // Raised when a track cannot be played because its file is missing/moved (see
+        // PlaybackFailedEventArgs). Surfaced by PlayerBar as a banner; never crashes playback.
+        public event EventHandler<PlaybackFailedEventArgs>? PlaybackFailed;
 
         // Existing properties (preserved for backward compatibility)
         public bool IsPlaying => _playbackState == PlaybackState.Playing;
@@ -123,6 +144,18 @@ namespace DeadEditor.Services
 
         public void LoadFile(string filePath)
         {
+            // Defensive guard: a missing/moved file would throw out of NAudio's AudioFileReader
+            // ctor below and, with no unhandled-exception handler, crash the app. Callers
+            // (Play(TrackInfo), Play() Case 3) already pre-check existence, so this is belt-and-
+            // suspenders: raise PlaybackFailed and return without touching the current player
+            // (leaves _wavePlayer as-is; callers null-check before dereferencing).
+            if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
+            {
+                System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] LoadFile SKIPPED - missing file: {filePath}");
+                RaisePlaybackFailed(_currentTrack, "File not found");
+                return;
+            }
+
             try
             {
                 Stop();
@@ -202,6 +235,16 @@ namespace DeadEditor.Services
         /// </summary>
         public void Play(TrackInfo track)
         {
+            // Guard: never hand a missing/empty path to LoadFile/NAudio (which would throw and,
+            // with no unhandled-exception handler, crash the app). A DIRECT play of a missing track
+            // banners via PlaybackFailed and stays put — it does not auto-jump to another track.
+            // Mirrors the existing File.Exists precedent in the parameterless Play() Case 3.
+            if (track == null || string.IsNullOrEmpty(track.FilePath) || !System.IO.File.Exists(track.FilePath))
+            {
+                RaisePlaybackFailed(track, "File not found");
+                return;
+            }
+
             try
             {
                 System.Diagnostics.Debug.WriteLine($"[AudioPlayerService] Play(TrackInfo) called - Track: {track.SongName ?? track.Title}");
@@ -223,9 +266,14 @@ namespace DeadEditor.Services
                 _currentTrack = track;
                 LoadFile(track.FilePath);
 
+                // Defensive: LoadFile leaves _wavePlayer null if the file vanished between the
+                // guard above and here (TOCTOU). Bail without crashing; PlaybackFailed already fired.
+                if (_wavePlayer == null)
+                    return;
+
                 // Start playback directly (don't call parameterless Play() which
                 // would re-enter Case 3 and redundantly LoadFile a second time)
-                _wavePlayer!.Play();
+                _wavePlayer.Play();
                 SetPlaybackState(PlaybackState.Playing);
 
                 TrackChanged?.Invoke(this, EventArgs.Empty);
@@ -384,35 +432,68 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Plays the next track in the playlist.
+        /// Plays the next PLAYABLE track in the playlist, skipping any whose file is missing/moved
+        /// (each raises PlaybackFailed). No-ops at end-of-playlist with nothing playable ahead.
         /// </summary>
-        public void Next()
+        public void Next() => TryAdvance(+1);
+
+        /// <summary>
+        /// Plays the previous PLAYABLE track in the playlist, skipping any whose file is missing.
+        /// No-ops at start-of-playlist with nothing playable behind.
+        /// </summary>
+        public void Previous() => TryAdvance(-1);
+
+        /// <summary>
+        /// Advances the playlist cursor to the next playable track in <paramref name="direction"/>
+        /// (+1 forward, -1 back) and plays it. Returns true if a track started, false if none
+        /// remained playable that way. Skipped missing files each raise PlaybackFailed. The advance
+        /// is ITERATIVE (see NextPlayableIndex) — an all-missing run cannot recurse unbounded.
+        /// </summary>
+        private bool TryAdvance(int direction)
         {
             if (_playlist.Count == 0)
-                return;
+                return false;
 
-            if (_currentTrackIndex < _playlist.Count - 1)
-            {
-                _currentTrackIndex++;
-                var nextTrack = _playlist[_currentTrackIndex];
-                Play(nextTrack);
-            }
+            int idx = NextPlayableIndex(_currentTrackIndex, direction);
+            if (idx < 0)
+                return false;
+
+            _currentTrackIndex = idx;
+            Play(_playlist[idx]);
+            return true;
         }
 
         /// <summary>
-        /// Plays the previous track in the playlist.
+        /// Scans the playlist from <paramref name="currentIndex"/> outward in <paramref name="direction"/>
+        /// (+1/-1) and returns the index of the first track whose file exists on disk, or -1 if none.
+        /// Every track skipped for a missing/empty path raises PlaybackFailed. Purely iterative and
+        /// bounded by the playlist length — no recursion, so consecutive missing files cannot overflow.
+        /// Internal for unit testing the skip decision without decoding audio.
         /// </summary>
-        public void Previous()
+        internal int NextPlayableIndex(int currentIndex, int direction)
         {
-            if (_playlist.Count == 0)
-                return;
-
-            if (_currentTrackIndex > 0)
+            for (int i = currentIndex + direction; i >= 0 && i < _playlist.Count; i += direction)
             {
-                _currentTrackIndex--;
-                var previousTrack = _playlist[_currentTrackIndex];
-                Play(previousTrack);
+                var track = _playlist[i];
+                if (!string.IsNullOrEmpty(track.FilePath) && System.IO.File.Exists(track.FilePath))
+                    return i;
+
+                // Missing file — skip it and tell the UI why.
+                RaisePlaybackFailed(track, "File not found");
             }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Raises <see cref="PlaybackFailed"/>. Central so every degrade path (direct play,
+        /// skip-on-advance, defensive LoadFile) reports uniformly.
+        /// </summary>
+        private void RaisePlaybackFailed(TrackInfo? track, string reason)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[AudioPlayerService] PlaybackFailed: {reason} - {track?.FilePath}");
+            PlaybackFailed?.Invoke(this, new PlaybackFailedEventArgs(track, reason));
         }
 
         /// <summary>
@@ -439,14 +520,20 @@ namespace DeadEditor.Services
             bool wasNaturalEnd = !_userInitiatedStop && e.Exception == null;
             _userInitiatedStop = false;  // Reset flag
 
-            if (wasNaturalEnd && _currentTrackIndex < _playlist.Count - 1)
+            if (wasNaturalEnd)
             {
-                // Auto-advance to next track
-                Next();
+                // Auto-advance, skipping any missing-file tracks (each banners via PlaybackFailed).
+                // If nothing playable remains ahead — true end of playlist, or an all-missing tail —
+                // end cleanly at Stopped rather than wedging or crashing.
+                if (!TryAdvance(+1))
+                {
+                    SetPlaybackState(PlaybackState.Stopped);
+                    PlaybackStopped?.Invoke(this, EventArgs.Empty);
+                }
             }
             else
             {
-                // End of playlist or user-initiated stop - transition to Stopped
+                // User-initiated stop or a mid-track decode error - transition to Stopped
                 SetPlaybackState(PlaybackState.Stopped);
                 PlaybackStopped?.Invoke(this, EventArgs.Empty);
             }
