@@ -304,8 +304,35 @@ reordering interacts with segue-aware continuous-flow playback -- moving a track
 segued run (e.g. Dark Star > St. Stephen > The Eleven) needs a defined rule for what happens to the
 segue grouping, so this wants a short design pass, not just a raw list-reorder gesture.
 
-### Stale library entries point at a wiped/missing managed folder (Surfaced 2026-06-28)
-Pre-existing, independent of the alias arc. Surfaced after the managed library was cleared during diagnosis: the library is filesystem-derived (no DB), so a row whose folder has since been deleted/moved is "stale" only transiently — but in-session caches (`_shows`, and any captured `FolderPaths`) can still point at a folder that no longer exists, leading to empty reads or, combined with the item above, a player crash. Fix direction: a library rescan/cleanup pass that drops or flags entries whose `FolderPaths` no longer exist on disk (and re-validates before play/edit).
+### ~~Stale library entries point at a wiped/missing managed folder~~ (Surfaced 2026-06-28; CLOSED 2026-07-01)
+Pre-existing, independent of the alias arc. Surfaced after the managed library was cleared during
+diagnosis: the library is filesystem-derived (no DB), so a row whose folder has since been
+deleted/moved is "stale" only transiently — in-session caches (`_shows`, captured `FolderPaths`)
+can still point at a folder that no longer exists.
+
+**Phase A outcome (read-only diagnosis):** the crash half was already closed by the missing-file
+playback guard (`4d0036b`). The remaining staleness is **in-session cosmetic only**: `LoadAlbumsInto`
+enumerates directories fresh on every scan, so a row is born only for a folder that exists at scan
+time — there are no stale rows immediately after any scan. A ghost arises only when a folder is
+deleted/moved *after* a scan and *before* the next `ReloadLibrary()`. Every downstream consumer is
+already `Directory.Exists`-guarded (`LibraryShow.LoadTrackTitlesFromDisk`, `AlbumDetailView` and
+`EditMetadataView` track loads) and playback is guarded by `4d0036b`, so the worst case is a phantom
+grid row that opens an empty detail/edit view — no crash, no wrong data.
+
+**Fix directions evaluated:** *drop* rejected (redundant — the next scan re-derives from disk, so a
+dropped ghost reappears if the folder returns and is dropped anyway if it stays gone; nothing
+persistent to clean, no library index to corrupt). *Flag/badge* rejected-for-now (meaningless
+without a re-stat trigger: rows are born only from existing folders, so at scan time nothing is ever
+flagged missing). The actual root cause was that `ReloadLibrary()` was reachable only via
+import-complete and settings changes — there was **no manual rescan**.
+
+**Done (this commit):** shipped a **Refresh** button in the library header (`HeaderBar` LibraryHeader,
+`BackButtonStyle`, next to Advanced Search). Click raises `RefreshLibraryRequested`; `ShellWindow`
+calls the existing `LibraryGridView.ReloadLibrary()`, which re-derives `_shows` from disk and drops
+ghosts. `LoadShowsAsync` gained a `_isScanning` re-entrancy guard so a rapid second click during an
+in-flight scan safely no-ops (no overlapping scan, no doubled rows). Refresh is disabled during
+By-Date edit mode (mirrors the existing `ShowTypeFilter` guard) so a rescan can't discard unsaved
+date edits. No flag/drop machinery, no re-stat pass — root-cause fix only.
 
 ### Fingerprint-keyed combine recognition (Layer B) (Surfaced 2026-06-29)
 Banked from the slice-5 alias persistence design. Recognize an *incoming* combined track against

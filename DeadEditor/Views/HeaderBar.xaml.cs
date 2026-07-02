@@ -27,6 +27,9 @@ namespace DeadEditor
         /// <summary>Fired when Advanced Search is clicked.</summary>
         public event EventHandler? AdvancedSearchRequested;
 
+        /// <summary>Fired when the Refresh button is clicked (manual library rescan).</summary>
+        public event EventHandler? RefreshLibraryRequested;
+
         /// <summary>Fired when Delete is clicked from the Album Detail header.</summary>
         public event EventHandler? DeleteAlbumRequested;
 
@@ -474,6 +477,11 @@ namespace DeadEditor
             AdvancedSearchRequested?.Invoke(this, EventArgs.Empty);
         }
 
+        private void RefreshLibraryButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshLibraryRequested?.Invoke(this, EventArgs.Empty);
+        }
+
         private void DeleteAlbumButton_Click(object sender, RoutedEventArgs e)
         {
             DeleteAlbumRequested?.Invoke(this, EventArgs.Empty);
@@ -542,6 +550,10 @@ namespace DeadEditor
 
             // Disable Show dropdown during editing to prevent switching away mid-edit
             ShowTypeFilter.IsEnabled = !isEditMode;
+
+            // Disable Refresh during date-edit mode so a rescan can't silently discard unsaved
+            // date edits (a rescan rebuilds every row from disk). Mirrors the ShowTypeFilter guard.
+            RefreshLibraryButton.IsEnabled = !isEditMode;
         }
 
         /// <summary>

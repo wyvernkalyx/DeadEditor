@@ -38,6 +38,11 @@ namespace DeadEditor
         // Guard: LoadShowsAsync runs only on first Loaded event, not on back-navigation re-adds
         private bool _isInitialLoadComplete;
 
+        // Guard: a scan (LoadShowsAsync) is in flight. Makes ReloadLibrary re-entrancy-safe — a
+        // manual Refresh clicked while a prior scan is still running safely no-ops rather than
+        // spawning an overlapping scan.
+        private bool _isScanning;
+
         // Remember last-applied filter so LoadShowsAsync can re-apply after reload
         private string _lastSearchText = "";
         private string _lastTypeFilter = "All";
@@ -92,6 +97,16 @@ namespace DeadEditor
 
         private async Task LoadShowsAsync()
         {
+            // Re-entrancy guard: if a scan is already running (e.g. a rapid second Refresh click),
+            // no-op rather than spawning an overlapping scan. Set/reset entirely on the UI thread —
+            // the background work is inside a single awaited Task.Run, so there is no concurrent
+            // read of this flag off-thread.
+            if (_isScanning)
+                return;
+            _isScanning = true;
+            try
+            {
+
             // Show loading indicator while scanning
             LoadingIndicator.Visibility = Visibility.Visible;
 
@@ -173,6 +188,12 @@ namespace DeadEditor
 
             // Notify ShellWindow so it can update cross-references (Concerts view ownership)
             LibraryLoaded?.Invoke(this, EventArgs.Empty);
+
+            }
+            finally
+            {
+                _isScanning = false;
+            }
         }
 
         // ===== COLUMN MANAGEMENT =====

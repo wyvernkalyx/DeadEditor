@@ -69,6 +69,7 @@ namespace DeadEditor
             HeaderBar.EditMetadataRequested += HeaderBar_EditMetadataRequested;
             HeaderBar.LibraryFilterChanged += HeaderBar_LibraryFilterChanged;
             HeaderBar.AdvancedSearchRequested += HeaderBar_AdvancedSearchRequested;
+            HeaderBar.RefreshLibraryRequested += HeaderBar_RefreshLibraryRequested;
             HeaderBar.DeleteAlbumRequested += HeaderBar_DeleteAlbumRequested;
             HeaderBar.EditDatesRequested += HeaderBar_EditDatesRequested;
             HeaderBar.SaveDatesRequested += HeaderBar_SaveDatesRequested;
@@ -372,6 +373,14 @@ namespace DeadEditor
             {
                 System.Diagnostics.Debug.WriteLine($"[ShellWindow] Advanced Search error: {ex.Message}");
             }
+        }
+
+        // Manual library rescan. Reuses the existing ReloadLibrary path (re-reads settings, then
+        // LoadShowsAsync). LoadShowsAsync guards against re-entrancy, so a rapid second click during
+        // an in-flight scan safely no-ops.
+        private void HeaderBar_RefreshLibraryRequested(object? sender, EventArgs e)
+        {
+            _libraryView?.ReloadLibrary();
         }
 
         private async void HeaderBar_DeleteAlbumRequested(object? sender, EventArgs e)
