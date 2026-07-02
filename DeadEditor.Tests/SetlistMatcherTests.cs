@@ -764,9 +764,130 @@ public class SetlistMatcherTests
         Assert.Empty(result.ConfirmedCombines);  // ...but recorded no combines
     }
 
+    // ===== Gap B Slice A: decomposer characterization at the 1969-03-01 fixture shape =====
+    // Locks the slice-3 re-derivation guarantee against the real Dark Star > St. Stephen >
+    // The Eleven run at flattened official indices [6,7,8] (The Eleven carries the boundary
+    // segue -> Turn On Your Love Light). These pin that a *decomposable* combined title matches
+    // every run with NO alias read — the write->read loop for titled combines is closed by
+    // Pass 2 (CombinedTrackDecomposer), contradicting the handoff's "re-derives as unmatched"
+    // premise — and document the residual (non-decomposable) gap's shape. The setlist is
+    // constructed in-test to mirror Data/concerts/1969-03-01.json; it is not read from disk.
+    // See alias-setlists-spec.md 5.3 and the gap-B entry in follow-ups.md.
+
+    [Theory]
+    [InlineData("Dark Star > St. Stephen > The Eleven")] // taper '>' form
+    [InlineData("Dark Star/St. Stephen/The Eleven")]     // official '/' medley form
+    public void GapBSliceA_DecomposableCombine_MatchesDarkStarRun_AtFixtureIndices(string combinedTitle)
+    {
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, combinedTitle) };
+        var setlist = Setlist1969();
+
+        var set = SetlistMatcher.ComputeProposals(tracks, setlist, Fixture1969Echo, Fixture1969Null);
+
+        var combine = Assert.Single(set.Proposals);
+        Assert.Equal(new List<int> { 6, 7, 8 }, combine.CoveredEntryIndices);
+        // NewSongName is derived from the covered official canonicals joined with " > ", ALWAYS —
+        // so the '/' input yields the same '>' form as the '>' input (spec 11.3).
+        Assert.Equal("Dark Star > St. Stephen > The Eleven", combine.NewSongName);
+        // NewSegue is the LAST covered entry's boundary segue: The Eleven -> Turn On Your Love Light.
+        Assert.True(combine.NewSegue);
+        Assert.Equal(new HashSet<int> { 6, 7, 8 }, set.ClaimedPositions);
+
+        // Apply surfaces it as a confirmed combine (Count > 1) — the alias-persistence input.
+        var result = SetlistMatcher.Apply(set);
+        Assert.Equal(1, result.MatchedCount);
+        var confirmed = Assert.Single(result.ConfirmedCombines);
+        Assert.Equal(new List<int> { 6, 7, 8 }, confirmed.CoveredEntryIndices);
+    }
+
+    [Fact]
+    public void GapBSliceA_DecomposableCombine_ReDerivesIdentically_OnSecondRun()
+    {
+        // "Confirmed once, matches again next time" — the guarantee gap B was said to break.
+        // ComputeProposals is pure over its inputs and reads no persisted alias, so a second run
+        // over fresh tracks yields the identical combined proposal. This is the read-side the
+        // handoff claimed was missing: it is delivered by re-derivation, not by reading aliasSetlists.
+        var setlist = Setlist1969();
+
+        var first = SetlistMatcher.ComputeProposals(
+            new List<TrackInfo> { MakeTrack(1, 1, "Dark Star > St. Stephen > The Eleven") },
+            setlist, Fixture1969Echo, Fixture1969Null);
+        var second = SetlistMatcher.ComputeProposals(
+            new List<TrackInfo> { MakeTrack(1, 1, "Dark Star > St. Stephen > The Eleven") },
+            setlist, Fixture1969Echo, Fixture1969Null);
+
+        var c1 = Assert.Single(first.Proposals);
+        var c2 = Assert.Single(second.Proposals);
+        Assert.Equal(c1.CoveredEntryIndices, c2.CoveredEntryIndices);
+        Assert.Equal(c1.NewSongName, c2.NewSongName);
+        Assert.Equal(c1.NewSegue, c2.NewSegue);
+        Assert.Equal(first.ClaimedPositions, second.ClaimedPositions);
+    }
+
+    [Fact]
+    public void GapBSliceA_NonDecomposableCombinedTitle_LeftUnmatched_DocumentsResidualGap()
+    {
+        // The residual gap B: a combined recording whose title lacks the component song names
+        // (no '>'/'/' split, components don't resolve) cannot be matched from the title alone.
+        // It has no per-recording key (fingerprint/version identity), so it correctly lands
+        // unmatched and untouched rather than being guessed. This is the ONLY open case, and why
+        // no blind alias read-side is safe (a blind read would mis-serve separate-track recordings).
+        var tracks = new List<TrackInfo> { MakeTrack(1, 1, "Space Jam 1969") };
+        var setlist = Setlist1969();
+
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, Fixture1969Echo, Fixture1969Null);
+
+        Assert.Equal(0, result.MatchedCount);
+        Assert.Empty(result.ClaimedPositions);
+        Assert.Equal("Space Jam 1969", tracks[0].SongName); // never fabricated into a match
+        Assert.Null(tracks[0].IsMatched);
+        Assert.False(tracks[0].IsModified);
+    }
+
+    // Atomicity-guard regression (case 5) is already locked and NOT duplicated here:
+    //   - decomposer level: CombinedTrackDecomposerTests.AtomicMedley_NeverSplit_ReturnsNull and
+    //     AtomicAliasWithSeparator_NeverSplit_ReturnsNull (a single official title/alias that
+    //     itself contains "/" or ">" resolves whole and is never split);
+    //   - matcher level: CombinedSegueTrack_OneUnmatchableKey_LeftIntact_NeverRenamed (above),
+    //     where the whole combined string resolves atomically and stays unmatched/untouched.
+
     // ===== Helpers =====
 
     private static string? IdentityResolver(string s) => s;
+
+    // 1969-03-01 flattened setlist (mirrors Data/concerts/1969-03-01.json across its three sets;
+    // segues carried through verbatim — note The Eleven at index 8 segues to Turn On Your Love Light).
+    private static readonly string[] Fixture1969Songs =
+    {
+        "That's It for the Other One", "New Potato Caboose", "Doin' That Rag", "Cosmic Charlie",
+        "Dupree's Diamond Blues", "Mountains of the Moon", "Dark Star", "St. Stephen",
+        "The Eleven", "Turn On Your Love Light", "Hey Jude",
+    };
+
+    private static readonly bool[] Fixture1969Segues =
+        { true, true, true, false, true, false, true, true, true, false, false };
+
+    private static List<SetlistMatcher.SetlistEntry> Setlist1969()
+    {
+        var list = new List<SetlistMatcher.SetlistEntry>(Fixture1969Songs.Length);
+        for (int i = 0; i < Fixture1969Songs.Length; i++)
+            list.Add(new SetlistMatcher.SetlistEntry
+            {
+                Name = Fixture1969Songs[i],
+                Canonical = Fixture1969Songs[i],
+                Position = i,
+                Segue = Fixture1969Segues[i],
+            });
+        return list;
+    }
+
+    // Resolvers mirroring production wiring: null-on-unknown for decomposition (so a combined
+    // title never echo-resolves through the atomicity guard) and echoing for direct match.
+    private static readonly HashSet<string> Fixture1969Known =
+        new(Fixture1969Songs, System.StringComparer.OrdinalIgnoreCase);
+
+    private static string? Fixture1969Null(string s) => Fixture1969Known.Contains(s) ? s : null;
+    private static string? Fixture1969Echo(string s) => Fixture1969Null(s) ?? s;
 
     private static readonly Dictionary<string, string> Aliases = new()
     {

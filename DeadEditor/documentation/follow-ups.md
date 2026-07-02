@@ -402,18 +402,54 @@ before they can race (each is UI-thread-driven today, so a cross-surface race ne
 but the guard is the durable fix). Surfaced during the slice-5 persistence diagnosis; updated at the
 Option-B import-seam wiring (2026-06-30).
 
-### Combines are write-only: the matcher never reads aliasSetlists back (Surfaced 2026-07-01)
-The slice-5/6 combine authoring + persistence arc has NO read-side consumer. SetlistMatcher sources its
-setlist from ShowLookupService.GetSetlist -> ConcertSetlistAdapter.ToSetInfoList, which maps only the
-concert Sets; aliasSetlists is never consulted. So a recorded combine does NOT change whether any track
-matches on a re-match -- a faithful combined pressing confirmed once will re-derive as unmatched next
-time. The write path (authoring, PersistAliasSetlist, the import/edit seams) is complete and the
-concurrency-guard entry tracks its writers, but nothing closes the write->read loop, so the
-"verify once, never again" promise is not yet met for combines specifically. Deferred: closing it needs
-combine coverage folded into the matcher setlist (the ConcertSetlistAdapter seam) and interacts with the
-version-identity question. Cross-ref: Concert-file write concurrency guard; Fingerprint-keyed combine
-recognition (Layer B); Release version-tracking arc. Most consequential item exposed by the 2026-07-01
-stocktake.
+### Combines: the matcher never reads aliasSetlists back — residual is version-identity-gated (Surfaced 2026-07-01; scoped by Phase A 2026-07-02)
+`aliasSetlists` is literally never read at match time: SetlistMatcher sources its setlist from
+ShowLookupService.GetSetlist -> ConcertSetlistAdapter.ToSetInfoList, which maps only the concert Sets
+(ConcertSetlistAdapter.cs:40-63); aliasSetlists is not consulted anywhere in the matcher.
+
+**Corrected premise (Phase A read-only, HEAD b022f69):** the original claim here — "a faithful combined
+pressing confirmed once will re-derive as unmatched next time" — is WRONG for the realistic case. The
+slice-3 decomposer (SetlistMatcher Pass 2 via CombinedTrackDecomposer, SetlistMatcher.cs:188-224)
+already matches any *decomposable* combined TITLE every run, with no alias read: it splits the media
+title on `>`/`/`/`->`, validates each component to an official song, and claims the contiguous run. A
+single FLAC titled `Dark Star > St. Stephen > The Eleven` (or the `/` medley form) matches the
+1969-03-01 setlist to flattened indices [6,7,8] on every re-match. So the write->read loop for TITLED
+combines is closed by re-derivation — the persisted alias is redundant for it. Locked by
+characterization tests: `SetlistMatcherTests.GapBSliceA_*` (the fixture-shaped `>`/`/` match, the
+re-derivation-stability test, and the non-decomposable negative). Case 5 (atomicity guard) was already
+covered by `CombinedTrackDecomposerTests.AtomicMedley_NeverSplit_ReturnsNull` /
+`AtomicAliasWithSeparator_NeverSplit_ReturnsNull` and matcher-level
+`CombinedSegueTrack_OneUnmatchableKey_LeftIntact_NeverRenamed` — not duplicated.
+
+**Residual (the only open case):** a combined recording whose title does NOT carry the component song
+names (e.g. a single track titled `Space Jam 1969`, or an idiosyncratic label) cannot be matched from
+the title alone. It lands unmatched/untouched and stays that way on re-match. Closing this is
+**gated on a per-recording key**, because whether a given import combines a run is a per-recording
+(version) fact, not a per-concert fact: on the same date one taper splits Dark Star / St. Stephen /
+The Eleven into three tracks and another presses them as one. `AliasEntry` is indices-only by design
+(no title, no fingerprint, no version key — ConcertReference.cs:142-146), so it carries nothing to bind
+an arbitrary incoming track to an alias. Bind this residual to: Fingerprint-keyed combine recognition
+(Layer B) and the Release version-tracking arc — both below; both blocked on their own prerequisites.
+
+**Decision record (do NOT re-litigate — build a blind read-side):** because the alias has no
+per-recording key and the one in-band signal (the title) is already consumed by the decomposer, all
+three integration points were assessed (Phase A 2026-07-02) and REJECTED for now:
+1. Fold aliases into `ConcertSetlistAdapter.ToSetInfoList` as synthetic combined entries — breaks
+   separate-track recordings of the same date (it would replace positions 7-9 with one entry for
+   *every* recording, mis-serving the recording that kept them separate; version-identity mis-serve)
+   and has high blast radius (the adapter feeds box-set pull, GetDiscTrack/GetSegue/GetSetlistSongCount,
+   both Match surfaces).
+2. Teach SetlistMatcher to consult aliases as an alternate target — has no key to bind a
+   non-decomposable title, and merely duplicates Pass 2 for decomposable titles.
+3. Post-process unmatched tracks against aliases positionally — guesswork that would violate the
+   matcher's standing "degrades to unmatched, never mis-names" guarantee.
+Revisit ONLY when a per-recording key exists (fingerprint identity or a canonical version id). The
+multi-cover proposal shape consumers would need already exists (CoveredEntryIndices is a list; every
+consumer except coverage-driven track numbering, alias-setlists-spec §7 UNBUILT, already handles a run),
+so the eventual read-side is a matcher-internal seam, not a consumer-wide change.
+
+Cross-ref: Concert-file write concurrency guard; Fingerprint-keyed combine recognition (Layer B);
+Release version-tracking arc; fpcalc leading-portion gap.
 
 ### ~~Concert-detail-view read-only combine display~~ (Surfaced 2026-07-01; DONE 2026-07-02)
 ConcertDetailView (the read-only "what I know about this show" surface) previously rendered the setlist
