@@ -6,8 +6,10 @@
   "country": "US",
   "setlistFmId": "33dcfc1d",
   "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/capitol-theatre-port-chester-ny-33dcfc1d.html",
-  "lastUpdated": "2026-04-04T17:02:54Z",
+  "lastUpdated": "2026-07-03T03:09:00Z",
   "hasSetlist": true,
+  "multiShow": false,
+  "verified": false,
   "sets": [
     {
       "name": "Set 1",
@@ -75,7 +77,7 @@
         {
           "name": "Greatest Story Ever Told",
           "date": "1971-02-21",
-          "segue": false,
+          "segue": true,
           "info": ""
         },
         {
@@ -233,7 +235,7 @@
       "position": 11,
       "songName": "Greatest Story Ever Told",
       "date": "1971-02-21",
-      "segue": false,
+      "segue": true,
       "set": "Set 1"
     },
     {
