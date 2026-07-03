@@ -145,9 +145,53 @@ namespace DeadEditor
             // the fast (~sub-second) path. The 25-file read stays synchronous by design.
             LoadData();
 
+            // Enable the Edit-side View Info affordance only when the show folder holds a .txt
+            // (spec §8, "first .txt wins"). Mirrors Import's enable-when-info-file-present.
+            ViewInfoButton.IsEnabled = ResolveInfoFilePath() != null;
+
             // LoadData prefilled the date programmatically (no LostFocus fires), so drive the
             // reference side-panel from here too (spec §5.2). The cache is already warm above.
             await RefreshSetlistPanelAsync();
+        }
+
+        /// <summary>
+        /// Resolve the show folder's info .txt via the pure first-.txt-wins rule (spec §8), or null
+        /// when the folder is missing/unreadable or has no .txt. Edit builds no info-file plumbing
+        /// (no ReadAlbumInfo), so this discovers it on demand — inheriting Import's "first .txt wins".
+        /// </summary>
+        private string? ResolveInfoFilePath()
+        {
+            var folder = _show?.FolderPath;
+            if (string.IsNullOrEmpty(folder) || !Directory.Exists(folder))
+                return null;
+
+            try
+            {
+                return InfoFileResolver.ResolveFirstTextFile(Directory.GetFiles(folder));
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void ViewInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            var path = ResolveInfoFilePath();
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            // Shell-open the info .txt in the OS default editor (spec §8), mirroring Import's
+            // View Info and the OpenFolderButton try/catch-to-status idiom.
+            try
+            {
+                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Could not open info file: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"[EDIT] Open info file failed: {ex.Message}");
+            }
         }
 
         // ===== DATA LOADING =====

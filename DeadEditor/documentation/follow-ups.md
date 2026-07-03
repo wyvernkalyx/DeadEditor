@@ -8,6 +8,21 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### ShowReadPanel / ReadPanelHost stack has zero callers post info-file retarget (Surfaced 2026-07-03, LOW priority)
+Slice 4 retargeted ImportView.ViewInfoButton_Click from App.Alerts.ShowReadPanel(...) to an external
+OS-editor shell-open (reference-side-panel-spec.md §8). That was the only ShowReadPanel caller, so the
+whole read-panel stack is now dead: IAlertService.ShowReadPanel / AlertService.ShowReadPanel +
+_readPanelHost, IReadPanelHost, Views/ReadPanelHost.xaml/.cs, and the ShellWindow registration
+(RegisterReadPanelHost at ShellWindow.xaml.cs:54, the ReadPanelHost element in ShellWindow.xaml).
+Dead-code retirement candidate; left intact this slice to keep the commit one concern.
+
+### Import InfoFileContent now serves only as an enable flag (Surfaced 2026-07-03, LOW priority)
+With View Info opening the file externally (path = FolderPath + InfoFileName), ImportView no longer reads
+_albumInfo.InfoFileContent for display -- it survives only as the ViewInfoButton.IsEnabled predicate
+(ImportView.xaml.cs:432) and the click-time non-empty guard. The full file content is still read into
+memory at import (MetadataService.ReadAlbumInfo). Possible tidy alongside the ShowReadPanel retirement
+above: reduce the enable signal to a lighter "info file present" flag rather than holding the content.
+
 ### Vestigial MatchReviewWindow.xaml beside the live MatchReviewDialog.xaml (Surfaced 2026-07-03, LOW priority)
 MatchReviewWindow.xaml/.cs sits next to the live MatchReviewDialog.xaml (what MatchReviewRunner opens);
 the Window carries no segue checkbox and appears to be a dead/alternate layout. During the segue

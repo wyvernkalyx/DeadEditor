@@ -1601,12 +1601,21 @@ namespace DeadEditor
             if (_albumInfo == null || string.IsNullOrEmpty(_albumInfo.InfoFileContent))
                 return;
 
-            // Bucket-C read panel (alert-system-spec.md Ruling 3, #33): the whole info .txt in a
-            // scrollable, selectable, monospace in-window panel — replacing the silent-destroying,
-            // non-scrolling, proportional-font MessageBox.
-            App.Alerts.ShowReadPanel(
-                _albumInfo.InfoFileName ?? "Info File",
-                _albumInfo.InfoFileContent);
+            // Open the info .txt in the OS default editor (reference-side-panel-spec.md §8),
+            // replacing the in-window ReadPanelHost scrim so the file can sit in its own window
+            // beside the setlist editor. Shell-open + try/catch-to-status mirrors
+            // OpenFolderButton_Click. The button is enabled only when an info file exists
+            // (ImportView.xaml.cs UpdateUiState → ViewInfoButton.IsEnabled), so the path is present.
+            try
+            {
+                var path = Path.Combine(_albumInfo.FolderPath, _albumInfo.InfoFileName ?? "");
+                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                StatusTextBlock.Text = $"Could not open info file: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"[IMPORT] Open info file failed: {ex.Message}");
+            }
         }
 
         // ===== ARTWORK =====

@@ -446,6 +446,21 @@
                             ToolTip="Remove album artwork"/>
                 </StackPanel>
 
+                <!-- View Info (Edit-side, net-new; reference-side-panel-spec.md §8). First-.txt
+                     discovery over the show folder opens the info .txt in the OS default editor —
+                     same shell-open as Import's View Info, so it can sit beside the setlist editor.
+                     Lives in the view's own chrome (not the shared SetlistReferencePanel, which stays
+                     a pure setlist display + event surface, §4). Disabled when no .txt exists. -->
+                <Button x:Name="ViewInfoButton" Content="View Info"
+                        Width="170" Height="24" Margin="0,8,0,0"
+                        FontSize="12"
+                        Background="#3C3C3C" Foreground="#CCCCCC" BorderBrush="#555555"
+                        Padding="6,2" Cursor="Hand"
+                        HorizontalAlignment="Center"
+                        IsEnabled="False"
+                        Click="ViewInfoButton_Click"
+                        ToolTip="Open this album's info .txt in the default text editor"/>
+
                 <!-- Verification badge -->
                 <Border x:Name="VerificationBadge"
                         HorizontalAlignment="Center"

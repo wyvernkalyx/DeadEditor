@@ -74,7 +74,7 @@ namespace DeadEditor
             => EditSetlistRequested?.Invoke();
 
         /// <summary>
-        /// Populate or refresh the Setlist tab. <paramref name="claimedPositions"/> is null pre-match
+        /// Populate or refresh the Setlist view. <paramref name="claimedPositions"/> is null pre-match
         /// (nothing dimmed) and a set of flattened positions post-match (members render dimmed).
         /// Re-calling with an updated claimed set is the re-dim path (after a match run or a manual
         /// assign). An empty <paramref name="entries"/> list renders the empty state.
@@ -112,7 +112,7 @@ namespace DeadEditor
                 : "";
         }
 
-        /// <summary>Display row bound by the Setlist tab's ItemTemplate.</summary>
+        /// <summary>Display row bound by the Setlist view's ItemTemplate.</summary>
         public sealed class SetlistRow
         {
             public string PositionText { get; set; } = "";
