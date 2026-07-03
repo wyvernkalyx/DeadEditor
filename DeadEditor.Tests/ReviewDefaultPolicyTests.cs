@@ -41,4 +41,20 @@ public class ReviewDefaultPolicyTests
         Assert.Equal(ReviewDecision.Accept,
             ReviewDefaultPolicy.DefaultForSegue(oldSegue: false, newSegue: false));
     }
+
+    [Fact]
+    public void SegueActionLabel_Remove_TrueToFalse_ReadsRemove()
+    {
+        // Checking the box accepts the setlist value (false) — i.e. removes the segue.
+        Assert.Equal("Remove segue",
+            ReviewDefaultPolicy.SegueActionLabel(current: true, proposed: false));
+    }
+
+    [Fact]
+    public void SegueActionLabel_Add_FalseToTrue_ReadsAdd()
+    {
+        // The direction the gate fixture cannot produce — locked by this test.
+        Assert.Equal("Add segue",
+            ReviewDefaultPolicy.SegueActionLabel(current: false, proposed: true));
+    }
 }

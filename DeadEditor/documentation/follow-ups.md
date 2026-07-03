@@ -8,6 +8,20 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Vestigial MatchReviewWindow.xaml beside the live MatchReviewDialog.xaml (Surfaced 2026-07-03, LOW priority)
+MatchReviewWindow.xaml/.cs sits next to the live MatchReviewDialog.xaml (what MatchReviewRunner opens);
+the Window carries no segue checkbox and appears to be a dead/alternate layout. During the segue
+legibility pass only the Dialog was edited. Audit whether the Window is referenced anywhere; remove it
+or document why it stays. Dead XAML copies have previously absorbed a fix while tests still passed (the
+LibraryGridView SetAlbumColumns two-sources-of-truth lesson), so an inert copy is a latent trap.
+
+### Media|Setlist columnar treatment for the review dialog NAME-change rows (Surfaced 2026-07-03, LOW priority)
+The segue sub-block now shows two source-labeled concrete values (Media vs Setlist); the NAME sub-block
+still shows Old -> editable New TextBox. Extending the Media|Setlist columns to name rows for dialog-wide
+consistency is a separate redesign (the Setlist side would be an editable cell, not a read-only value),
+deliberately not folded into the segue-row change. Revisit if the two presentations reading differently
+proves confusing in lived use.
+
 ### Import-entry setlist deep-link passes libraryShows null (Surfaced 2026-07-02, LOW priority)
 OnEditSetlistRequested (ImportView) calls NavigateToConcertDetail(concert, null) because Import holds
 no per-date owned-copies index like the Concerts list (ConcertDatabaseView._libraryShowsByDate). So a

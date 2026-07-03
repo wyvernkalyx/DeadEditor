@@ -137,6 +137,36 @@ public class MatchReviewViewModelTests
         Assert.True(row.EffectiveSegue);
     }
 
+    [Fact]
+    public void Row_MediaAndSetlistDisplay_ShowSegueMarkerPerSide()
+    {
+        // Remove direction: media carries the segue, setlist does not.
+        var remove = new ReviewRowViewModel(MakeProposal(
+            oldName: "Good Lovin'", newName: "Good Lovin'",
+            oldSegue: true, newSegue: false));
+        Assert.Equal("Good Lovin' >", remove.MediaDisplay);
+        Assert.Equal("Good Lovin'", remove.SetlistDisplay);
+
+        // Add direction: setlist carries the segue, media does not.
+        var add = new ReviewRowViewModel(MakeProposal(
+            oldName: "China Cat Sunflower", newName: "China Cat Sunflower",
+            oldSegue: false, newSegue: true));
+        Assert.Equal("China Cat Sunflower", add.MediaDisplay);
+        Assert.Equal("China Cat Sunflower >", add.SetlistDisplay);
+    }
+
+    [Fact]
+    public void Row_MediaAndSetlistDisplay_UseEachSidesTitle_WhenNameAlsoChanged()
+    {
+        // Both a name change and a segue add: Media shows the raw media title, Setlist shows the
+        // canonical title, each with its own segue marker.
+        var row = new ReviewRowViewModel(MakeProposal(
+            oldName: "Lovelight", newName: "Turn On Your Love Light",
+            oldSegue: false, newSegue: true));
+        Assert.Equal("Lovelight", row.MediaDisplay);
+        Assert.Equal("Turn On Your Love Light >", row.SetlistDisplay);
+    }
+
     // ===== ReviewRowViewModel: SongName resolution =====
 
     [Fact]

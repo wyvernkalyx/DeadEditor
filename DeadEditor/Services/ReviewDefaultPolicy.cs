@@ -58,5 +58,21 @@ namespace DeadEditor.Services
             // decision-irrelevant (Effective == Old == New regardless).
             return ReviewDecision.Accept;
         }
+
+        /// <summary>
+        /// The label for the segue Accept checkbox, describing what CHECKING does
+        /// (checking = accept the setlist value = set segue to <paramref name="proposed"/>).
+        /// A static "Accept segue" mis-reads in the remove direction, so the label is dynamic:
+        /// remove (true -> false) = "Remove segue"; add (false -> true) = "Add segue". Pure so both
+        /// directions are unit-testable (the add direction has no gate fixture).
+        /// </summary>
+        public static string SegueActionLabel(bool current, bool proposed)
+        {
+            if (current && !proposed) return "Remove segue";
+            if (!current && proposed) return "Add segue";
+            // Unchanged: the segue sub-block is not shown in this case (SegueChanged is false), so
+            // this is never displayed; return the proposed-state action for a total function.
+            return proposed ? "Add segue" : "Remove segue";
+        }
     }
 }

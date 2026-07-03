@@ -131,6 +131,23 @@ namespace DeadEditor
             set => SegueDecision = value ? ReviewDecision.Accept : ReviewDecision.Ignore;
         }
 
+        /// <summary>The segue checkbox label, describing what checking does in this row's
+        /// direction ("Remove segue" for true->false, "Add segue" for false->true) so it never
+        /// reads as the opposite of its effect. Delegates to the pure
+        /// <see cref="ReviewDefaultPolicy.SegueActionLabel"/>.</summary>
+        public string SegueActionLabel => ReviewDefaultPolicy.SegueActionLabel(OldSegue, NewSegue);
+
+        /// <summary>The Media (track) side of a segue proposal: the track's current title with a
+        /// trailing " &gt;" when the track currently carries a segue. Shown in the segue sub-block's
+        /// "Media" column so the checkbox action ("Remove/Add segue") reads against concrete
+        /// evidence rather than an abstract True -&gt; False.</summary>
+        public string MediaDisplay => OldSongName + (OldSegue ? " >" : "");
+
+        /// <summary>The Setlist side: the proposed canonical title with a trailing " &gt;" when the
+        /// setlist entry carries a segue. Paired with <see cref="MediaDisplay"/> in the segue
+        /// sub-block's two source-labeled columns.</summary>
+        public string SetlistDisplay => NewSongName + (NewSegue ? " >" : "");
+
         /// <summary>True when the proposed SongName actually differs from the
         /// current one (Ordinal). Drives showing the name sub-block in the
         /// dialog so a segue-only row carries no redundant name control.</summary>

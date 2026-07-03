@@ -107,23 +107,37 @@
                                                   IsChecked="{Binding IsSongNameAccepted}"/>
                                     </Grid>
 
-                                    <!-- Segue field: shown only when the segue changed -->
+                                    <!-- Segue field: shown only when the segue changed. Two
+                                         source-labeled concrete values (Media vs Setlist), each with
+                                         a trailing " >" when that side carries a segue, so the
+                                         checkbox action reads against evidence rather than an
+                                         abstract True -> False. -->
                                     <Grid Visibility="{Binding SegueChanged, Converter={StaticResource BoolToVis}}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                            <TextBlock Text="Segue: " Foreground="#999999"
-                                                       VerticalAlignment="Center"/>
-                                            <TextBlock Text="{Binding OldSegue}" Foreground="#999999"
-                                                       VerticalAlignment="Center"/>
-                                            <TextBlock Text="  →  " Foreground="#666666"
-                                                       VerticalAlignment="Center"/>
-                                            <TextBlock Text="{Binding NewSegue}" Foreground="#FFFFFF"
-                                                       VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <CheckBox Grid.Column="1" Content="Accept segue"
+                                        <Grid Grid.Column="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" MinWidth="200"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <!-- Column headers (dim, matching the legend/secondary typography) -->
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Media"
+                                                       Foreground="#777777" FontSize="11" Margin="0,0,24,2"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Setlist"
+                                                       Foreground="#777777" FontSize="11" Margin="0,0,0,2"/>
+                                            <!-- Concrete values, each with its own " >" segue marker -->
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding MediaDisplay}"
+                                                       Foreground="#CFCFCF" Margin="0,0,24,0" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SetlistDisplay}"
+                                                       Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <CheckBox Grid.Column="1" Content="{Binding SegueActionLabel}"
                                                   Foreground="#CCCCCC" VerticalAlignment="Center"
                                                   Margin="12,0,0,0"
                                                   IsChecked="{Binding IsSegueAccepted}"/>
