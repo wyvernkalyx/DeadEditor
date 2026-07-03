@@ -8,6 +8,17 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Re-running Match Setlist cannot un-match a track edited after a prior run (Surfaced 2026-07-03, slice-5a gate, MEDIUM priority)
+Match Setlist is Model B (decorate-only): it leaves already-unmatched tracks untouched and never
+clears a stale IsMatched=true. So if a track was matched in run 1, then its title is changed (or it
+should no longer resolve), a fresh Match Setlist run does NOT un-match it -- it keeps IsMatched=true
+with the old canonical SongName. Consequence: no amber highlight (Edit gates amber on IsMatched != true),
+no right-click Match-to-Song menu (same gate), and the track grid disagrees with the setlist panel.
+The designed rescue is panel click-to-assign onto an already-resolved track (spec section 7.5.1 ALLOW:
+explicit action is explicit intent, re-assignment is the correction path), which frees the prior claimed
+position and claims the new one -- lands with slice 5b. Until then there is no in-app path to correct a
+stale match. See reference-side-panel-spec.md section 7.5 / 7.6.
+
 ### ShowReadPanel / ReadPanelHost stack has zero callers post info-file retarget (Surfaced 2026-07-03, LOW priority)
 Slice 4 retargeted ImportView.ViewInfoButton_Click from App.Alerts.ShowReadPanel(...) to an external
 OS-editor shell-open (reference-side-panel-spec.md §8). That was the only ShowReadPanel caller, so the

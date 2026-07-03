@@ -91,15 +91,16 @@ On a fresh Import view the Album-Info date field is editable **before** any fold
 Today the manual right-click Match-to-Song writes are **duplicated inline** in each code-behind (`ImportView.xaml.cs:893-949`, write set at `916-920`; `EditMetadataView.xaml.cs:1699-1752`, write set at `1719-1725`) with no shared entry point; `MatchToSongDialog` returns only the selected index and writes nothing.
 
 ### 7.1 Shared apply core (resolved decision)
-Extract a shared apply core, **pure over `TrackInfo`**, that performs exactly the current manual write set:
+Extract a shared apply core, **pure over `TrackInfo`** (implemented as `Helpers/ManualMatchApply.Apply`, returning a `ManualMatchResult`), that performs exactly the current manual write set plus the pure claimed-position add:
 - `SongName = entry.Canonical`
 - `IsMatched = true`
 - `IsModified = true`
 - `if (entry.Segue) Segue = true`
+- `claimedPositions.Add(position)` — a plain `ISet<int>` mutation (no view/service touch), folded into the core so the whole "this track now claims this position" transition is one unit-tested call
 
 Per-surface side effects attach in the hosting view **after** the core call, mirroring today exactly:
-- **Both surfaces**: `_lastClaimedPositions.Add(position)`, panel re-dim via `SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions)`, `AddAlias(entry.Canonical, oldSongName.Trim())`, status text, `TracksDataGrid.Items.Refresh()` (Import: claimed-add `ImportView.xaml.cs:923`, re-dim `:927-928`, alias `:936`, status `:946`, refresh `:948`; Edit: claimed-add `EditMetadataView.xaml.cs:1728`, re-dim `:1732-1733`, alias `:1739`, refresh `:1743`, status `:1751`).
-- **Edit only** (no Import counterpart): `ReconstructRawTitles()`, `_hasUnsavedChanges = true`, `RefreshValidation()`, `RecomputeUnmatchedHighlights()` (`EditMetadataView.xaml.cs:1742-1748`).
+- **Both surfaces**: panel re-dim via `SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions)`, `AddAlias(entry.Canonical, oldSongName.Trim())` (driven off `ManualMatchResult.PreviousSongName`), status text, `TracksDataGrid.Items.Refresh()` (Import: re-dim `ImportView.xaml.cs:941`, alias `:948`, status `:958`, refresh `:960`; Edit: re-dim `EditMetadataView.xaml.cs:1727`, alias `:1733`, refresh `:1737`, status `:1745`).
+- **Edit only** (no Import counterpart): `ReconstructRawTitles()`, `_hasUnsavedChanges = true`, `RefreshValidation()`, `RecomputeUnmatchedHighlights()` (`EditMetadataView.xaml.cs:1736-1742`).
 
 ### 7.2 Retrofit the existing handlers (resolved decision)
 The two existing right-click Match-to-Song handlers are retrofitted onto this same core **in the same slice** that introduces it (slice 5). The panel's click/DnD assign path calls the identical core + the identical per-surface hooks. There must be **no third inline copy** of the write set.

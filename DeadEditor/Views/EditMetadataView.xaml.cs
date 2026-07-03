@@ -1715,28 +1715,22 @@ namespace DeadEditor
             var selectedIndex = dialog.SelectedSetlistIndex;
             var selectedSong = _lastSetlistSongs[selectedIndex];
 
-            // Update song name to canonical title (no disc/track reassignment in Edit Metadata)
-            track.SongName = selectedSong.Canonical;
-            track.IsMatched = true;
-            track.IsModified = true;
+            // Decorate via the shared manual-match core — canonical SongName, segue, matched/modified
+            // flags, and claim the position. No disc/track reassignment in Edit Metadata
+            // (reference-side-panel-spec.md §7.1).
+            var matchResult = ManualMatchApply.Apply(
+                track, _lastClaimedPositions, selectedIndex, selectedSong.Canonical, selectedSong.Segue);
 
-            // Apply segue from setlist
-            if (selectedSong.Segue)
-                track.Segue = true;
-
-            // Mark position as claimed
-            _lastClaimedPositions.Add(selectedIndex);
-
-            // Re-dim the reference panel so the newly claimed entry greys out (spec §6). Projection
-            // is unchanged; only the claimed set grew.
+            // Re-dim the reference panel so the newly claimed entry greys out (spec §6, §7.1 host
+            // hook). Projection is unchanged; only the claimed set grew.
             if (_lastSetlistProjection != null)
                 SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions);
 
             // Auto-add alias to songs.json
-            var aliasCandidate = cleanedTitle.Trim();
-            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(selectedSong.Canonical))
+            var aliasCandidate = matchResult.PreviousSongName.Trim();
+            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(matchResult.Canonical))
             {
-                _normalizationService.AddAlias(selectedSong.Canonical, aliasCandidate);
+                _normalizationService.AddAlias(matchResult.Canonical, aliasCandidate);
             }
 
             ReconstructRawTitles();

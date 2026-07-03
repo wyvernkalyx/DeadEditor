@@ -62,8 +62,17 @@ namespace DeadEditor
         private List<(string Name, string Canonical, int Position, bool Segue)>? _lastSetlistSongs;
         /// <summary>Indices into _lastSetlistSongs that have been claimed by matched tracks.</summary>
         private HashSet<int>? _lastClaimedPositions;
-        /// <summary>The date used for the last Match Setlist run.</summary>
+        /// <summary>The date used for the last Match Setlist run (the applied-date value; distinct
+        /// from the run-completed signal <see cref="_matchSetlistHasRun"/>). Still consumed as a
+        /// value by GetSetlist/GetDiscTrack/ShouldPersistCombines and the date-equality re-dim guard.</summary>
         private string? _lastMatchDate;
+        /// <summary>
+        /// Unified "an applied Match Setlist run has completed this session" signal (spec §7.6a),
+        /// the same mechanism Edit uses (<c>EditMetadataView._matchSetlistHasRun</c>). Separates the
+        /// run-completed flag from <see cref="_lastMatchDate"/>'s value role, so both surfaces reason
+        /// about run-state identically. Reset by <see cref="ClearView"/> (spec §7.6b).
+        /// </summary>
+        private bool _matchSetlistHasRun;
         /// <summary>
         /// The setlist projection currently shown in the reference side-panel
         /// (reference-side-panel-spec.md §5). Stored so a manual/panel re-dim can reuse it without
@@ -458,9 +467,15 @@ namespace DeadEditor
             _currentFolderPath = null;
             _mbidPresentInSource = false;
             // Drop the stashed import-commit combines so a cleared/next import cannot persist them.
-            // (The broader _lastMatch* stale-stash cleanup is banked separately; Option B's equality
-            // gate already neutralizes a stale _lastMatchDate, so only the new stash is reset here.)
             _lastConfirmedCombines = null;
+            // Reset the Match Setlist run state so it cannot leak onto a newly loaded album
+            // (reference-side-panel-spec.md §7.6b): a stale claimed set would otherwise mis-dim the
+            // panel and a stale run signal would offer the right-click Match-to-Song menu on album B
+            // before B has its own run.
+            _lastSetlistSongs = null;
+            _lastClaimedPositions = null;
+            _lastMatchDate = null;
+            _matchSetlistHasRun = false;
             // Clear the reference side-panel and its stashed projection on view reset.
             _lastSetlistProjection = null;
             SetlistPanel?.SetSetlist(System.Array.Empty<SetlistEntryVm>(), null);
@@ -824,9 +839,11 @@ namespace DeadEditor
             };
             menu.Items.Add(trackInfoItem);
 
-            // "Match to Song..." — for unmatched tracks after Match Setlist has run
+            // "Match to Song..." — for unmatched tracks after Match Setlist has run. Gated on the
+            // unified run-completed signal (spec §7.6a), equivalent to the prior _lastMatchDate != null
+            // check (both are set at apply and reset together in ClearView) but now identical to Edit.
             if (_lastSetlistSongs != null && _lastClaimedPositions != null &&
-                _lastMatchDate != null && vm.Track.IsMatched != true)
+                _matchSetlistHasRun && vm.Track.IsMatched != true)
             {
                 // Build list of unclaimed setlist songs
                 var unmatchedSongs = BuildUnmatchedSetlistSongList();
@@ -910,30 +927,25 @@ namespace DeadEditor
             var selectedIndex = dialog.SelectedSetlistIndex;
             var selectedSong = _lastSetlistSongs[selectedIndex];
 
-            // Model B: decorate only — set canonical SongName, segue, and matched
-            // flag. Do NOT touch DiscNumber/TrackNumber. The audio's position in
-            // the recording stays where it was.
-            vm.Track.SongName = selectedSong.Canonical;
-            vm.Track.IsMatched = true;
-            vm.Track.IsModified = true;
-            if (selectedSong.Segue)
-                vm.Track.Segue = true;
-
-            // Mark this position as claimed
-            _lastClaimedPositions.Add(selectedIndex);
+            // Model B: decorate only via the shared manual-match core — set canonical SongName,
+            // segue, matched/modified flags, and claim the position. Do NOT touch DiscNumber/
+            // TrackNumber; the audio's position in the recording stays where it was
+            // (reference-side-panel-spec.md §7.1).
+            var matchResult = ManualMatchApply.Apply(
+                vm.Track, _lastClaimedPositions, selectedIndex, selectedSong.Canonical, selectedSong.Segue);
 
             // Re-dim the reference panel so the newly claimed entry greys out
-            // (reference-side-panel-spec.md §6). Projection is unchanged; only the claimed set grew.
+            // (reference-side-panel-spec.md §6, §7.1 host hook). Projection is unchanged; only the
+            // claimed set grew.
             if (_lastSetlistProjection != null)
                 SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions);
 
             // Auto-add alias to songs.json so future imports of the same variant
             // match automatically.
-            var officialTitle = selectedSong.Canonical;
-            var aliasCandidate = cleanedTitle.Trim();
-            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(officialTitle))
+            var aliasCandidate = matchResult.PreviousSongName.Trim();
+            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(matchResult.Canonical))
             {
-                _normalizationService.AddAlias(officialTitle, aliasCandidate);
+                _normalizationService.AddAlias(matchResult.Canonical, aliasCandidate);
             }
 
             int matchCount = _lastClaimedPositions.Count;
@@ -1359,6 +1371,7 @@ namespace DeadEditor
             _lastSetlistSongs = setlistSongs;
             _lastClaimedPositions = result.ClaimedPositions;
             _lastMatchDate = date;
+            _matchSetlistHasRun = true;
 
             // Feed the reference side-panel and dim the entries the match claimed
             // (reference-side-panel-spec.md §6). The projection is the same one _lastSetlistSongs
