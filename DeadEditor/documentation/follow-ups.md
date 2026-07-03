@@ -22,12 +22,11 @@ RefreshSetlistPanelAsync, AlbumDateTextBox_LostFocus, OnEditSetlistRequested). E
 unit-testable IsWellFormedDate(string?) predicate and route all four through it. Deferred from slice 3
 to avoid touching unrelated call sites in a wiring commit.
 
-### Setlist-panel toggle strip + SETLIST label should move into SetlistReferencePanel (Surfaced 2026-07-02, MEDIUM priority)
-The collapsible toggle strip (labeled 24px edge) and the SETLIST header are currently host-side in
-ImportView, not inside the shared SetlistReferencePanel control. When slice 2 hosts the panel on
-EditMetadataView, keeping the strip host-side would duplicate it across both hosts. Extract the strip +
-label into the control, exposing an IsExpanded/toggle surface, so both hosts share one collapse
-affordance instead of copy-pasting it. Tied to spec slice 2 (host the panel on Edit).
+### ~~Setlist-panel toggle strip + SETLIST label should move into SetlistReferencePanel~~ (Surfaced 2026-07-02; DONE 2026-07-03)
+DONE (slice 2): the 24px toggle strip (chevron + rotated SETLIST label) and the collapse mechanism
+(imperative bool + body Width 320<->0 toggle) now live inside SetlistReferencePanel, which exposes a
+public SetExpanded(bool). ImportView's host-side strip and SetlistPanelToggle_Click were removed, and
+both Import and Edit hosts just place the control, so the mechanism is no longer duplicated across hosts.
 
 ### Refresh-on-return hook for the Import setlist panel after a deep-link return (Surfaced 2026-07-02, LOW priority)
 When the concert setlist-editor deep-link (spec slice 3) returns to Import, the panel does not

@@ -60,6 +60,10 @@ namespace DeadEditor
         private List<(string Name, string Canonical, int Position, bool Segue)>? _lastSetlistSongs;
         private HashSet<int>? _lastClaimedPositions;
 
+        // The setlist projection currently shown in the reference side-panel (spec §5). Stashed so a
+        // manual/panel re-dim can reuse it without rebuilding, mirroring ImportView._lastSetlistProjection.
+        private IReadOnlyList<SetlistEntryVm>? _lastSetlistProjection;
+
         // Drag-to-reorder state
         private WpfPoint _dragStartPoint;
         private TrackInfoViewModel? _draggedItem;
@@ -140,6 +144,10 @@ namespace DeadEditor
             // Warm now (cache is loaded): the TagLib read + UpdateMatchSetlistButton -> GetSetlist is
             // the fast (~sub-second) path. The 25-file read stays synchronous by design.
             LoadData();
+
+            // LoadData prefilled the date programmatically (no LostFocus fires), so drive the
+            // reference side-panel from here too (spec §5.2). The cache is already warm above.
+            await RefreshSetlistPanelAsync();
         }
 
         // ===== DATA LOADING =====
@@ -1313,28 +1321,34 @@ namespace DeadEditor
 
         // ===== DATE AUTO-LOOKUP =====
 
-        private void AlbumDateTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void AlbumDateTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (_isUpdating || _albumInfo == null) return;
 
             var date = AlbumDateTextBox.Text?.Trim();
-            if (string.IsNullOrEmpty(date) || date.Length != 10) return;
-            if (!Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$")) return;
 
-            var showInfo = ShowLookupService.Instance.GetShowByDate(date);
-            if (showInfo != null)
+            if (!string.IsNullOrEmpty(date) && date.Length == 10
+                && Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$"))
             {
-                if (string.IsNullOrWhiteSpace(VenueTextBox.Text))
+                var showInfo = ShowLookupService.Instance.GetShowByDate(date);
+                if (showInfo != null)
                 {
-                    VenueTextBox.Text = showInfo.Venue;
+                    if (string.IsNullOrWhiteSpace(VenueTextBox.Text))
+                    {
+                        VenueTextBox.Text = showInfo.Venue;
+                    }
+                    if (string.IsNullOrWhiteSpace(CityStateTextBox.Text))
+                    {
+                        CityStateTextBox.Text = showInfo.FormattedLocation;
+                    }
                 }
-                if (string.IsNullOrWhiteSpace(CityStateTextBox.Text))
-                {
-                    CityStateTextBox.Text = showInfo.FormattedLocation;
-                }
+
+                UpdateMatchSetlistButton();
             }
 
-            UpdateMatchSetlistButton();
+            // Refresh the reference side-panel independent of the venue lookup, so a malformed/empty
+            // date clears it and a valid date (re)populates it (spec §5.2). Mirrors ImportView.
+            await RefreshSetlistPanelAsync();
         }
 
         private void UpdateMatchSetlistButton()
@@ -1351,6 +1365,49 @@ namespace DeadEditor
                 MatchSetlistButton.IsEnabled = false;
                 MatchSetlistButton.ToolTip = "No setlist data for this date";
             }
+        }
+
+        // ===== REFERENCE SIDE-PANEL (Setlist) =====
+
+        /// <summary>
+        /// Populate the reference side-panel's Setlist view from the current album date (spec §5.2),
+        /// the Edit-side mirror of ImportView.RefreshSetlistPanelAsync. A malformed/empty date, or a
+        /// date with no setlist, clears the panel. Post-match dimming is applied when a match has run
+        /// (§6). The cold-load guard (§5.3) is a no-op on the warm path — Edit's _Loaded already gated.
+        /// </summary>
+        private async Task RefreshSetlistPanelAsync()
+        {
+            if (SetlistPanel == null) return; // defensive: before InitializeComponent completes
+
+            var date = AlbumDateTextBox.Text?.Trim();
+            bool wellFormed = !string.IsNullOrEmpty(date) && date.Length == 10
+                && Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$");
+
+            if (!wellFormed)
+            {
+                _lastSetlistProjection = null;
+                SetlistPanel.SetSetlist(System.Array.Empty<SetlistEntryVm>(), null);
+                return;
+            }
+
+            await ConcertDataGate.EnsureLoadedAsync();
+
+            var setlist = ShowLookupService.Instance.GetSetlist(date!);
+            if (setlist == null)
+            {
+                _lastSetlistProjection = null;
+                SetlistPanel.SetSetlist(System.Array.Empty<SetlistEntryVm>(), null);
+                return;
+            }
+
+            var projection = SetlistProjection.Build(setlist, _normalizationService.GetOfficialTitle);
+            _lastSetlistProjection = projection;
+
+            // Dim only when a match has run this session; pre-match the panel is pure reference (§6).
+            var claimed = (_matchSetlistHasRun && _lastClaimedPositions != null)
+                ? _lastClaimedPositions
+                : null;
+            SetlistPanel.SetSetlist(projection, claimed);
         }
 
         // ===== VERIFY BUTTON =====
@@ -1626,6 +1683,11 @@ namespace DeadEditor
             // Mark position as claimed
             _lastClaimedPositions.Add(selectedIndex);
 
+            // Re-dim the reference panel so the newly claimed entry greys out (spec §6). Projection
+            // is unchanged; only the claimed set grew.
+            if (_lastSetlistProjection != null)
+                SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions);
+
             // Auto-add alias to songs.json
             var aliasCandidate = cleanedTitle.Trim();
             if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(selectedSong.Canonical))
@@ -1728,6 +1790,11 @@ namespace DeadEditor
             _lastSetlistSongs = setlistSongs;
             _lastClaimedPositions = result.ClaimedPositions;
             _matchSetlistHasRun = true;
+
+            // Feed the reference side-panel and dim the entries the match claimed (spec §6). Same
+            // projection _lastSetlistSongs was adapted from, so panel and match state stay in lockstep.
+            _lastSetlistProjection = projection;
+            SetlistPanel.SetSetlist(projection, _lastClaimedPositions);
 
             ReconstructRawTitles();
             TracksDataGrid.Items.Refresh();

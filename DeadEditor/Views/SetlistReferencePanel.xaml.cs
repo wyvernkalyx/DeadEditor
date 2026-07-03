@@ -8,7 +8,9 @@ namespace DeadEditor
 {
     /// <summary>
     /// Shared collapsible reference panel docked beside the track grid (reference-side-panel-spec.md).
-    /// Slice 1 hosts only the read-only Setlist tab (the Info tab arrives in slice 3).
+    /// Hosts the read-only Setlist view under an always-visible 24px toggle strip. The control owns
+    /// its own collapse mechanism (§3) — the strip + expand/collapse were extracted from the Import
+    /// host so both hosts share one mechanism; hosts just place the control in their middle column.
     ///
     /// Pure display + event surface: the control never reads a service, never touches
     /// <c>TrackInfo</c>, and never mutates dirty state. The hosting view owns all data-fetching and
@@ -16,6 +18,36 @@ namespace DeadEditor
     /// </summary>
     public partial class SetlistReferencePanel : System.Windows.Controls.UserControl
     {
+        // Collapse mechanism (imperative bool + Width toggle, the PlaylistPanel idiom adapted to a
+        // horizontal column Width, spec §3). Collapsed by default on both hosts.
+        private bool _expanded;
+        private const double ExpandedWidth = 320;
+
+        // True when the current setlist has entries — cached so the ShowEditSetlistLink setter can
+        // re-evaluate the deep-link button's visibility without re-running SetSetlist.
+        private bool _hasEntries;
+
+        // Host policy: Import shows the "Edit setlist ↗" deep-link; Edit suppresses it (§9 banking).
+        private bool _showEditSetlistLink = true;
+
+        /// <summary>
+        /// Whether the header's "Edit setlist ↗" deep-link is offered. Import leaves it true; Edit
+        /// sets it false (a round-trip from Edit would silently lose in-progress metadata edits, so
+        /// the affordance is banked there, spec §9). The button is shown only when this is true AND
+        /// the panel currently has entries.
+        /// </summary>
+        public bool ShowEditSetlistLink
+        {
+            get => _showEditSetlistLink;
+            set
+            {
+                _showEditSetlistLink = value;
+                if (EditSetlistButton != null)
+                    EditSetlistButton.Visibility =
+                        (value && _hasEntries) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
         /// <summary>
         /// Raised when the user activates the header's "Edit setlist ↗" affordance. The hosting
         /// view performs the concert-detail deep-link (reference-side-panel-spec.md §9); the panel
@@ -26,6 +58,16 @@ namespace DeadEditor
         public SetlistReferencePanel()
         {
             InitializeComponent();
+        }
+
+        private void ToggleButton_Click(object sender, RoutedEventArgs e) => SetExpanded(!_expanded);
+
+        /// <summary>Expand or collapse the panel body (Width 320 &lt;-&gt; 0) and swap the chevron.</summary>
+        public void SetExpanded(bool expanded)
+        {
+            _expanded = expanded;
+            PanelBody.Width = expanded ? ExpandedWidth : 0;
+            Chevron.Text = expanded ? "◀" : "▶";
         }
 
         private void EditSetlistButton_Click(object sender, RoutedEventArgs e)
@@ -58,10 +100,13 @@ namespace DeadEditor
             SetlistItems.ItemsSource = rows;
 
             bool hasEntries = rows.Count > 0;
+            _hasEntries = hasEntries;
             SetlistItems.Visibility = hasEntries ? Visibility.Visible : Visibility.Collapsed;
             EmptyState.Visibility = hasEntries ? Visibility.Collapsed : Visibility.Visible;
-            // Deep-link affordance is offered only when there is a setlist to edit (spec §9).
-            EditSetlistButton.Visibility = hasEntries ? Visibility.Visible : Visibility.Collapsed;
+            // Deep-link affordance is offered only when there is a setlist to edit AND the host
+            // allows it (Import yes, Edit no — spec §9).
+            EditSetlistButton.Visibility =
+                (hasEntries && _showEditSetlistLink) ? Visibility.Visible : Visibility.Collapsed;
             SetlistCountText.Text = hasEntries
                 ? (rows.Count == 1 ? "1 song" : $"{rows.Count} songs")
                 : "";

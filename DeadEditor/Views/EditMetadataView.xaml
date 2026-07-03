@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:markers="clr-namespace:DeadEditor.Helpers"
+             xmlns:local="clr-namespace:DeadEditor"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1200"
              Background="#1E1E1E"
@@ -189,6 +190,7 @@
         <Grid Grid.Row="2" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
@@ -404,8 +406,14 @@
                 </Grid>
             </Border>
 
+            <!-- Reference Side-Panel (Setlist) — shared control, own toggle strip + collapse (spec
+                 §3). Edit suppresses the "Edit setlist ↗" deep-link (§9 banking: EditMetadataView is
+                 reconstructed per entry, so a round-trip would drop in-progress edits). -->
+            <local:SetlistReferencePanel x:Name="SetlistPanel" Grid.Column="1" Margin="0,0,10,0"
+                                         ShowEditSetlistLink="False"/>
+
             <!-- Artwork Panel -->
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="2">
                 <!-- Album Art -->
                 <Grid Width="180" Height="180">
                     <Image x:Name="AlbumArtImage"

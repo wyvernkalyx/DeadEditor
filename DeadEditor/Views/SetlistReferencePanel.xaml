@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="320"
+             d:DesignHeight="500" d:DesignWidth="344"
              Background="#1E1E1E">
 
     <UserControl.Resources>
@@ -19,80 +19,118 @@
         </Style>
     </UserControl.Resources>
 
-    <TabControl Background="#1E1E1E" BorderThickness="0">
-        <TabItem Header="Setlist">
-            <Grid Background="#1E1E1E">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+    <!-- The control owns its own collapse mechanism (spec §3): an always-visible 24px toggle
+         strip (col 0) + a body whose Width toggles 0 <-> 320 (col 1). Both hosts just place the
+         control; the strip and expand/collapse live here so Import and Edit share one mechanism
+         (follow-ups: strip extraction). Collapsed by default. -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
-                <!-- Header: song count + "Edit setlist" deep-link (spec §9). The link is shown
-                     only when the panel has entries; it raises EditSetlistRequested and the
-                     hosting view performs the navigation (the panel holds no date, §4). -->
-                <Border Grid.Row="0" Background="#2D2D30" Padding="10,6"
-                        BorderBrush="#3F3F46" BorderThickness="0,0,0,1">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" x:Name="SetlistCountText"
-                                   Foreground="#CCCCCC" FontSize="13" VerticalAlignment="Center"/>
-                        <Button Grid.Column="1" x:Name="EditSetlistButton"
-                                Click="EditSetlistButton_Click" Content="Edit setlist ↗"
-                                Background="Transparent" BorderThickness="0" Foreground="#5B9BD5"
-                                Cursor="Hand" Padding="0" FontSize="13" Visibility="Collapsed"
-                                ToolTip="Open this concert in the setlist editor"/>
+        <Border Grid.Column="0" Width="24" Background="#2D2D30"
+                BorderBrush="#555555" BorderThickness="1">
+            <Button x:Name="ToggleButton" Click="ToggleButton_Click"
+                    Background="Transparent" BorderThickness="0" Foreground="#CCCCCC"
+                    Cursor="Hand" Padding="0"
+                    ToolTip="Show/hide the setlist reference panel">
+                <!-- Chevron atop a rotated SETLIST label so the always-visible 24px strip
+                     identifies itself when collapsed (slice-1 discoverability gate fix). -->
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
+                            VerticalAlignment="Top" Margin="0,8,0,0">
+                    <TextBlock x:Name="Chevron" Text="▶" FontSize="14"
+                               HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBlock Text="SETLIST" FontSize="12" Foreground="#999999"
+                               HorizontalAlignment="Center">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90"/>
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </StackPanel>
+            </Button>
+        </Border>
+
+        <Border Grid.Column="1" x:Name="PanelBody" Width="0"
+                BorderBrush="#555555" BorderThickness="0,1,1,1" Background="#1E1E1E">
+            <TabControl Background="#1E1E1E" BorderThickness="0">
+                <TabItem Header="Setlist">
+                    <Grid Background="#1E1E1E">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Header: song count + "Edit setlist" deep-link (spec §9). The link is
+                             shown only when the panel has entries AND the host allows it
+                             (ShowEditSetlistLink); it raises EditSetlistRequested and the hosting
+                             view performs the navigation (the panel holds no date, §4). Edit hosts
+                             suppress it (§9 banking). -->
+                        <Border Grid.Row="0" Background="#2D2D30" Padding="10,6"
+                                BorderBrush="#3F3F46" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" x:Name="SetlistCountText"
+                                           Foreground="#CCCCCC" FontSize="13" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" x:Name="EditSetlistButton"
+                                        Click="EditSetlistButton_Click" Content="Edit setlist ↗"
+                                        Background="Transparent" BorderThickness="0" Foreground="#5B9BD5"
+                                        Cursor="Hand" Padding="0" FontSize="13" Visibility="Collapsed"
+                                        ToolTip="Open this concert in the setlist editor"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Empty state -->
+                        <TextBlock x:Name="EmptyState" Grid.Row="1"
+                                   Text="No setlist for this date."
+                                   Foreground="#888888" FontSize="14"
+                                   Margin="12" TextWrapping="Wrap"
+                                   Visibility="Visible"/>
+
+                        <!-- Setlist rows -->
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <ItemsControl x:Name="SetlistItems" Visibility="Collapsed">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource SetlistRowStyle}"
+                                                Padding="10,4" BorderBrush="#2A2A2A" BorderThickness="0,0,0,1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Flattened position (1-based for display) -->
+                                                <TextBlock Grid.Column="0" Text="{Binding PositionText}"
+                                                           Foreground="#888888" FontSize="13"
+                                                           MinWidth="24" Margin="0,0,8,0"/>
+
+                                                <!-- Song name + segue marker -->
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" Foreground="#EEEEEE"
+                                                               FontSize="14" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding SegueMarker}" Foreground="#E0A030"
+                                                               FontSize="14" FontWeight="Bold" Margin="6,0,0,0"/>
+                                                </StackPanel>
+
+                                                <!-- Set label -->
+                                                <TextBlock Grid.Column="2" Text="{Binding SetLabel}"
+                                                           Foreground="#888888" FontSize="12"
+                                                           Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Grid>
-                </Border>
-
-                <!-- Empty state -->
-                <TextBlock x:Name="EmptyState" Grid.Row="1"
-                           Text="No setlist for this date."
-                           Foreground="#888888" FontSize="14"
-                           Margin="12" TextWrapping="Wrap"
-                           Visibility="Visible"/>
-
-                <!-- Setlist rows -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                    <ItemsControl x:Name="SetlistItems" Visibility="Collapsed">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource SetlistRowStyle}"
-                                        Padding="10,4" BorderBrush="#2A2A2A" BorderThickness="0,0,0,1">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <!-- Flattened position (1-based for display) -->
-                                        <TextBlock Grid.Column="0" Text="{Binding PositionText}"
-                                                   Foreground="#888888" FontSize="13"
-                                                   MinWidth="24" Margin="0,0,8,0"/>
-
-                                        <!-- Song name + segue marker -->
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Name}" Foreground="#EEEEEE"
-                                                       FontSize="14" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Text="{Binding SegueMarker}" Foreground="#E0A030"
-                                                       FontSize="14" FontWeight="Bold" Margin="6,0,0,0"/>
-                                        </StackPanel>
-
-                                        <!-- Set label -->
-                                        <TextBlock Grid.Column="2" Text="{Binding SetLabel}"
-                                                   Foreground="#888888" FontSize="12"
-                                                   Margin="8,0,0,0" VerticalAlignment="Center"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Grid>
-        </TabItem>
-    </TabControl>
+                </TabItem>
+            </TabControl>
+        </Border>
+    </Grid>
 </UserControl>

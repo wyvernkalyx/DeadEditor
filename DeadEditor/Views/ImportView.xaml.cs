@@ -1178,8 +1178,8 @@ namespace DeadEditor
 
         // ===== REFERENCE SIDE-PANEL (Setlist) =====
 
-        private bool _setlistPanelExpanded = false;
-        private const double SetlistPanelExpandedWidth = 320;
+        // The 24px toggle strip and expand/collapse now live inside SetlistReferencePanel itself
+        // (spec §3, strip extraction) so Import and Edit share one mechanism — no host-side toggle.
 
         /// <summary>
         /// Populate the reference side-panel's Setlist tab from the current album date
@@ -1259,25 +1259,6 @@ namespace DeadEditor
             if (Window.GetWindow(this) is ShellWindow shell)
             {
                 shell.NavigateToConcertDetail(concert, null);
-            }
-        }
-
-        /// <summary>
-        /// Collapse/expand the reference panel body via an imperative Width toggle + chevron swap —
-        /// the PlaylistPanel idiom adapted to horizontal collapse (reference-side-panel-spec.md §3).
-        /// </summary>
-        private void SetlistPanelToggle_Click(object sender, RoutedEventArgs e)
-        {
-            _setlistPanelExpanded = !_setlistPanelExpanded;
-            if (_setlistPanelExpanded)
-            {
-                SetlistPanelBody.Width = SetlistPanelExpandedWidth;
-                SetlistPanelChevron.Text = "◀"; // ◀ (collapse)
-            }
-            else
-            {
-                SetlistPanelBody.Width = 0;
-                SetlistPanelChevron.Text = "▶"; // ▶ (expand)
             }
         }
 
