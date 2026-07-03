@@ -1,6 +1,6 @@
 # Reference Side-Panel (Setlist + Info File) — Design Spec
 
-_Status: approved design, revised after lived use. Slice 1 (read-only Setlist tab, Import) is **implemented** (uncommitted at time of this amendment; manual WPF gate in progress). This revision **supersedes the original §8 (in-panel Info tab)** with an external info-file open (§8) and **adds the setlist-editor deep-link** (§9), a pivot driven by the lived workflow of comparing the info file against the setlist editor. Document-before-implement per the handbook; implementation follows in the six slices of §11. All file:line citations are Phase-A-verified (slice-1 citations against HEAD `aa9b5da`; the amendment citations against the working tree at amendment time); they are cited, not re-derived._
+_Status: approved design, revised after lived use. Slice 1 (read-only Setlist tab, Import) is **implemented** (uncommitted at time of this amendment; manual WPF gate in progress). This revision **supersedes the original §8 (in-panel Info tab)** with an external info-file open (§8) and **adds the setlist-editor deep-link** (§9), a pivot driven by the lived workflow of comparing the info file against the setlist editor. Document-before-implement per the handbook; implementation follows in the six slices of §11. All file:line citations are Phase-A-verified (slice-1 citations against HEAD `aa9b5da`; the amendment citations against the working tree at amendment time); they are cited, not re-derived. A later amendment adds §7.5 (panel-assignment availability rules) and §7.6 (slice-5 diagnostic work items); its citations are re-verified against HEAD `dc110ad`._
 
 ## 1. Problem
 
@@ -88,7 +88,7 @@ On a fresh Import view the Album-Info date field is editable **before** any fold
 
 ## 7. Assignment write contract (load-bearing)
 
-Today the manual right-click Match-to-Song writes are **duplicated inline** in each code-behind (`ImportView.xaml.cs:870,893-908`; `EditMetadataView.xaml.cs:1598,1618-1642`) with no shared entry point; `MatchToSongDialog` returns only the selected index and writes nothing.
+Today the manual right-click Match-to-Song writes are **duplicated inline** in each code-behind (`ImportView.xaml.cs:893-949`, write set at `916-920`; `EditMetadataView.xaml.cs:1699-1752`, write set at `1719-1725`) with no shared entry point; `MatchToSongDialog` returns only the selected index and writes nothing.
 
 ### 7.1 Shared apply core (resolved decision)
 Extract a shared apply core, **pure over `TrackInfo`**, that performs exactly the current manual write set:
@@ -98,8 +98,8 @@ Extract a shared apply core, **pure over `TrackInfo`**, that performs exactly th
 - `if (entry.Segue) Segue = true`
 
 Per-surface side effects attach in the hosting view **after** the core call, mirroring today exactly:
-- **Both surfaces**: `_lastClaimedPositions.Add(position)`, `AddAlias(entry.Canonical, oldSongName.Trim())`, status text, `TracksDataGrid.Items.Refresh()` (`ImportView.xaml.cs:900,908`; `EditMetadataView.xaml.cs:1627,1633`).
-- **Edit only** (no Import counterpart): `ReconstructRawTitles()`, `_hasUnsavedChanges = true`, `RefreshValidation()`, `RecomputeUnmatchedHighlights()` (`EditMetadataView.xaml.cs:1636-1642`).
+- **Both surfaces**: `_lastClaimedPositions.Add(position)`, panel re-dim via `SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions)`, `AddAlias(entry.Canonical, oldSongName.Trim())`, status text, `TracksDataGrid.Items.Refresh()` (Import: claimed-add `ImportView.xaml.cs:923`, re-dim `:927-928`, alias `:936`, status `:946`, refresh `:948`; Edit: claimed-add `EditMetadataView.xaml.cs:1728`, re-dim `:1732-1733`, alias `:1739`, refresh `:1743`, status `:1751`).
+- **Edit only** (no Import counterpart): `ReconstructRawTitles()`, `_hasUnsavedChanges = true`, `RefreshValidation()`, `RecomputeUnmatchedHighlights()` (`EditMetadataView.xaml.cs:1742-1748`).
 
 ### 7.2 Retrofit the existing handlers (resolved decision)
 The two existing right-click Match-to-Song handlers are retrofitted onto this same core **in the same slice** that introduces it (slice 5). The panel's click/DnD assign path calls the identical core + the identical per-surface hooks. There must be **no third inline copy** of the write set.
@@ -109,6 +109,40 @@ The core writes `Segue = true` only when the entry carries a segue; it never cle
 
 ### 7.4 No unverify on assign (resolved decision)
 Edit-side assignment does **not** call `MaybeUnverifyAlbumEdit()` — parity with the existing manual handlers, which also don't (known gap, follow-ups.md:318). This feature neither fixes nor widens that gap; it stays banked as its own concern.
+
+### 7.5 Availability rules — panel assignment vs the right-click menu (resolved decision)
+
+Panel-driven assignment and the existing right-click **Match to Song** menu have **different availability gates**, deliberately:
+
+- **Panel assignment gate = the panel is populated.** The panel's click/DnD assign is offered whenever the setlist projection exists (`_lastSetlistProjection != null` — Import `ImportView.xaml.cs:72,465,1366`; Edit `EditMetadataView.xaml.cs:65,1448,1840`). It is **NOT** gated on a completed Match Setlist run. Motivating case: **position-only imports where auto-match resolves nothing** — no run ever completes with claims, yet the setlist is populated on date entry (§5.2), so the panel is the *only* path to assign. A track's `IsMatched` state does not gate panel assignment (§7.5.1).
+
+- **Right-click menu gate = UNCHANGED.** The existing menu keeps its current, stricter gate: a completed **applied** Match Setlist run **and** the clicked track's `IsMatched != true` **and** at least one unclaimed setlist song. Ground truth: Import `ImportView.xaml.cs:827-844` (condition at `828-829`: `_lastSetlistSongs != null && _lastClaimedPositions != null && _lastMatchDate != null && vm.Track.IsMatched != true`, plus the `BuildUnmatchedSetlistSongList().Count > 0` check at `832-833`); Edit `EditMetadataView.xaml.cs:1643-1659` (condition at `1644-1645`: `_matchSetlistHasRun && clickedTrack.IsMatched != true && _lastSetlistSongs != null && _lastClaimedPositions != null`, plus the unmatched-count check at `1647-1648`). Slice 5 does not change this gate; it only retrofits the handler body onto the shared core (§7.2).
+
+#### 7.5.1 Assignment onto an already-resolved track is ALLOWED
+Panel assignment works on a track **regardless of its current `IsMatched` state** — including a track auto-match already resolved. Rationale: a panel assign is an **explicit per-track user action**, and explicit action is explicit intent; re-assignment is the **correction path** when auto-match resolved a track to the wrong song. (This is exactly what the right-click menu cannot do — its `IsMatched != true` gate structurally excludes resolved tracks, §7.5.2.)
+
+**Consequence the host must implement:** re-assigning a track that already claimed a setlist position must **free the previously claimed position** (remove it from `_lastClaimedPositions` so the old entry un-dims) and **claim the new one**, then re-call `SetSetlist(projection, _lastClaimedPositions)` to refresh dimming. This is a **new** host hook: today's manual path only ever *adds* to the claimed set (Import `:923`, Edit `:1728`) and never frees, because its gate guarantees the clicked track was unclaimed.
+
+**Implementation note (flag).** `_lastClaimedPositions` is position-indexed; `TrackInfo` carries **no back-reference** to the setlist position it claimed, so "free the previously claimed position" has no O(1) lookup today. Slice 5 must introduce a track→claimed-position association (a side map, or recompute the freed position from the track's prior `SongName`/segue) to un-dim correctly. Absent this, a re-assign would leave the stale old position dimmed. Called out as slice-5 design work, not solved here.
+
+#### 7.5.2 Structural consequence — the menu can never serve two track classes
+Because the right-click gate requires `IsMatched != true`, the menu **can never appear** for:
+1. **recognized-but-unclaimed tracks** — a track whose title normalized to a canonical song (so `IsMatched == true`) but whose setlist *position* the matcher did not claim (e.g. a **second "Ripple"** when the setlist lists one, or any repeated song); and
+2. **extra / non-setlist tracks** that still resolved to a canonical title (tuning, banter, or a song not in this date's setlist).
+
+Both classes are unreachable from the menu by construction. **Panel assignment is the structural fix for both** — its populated-panel gate (§7.5) plus its allow-on-resolved rule (§7.5.1) let the user assign these tracks directly, which the menu path cannot.
+
+### 7.6 Slice-5 work items from diagnostic findings (implementation notes)
+
+Findings surfaced while specifying the availability rules; each is slice-5 implementation work, recorded here, not yet coded:
+
+a. **Run-state signal unification.** The two surfaces track "a match run completed" differently — Import overloads `_lastMatchDate != null` (`ImportView.xaml.cs:66,1361`), Edit uses a dedicated `_matchSetlistHasRun` bool (`EditMetadataView.xaml.cs:59,1836`). Unify on **one** mechanism during the shared-core extraction (§7.1) so both surfaces reason about run-state identically. Note the panel gate (§7.5) is *not* this signal — it keys on `_lastSetlistProjection`; unification concerns the right-click gate and the status/guidance copy only.
+
+b. **`ClearView` stale-state leak (latent).** Import's `ClearView` (`ImportView.xaml.cs:452-473`) resets `_lastSetlistProjection` (`:465`) and `_lastConfirmedCombines` (`:463`) but does **NOT** reset `_lastSetlistSongs`, `_lastClaimedPositions`, or `_lastMatchDate` (the in-code comment at `:460-462` acknowledges the broader `_lastMatch*` cleanup is banked). Stale match state can leak onto a newly loaded album. Sweep the full reset into slice 5 — it becomes load-bearing once panel assignment reads/writes that state outside a fresh run.
+
+c. **Misleading guidance copy.** Copy in the review dialog and the Edit status bar tells the user to "match manually in the grid" / "right-click to match manually" (Import status at `ImportView.xaml.cs:944`) in states where the menu item **cannot** appear — the cancel path and a fully-claimed setlist (menu gate false). When the availability rules land, rewrite the guidance so copy and gates agree: point at the **panel** (always available when populated), not the sometimes-absent menu.
+
+d. **Unclaimed-indication asymmetry.** Import has **no** post-match unclaimed indication; Edit tints unclaimed rows amber via `RecomputeUnmatchedHighlights` (`EditMetadataView.xaml.cs:507-511`, `vm.ShowUnmatchedWarning = _matchSetlistHasRun && vm.Track.IsMatched != true`). The surfaces also disagree on what "unmatched" *means* visually: Import gold = title-unresolved **always**; Edit amber = **gated on a run**. Slice 5 should either reconcile the two indications or explicitly document why they differ — and ensure panel assignment updates whichever indication a surface uses.
 
 ## 8. External info-file open
 
@@ -152,7 +186,7 @@ One concern per commit; WPF manual gate on every UI-visible slice; pure helpers 
 2. **Host the same control on Edit.** Nothing else — per-view host wiring only (§3). WPF gate.
 3. **Setlist-editor deep-link** (NEW). "Edit setlist ↗" event + host deep-link with null-guard; no refresh hook (§9). WPF gate = the manual round-trip: deep-link, fix a setlist (the 1971-02-23 segues are the fixture), save, back, re-Read, verify the panel + matcher see the fix.
 4. **External info-file open** (replaces the old Info-tab slice). Import: retarget the View Info button to shell-open (§8). Edit: net-new first-`.txt` discovery + shell-open. Optional: collapse the vestigial TabControl to a plain Setlist panel header. WPF gate.
-5. **Click-to-assign** (formerly slice 4, content unchanged). Extract the shared apply core (§7.1), retrofit BOTH existing Match-to-Song handlers onto it (§7.2), wire select-track → double-click-entry → `AssignRequested` → core + per-surface hooks. Unit tests on the core. WPF gate.
+5. **Click-to-assign** (formerly slice 4, content unchanged). Extract the shared apply core (§7.1), retrofit BOTH existing Match-to-Song handlers onto it (§7.2), wire select-track → double-click-entry → `AssignRequested` → core + per-surface hooks. Honor the **availability rules** (§7.5: panel gate = populated, not run-gated; allow-on-resolved with previous-position freeing, §7.5.1) and sweep the four diagnostic work items (§7.6: run-state unification, `ClearView` reset, guidance copy, unclaimed-indication asymmetry). Unit tests on the core. WPF gate.
 6. **DnD assign** (formerly slice 5, content unchanged). Drag source on setlist rows + payload-typed drop branch calling the slice-5 core (§10). WPF gate.
 
 ## 12. Decision record
