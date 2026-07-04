@@ -8,6 +8,16 @@ this is a reference list, not a narrative.
 
 Issues identified but not yet fixed. Each entry: brief description, where it surfaces, when noticed.
 
+### Recording-to-canon write-back policy is now canonically specified (Surfaced 2026-07-03, pointer)
+The recording-to-canon write-back policy -- formerly a chat-side session handoff referred to as
+"P1-P3" / "KnownExtras" that never lived in the repo -- is now canonically specified in
+setlist-extras-writeback-spec.md section 6 (P1 never silently change a verified setlist; P2 offer
+visibly, never silent, to unverified setlists; P3 diff-gated "update and verify?" on import). Typed
+setlist extras (song / tuning / false-start / banter / other-extra) are section 3; decisions D1-D9
+resolved 2026-07-03. The related recording-side track-kind refactor (typing tracks on TrackInfo, and
+the IsMatched title-known-vs-setlist-claimed split) remains banked -- see that spec section 12 and
+audio-as-archive-design-memo.md. Not a deferred bug; a locator so the policy is findable from here.
+
 ### Re-running Match Setlist cannot un-match a track edited after a prior run (Surfaced 2026-07-03, slice-5a gate, MEDIUM priority)
 Match Setlist is Model B (decorate-only): it leaves already-unmatched tracks untouched and never
 clears a stale IsMatched=true. So if a track was matched in run 1, then its title is changed (or it
