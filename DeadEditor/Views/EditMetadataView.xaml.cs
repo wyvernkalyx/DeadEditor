@@ -1794,6 +1794,23 @@ namespace DeadEditor
                 return;
             }
 
+            AssignEntryToTrack(vm, position);
+        }
+
+        /// <summary>
+        /// Shared click + DnD assign seam (reference-side-panel-spec.md §10.2-iii): applies the setlist
+        /// entry at <paramref name="position"/> to <paramref name="vm"/> — refuse-steal, the
+        /// <see cref="ManualMatchApply.Reassign"/> write, and every Edit-side post-assign hook (panel
+        /// re-dim, alias, raw-title reconstruct, dirty flag, validation, unplaced-highlight recompute,
+        /// status). The click path resolves <paramref name="vm"/> via <see cref="SelectedTrackResolver"/>
+        /// (§7.5); the DnD drop path resolves it from the drop row (§10.3); both call this so there is no
+        /// third inline copy of the write/hook set (§7.2).
+        /// </summary>
+        private void AssignEntryToTrack(TrackInfoViewModel vm, int position)
+        {
+            if (_lastSetlistProjection == null || position < 0 || position >= _lastSetlistProjection.Count)
+                return;
+
             _lastClaimedPositions ??= new HashSet<int>();
 
             if (_lastClaimedPositions.Contains(position) && vm.ClaimedSetlistPosition != position)
@@ -2021,6 +2038,12 @@ namespace DeadEditor
                         UpdateDropIndicator(targetRow);
                 }
             }
+            else if (e.Data.GetDataPresent(typeof(SetlistReferencePanel.SetlistRow)))
+            {
+                // Setlist-assign payload (spec §10.2-ii): allow the drop only over a real track row.
+                e.Effects = (sender is DataGridRow row && row.Item is TrackInfoViewModel)
+                    ? WpfDragDropEffects.Move : WpfDragDropEffects.None;
+            }
             else
             {
                 e.Effects = WpfDragDropEffects.None;
@@ -2060,6 +2083,15 @@ namespace DeadEditor
                         RefreshValidation();
                     }
                 }
+            }
+            else if (e.Data.GetDataPresent(typeof(SetlistReferencePanel.SetlistRow))
+                && sender is DataGridRow setlistTargetRow
+                && setlistTargetRow.Item is TrackInfoViewModel setlistTargetVm
+                && e.Data.GetData(typeof(SetlistReferencePanel.SetlistRow)) is SetlistReferencePanel.SetlistRow payload)
+            {
+                // DnD setlist assign (spec §10.2-ii/§10.3): target is the drop row, never selection;
+                // route through the shared click+drop seam.
+                AssignEntryToTrack(setlistTargetVm, payload.Position);
             }
 
             HideDropIndicator();

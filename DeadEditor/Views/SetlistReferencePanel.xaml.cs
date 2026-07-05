@@ -31,6 +31,13 @@ namespace DeadEditor
         // Host policy: Import shows the "Edit setlist ↗" deep-link; Edit suppresses it (§9 banking).
         private bool _showEditSetlistLink = true;
 
+        // Drag-source state for DnD assign (spec §10.2-i). PreviewMouseLeftButtonDown arms with the row
+        // + start point; PreviewMouseMove begins DoDragDrop only past the system drag threshold, so the
+        // stationary double-click assign gesture (SetlistRow_MouseLeftButtonDown) never trips a drag.
+        private System.Windows.Point _dragStartPoint;
+        private SetlistRow? _dragRow;
+        private bool _dragArmed;
+
         /// <summary>
         /// Whether the header's "Edit setlist ↗" deep-link is offered. Import leaves it true; Edit
         /// sets it false (a round-trip from Edit would silently lose in-progress metadata edits, so
@@ -80,8 +87,69 @@ namespace DeadEditor
         {
             if (e.ClickCount != 2)
                 return;
+            // A double-click assigns — cancel any armed drag so a pending drag-start can't hijack the
+            // gesture (spec §10.2-i: the double-click gesture wins over the drag source).
+            _dragArmed = false;
+            _dragRow = null;
             if (sender is FrameworkElement fe && fe.DataContext is SetlistRow row)
                 AssignRequested?.Invoke(row.Position);
+        }
+
+        /// <summary>
+        /// Arm a potential drag on a setlist row (spec §10.2-i): record the row and the start point.
+        /// Only a genuine single-click press (<c>ClickCount == 1</c>) arms — the second press of a
+        /// double-click must NOT arm, or its modal <c>DoDragDrop</c> could consume the mouse-input
+        /// stream and starve the bubbling <see cref="SetlistRow_MouseLeftButtonDown"/> of its
+        /// <c>ClickCount == 2</c>, killing the assign. No drag starts here; only
+        /// <see cref="SetlistRow_PreviewMouseMove"/> past the drag threshold starts one.
+        /// </summary>
+        private void SetlistRow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount != 1)
+            {
+                _dragArmed = false;
+                _dragRow = null;
+                return;
+            }
+            if (sender is FrameworkElement fe && fe.DataContext is SetlistRow row)
+            {
+                _dragStartPoint = e.GetPosition(null);
+                _dragRow = row;
+                _dragArmed = true;
+            }
+        }
+
+        /// <summary>
+        /// Start the drag once the pointer leaves the system drag threshold with the button held. The
+        /// drag carries the row's <see cref="SetlistRow"/> as payload (spec §10.1); the host's grid
+        /// drop branch reads <see cref="SetlistRow.Position"/> and assigns.
+        /// </summary>
+        private void SetlistRow_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!_dragArmed || _dragRow == null || e.LeftButton != MouseButtonState.Pressed)
+                return;
+
+            var diff = _dragStartPoint - e.GetPosition(null);
+            if (Math.Abs(diff.X) <= SystemParameters.MinimumHorizontalDragDistance &&
+                Math.Abs(diff.Y) <= SystemParameters.MinimumVerticalDragDistance)
+                return;
+
+            // Disarm before the blocking DoDragDrop loop so it can't re-enter and start a second drag.
+            var payload = _dragRow;
+            _dragArmed = false;
+            _dragRow = null;
+            if (sender is DependencyObject source)
+                System.Windows.DragDrop.DoDragDrop(source, payload, System.Windows.DragDropEffects.Move);
+        }
+
+        /// <summary>
+        /// Release without crossing the threshold (a click / double-click): drop the armed state so a
+        /// later stray move can't start a drag from a stale start point (spec §10.2-i).
+        /// </summary>
+        private void SetlistRow_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _dragArmed = false;
+            _dragRow = null;
         }
 
         /// <summary>Expand or collapse the panel body (Width 320 &lt;-&gt; 0) and swap the chevron.</summary>

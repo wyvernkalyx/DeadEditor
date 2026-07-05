@@ -102,12 +102,16 @@
                             <DataTemplate>
                                 <!-- Transparent background makes the whole row hit-testable; a
                                      double-click raises AssignRequested to assign this entry to the
-                                     host's selected track (spec §7.5). -->
+                                     host's selected track (spec §7.5), and a drag past the threshold
+                                     starts a DnD assign onto the dropped-on track (spec §10). -->
                                 <Border Style="{StaticResource SetlistRowStyle}"
                                         Padding="10,4" BorderBrush="#2A2A2A" BorderThickness="0,0,0,1"
                                         Background="Transparent" Cursor="Hand"
                                         MouseLeftButtonDown="SetlistRow_MouseLeftButtonDown"
-                                        ToolTip="Double-click to assign this entry to the selected track">
+                                        PreviewMouseLeftButtonDown="SetlistRow_PreviewMouseLeftButtonDown"
+                                        PreviewMouseMove="SetlistRow_PreviewMouseMove"
+                                        PreviewMouseLeftButtonUp="SetlistRow_PreviewMouseLeftButtonUp"
+                                        ToolTip="Double-click to assign to the selected track, or drag onto a track to assign">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
