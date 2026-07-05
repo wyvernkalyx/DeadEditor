@@ -6,11 +6,13 @@
   "country": "US",
   "setlistFmId": "3bdcfc14",
   "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/fillmore-west-san-francisco-ca-3bdcfc14.html",
-  "lastUpdated": "2026-04-04T17:02:54Z",
+  "lastUpdated": "2026-07-04T14:55:15Z",
   "hasSetlist": true,
+  "multiShow": false,
+  "verified": false,
   "sets": [
     {
-      "name": "Set I",
+      "name": "Set 1",
       "songs": [
         {
           "name": "Casey Jones",
@@ -69,7 +71,7 @@
       ]
     },
     {
-      "name": "Set II",
+      "name": "Set 2",
       "songs": [
         {
           "name": "Me and My Uncle",
@@ -80,13 +82,13 @@
         {
           "name": "Truckin'",
           "date": "1971-03-03",
-          "segue": false,
+          "segue": true,
           "info": ""
         },
         {
           "name": "The Other One",
           "date": "1971-03-03",
-          "segue": false,
+          "segue": true,
           "info": ""
         },
         {
@@ -98,7 +100,7 @@
         {
           "name": "Greatest Story Ever Told",
           "date": "1971-03-03",
-          "segue": false,
+          "segue": true,
           "info": ""
         },
         {
@@ -127,105 +129,105 @@
       "songName": "Casey Jones",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 2,
       "songName": "Hard to Handle",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 3,
       "songName": "Playing in the Band",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 4,
       "songName": "Loser",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 5,
       "songName": "Me and Bobby McGee",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 6,
       "songName": "Next Time You See Me",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 7,
       "songName": "I'm a King Bee",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 8,
       "songName": "Beat It on Down the Line",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 9,
       "songName": "Bertha",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set I"
+      "set": "Set 1"
     },
     {
       "position": 10,
       "songName": "Me and My Uncle",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set II"
+      "set": "Set 2"
     },
     {
       "position": 11,
       "songName": "Truckin'",
       "date": "1971-03-03",
-      "segue": false,
-      "set": "Set II"
+      "segue": true,
+      "set": "Set 2"
     },
     {
       "position": 12,
       "songName": "The Other One",
       "date": "1971-03-03",
-      "segue": false,
-      "set": "Set II"
+      "segue": true,
+      "set": "Set 2"
     },
     {
       "position": 13,
       "songName": "Wharf Rat",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set II"
+      "set": "Set 2"
     },
     {
       "position": 14,
       "songName": "Greatest Story Ever Told",
       "date": "1971-03-03",
-      "segue": false,
-      "set": "Set II"
+      "segue": true,
+      "set": "Set 2"
     },
     {
       "position": 15,
       "songName": "Johnny B. Goode",
       "date": "1971-03-03",
       "segue": false,
-      "set": "Set II"
+      "set": "Set 2"
     },
     {
       "position": 16,
