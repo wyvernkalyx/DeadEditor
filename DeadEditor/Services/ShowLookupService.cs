@@ -13,6 +13,14 @@ namespace DeadEditor.Services
 
         [JsonProperty("segue")]
         public bool Segue { get; set; }
+
+        /// <summary>
+        /// Typed-entry kind carried through from <see cref="Models.ConcertSong.Type"/> by
+        /// <c>ConcertSetlistAdapter</c> so the projection can expose it (setlist-extras-writeback-spec.md
+        /// §2.4). Default "song"; plumbed only — no consumer renders it in slice 1.
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; } = "song";
     }
 
     public class SetInfo

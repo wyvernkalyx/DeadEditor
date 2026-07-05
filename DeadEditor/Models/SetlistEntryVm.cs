@@ -22,13 +22,21 @@ namespace DeadEditor.Models
         /// <summary>Human set label, e.g. "Set 2, #3".</summary>
         public string SetLabel { get; }
 
-        public SetlistEntryVm(string name, string canonical, int position, bool segue, string setLabel)
+        /// <summary>
+        /// Typed-entry kind (setlist-extras-writeback-spec.md D1/§3.1): song / tuning / false-start /
+        /// banter / other-extra. Default "song". Plumbed through the projection in slice 1 — panel and
+        /// review-dialog rendering land in slice 3; the matcher's extra-exclusion in slice 2.
+        /// </summary>
+        public string Type { get; }
+
+        public SetlistEntryVm(string name, string canonical, int position, bool segue, string setLabel, string type = "song")
         {
             Name = name;
             Canonical = canonical;
             Position = position;
             Segue = segue;
             SetLabel = setLabel;
+            Type = type;
         }
     }
 }

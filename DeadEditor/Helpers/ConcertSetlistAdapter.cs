@@ -51,7 +51,10 @@ namespace DeadEditor.Helpers
                         .Select(song => new SetlistSong
                         {
                             Name = song.Name,
-                            Segue = song.Segue
+                            Segue = song.Segue,
+                            // Carry the typed-entry kind through so the projection can expose it
+                            // (setlist-extras-writeback-spec.md §2.4). Plumbed, not rendered, in slice 1.
+                            Type = song.Type
                         })
                         .ToList()
                 })

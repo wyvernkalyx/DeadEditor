@@ -46,7 +46,7 @@ namespace DeadEditor.Helpers
                     var song = songs[i];
                     var canonical = canonicalResolver(song.Name) ?? song.Name;
                     var setLabel = $"{set.Label}, #{i + 1}";
-                    result.Add(new SetlistEntryVm(song.Name, canonical, position, song.Segue, setLabel));
+                    result.Add(new SetlistEntryVm(song.Name, canonical, position, song.Segue, setLabel, song.Type));
                     position++;
                 }
             }

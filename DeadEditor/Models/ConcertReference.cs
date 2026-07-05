@@ -108,6 +108,21 @@ namespace DeadEditor.Models
         public string Date { get; set; } = "";
         public bool Segue { get; set; }
         public string Info { get; set; } = "";
+
+        /// <summary>
+        /// Typed-entry kind (setlist-extras-writeback-spec.md D1/§3.1): one of
+        /// song / tuning / false-start / banter / other-extra (extensible, prefer other-extra).
+        /// Default "song"; a missing key deserializes to "song" so every legacy fetcher-sourced
+        /// file is valid unchanged. Written to BOTH sets[] and tracks[] in lockstep (D8a) — see the
+        /// twin on <see cref="ConcertTrack"/>. Empty-omitted when "song" via
+        /// <see cref="ShouldSerializeType"/> (mirrors <see cref="ShouldSerializeAliasSetlists"/>) so
+        /// untyped files stay byte-clean.
+        /// </summary>
+        public string Type { get; set; } = "song";
+
+        /// <summary>Omit the type key when it is the "song" default (or empty/null), keeping legacy files byte-clean.</summary>
+        public bool ShouldSerializeType() =>
+            !string.IsNullOrEmpty(Type) && !string.Equals(Type, "song", System.StringComparison.Ordinal);
     }
 
     public class ConcertTrack
@@ -117,6 +132,17 @@ namespace DeadEditor.Models
         public string Date { get; set; } = "";
         public bool Segue { get; set; }
         public string Set { get; set; } = "";
+
+        /// <summary>
+        /// Typed-entry kind, the flattened-shape twin of <see cref="ConcertSong.Type"/> kept in
+        /// lockstep by <c>ConcertSnapshot.Project</c> (D8a). Same vocabulary, default, and empty-omit
+        /// behavior (setlist-extras-writeback-spec.md D1/§3.1/§3.2).
+        /// </summary>
+        public string Type { get; set; } = "song";
+
+        /// <summary>Omit the type key when it is the "song" default (or empty/null), keeping legacy files byte-clean.</summary>
+        public bool ShouldSerializeType() =>
+            !string.IsNullOrEmpty(Type) && !string.Equals(Type, "song", System.StringComparison.Ordinal);
     }
 
     /// <summary>

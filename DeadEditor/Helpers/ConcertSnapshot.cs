@@ -8,7 +8,13 @@ namespace DeadEditor.Helpers
     /// One editable setlist row, projected from <c>EditSetlistView</c>'s grid. A WPF-free input
     /// record so the projection below can be unit-tested without a UI runtime.
     /// </summary>
-    public readonly record struct ConcertTrackInput(string SongName, string Date, bool Segue, string Set, string Info);
+    /// <summary>
+    /// One editable setlist row. <c>Type</c> is the typed-entry kind (setlist-extras-writeback-spec.md
+    /// D1/§3.1); default "song" so existing call sites (and untyped editor rows) project as songs and
+    /// serialize the key omitted (byte-stable). It participates in the diff-at-save baseline so a
+    /// retype unverifies (D3).
+    /// </summary>
+    public readonly record struct ConcertTrackInput(string SongName, string Date, bool Segue, string Set, string Info, string Type = "song");
 
     /// <summary>
     /// Pure, WPF-free, I/O-free projection of the concert setlist editor's current state into a
@@ -66,7 +72,8 @@ namespace DeadEditor.Helpers
                         Name = track.SongName,
                         Date = trackDate,
                         Segue = track.Segue,
-                        Info = track.Info
+                        Info = track.Info,
+                        Type = track.Type
                     });
 
                     concert.Tracks.Add(new ConcertTrack
@@ -75,7 +82,9 @@ namespace DeadEditor.Helpers
                         SongName = track.SongName,
                         Date = trackDate,
                         Segue = track.Segue,
-                        Set = group.Key
+                        Set = group.Key,
+                        // Lockstep with the ConcertSong above (D8a): the same type on both shapes.
+                        Type = track.Type
                     });
                 }
 
