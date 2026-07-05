@@ -28,6 +28,15 @@ namespace DeadEditor.Services
             public string Canonical { get; init; } = "";
             public int Position { get; init; }
             public bool Segue { get; init; }
+
+            /// <summary>
+            /// Typed-entry kind (setlist-extras-writeback-spec.md D1/§3.1); default "song". Auto-match
+            /// NEVER claims a non-song entry (D2, §4): extras are excluded as candidates in both the
+            /// direct pass and the combine pass, so an extra is only ever placed by manual / panel
+            /// assignment. Default keeps every all-song setlist (the entire current corpus) matching
+            /// byte-identically to before.
+            /// </summary>
+            public string Type { get; init; } = SetlistEntryType.Song;
         }
 
         /// <summary>
@@ -178,6 +187,9 @@ namespace DeadEditor.Services
                 for (int i = 0; i < setlist.Count; i++)
                 {
                     if (claimed.Contains(i)) continue;
+                    // D2: auto-match never claims an extra, even when the track's canonical title
+                    // equals the extra's (a "Tuning" track does not auto-claim a `tuning` entry).
+                    if (SetlistEntryType.IsExtra(setlist[i].Type)) continue;
                     if (string.Equals(trackCanonical, setlist[i].Canonical,
                         StringComparison.OrdinalIgnoreCase))
                     {
@@ -211,6 +223,15 @@ namespace DeadEditor.Services
             foreach (var entry in setlist)
                 officialCanonicalNames.Add(entry.Canonical);
 
+            // D2 for the combine pass: an extra index must never fall inside a combine run. Feed the
+            // decomposer every extra index as if already claimed, so any window overlapping an extra is
+            // skipped exactly as a claimed position is — WITHOUT polluting the real `claimed` set (which
+            // becomes ClaimedPositions / ClaimsByTrack, both of which must stay extra-free). For an
+            // all-song setlist this stays empty and the combine pass is byte-identical to before.
+            var extraIndices = new HashSet<int>();
+            for (int i = 0; i < setlist.Count; i++)
+                if (SetlistEntryType.IsExtra(setlist[i].Type)) extraIndices.Add(i);
+
             foreach (var track in tracks)
             {
                 if (matchedTracks.Contains(track)) continue;
@@ -218,8 +239,17 @@ namespace DeadEditor.Services
                 var trackName = track.SongName;
                 if (string.IsNullOrEmpty(trackName)) continue;
 
+                // For an all-song setlist, pass `claimed` itself (no allocation, identical behavior);
+                // otherwise pass claimed ∪ extras so combine windows never cover an extra.
+                ISet<int> combineClaimed = claimed;
+                if (extraIndices.Count > 0)
+                {
+                    combineClaimed = new HashSet<int>(claimed);
+                    combineClaimed.UnionWith(extraIndices);
+                }
+
                 var run = CombinedTrackDecomposer.Decompose(
-                    trackName, officialCanonicalNames, resolveOfficialOrNull, claimed);
+                    trackName, officialCanonicalNames, resolveOfficialOrNull, combineClaimed);
                 if (run == null || run.Count < 2) continue;
 
                 var coveredNames = new List<string>(run.Count);
