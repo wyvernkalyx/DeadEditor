@@ -853,6 +853,51 @@ public class SetlistMatcherTests
 
     // ===== Helpers =====
 
+    [Fact]
+    public void ClaimsByTrack_MapsEachMatchedTrackToItsClaimedPosition_ExcludesUnmatched()
+    {
+        // Middle track is not in the setlist → unmatched → must not appear in ClaimsByTrack.
+        var tracks = new List<TrackInfo>
+        {
+            MakeTrack(1, 1, "China Cat Sunflower"),
+            MakeTrack(1, 2, "Tuning"),
+            MakeTrack(1, 3, "Sugar Magnolia"),
+        };
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "China Cat Sunflower", Canonical = "China Cat Sunflower", Position = 0 },
+            new() { Name = "Sugar Magnolia",      Canonical = "Sugar Magnolia",      Position = 1 },
+        };
+
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
+
+        Assert.Equal(2, result.ClaimsByTrack.Count);
+        Assert.Contains(result.ClaimsByTrack, c => ReferenceEquals(c.Track, tracks[0]) && c.Position == 0);
+        Assert.Contains(result.ClaimsByTrack, c => ReferenceEquals(c.Track, tracks[2]) && c.Position == 1);
+        Assert.DoesNotContain(result.ClaimsByTrack, c => ReferenceEquals(c.Track, tracks[1]));
+    }
+
+    [Fact]
+    public void ClaimsByTrack_RepeatedSong_MapsEachTrackToDistinctFirstUnclaimedPosition()
+    {
+        // Two "Playing in the Band" tracks claim the two setlist positions in track order.
+        var tracks = new List<TrackInfo>
+        {
+            MakeTrack(1, 1, "Playing in the Band"),
+            MakeTrack(1, 2, "Playing in the Band"),
+        };
+        var setlist = new List<SetlistMatcher.SetlistEntry>
+        {
+            new() { Name = "Playing in the Band", Canonical = "Playing in the Band", Position = 0 },
+            new() { Name = "Playing in the Band", Canonical = "Playing in the Band", Position = 1 },
+        };
+
+        var result = SetlistMatcher.MatchAndDecorate(tracks, setlist, IdentityResolver, IdentityResolver);
+
+        Assert.Contains(result.ClaimsByTrack, c => ReferenceEquals(c.Track, tracks[0]) && c.Position == 0);
+        Assert.Contains(result.ClaimsByTrack, c => ReferenceEquals(c.Track, tracks[1]) && c.Position == 1);
+    }
+
     private static string? IdentityResolver(string s) => s;
 
     // 1969-03-01 flattened setlist (mirrors Data/concerts/1969-03-01.json across its three sets;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using DeadEditor.Models;
 
 namespace DeadEditor
@@ -55,12 +56,33 @@ namespace DeadEditor
         /// </summary>
         public event Action? EditSetlistRequested;
 
+        /// <summary>
+        /// Raised when the user double-clicks a setlist entry to assign it to the hosting view's
+        /// currently-selected track (reference-side-panel-spec.md §7, §7.5). Carries the entry's
+        /// flattened 0-based <see cref="SetlistEntryVm.Position"/>. The panel holds no track selection
+        /// and performs no write — the host resolves the selected track and applies the assignment
+        /// (§4 contract). Available whenever the panel is populated, independent of any match run.
+        /// </summary>
+        public event Action<int>? AssignRequested;
+
         public SetlistReferencePanel()
         {
             InitializeComponent();
         }
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e) => SetExpanded(!_expanded);
+
+        /// <summary>
+        /// Double-click on a setlist row raises <see cref="AssignRequested"/> with the row's flattened
+        /// position. Single-clicks (selection/scroll) are ignored so an accidental click never assigns.
+        /// </summary>
+        private void SetlistRow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount != 2)
+                return;
+            if (sender is FrameworkElement fe && fe.DataContext is SetlistRow row)
+                AssignRequested?.Invoke(row.Position);
+        }
 
         /// <summary>Expand or collapse the panel body (Width 320 &lt;-&gt; 0) and swap the chevron.</summary>
         public void SetExpanded(bool expanded)
@@ -88,6 +110,7 @@ namespace DeadEditor
                 {
                     rows.Add(new SetlistRow
                     {
+                        Position = e.Position,
                         PositionText = (e.Position + 1).ToString(),
                         Name = e.Name,
                         SetLabel = e.SetLabel,
@@ -115,6 +138,8 @@ namespace DeadEditor
         /// <summary>Display row bound by the Setlist view's ItemTemplate.</summary>
         public sealed class SetlistRow
         {
+            /// <summary>Flattened 0-based position — the claim axis, carried for AssignRequested.</summary>
+            public int Position { get; set; }
             public string PositionText { get; set; } = "";
             public string Name { get; set; } = "";
             public string SetLabel { get; set; } = "";

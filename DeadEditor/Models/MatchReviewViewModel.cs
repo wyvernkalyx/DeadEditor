@@ -86,10 +86,11 @@ namespace DeadEditor
 
         /// <summary>The Unmatched section header line, with grammatical
         /// singular/plural (mirrors <see cref="HiddenSummary"/>). Points the user
-        /// at the grid, where unmatched tracks are resolved manually.</summary>
+        /// at the Setlist panel, the always-available assign path (reference-side-panel-spec.md
+        /// §7.5, §7.6c) — not the sometimes-absent right-click menu.</summary>
         public string UnmatchedSummary => UnmatchedCount == 1
-            ? "1 unmatched track — match manually in the grid"
-            : $"{UnmatchedCount} unmatched tracks — match manually in the grid";
+            ? "1 unmatched track — assign from the Setlist panel"
+            : $"{UnmatchedCount} unmatched tracks — assign from the Setlist panel";
 
         /// <summary>
         /// Builds a fresh <see cref="SetlistMatcher.ProposalSet"/> from the

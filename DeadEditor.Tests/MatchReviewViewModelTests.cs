@@ -364,12 +364,12 @@ public class MatchReviewViewModelTests
         var one = new MatchReviewViewModel(
             MakeSet(MakeProposal("Watchtower", "All Along The Watchtower", false, false)),
             new List<TrackInfo> { MakeBareTrack(1), });
-        Assert.Equal("1 unmatched track — match manually in the grid", one.UnmatchedSummary);
+        Assert.Equal("1 unmatched track — assign from the Setlist panel", one.UnmatchedSummary);
 
         var two = new MatchReviewViewModel(
             MakeSet(MakeProposal("Watchtower", "All Along The Watchtower", false, false)),
             new List<TrackInfo> { MakeBareTrack(1), MakeBareTrack(2) });
-        Assert.Equal("2 unmatched tracks — match manually in the grid", two.UnmatchedSummary);
+        Assert.Equal("2 unmatched tracks — assign from the Setlist panel", two.UnmatchedSummary);
     }
 
     // ===== MatchReviewViewModel: BuildEditedProposalSet =====

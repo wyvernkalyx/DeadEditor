@@ -128,6 +128,8 @@ namespace DeadEditor
             _normalizationService = new NormalizationService();
             _manifestService = new ManifestService();
             ValidationIssuesItemsControl.ItemsSource = _validationIssues;
+            // Reference-panel double-click assign — the host owns the write (spec §7.5).
+            SetlistPanel.AssignRequested += SetlistPanel_AssignRequested;
         }
 
         private async void EditMetadataView_Loaded(object sender, RoutedEventArgs e)
@@ -1720,6 +1722,8 @@ namespace DeadEditor
             // (reference-side-panel-spec.md §7.1).
             var matchResult = ManualMatchApply.Apply(
                 track, _lastClaimedPositions, selectedIndex, selectedSong.Canonical, selectedSong.Segue);
+            // Back-reference stamp so a later panel re-assign of this track frees this position (§7.5.1).
+            vm.ClaimedSetlistPosition = matchResult.ClaimedPosition;
 
             // Re-dim the reference panel so the newly claimed entry greys out (spec §6, §7.1 host
             // hook). Projection is unchanged; only the claimed set grew.
@@ -1743,6 +1747,82 @@ namespace DeadEditor
 
             int remaining = _lastSetlistSongs.Count - _lastClaimedPositions.Count;
             StatusTextBlock.Text = $"Matched '{aliasCandidate}' → '{selectedSong.Canonical}'. {remaining} setlist songs remaining.";
+        }
+
+        /// <summary>
+        /// Stamps each track VM's <see cref="TrackInfoViewModel.ClaimedSetlistPosition"/> from a Match
+        /// Setlist run so a later panel re-assign can free the prior position (§7.5.1). Resets all
+        /// stamps first, then applies the run's per-track claims.
+        /// </summary>
+        private void StampRunClaims(SetlistMatcher.MatchResult result)
+        {
+            foreach (var vm in _tracks)
+                vm.ClaimedSetlistPosition = null;
+            foreach (var claim in result.ClaimsByTrack)
+            {
+                foreach (var vm in _tracks)
+                {
+                    if (ReferenceEquals(vm.Track, claim.Track))
+                    {
+                        vm.ClaimedSetlistPosition = claim.Position;
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Panel double-click assign (reference-side-panel-spec.md §7.5): assign the double-clicked
+        /// setlist entry to the grid's selected track. Available whenever the panel is populated,
+        /// independent of any match run. Re-assign onto an already-resolved track is allowed and frees
+        /// the track's prior position (§7.5.1); claiming an entry another track already holds is refused.
+        /// Mirrors the right-click Match-to-Song per-surface hooks (Edit side).
+        /// </summary>
+        private void SetlistPanel_AssignRequested(int position)
+        {
+            if (_lastSetlistProjection == null || position < 0 || position >= _lastSetlistProjection.Count)
+                return;
+
+            // Cell-selection grid (SelectionUnit=CellOrRowHeader): a bare cell click leaves
+            // SelectedItem null and does not drive CurrentItem (which follows row selection), but it
+            // DOES set CurrentCell.Item — so resolve the current track across all three sources.
+            var vm = SelectedTrackResolver.Resolve(
+                TracksDataGrid.SelectedItem, TracksDataGrid.CurrentCell.Item, TracksDataGrid.CurrentItem);
+            if (vm == null)
+            {
+                StatusTextBlock.Text = "Select a track first, then double-click a setlist entry to assign it.";
+                return;
+            }
+
+            _lastClaimedPositions ??= new HashSet<int>();
+
+            if (_lastClaimedPositions.Contains(position) && vm.ClaimedSetlistPosition != position)
+            {
+                StatusTextBlock.Text = "That setlist entry is already placed to another track.";
+                return;
+            }
+
+            var entry = _lastSetlistProjection[position];
+            var result = ManualMatchApply.Reassign(
+                vm.Track, _lastClaimedPositions, vm.ClaimedSetlistPosition, position, entry.Canonical, entry.Segue);
+            vm.ClaimedSetlistPosition = position;
+
+            SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions);
+
+            var aliasCandidate = result.PreviousSongName.Trim();
+            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(result.Canonical)
+                && !string.Equals(aliasCandidate, result.Canonical, StringComparison.OrdinalIgnoreCase))
+            {
+                _normalizationService.AddAlias(result.Canonical, aliasCandidate);
+            }
+
+            // Edit-side per-surface hooks (mirror the right-click Match-to-Song tail).
+            ReconstructRawTitles();
+            TracksDataGrid.Items.Refresh();
+            _hasUnsavedChanges = true;
+            RefreshValidation();
+            RecomputeUnmatchedHighlights();
+            StatusTextBlock.Text = $"Assigned '{entry.Name}' to the selected track.";
         }
 
         // ===== MATCH SETLIST =====
@@ -1834,6 +1914,9 @@ namespace DeadEditor
             _lastSetlistProjection = projection;
             SetlistPanel.SetSetlist(projection, _lastClaimedPositions);
 
+            // Stamp per-track claimed positions for the panel-reassign back-reference (§7.5.1).
+            StampRunClaims(result);
+
             ReconstructRawTitles();
             TracksDataGrid.Items.Refresh();
             _hasUnsavedChanges = true;
@@ -1845,7 +1928,7 @@ namespace DeadEditor
             int unmatchedCount = _tracks.Count - matchCount;
             var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
             var unmatchedMsg = unmatchedCount > 0
-                ? $". {unmatchedCount} unmatched \u2014 right-click to match manually."
+                ? $". {unmatchedCount} unmatched \u2014 assign from the Setlist panel."
                 : "";
             StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
 

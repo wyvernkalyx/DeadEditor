@@ -115,16 +115,29 @@ Edit-side assignment does **not** call `MaybeUnverifyAlbumEdit()` — parity wit
 
 Panel-driven assignment and the existing right-click **Match to Song** menu have **different availability gates**, deliberately:
 
-- **Panel assignment gate = the panel is populated.** The panel's click/DnD assign is offered whenever the setlist projection exists (`_lastSetlistProjection != null` — Import `ImportView.xaml.cs:72,465,1366`; Edit `EditMetadataView.xaml.cs:65,1448,1840`). It is **NOT** gated on a completed Match Setlist run. Motivating case: **position-only imports where auto-match resolves nothing** — no run ever completes with claims, yet the setlist is populated on date entry (§5.2), so the panel is the *only* path to assign. A track's `IsMatched` state does not gate panel assignment (§7.5.1).
+- **Panel assignment gate = the panel is populated.** The panel's click/DnD assign is offered whenever the setlist projection exists (`_lastSetlistProjection != null` — Import `ImportView.xaml.cs:72,465,1366`; Edit `EditMetadataView.xaml.cs:65,1448,1840`). It is **NOT** gated on a completed Match Setlist run. Motivating case: **position-only imports where auto-match resolves nothing** — no run ever completes with claims, yet the setlist is populated on date entry (§5.2), so the panel is the *only* path to assign. A track's `IsMatched` state does not gate panel assignment (§7.5.1). **Interaction model (as built, slice 5b):** select a track in the grid, then **double-click** a setlist row; the panel raises `AssignRequested(position)` (single-clicks are ignored so an accidental click never assigns) and the host resolves the selected track via `Helpers/SelectedTrackResolver` — `SelectedItem` (full-row grids, Import) falling through to **`CurrentCell.Item`** (Edit's `CellOrRowHeader` grid, where a bare cell click leaves `SelectedItem` and `CurrentItem` null; this was the slice-5b gate-b bug) then `CurrentItem` — and applies the write. The panel holds no selection and performs no write (§4).
 
 - **Right-click menu gate = UNCHANGED.** The existing menu keeps its current, stricter gate: a completed **applied** Match Setlist run **and** the clicked track's `IsMatched != true` **and** at least one unclaimed setlist song. Ground truth: Import `ImportView.xaml.cs:827-844` (condition at `828-829`: `_lastSetlistSongs != null && _lastClaimedPositions != null && _lastMatchDate != null && vm.Track.IsMatched != true`, plus the `BuildUnmatchedSetlistSongList().Count > 0` check at `832-833`); Edit `EditMetadataView.xaml.cs:1643-1659` (condition at `1644-1645`: `_matchSetlistHasRun && clickedTrack.IsMatched != true && _lastSetlistSongs != null && _lastClaimedPositions != null`, plus the unmatched-count check at `1647-1648`). Slice 5 does not change this gate; it only retrofits the handler body onto the shared core (§7.2).
 
 #### 7.5.1 Assignment onto an already-resolved track is ALLOWED
 Panel assignment works on a track **regardless of its current `IsMatched` state** — including a track auto-match already resolved. Rationale: a panel assign is an **explicit per-track user action**, and explicit action is explicit intent; re-assignment is the **correction path** when auto-match resolved a track to the wrong song. (This is exactly what the right-click menu cannot do — its `IsMatched != true` gate structurally excludes resolved tracks, §7.5.2.)
 
-**Consequence the host must implement:** re-assigning a track that already claimed a setlist position must **free the previously claimed position** (remove it from `_lastClaimedPositions` so the old entry un-dims) and **claim the new one**, then re-call `SetSetlist(projection, _lastClaimedPositions)` to refresh dimming. This is a **new** host hook: today's manual path only ever *adds* to the claimed set (Import `:923`, Edit `:1728`) and never frees, because its gate guarantees the clicked track was unclaimed.
+**Consequence the host must implement:** re-assigning a track that already claimed a setlist position must **free the previously claimed position** (remove it from `_lastClaimedPositions` so the old entry un-dims) and **claim the new one**, then re-call `SetSetlist(projection, _lastClaimedPositions)` to refresh dimming.
 
-**Implementation note (flag).** `_lastClaimedPositions` is position-indexed; `TrackInfo` carries **no back-reference** to the setlist position it claimed, so "free the previously claimed position" has no O(1) lookup today. Slice 5 must introduce a track→claimed-position association (a side map, or recompute the freed position from the track's prior `SongName`/segue) to un-dim correctly. Absent this, a re-assign would leave the stale old position dimmed. Called out as slice-5 design work, not solved here.
+**Back-reference — as built (slice 5b).** The track→claimed-position association is a transient
+`int? TrackInfoViewModel.ClaimedSetlistPosition` (`Models/TrackInfoViewModel.cs`, session-only, never
+persisted). It is stamped by **every** claim path so the freed position is an O(1) lookup: the
+right-click Match-to-Song and panel assign stamp it from `ManualMatchResult.ClaimedPosition`; a Match
+Setlist run stamps it from the new `SetlistMatcher.MatchResult.ClaimsByTrack` (per-track primary
+covered index), with all stamps reset at the top of each run so an unplaced track carries none. The
+free-old-claim-new transition is the pure, unit-tested `ManualMatchApply.Reassign(track,
+claimedPositions, previousPosition, newPosition, canonical, segue)` — it removes `previousPosition`
+when present and distinct, then applies the standard write set (a null or equal `previousPosition`
+degrades to a plain `Apply`). The host reads the selected track's `ClaimedSetlistPosition` as
+`previousPosition`. **Refuse-steal rule:** claiming a position a *different* track already holds
+(`_lastClaimedPositions.Contains(pos) && selected.ClaimedSetlistPosition != pos`) is refused with a
+status hint — v1 has no un-place gesture, so stealing another track's claim (which would strand it)
+is out of scope. Assigning with no track selected shows a "select a track first" hint and no-ops.
 
 #### 7.5.2 Structural consequence — the menu can never serve two track classes
 Because the right-click gate requires `IsMatched != true`, the menu **can never appear** for:
@@ -141,9 +154,23 @@ a. **Run-state signal unification.** The two surfaces track "a match run complet
 
 b. **`ClearView` stale-state leak (latent).** Import's `ClearView` (`ImportView.xaml.cs:452-473`) resets `_lastSetlistProjection` (`:465`) and `_lastConfirmedCombines` (`:463`) but does **NOT** reset `_lastSetlistSongs`, `_lastClaimedPositions`, or `_lastMatchDate` (the in-code comment at `:460-462` acknowledges the broader `_lastMatch*` cleanup is banked). Stale match state can leak onto a newly loaded album. Sweep the full reset into slice 5 — it becomes load-bearing once panel assignment reads/writes that state outside a fresh run.
 
-c. **Misleading guidance copy.** Copy in the review dialog and the Edit status bar tells the user to "match manually in the grid" / "right-click to match manually" (Import status at `ImportView.xaml.cs:944`) in states where the menu item **cannot** appear — the cancel path and a fully-claimed setlist (menu gate false). When the availability rules land, rewrite the guidance so copy and gates agree: point at the **panel** (always available when populated), not the sometimes-absent menu.
+c. **Misleading guidance copy — DONE (slice 5b).** Three user-facing strings pointed at the
+sometimes-absent right-click menu; all now point at the always-available **Setlist panel** ("… unmatched
+— assign from the Setlist panel"): the Import run status and Import Match-to-Song status
+(`ImportView.xaml.cs`), the Edit run status (`EditMetadataView.xaml.cs`), and the review dialog's
+unmatched-section header (`MatchReviewViewModel.UnmatchedSummary`). The cancel-path status ("Match
+Setlist cancelled.") named no affordance and was left as-is. No string now names an affordance in a
+state where it cannot appear.
 
-d. **Unclaimed-indication asymmetry.** Import has **no** post-match unclaimed indication; Edit tints unclaimed rows amber via `RecomputeUnmatchedHighlights` (`EditMetadataView.xaml.cs:507-511`, `vm.ShowUnmatchedWarning = _matchSetlistHasRun && vm.Track.IsMatched != true`). The surfaces also disagree on what "unmatched" *means* visually: Import gold = title-unresolved **always**; Edit amber = **gated on a run**. Slice 5 should either reconcile the two indications or explicitly document why they differ — and ensure panel assignment updates whichever indication a surface uses.
+d. **Unclaimed-indication asymmetry — RESOLVED by bringing Import to parity (slice 5b).** Import now
+has the same run-gated amber unplaced-row tint as Edit: a `RecomputeUnmatchedHighlights` (gated on the
+unified `_matchSetlistHasRun`, driving the shared `TrackInfoViewModel.ShowUnmatchedWarning`) plus a
+`ShowUnmatchedWarning` row-background `DataTrigger` (`#3F2D1A`) in the Import grid, called after a run,
+a right-click match, and a panel assign. The two indications are **deliberately distinct and coexist**:
+the **run-gated amber row tint** means "left unplaced by a match run" (appears only after a run), while
+Import's **always-on gold title text** (`#D7BA7D`, bound to `Track.IsMatched == False`) means "the title
+is not a known canonical" — independent of any run. A row can show gold text on an amber background
+(unrecognized title *and* unplaced); the two are visually separable (text color vs row background).
 
 ## 8. External info-file open
 

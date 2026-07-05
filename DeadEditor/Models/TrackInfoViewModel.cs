@@ -173,6 +173,16 @@ namespace DeadEditor
             }
         }
 
+        /// <summary>
+        /// The flattened setlist position this track currently claims, or null if it claims none.
+        /// Transient session state (never persisted) — the track→claimed-position back-reference that
+        /// lets a panel re-assign free the prior position and un-dim it (reference-side-panel-spec.md
+        /// §7.5.1). Set by every claim path (Match Setlist run via MatchResult.ClaimsByTrack, the
+        /// right-click Match-to-Song, and panel assign); reset before each run and cleared when the
+        /// track becomes unmatched. Not bound in XAML, so no change notification is needed.
+        /// </summary>
+        public int? ClaimedSetlistPosition { get; set; }
+
         public void UpdateDisplayTitle()
         {
             if (_isEditMode)

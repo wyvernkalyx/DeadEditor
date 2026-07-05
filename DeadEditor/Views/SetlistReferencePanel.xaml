@@ -100,8 +100,14 @@
                     <ItemsControl x:Name="SetlistItems" Visibility="Collapsed">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
+                                <!-- Transparent background makes the whole row hit-testable; a
+                                     double-click raises AssignRequested to assign this entry to the
+                                     host's selected track (spec §7.5). -->
                                 <Border Style="{StaticResource SetlistRowStyle}"
-                                        Padding="10,4" BorderBrush="#2A2A2A" BorderThickness="0,0,0,1">
+                                        Padding="10,4" BorderBrush="#2A2A2A" BorderThickness="0,0,0,1"
+                                        Background="Transparent" Cursor="Hand"
+                                        MouseLeftButtonDown="SetlistRow_MouseLeftButtonDown"
+                                        ToolTip="Double-click to assign this entry to the selected track">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>

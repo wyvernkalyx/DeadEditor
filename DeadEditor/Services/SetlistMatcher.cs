@@ -30,11 +30,27 @@ namespace DeadEditor.Services
             public bool Segue { get; init; }
         }
 
+        /// <summary>
+        /// Associates one applied track with the primary setlist position it claimed. Lets the host
+        /// build a track→claimed-position back-reference (reference-side-panel-spec.md §7.5.1) so a
+        /// later panel re-assign can free the track's prior position and un-dim it. For a combined
+        /// track (2+ covered indices) this carries the first covered index only.
+        /// </summary>
+        public readonly record struct TrackClaim(TrackInfo Track, int Position);
+
         public sealed class MatchResult
         {
             public int MatchedCount { get; init; }
             public int SegueCount { get; init; }
             public HashSet<int> ClaimedPositions { get; init; } = new();
+
+            /// <summary>
+            /// Per-track primary claimed position for every applied proposal (single and combined),
+            /// in proposal order. Additive; empty by default so consumers that ignore it are
+            /// unaffected. The host maps each <see cref="TrackClaim.Track"/> back to its VM to stamp
+            /// the claimed-position back-reference used by panel re-assign (§7.5.1).
+            /// </summary>
+            public IReadOnlyList<TrackClaim> ClaimsByTrack { get; init; } = new List<TrackClaim>();
 
             /// <summary>
             /// The applied proposals that collapse 2+ official entries into one media track
@@ -276,6 +292,13 @@ namespace DeadEditor.Services
                 // alias-persistence seam can record them; single-song matches are excluded.
                 ConfirmedCombines = proposalSet.Proposals
                     .Where(p => p.CoveredEntryIndices.Count > 1)
+                    .ToList(),
+                // Per-track primary claimed position (first covered index) for the host's
+                // panel-reassign back-reference (§7.5.1). Every applied proposal that claimed at
+                // least one position is included.
+                ClaimsByTrack = proposalSet.Proposals
+                    .Where(p => p.CoveredEntryIndices.Count > 0)
+                    .Select(p => new TrackClaim(p.Track, p.CoveredEntryIndices[0]))
                     .ToList(),
             };
         }

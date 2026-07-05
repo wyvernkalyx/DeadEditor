@@ -107,4 +107,60 @@ public class ManualMatchApplyTests
         Assert.Equal(2, track.DiscNumber);
         Assert.Equal(7, track.TrackNumber);
     }
+
+    // --- Reassign (§7.5.1): free the prior claimed position, claim the new one ---
+
+    [Fact]
+    public void Reassign_FreesPreviousPosition_AndClaimsNew()
+    {
+        var track = Track("Ripple", matched: true);
+        var claimed = new HashSet<int> { 3 };  // track currently claims position 3
+
+        var result = ManualMatchApply.Reassign(track, claimed, previousPosition: 3, newPosition: 7,
+            canonical: "Sugar Magnolia", segue: false);
+
+        Assert.DoesNotContain(3, claimed);   // old un-dims
+        Assert.Contains(7, claimed);         // new claimed
+        Assert.Equal("Sugar Magnolia", track.SongName);
+        Assert.True(track.IsMatched);
+        Assert.Equal(7, result.ClaimedPosition);
+    }
+
+    [Fact]
+    public void Reassign_NullPreviousPosition_IsPlainClaim()
+    {
+        var track = Track("tuning", matched: false);
+        var claimed = new HashSet<int>();
+
+        ManualMatchApply.Reassign(track, claimed, previousPosition: null, newPosition: 2,
+            canonical: "Tuning", segue: false);
+
+        Assert.Equal(new HashSet<int> { 2 }, claimed);
+        Assert.Equal("Tuning", track.SongName);
+    }
+
+    [Fact]
+    public void Reassign_SamePosition_DoesNotDropTheClaim()
+    {
+        // Re-affirming the same entry must not free-then-nothing: position stays claimed.
+        var track = Track("Bertha");
+        var claimed = new HashSet<int> { 5 };
+
+        ManualMatchApply.Reassign(track, claimed, previousPosition: 5, newPosition: 5,
+            canonical: "Bertha", segue: false);
+
+        Assert.Equal(new HashSet<int> { 5 }, claimed);
+    }
+
+    [Fact]
+    public void Reassign_PropagatesSegueTrue()
+    {
+        var track = Track("China Cat", segue: false);
+        var claimed = new HashSet<int> { 1 };
+
+        ManualMatchApply.Reassign(track, claimed, previousPosition: 1, newPosition: 4,
+            canonical: "China Cat Sunflower", segue: true);
+
+        Assert.True(track.Segue);
+    }
 }

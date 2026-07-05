@@ -128,6 +128,8 @@ namespace DeadEditor
 
             // Reference-panel "Edit setlist ↗" deep-link — the host owns navigation (spec §9).
             SetlistPanel.EditSetlistRequested += OnEditSetlistRequested;
+            // Reference-panel double-click assign — the host owns the write (spec §7.5).
+            SetlistPanel.AssignRequested += SetlistPanel_AssignRequested;
         }
 
         // ===== PUBLIC API =====
@@ -933,6 +935,8 @@ namespace DeadEditor
             // (reference-side-panel-spec.md §7.1).
             var matchResult = ManualMatchApply.Apply(
                 vm.Track, _lastClaimedPositions, selectedIndex, selectedSong.Canonical, selectedSong.Segue);
+            // Back-reference stamp so a later panel re-assign of this track frees this position (§7.5.1).
+            vm.ClaimedSetlistPosition = matchResult.ClaimedPosition;
 
             // Re-dim the reference panel so the newly claimed entry greys out
             // (reference-side-panel-spec.md §6, §7.1 host hook). Projection is unchanged; only the
@@ -953,11 +957,94 @@ namespace DeadEditor
             int segueCount = _tracks.Count(t => t.Track.Segue);
             var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";
             var unmatchedMsg = unmatchedCount > 0
-                ? $". {unmatchedCount} unmatched — right-click to match manually."
+                ? $". {unmatchedCount} unmatched — assign from the Setlist panel."
                 : "";
             StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
 
+            // This row just became matched — drop it out of the amber unplaced tint (parity §7.6d).
+            RecomputeUnmatchedHighlights();
             TracksDataGrid.Items.Refresh();
+        }
+
+        /// <summary>
+        /// Recomputes the amber unplaced-row tint for every track (Import parity with Edit, spec
+        /// §7.6d). A row goes amber only when Match Setlist has run this session AND the track is
+        /// unplaced (<c>IsMatched != true</c>) — never on fresh load. Distinct from the always-on gold
+        /// title-unresolved text color (which means "title is not a known canonical", run-independent).
+        /// Called after a match run, a right-click Match-to-Song, and a panel assign.
+        /// </summary>
+        private void RecomputeUnmatchedHighlights()
+        {
+            foreach (var vm in _tracks)
+                vm.ShowUnmatchedWarning = _matchSetlistHasRun && vm.Track.IsMatched != true;
+        }
+
+        /// <summary>
+        /// Stamps each track VM's <see cref="TrackInfoViewModel.ClaimedSetlistPosition"/> from a Match
+        /// Setlist run so a later panel re-assign can free the prior position (§7.5.1). Resets all
+        /// stamps first, then applies the run's per-track claims — so a track left unplaced this run
+        /// carries no stale stamp.
+        /// </summary>
+        private void StampRunClaims(SetlistMatcher.MatchResult result)
+        {
+            foreach (var vm in _tracks)
+                vm.ClaimedSetlistPosition = null;
+            foreach (var claim in result.ClaimsByTrack)
+            {
+                foreach (var vm in _tracks)
+                {
+                    if (ReferenceEquals(vm.Track, claim.Track))
+                    {
+                        vm.ClaimedSetlistPosition = claim.Position;
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Panel double-click assign (reference-side-panel-spec.md §7.5): assign the double-clicked
+        /// setlist entry to the grid's selected track. Available whenever the panel is populated,
+        /// independent of any match run. Re-assign onto an already-resolved track is allowed and frees
+        /// the track's prior position (§7.5.1); claiming an entry another track already holds is refused.
+        /// </summary>
+        private void SetlistPanel_AssignRequested(int position)
+        {
+            if (_lastSetlistProjection == null || position < 0 || position >= _lastSetlistProjection.Count)
+                return;
+
+            if (TracksDataGrid.SelectedItem is not TrackInfoViewModel vm)
+            {
+                StatusTextBlock.Text = "Select a track first, then double-click a setlist entry to assign it.";
+                return;
+            }
+
+            _lastClaimedPositions ??= new HashSet<int>();
+
+            // Refuse stealing an entry a different track already claims (no un-place gesture in v1).
+            if (_lastClaimedPositions.Contains(position) && vm.ClaimedSetlistPosition != position)
+            {
+                StatusTextBlock.Text = "That setlist entry is already placed to another track.";
+                return;
+            }
+
+            var entry = _lastSetlistProjection[position];
+            var result = ManualMatchApply.Reassign(
+                vm.Track, _lastClaimedPositions, vm.ClaimedSetlistPosition, position, entry.Canonical, entry.Segue);
+            vm.ClaimedSetlistPosition = position;
+
+            SetlistPanel.SetSetlist(_lastSetlistProjection, _lastClaimedPositions);
+
+            var aliasCandidate = result.PreviousSongName.Trim();
+            if (!string.IsNullOrEmpty(aliasCandidate) && !string.IsNullOrEmpty(result.Canonical)
+                && !string.Equals(aliasCandidate, result.Canonical, StringComparison.OrdinalIgnoreCase))
+            {
+                _normalizationService.AddAlias(result.Canonical, aliasCandidate);
+            }
+
+            RecomputeUnmatchedHighlights();
+            TracksDataGrid.Items.Refresh();
+            StatusTextBlock.Text = $"Assigned '{entry.Name}' to the selected track.";
         }
 
         // ===== DRAG-TO-REORDER =====
@@ -1379,6 +1466,11 @@ namespace DeadEditor
             _lastSetlistProjection = projection;
             SetlistPanel.SetSetlist(projection, _lastClaimedPositions);
 
+            // Stamp per-track claimed positions for the panel-reassign back-reference (§7.5.1) and
+            // paint unplaced tracks amber (Import parity, §7.6d).
+            StampRunClaims(result);
+            RecomputeUnmatchedHighlights();
+
             // Stash the confirmed combines (Count>1 covered runs) mapped to the persistence model.
             // These are NOT persisted here — Option B persists at the irrevocable library-commit
             // point (ImportButton_Click), so an abandoned import preview writes no canonical
@@ -1399,7 +1491,7 @@ namespace DeadEditor
             {
                 var segueMsg = result.SegueCount > 0 ? $", {result.SegueCount} segues" : "";
                 var unmatchedMsg = unmatchedCount > 0
-                    ? $". {unmatchedCount} unmatched — right-click to match manually."
+                    ? $". {unmatchedCount} unmatched — assign from the Setlist panel."
                     : "";
                 StatusTextBlock.Text = $"Matched {matchCount} of {_tracks.Count} tracks to setlist{segueMsg}{unmatchedMsg}";
             }

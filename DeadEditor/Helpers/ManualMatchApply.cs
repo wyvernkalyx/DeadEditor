@@ -46,5 +46,28 @@ namespace DeadEditor.Helpers
 
             return new ManualMatchResult(previousSongName, canonical, claimedPosition);
         }
+
+        /// <summary>
+        /// Panel/DnD re-assign transition (reference-side-panel-spec.md §7.5.1): frees the track's
+        /// previously claimed position (so the old setlist entry un-dims) and claims
+        /// <paramref name="newPosition"/>, applying the same write set as <see cref="Apply"/>. When
+        /// <paramref name="previousPosition"/> is null (the track claimed nothing) or equals
+        /// <paramref name="newPosition"/> (re-affirming the same entry), no free happens and this is
+        /// exactly <see cref="Apply"/>. Pure over <see cref="TrackInfo"/> + the claimed set; the host
+        /// supplies <paramref name="previousPosition"/> from its per-track back-reference.
+        /// </summary>
+        public static ManualMatchResult Reassign(
+            TrackInfo track,
+            ISet<int> claimedPositions,
+            int? previousPosition,
+            int newPosition,
+            string canonical,
+            bool segue)
+        {
+            if (previousPosition.HasValue && previousPosition.Value != newPosition)
+                claimedPositions.Remove(previousPosition.Value);
+
+            return Apply(track, claimedPositions, newPosition, canonical, segue);
+        }
     }
 }
