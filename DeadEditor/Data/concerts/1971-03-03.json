@@ -15,6 +15,13 @@
       "name": "Set 1",
       "songs": [
         {
+          "name": "Tuning",
+          "date": "1971-03-03",
+          "segue": false,
+          "info": "",
+          "type": "tuning"
+        },
+        {
           "name": "Casey Jones",
           "date": "1971-03-03",
           "segue": false,
@@ -126,111 +133,119 @@
   "tracks": [
     {
       "position": 1,
+      "songName": "Tuning",
+      "date": "1971-03-03",
+      "segue": false,
+      "set": "Set 1",
+      "type": "tuning"
+    },
+    {
+      "position": 2,
       "songName": "Casey Jones",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 2,
+      "position": 3,
       "songName": "Hard to Handle",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 3,
+      "position": 4,
       "songName": "Playing in the Band",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 4,
+      "position": 5,
       "songName": "Loser",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 5,
+      "position": 6,
       "songName": "Me and Bobby McGee",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 6,
+      "position": 7,
       "songName": "Next Time You See Me",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 7,
+      "position": 8,
       "songName": "I'm a King Bee",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 8,
+      "position": 9,
       "songName": "Beat It on Down the Line",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 9,
+      "position": 10,
       "songName": "Bertha",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 10,
+      "position": 11,
       "songName": "Me and My Uncle",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 11,
+      "position": 12,
       "songName": "Truckin'",
       "date": "1971-03-03",
       "segue": true,
       "set": "Set 2"
     },
     {
-      "position": 12,
+      "position": 13,
       "songName": "The Other One",
       "date": "1971-03-03",
       "segue": true,
       "set": "Set 2"
     },
     {
-      "position": 13,
+      "position": 14,
       "songName": "Wharf Rat",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 14,
+      "position": 15,
       "songName": "Greatest Story Ever Told",
       "date": "1971-03-03",
       "segue": true,
       "set": "Set 2"
     },
     {
-      "position": 15,
+      "position": 16,
       "songName": "Johnny B. Goode",
       "date": "1971-03-03",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 16,
+      "position": 17,
       "songName": "Good Lovin'",
       "date": "1971-03-03",
       "segue": false,
