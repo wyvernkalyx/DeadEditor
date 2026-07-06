@@ -47,6 +47,18 @@ When adding a new feature that writes to disk:
 - Do not add an `allowSourceWrite` escape hatch or any equivalent bypass. There is no legitimate source-write in DeadEditor; an escape hatch is a foot-gun.
 - If a workflow seems to require writing to source, stop and raise it. There is almost certainly a managed-side equivalent (or one we should build).
 
+### Concert reference data — owner-ruled triage after gate sessions
+
+`Data/concerts/*.json` are tracked reference data the app legitimately writes: the setlist editor and its Save path are real write surfaces (these are managed reference files — AppData-first with a bundled fallback — not source folders). So a dirty concert file after a **manual WPF gate session is AMBIGUOUS**: it may be real curation the owner performed, or test noise from exercising the editor. Only the owner can tell the two apart.
+
+Protocol (ratified 2026-07-06, after a feature-test "Tuning" entry on 1971-04-08 tripped a commit precondition):
+
+- Note the tree state *before* a gate session.
+- *After* the session — and in every commit prompt's precondition check — enumerate every dirty `Data/concerts/*.json` **with its diff** and **STOP for the owner's per-file ruling**: **KEEP** (the change matches the recording → its own separate `data:` commit, never folded into a feature commit) or **DISCARD** (owner-authorized `git checkout --` of that explicit path only).
+- The standing rules are unchanged: never blanket-revert, never stage concert data into a feature commit, never discard without the owner's explicit per-file authorization.
+- Precedents: 1971-03-03 tuning **KEPT** (`a468429`); 1971-04-08 tuning **DISCARDED** (misplaced feature test, owner-authorized).
+- Scope: this covers the setlist JSONs. Match/assign gates also write real **FLAC tags**, which git does not track — a scratch-album fixture is **banked** should that ever become a concern.
+
 ---
 
 ## Documentation Handbook
@@ -843,6 +855,7 @@ Ask decisions and clarifications as **numbered questions in your reply text** �
 **Song Database:** 598 songs (594 Grateful Dead, 4 NRPS)
 **Documentation:** 41 files in `documentation/` (specs, design memos, audits/inspections)
 **Build/Test Baseline (2026-07-02):** `dotnet build DeadEditor/DeadEditor.csproj` (clean) -> 0 errors, 50 unique warnings (MSBuild reports 204; the WPF markup + main multi-pass compile re-emits warnings across the main and `_wpftmp` projects, so the raw count exceeds unique): 25 CA1416 platform-compat + 22 CS8618 uninitialized-non-nullable + 3 other nullable CS86xx; `dotnet test DeadEditor.sln` -> 593 passed, 0 failed, 0 skipped. (Prior figure of 453 was stale: 104 tests accrued across intervening commits without a baseline refresh, reaching 557; this pass added +10 `AlbumDisplayName` composer + hint-mapping tests for the audience album-name grid display, to 567; then +8 `SetlistProjection` tests for the slice-1 read-only setlist reference panel on Import, to 575; then +2 `ReviewDefaultPolicy` segue-label tests + +2 `ReviewRowViewModel` Media/Setlist display tests for the match-review segue legibility pass, to 579; then +7 `InfoFileResolver` tests for the slice-4 external info-file open, to 586; then +7 `ManualMatchApply` tests for the slice-5a shared manual-match write core, to 593.) Earlier trail retained for context: was 355; +30 `TrackNumberPrefix` helper tests, +7 `NormalizationService` track-prefix wiring tests, +6 alias-idempotency tests, +3 AddSong clobber tests = 401 as of 2026-06-20; +28 to 429, incl. +3 `TrackInfo.OriginalTitle` tests and +2 `TrackInfoViewModel` IsModified-notify tests; +20 to 449 for the B2b Match Setlist review-surface scaffold: +4 `ReviewDefaultPolicy` + +16 `ReviewRowViewModel`/`MatchReviewViewModel` tests incl. the segue data-loss guard; +4 to 453 for the review-dialog legibility pass: +3 changed-flag/pluralization + +1 row-header identity-mirror. Note (51 -> 49 -> 51 round trip): commit 2eec71e changed this to 49 believing 51 was stale, but miscounted CS8618 as 20; the tree has always emitted 22. Building 2eec71e in an isolated git worktree on 2026-06-20 still produced 22 CS8618 / 51 unique with an identical site list to HEAD as of 2026-06-20, so the 49 never existed in any build and there was no regression. CA1416 (25), other CS86xx (4), and raw (204) were correct as of 2026-06-20; current HEAD is 50 unique / 3-other (one CS86xx fewer).
+**Warning-gate capture:** measure warnings with a **forced rebuild** (`dotnet build DeadEditor/DeadEditor.csproj -t:Rebuild`, or equivalent) — an incremental build skips compilation and falsely reports 0 warnings (observed 2026-07-05).
 
 ## Development Environment
 - OS: Windows 10.0.26200
