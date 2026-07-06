@@ -8,12 +8,26 @@
              Background="#1E1E1E">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
         <!-- One setlist row. Dims to 0.4 opacity when the entry is claimed by a matched track. -->
         <Style x:Key="SetlistRowStyle" TargetType="Border">
             <Setter Property="Opacity" Value="1"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsClaimed}" Value="True">
                     <Setter Property="Opacity" Value="0.4"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Entry name. Songs read solid; a non-song extra reads muted + italic so the panel reads
+             as "songs + annotations" (setlist-extras-writeback-spec.md §7 type surfacing). -->
+        <Style x:Key="SetlistNameStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#EEEEEE"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsExtra}" Value="True">
+                    <Setter Property="Foreground" Value="#9A9A9A"/>
+                    <Setter Property="FontStyle" Value="Italic"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -124,12 +138,21 @@
                                                    Foreground="#888888" FontSize="13"
                                                    MinWidth="24" Margin="0,0,8,0"/>
 
-                                        <!-- Song name + segue marker -->
+                                        <!-- Entry name + segue marker + (extras only) a type chip. -->
                                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Name}" Foreground="#EEEEEE"
-                                                       FontSize="14" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding Name}" Style="{StaticResource SetlistNameStyle}"
+                                                       FontSize="14" TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding SegueMarker}" Foreground="#E0A030"
-                                                       FontSize="14" FontWeight="Bold" Margin="6,0,0,0"/>
+                                                       FontSize="14" FontWeight="Bold" Margin="6,0,0,0"
+                                                       VerticalAlignment="Center"/>
+                                            <!-- Type chip: shown only for non-song extras (§7). -->
+                                            <Border Background="#3A3A3A" CornerRadius="3" Padding="5,1"
+                                                    Margin="8,0,0,0" VerticalAlignment="Center"
+                                                    Visibility="{Binding IsExtra, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="{Binding TypeLabel}" Foreground="#C8A24B"
+                                                           FontSize="10" FontWeight="SemiBold"/>
+                                            </Border>
                                         </StackPanel>
 
                                         <!-- Set label -->

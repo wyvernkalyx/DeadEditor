@@ -882,6 +882,12 @@ namespace DeadEditor
             for (int i = 0; i < _lastSetlistSongs.Count; i++)
             {
                 if (_lastClaimedPositions.Contains(i)) continue;
+                // An unclaimed extra is not a missing song (§4): keep extras out of the "unmatched
+                // songs" list so they never read as incomplete. Extras are placed via the panel
+                // (click/drag), not this song-oriented right-click list. Projection is index-aligned
+                // with _lastSetlistSongs (same order, Position == i).
+                if (_lastSetlistProjection != null && i < _lastSetlistProjection.Count
+                    && SetlistEntryType.IsExtra(_lastSetlistProjection[i].Type)) continue;
 
                 // Find which set and position within set this song belongs to
                 var discTrack = ShowLookupService.Instance.GetDiscTrack(_lastMatchDate, _lastSetlistSongs[i].Position);
@@ -1443,6 +1449,9 @@ namespace DeadEditor
                     Canonical = e.Canonical,
                     Position = e.Position,
                     Segue = e.Segue,
+                    // Carry the typed-entry kind so auto-match excludes extras (D2, §4). Makes the
+                    // slice-2 exclusion production behavior on this surface.
+                    Type = e.Type,
                 })
                 .ToList();
 

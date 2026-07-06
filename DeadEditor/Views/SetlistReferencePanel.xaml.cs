@@ -176,6 +176,7 @@ namespace DeadEditor
             {
                 foreach (var e in entries)
                 {
+                    bool isExtra = SetlistEntryType.IsExtra(e.Type);
                     rows.Add(new SetlistRow
                     {
                         Position = e.Position,
@@ -184,6 +185,8 @@ namespace DeadEditor
                         SetLabel = e.SetLabel,
                         SegueMarker = e.Segue ? ">" : "",
                         IsClaimed = claimedPositions?.Contains(e.Position) ?? false,
+                        IsExtra = isExtra,
+                        TypeLabel = isExtra ? FormatTypeLabel(e.Type) : "",
                     });
                 }
             }
@@ -198,10 +201,29 @@ namespace DeadEditor
             // allows it (Import yes, Edit no — spec §9).
             EditSetlistButton.Visibility =
                 (hasEntries && _showEditSetlistLink) ? Visibility.Visible : Visibility.Collapsed;
-            SetlistCountText.Text = hasEntries
-                ? (rows.Count == 1 ? "1 song" : $"{rows.Count} songs")
-                : "";
+            SetlistCountText.Text = FormatCountText(rows);
         }
+
+        /// <summary>
+        /// Header count line. All-song setlists read exactly as before ("N songs" / "1 song");
+        /// when extras are present the songs and extras are counted separately so an extra is never
+        /// tallied as a song (§4 — extras are not songs).
+        /// </summary>
+        private static string FormatCountText(IReadOnlyList<SetlistRow> rows)
+        {
+            if (rows.Count == 0) return "";
+            int songs = 0, extras = 0;
+            foreach (var r in rows) { if (r.IsExtra) extras++; else songs++; }
+
+            var songText = songs == 1 ? "1 song" : $"{songs} songs";
+            if (extras == 0) return songText;
+            var extraText = extras == 1 ? "1 extra" : $"{extras} extras";
+            return $"{songText}, {extraText}";
+        }
+
+        /// <summary>Display label for an extra's type chip, e.g. "false-start" → "FALSE START".</summary>
+        private static string FormatTypeLabel(string type) =>
+            (type ?? "").Replace('-', ' ').ToUpperInvariant();
 
         /// <summary>Display row bound by the Setlist view's ItemTemplate.</summary>
         public sealed class SetlistRow
@@ -213,6 +235,12 @@ namespace DeadEditor
             public string SetLabel { get; set; } = "";
             public string SegueMarker { get; set; } = "";
             public bool IsClaimed { get; set; }
+
+            /// <summary>True for a non-song extra — drives the muted name style + type-chip visibility.</summary>
+            public bool IsExtra { get; set; }
+
+            /// <summary>Upper-cased type label shown in the chip (extras only; empty for songs).</summary>
+            public string TypeLabel { get; set; } = "";
         }
     }
 }
