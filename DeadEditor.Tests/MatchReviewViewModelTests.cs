@@ -13,10 +13,11 @@ namespace DeadEditor.Tests;
 /// effective-value resolution) and <see cref="MatchReviewViewModel"/>
 /// (visible/hidden split, edited-proposal rebuild).
 ///
-/// The central guarantee under test is the 1977-05-11 data-loss case: a blind
-/// Apply must NOT clear a real segue. With per-field defaults, a segue-remove
-/// row defaults Ignore, so the effective segue stays true and the rebuilt
-/// proposal carries NewSegue == true (protected).
+/// Segue defaults are unified: both add and remove default Accept (spec §5,
+/// owner-ratified). The 1977-05-11 data-loss protection now lives in the review
+/// step — the reviewer unchecks a segue-remove row to keep the real segue, and
+/// the rebuilt proposal then carries NewSegue == true. Apply semantics are
+/// unchanged: an unchecked segue-remove row still resolves to the old segue.
 /// </summary>
 public class MatchReviewViewModelTests
 {
@@ -115,15 +116,33 @@ public class MatchReviewViewModelTests
     // ===== ReviewRowViewModel: segue resolution =====
 
     [Fact]
-    public void Row_SegueRemove_DefaultsIgnore_EffectiveSegueStaysTrue()
+    public void Row_SegueRemove_DefaultsAccept_UncheckProtectsRealSegue()
     {
-        // The 1977-05-11 case: setlist proposes clearing a real segue.
+        // The 1977-05-11 case: setlist proposes clearing a real segue. The default
+        // is now Accept (would clear); protection is the reviewer's explicit uncheck.
         var row = new ReviewRowViewModel(MakeProposal(
             oldName: "Scarlet Begonias", newName: "Scarlet Begonias",
             oldSegue: true, newSegue: false));
 
-        Assert.Equal(ReviewDecision.Ignore, row.SegueDecision);
-        Assert.True(row.EffectiveSegue); // protected — keeps the real segue
+        Assert.Equal(ReviewDecision.Accept, row.SegueDecision); // unified default
+        Assert.False(row.EffectiveSegue);                       // at default, the clear applies
+
+        // Unchecking (Ignore) keeps the real segue — apply semantics unchanged.
+        row.SegueDecision = ReviewDecision.Ignore;
+        Assert.True(row.EffectiveSegue);
+    }
+
+    [Fact]
+    public void Row_SegueAcceptLabel_IsUniform_BothDirections()
+    {
+        // One label regardless of direction (spec §5) — the Media/Setlist columns carry it.
+        var remove = new ReviewRowViewModel(MakeProposal(
+            "Scarlet Begonias", "Scarlet Begonias", oldSegue: true, newSegue: false));
+        var add = new ReviewRowViewModel(MakeProposal(
+            "China Cat Sunflower", "China Cat Sunflower", oldSegue: false, newSegue: true));
+
+        Assert.Equal("Accept setlist over media", remove.SegueAcceptLabel);
+        Assert.Equal("Accept setlist over media", add.SegueAcceptLabel);
     }
 
     [Fact]
@@ -405,16 +424,22 @@ public class MatchReviewViewModelTests
     }
 
     [Fact]
-    public void Build_SegueRemoveRow_RebuiltProposalProtectsSegue()
+    public void Build_SegueRemoveRow_UncheckedRebuildsProtectingSegue()
     {
-        // End-to-end of the data-loss guard: a segue-remove row, left at its
-        // Ignore default, rebuilds to NewSegue == true (the real segue survives).
+        // End-to-end of the data-loss guard, now reviewer-driven: a segue-remove row
+        // defaults Accept (would clear), but once unchecked it rebuilds to
+        // NewSegue == true (the real segue survives).
         var set = MakeSet(
             MakeProposal("Scarlet Begonias", "Scarlet Begonias", oldSegue: true, newSegue: false));
 
         var vm = new MatchReviewViewModel(set);
-        var built = vm.BuildEditedProposalSet();
 
+        // At the unified default the clear would apply.
+        Assert.False(vm.BuildEditedProposalSet().Proposals[0].NewSegue);
+
+        // Reviewer unchecks -> the segue is protected.
+        vm.AllRows[0].SegueDecision = ReviewDecision.Ignore;
+        var built = vm.BuildEditedProposalSet();
         Assert.True(built.Proposals[0].NewSegue);
         Assert.True(built.Proposals[0].OldSegue);
     }
@@ -427,13 +452,15 @@ public class MatchReviewViewModelTests
 
         var vm = new MatchReviewViewModel(MakeSet(acceptRow, removeRow));
 
-        // Hand-ignore the name on the first row; leave the second at defaults.
+        // Hand-ignore the name on the first row; hand-ignore the segue on the second
+        // (its default is now Accept) to exercise the protected resolution.
         vm.AllRows[0].SongNameDecision = ReviewDecision.Ignore;
+        vm.AllRows[1].SegueDecision = ReviewDecision.Ignore;
 
         var built = vm.BuildEditedProposalSet();
 
         Assert.Equal("Watchtower", built.Proposals[0].NewSongName); // ignored -> old
-        Assert.True(built.Proposals[1].NewSegue);                   // segue-remove protected
+        Assert.True(built.Proposals[1].NewSegue);                   // segue-remove unchecked -> protected
     }
 
     [Fact]

@@ -4,10 +4,11 @@ using Xunit;
 namespace DeadEditor.Tests;
 
 /// <summary>
-/// Tests for <see cref="ReviewDefaultPolicy"/> — the protective per-field
-/// defaults from review-surface spec §5. The one asymmetry that matters: a
-/// segue remove (true -> false) defaults to Ignore so a sparse source cannot
-/// clear a real segue silently.
+/// Tests for <see cref="ReviewDefaultPolicy"/> — the per-field defaults from
+/// review-surface spec §5. Both segue directions (add and remove) default to
+/// Accept (owner-ratified unification): the mandatory review step, not a
+/// pre-checked default, is the guard against silent segue loss. The segue Accept
+/// checkbox carries a single uniform label in either direction.
 /// </summary>
 public class ReviewDefaultPolicyTests
 {
@@ -26,10 +27,11 @@ public class ReviewDefaultPolicyTests
     }
 
     [Fact]
-    public void Segue_Remove_TrueToFalse_DefaultsIgnore()
+    public void Segue_Remove_TrueToFalse_DefaultsAccept()
     {
-        // The data-loss direction — must default Ignore (spec §5).
-        Assert.Equal(ReviewDecision.Ignore,
+        // Unified default (spec §5, owner-ratified): remove now defaults Accept too —
+        // the review step, not a pre-checked default, guards against silent segue loss.
+        Assert.Equal(ReviewDecision.Accept,
             ReviewDefaultPolicy.DefaultForSegue(oldSegue: true, newSegue: false));
     }
 
@@ -43,18 +45,10 @@ public class ReviewDefaultPolicyTests
     }
 
     [Fact]
-    public void SegueActionLabel_Remove_TrueToFalse_ReadsRemove()
+    public void SegueAcceptLabel_IsUniform_AcceptSetlistOverMedia()
     {
-        // Checking the box accepts the setlist value (false) — i.e. removes the segue.
-        Assert.Equal("Remove segue",
-            ReviewDefaultPolicy.SegueActionLabel(current: true, proposed: false));
-    }
-
-    [Fact]
-    public void SegueActionLabel_Add_FalseToTrue_ReadsAdd()
-    {
-        // The direction the gate fixture cannot produce — locked by this test.
-        Assert.Equal("Add segue",
-            ReviewDefaultPolicy.SegueActionLabel(current: false, proposed: true));
+        // One label for both directions (spec §5): the row's Media/Setlist columns
+        // carry the direction, so the checkbox reads uniformly.
+        Assert.Equal("Accept setlist over media", ReviewDefaultPolicy.SegueAcceptLabel);
     }
 }

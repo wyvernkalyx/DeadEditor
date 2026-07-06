@@ -43,7 +43,7 @@ For single-song tracks the list is length 1. Building it as a list now (not an i
 Invoked by Match Setlist in both Import and Edit (both call the converged matcher). Flow: ComputeProposals -> dialog -> Apply(resolved subset).
 
 - One row per track that has a real change.
-- Resolution is PER FIELD, not per row. Each row carries two independently-resolvable decisions: one for SongName (variant to canonical) and one for Segue (add or remove). A track can have its name normalized while its segue is left alone; this is exactly the 1977-05-11 case (canonicalize the title AND propose clearing a real segue in the same track). A single row-level toggle would force losing one or the other, so per-field accept/ignore is required for the Sec. 5 defaults to protect segues on mixed rows.
+- Resolution is PER FIELD, not per row. Each row carries two independently-resolvable decisions: one for SongName (variant to canonical) and one for Segue (add or remove). A track can have its name normalized while its segue is left alone; this is exactly the 1977-05-11 case (canonicalize the title AND propose clearing a real segue in the same track). A single row-level toggle would force losing one or the other, so per-field accept/ignore is required so a reviewer can take the name while independently keeping (unchecking) a real segue on mixed rows.
 - For each field: Accept (take new) or Ignore (keep existing). The SongName field is presented as an editable value seeded with the proposed canonical name, so the user can take it, ignore it, or hand-tune it (covers any concatenation/alias need without a separate mode).
 - No-op rows hidden, by conjunction: a row is hidden only when BOTH SongName Old == New AND Segue Old == New. A row whose name already matches but whose segue would change is NOT a no-op and stays visible. Hidden rows show as a collapsed count ("N tracks already match"); they are never written and never flagged modified.
 - Combined rows (CoveredEntryIndices.Count > 1) are exempt from this conjunction hiding per alias-setlists-spec.md section 6.1 (shipped slice 4 Piece 1).
@@ -52,7 +52,7 @@ Invoked by Match Setlist in both Import and Edit (both call the converged matche
 ### 4.1 Claiming is fixed at compute (invariant; do not "fix")
 The greedy "first unclaimed entry with equal canonical name" claim is decided during ComputeProposals and is independent of the user's later accept/ignore. Ignoring a row or a field does NOT re-open its claimed entry for a later track. This is deliberate: letting accept/ignore re-open claims would reshuffle which track matched which entry mid-review. IsMatched keys off claim-at-compute (Sec. 6). A future reader must not optimize ignored rows into released claims.
 
-## 5. Default selection policy (protective defaults, per field)
+## 5. Default selection policy (per field)
 
 Each field's default (pre-accepted vs pre-ignored) is set per change type. On a mixed row the two fields default independently:
 
@@ -60,9 +60,13 @@ Each field's default (pre-accepted vs pre-ignored) is set per change type. On a 
 |---|---|---|
 | SongName | variant to canonical | Accept |
 | Segue | add (false to true) | Accept |
-| Segue | remove (true to false) | Ignore |
+| Segue | remove (true to false) | Accept |
 
-The asymmetry is the point: the dataset's documented failure mode is segue under-capture (false negatives), so a sparse source clearing a real segue is the one direction that must never be silent. With per-field resolution, a mixed row defaults to Accept the name and Ignore the segue removal, so 1977-05-11 keeps its normalized names AND keeps its real segues on a blind "apply." This same table becomes the trailing-segue rule for combined tracks later (policy, not a hard-coded matcher branch).
+Both segue directions default Accept (checked), under the uniform checkbox label "Accept setlist over media" (matching the dialog header, "Checked = use the setlist's value"). The review step itself is the consent mechanism: every changed row is shown before anything is written, and each segue row renders concrete Media vs Setlist values (each with its own trailing ">" marker), so the direction of the change is visible on the row. A reviewer who wants to keep a real segue that a sparse source would clear simply unchecks that row.
+
+(History: segue remove originally defaulted Ignore — the one protective asymmetry — because the dataset's documented failure mode is segue under-capture, and a blind apply could silently clear a real segue. The owner ratified unifying the default to Accept once the review surface made the apply non-blind: the per-row Media/Setlist columns plus the mandatory review replace the pre-checked default as the guard against silent segue loss. Apply semantics are unchanged — an unchecked segue-remove row still keeps the existing segue.)
+
+This same table becomes the trailing-segue rule for combined tracks later (policy, not a hard-coded matcher branch).
 
 ## 6. Flag derivation (IsMatched / IsModified)
 
@@ -87,6 +91,6 @@ Each its own concern, committed between layers.
 
 ## 10. Settled decisions and remaining UX details
 
-Settled: protective per-field defaults (Sec. 5); per-field resolution (Sec. 4); claim-at-compute invariant (Sec. 4.1); conjunction no-op hiding (Sec. 4).
+Settled: per-field defaults (Sec. 5 — both segue directions unified to Accept under the "Accept setlist over media" label, owner-ratified; consent is the review step, not a pre-checked default); per-field resolution (Sec. 4); claim-at-compute invariant (Sec. 4.1); conjunction no-op hiding (Sec. 4).
 
 Remaining UX details for B2 (not blockers): exact wording/placement of the collapsed no-op count; whether the editable SongName field is always visible or revealed on demand.

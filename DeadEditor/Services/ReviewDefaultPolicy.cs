@@ -16,17 +16,27 @@ namespace DeadEditor.Services
     }
 
     /// <summary>
-    /// The protective per-field defaults from the review-surface spec §5.
-    /// Pure and dependency-free: each method maps an old-to-new change to the
-    /// decision a row should be pre-seeded with.
+    /// The per-field defaults from the review-surface spec §5. Pure and
+    /// dependency-free: each method maps an old-to-new change to the decision a
+    /// row should be pre-seeded with.
     ///
-    /// The one asymmetry that matters is segue <b>remove</b> (true -> false):
-    /// the dataset's documented failure mode is segue under-capture, so a
-    /// sparse source clearing a real segue is the one direction that must
-    /// never apply silently — it defaults to <see cref="ReviewDecision.Ignore"/>.
+    /// Both segue directions (add and remove) default to
+    /// <see cref="ReviewDecision.Accept"/> (spec §5, owner-ratified). The review
+    /// step itself is the consent mechanism — every changed row is shown, and the
+    /// per-row Media/Setlist columns make the direction visible — so a pre-checked
+    /// default is no longer the guard against silent segue loss. A reviewer keeps a
+    /// real segue by unchecking that row; apply semantics are unchanged.
     /// </summary>
     public static class ReviewDefaultPolicy
     {
+        /// <summary>
+        /// The uniform label for every segue Accept checkbox (spec §5): checking
+        /// takes the setlist's value over the media's, in either direction. Matches
+        /// the dialog header ("Checked = use the setlist's value"); the row's
+        /// Media/Setlist columns already show which direction the change is.
+        /// </summary>
+        public const string SegueAcceptLabel = "Accept setlist over media";
+
         /// <summary>
         /// SongName default: a real variant -> canonical change defaults to
         /// Accept (spec §5). When old == new (Ordinal) the field is a no-op and
@@ -41,38 +51,17 @@ namespace DeadEditor.Services
         }
 
         /// <summary>
-        /// Segue default (spec §5 table):
-        /// add (false -> true) = Accept; remove (true -> false) = Ignore (the
-        /// data-loss direction); unchanged = decision irrelevant (Accept).
+        /// Segue default (spec §5 table): both add (false -> true) and remove
+        /// (true -> false) default Accept, as does unchanged (decision-irrelevant,
+        /// Effective == Old == New regardless). The remove direction was once
+        /// Ignore (the protective asymmetry); the owner ratified unifying it to
+        /// Accept now that the review surface makes the apply non-blind. The
+        /// parameters are retained for the callsite's clarity and to keep the
+        /// unchanged/decision-irrelevant contract explicit.
         /// </summary>
         public static ReviewDecision DefaultForSegue(bool oldSegue, bool newSegue)
         {
-            if (oldSegue && !newSegue)
-            {
-                // Remove: the protected direction. Default to keeping the real
-                // segue rather than letting a sparse source clear it silently.
-                return ReviewDecision.Ignore;
-            }
-
-            // Add (false -> true) and unchanged both default Accept; unchanged is
-            // decision-irrelevant (Effective == Old == New regardless).
             return ReviewDecision.Accept;
-        }
-
-        /// <summary>
-        /// The label for the segue Accept checkbox, describing what CHECKING does
-        /// (checking = accept the setlist value = set segue to <paramref name="proposed"/>).
-        /// A static "Accept segue" mis-reads in the remove direction, so the label is dynamic:
-        /// remove (true -> false) = "Remove segue"; add (false -> true) = "Add segue". Pure so both
-        /// directions are unit-testable (the add direction has no gate fixture).
-        /// </summary>
-        public static string SegueActionLabel(bool current, bool proposed)
-        {
-            if (current && !proposed) return "Remove segue";
-            if (!current && proposed) return "Add segue";
-            // Unchanged: the segue sub-block is not shown in this case (SegueChanged is false), so
-            // this is never displayed; return the proposed-state action for a total function.
-            return proposed ? "Add segue" : "Remove segue";
         }
     }
 }
