@@ -419,8 +419,18 @@ One concern per commit; WPF manual gate on every UI-visible slice; pure helpers 
    one alone). **Depends on:** slice 4 (hard). WPF gate = add a `false-start` Ripple + two `tuning`
    entries to 1971-02-21, save, re-open, verify persistence **and** that an alias-bearing concert's
    combines survive the extra insert unshifted.
-6. **Edit-side deep-link unbank** (§8) — refresh-on-return. WPF gate = Edit → edit setlist → back,
-   album edits intact, panel refreshed.
+6. **Edit-side deep-link unbank** (§8) — **pulled forward on lived demand, ahead of slices 4–5.**
+   Direct-to-editor navigation (`EditMetadataView.OnEditSetlistRequested` →
+   `ShellWindow.NavigateToSetlistEditor`, not Import's ConcertDetail hop) + a guarded refresh-on-return.
+   **Guard, not remap:** because the slice-4 atomic position remap does not exist yet, the return path
+   does not try to keep claims coherent across a shifted setlist — it **invalidates** match state
+   (`_matchSetlistHasRun=false`, clears `_lastClaimedPositions`/`_lastSetlistSongs`/every
+   `ClaimedSetlistPosition`, clears amber) and rebuilds the panel as pure reference, so a stale claim
+   can never dim/free the wrong entry (the §3.3 hazard). A re-run of Match Setlist re-establishes claims
+   against the new positions. The same return also guards the retained-instance `Loaded` re-fire so the
+   tag re-read cannot drop unsaved album edits (reference-side-panel-spec.md §9). When slice 4 lands, the
+   invalidate-on-return MAY be upgraded to a position-preserving remap (optional; invalidation stays
+   correct). WPF gate = Edit → edit setlist → back, album edits intact, panel refreshed, claims cleared.
 7. **Write-back offers** (§6) — P2-visible + P3 prompt + P1 explicit-review routing. WPF gate = the
    full two-Ripples round-trip from a recording.
 
@@ -431,8 +441,11 @@ this arc's slices. They are the placement gesture this arc's typed extras make u
 now landed** — so the sequencing precondition (a placement gesture must exist before extras are typed
 and displayed) is **satisfied**, not pending. **This arc therefore starts cleanly at its own slice 1**;
 the unified `AssignEntryToTrack → Reassign → Apply` seam (§4) is already in place for extras to claim
-through. Global order from here: extras slice 1 → 2 → 3 → 4 (remap) → 5 (editor authoring, gated on 4)
-→ 6 (Edit deep-link unbank) → 7 (write-back).
+through. Global order from here: extras slice 1 → 2 → 3 → **6 (Edit deep-link unbank — pulled forward on lived
+demand; ships with the invalidate-on-return guard, not the slice-4 remap)** → 4 (remap) → 5 (editor
+authoring, gated on 4) → 7 (write-back). Slice 6 moved ahead of 4/5 because the deep-link's return path
+only needs to *invalidate* claims, which has no dependency on the remap; the remap is required only to
+*preserve* claims across an edit, a later refinement.
 
 ## 11. Decision record (RESOLVED 2026-07-03; addendum D10–D12 2026-07-05)
 

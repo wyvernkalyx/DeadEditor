@@ -64,6 +64,13 @@ namespace DeadEditor
         // manual/panel re-dim can reuse it without rebuilding, mirroring ImportView._lastSetlistProjection.
         private IReadOnlyList<SetlistEntryVm>? _lastSetlistProjection;
 
+        // Set true just before the "Edit setlist ↗" deep-link navigates to the setlist editor
+        // (reference-side-panel-spec.md §9). The shell retains this instance on the back stack and
+        // re-attaches it on return, re-raising Loaded; the flag makes that re-fire take the return
+        // path (invalidate + rebuild) instead of re-running LoadData, which would re-read the FLAC
+        // tags and discard unsaved edits + per-VM claims. Consumed (reset) on the return Loaded.
+        private bool _returningFromSetlistEdit;
+
         // Drag-to-reorder state
         private WpfPoint _dragStartPoint;
         private TrackInfoViewModel? _draggedItem;
@@ -130,6 +137,9 @@ namespace DeadEditor
             ValidationIssuesItemsControl.ItemsSource = _validationIssues;
             // Reference-panel double-click assign — the host owns the write (spec §7.5).
             SetlistPanel.AssignRequested += SetlistPanel_AssignRequested;
+            // Header "Edit setlist ↗" deep-link (reference-side-panel-spec.md §9) — Edit navigates
+            // directly to the setlist editor; the host resolves the concert and performs the nav.
+            SetlistPanel.EditSetlistRequested += OnEditSetlistRequested;
         }
 
         private async void EditMetadataView_Loaded(object sender, RoutedEventArgs e)
@@ -142,6 +152,18 @@ namespace DeadEditor
             // LoadData still runs (GetSetlist degrades to a disabled Match Setlist button). The shared
             // helper owns this idiom verbatim — see Helpers/ConcertDataGate.
             await ConcertDataGate.EnsureLoadedAsync();
+
+            // Returning from the "Edit setlist ↗" deep-link (§9): the shell retained this instance on
+            // the back stack and re-attached it to the single ContentPresenter, re-raising Loaded. Do
+            // NOT re-run LoadData — it would re-read the FLAC tags and discard unsaved edits + claims.
+            // Take the return path instead: invalidate stale match state and rebuild the panel from
+            // the (possibly edited) setlist. Guard is consumed once.
+            if (_returningFromSetlistEdit)
+            {
+                _returningFromSetlistEdit = false;
+                await HandleSetlistEditReturnAsync();
+                return;
+            }
 
             // Warm now (cache is loaded): the TagLib read + UpdateMatchSetlistButton -> GetSetlist is
             // the fast (~sub-second) path. The 25-file read stays synchronous by design.
@@ -1454,6 +1476,56 @@ namespace DeadEditor
                 ? _lastClaimedPositions
                 : null;
             SetlistPanel.SetSetlist(projection, claimed);
+        }
+
+        /// <summary>
+        /// Header "Edit setlist ↗" deep-link handler (reference-side-panel-spec.md §9). Mirrors
+        /// ImportView.OnEditSetlistRequested's validation (well-formed date + concert lookup with a
+        /// status-line miss), but navigates DIRECTLY to the setlist editor rather than Import's one-way
+        /// hop to ConcertDetailView. Arms <see cref="_returningFromSetlistEdit"/> so the Loaded re-fire
+        /// on back-navigation skips the tag re-read and takes the invalidate-and-rebuild return path.
+        /// </summary>
+        private void OnEditSetlistRequested()
+        {
+            var date = AlbumDateTextBox.Text?.Trim();
+            bool wellFormed = !string.IsNullOrEmpty(date) && date.Length == 10
+                && Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$");
+            if (!wellFormed)
+            {
+                StatusTextBlock.Text = "Enter a valid date (yyyy-MM-dd) to edit its setlist.";
+                return;
+            }
+
+            var concert = ConcertLookupService.Instance.GetConcertByDate(date!);
+            if (concert == null)
+            {
+                StatusTextBlock.Text = $"No concert record for {date} to edit.";
+                return;
+            }
+
+            _returningFromSetlistEdit = true;
+            _shell.NavigateToSetlistEditor(concert);
+        }
+
+        /// <summary>
+        /// Return path from the setlist-editor deep-link (reference-side-panel-spec.md §9). The editor
+        /// supports add / remove / renumber (EditSetlistView.xaml.cs:184-231), so any claim that indexes
+        /// a flattened position may now point at a shifted entry. Until the slice-4 atomic position remap
+        /// exists (setlist-extras-writeback-spec.md §3.3), the guard is to INVALIDATE, not carry: drop
+        /// match state so a stale claim cannot dim or free the wrong entry, then rebuild the panel as
+        /// pure, undimmed reference. A re-run of Match Setlist re-establishes claims against the new
+        /// positions. Does NOT re-read tags, so unsaved album-metadata edits survive the round-trip.
+        /// </summary>
+        private async Task HandleSetlistEditReturnAsync()
+        {
+            _matchSetlistHasRun = false;
+            _lastClaimedPositions = null;
+            _lastSetlistSongs = null;
+            foreach (var vm in _tracks)
+                vm.ClaimedSetlistPosition = null;
+            RecomputeUnmatchedHighlights(); // _matchSetlistHasRun now false -> clears amber warnings
+
+            await RefreshSetlistPanelAsync(); // claimed == null (no match has run) -> undimmed reference
         }
 
         // ===== VERIFY BUTTON =====

@@ -746,6 +746,17 @@ namespace DeadEditor
         }
 
         /// <summary>
+        /// Opens the setlist editor directly on a concert (reference-side-panel-spec.md §9, Edit-side
+        /// deep-link). Parallels <see cref="NavigateToConcertDetail"/> but targets the editor itself —
+        /// Edit's link goes straight to editing, whereas Import's one-way link stops at ConcertDetail.
+        /// </summary>
+        public void NavigateToSetlistEditor(ConcertReference concert)
+        {
+            var editView = new EditSetlistView(this, concert);
+            _navigationService.NavigateTo(editView, concert);
+        }
+
+        /// <summary>
         /// Opens a folder picker for importing a recording for a specific concert date.
         /// Called from ConcertDatabaseView right-click menu and ConcertDetailView import button.
         /// </summary>

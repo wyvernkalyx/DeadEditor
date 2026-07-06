@@ -407,10 +407,12 @@
             </Border>
 
             <!-- Reference Side-Panel (Setlist) — shared control, own toggle strip + collapse (spec
-                 §3). Edit suppresses the "Edit setlist ↗" deep-link (§9 banking: EditMetadataView is
-                 reconstructed per entry, so a round-trip would drop in-progress edits). -->
+                 §3). Edit now offers the "Edit setlist ↗" deep-link (§9, unbanked): it navigates
+                 DIRECTLY to the setlist editor and, on return, invalidates match state + rebuilds the
+                 panel (the retained-instance Loaded re-fire is guarded so the tag re-read can't drop
+                 in-progress edits). -->
             <local:SetlistReferencePanel x:Name="SetlistPanel" Grid.Column="1" Margin="0,0,10,0"
-                                         ShowEditSetlistLink="False"/>
+                                         ShowEditSetlistLink="True"/>
 
             <!-- Artwork Panel -->
             <StackPanel Grid.Column="2">
