@@ -407,18 +407,26 @@ One concern per commit; WPF manual gate on every UI-visible slice; pure helpers 
    extra-claim exclusion from auto-match. Panel/matcher read-through.
 3. **Panel + review-dialog typing.** Render type distinctly; unclaimed extras don't read as incomplete.
    WPF gate.
-4. **Alias index-remap component (D9a — MANDATORY PREREQUISITE).** The pure, atomic alias-remap
-   (§3.3) as a **first-class, separately unit-tested** helper: given a canonical-`Position`
-   insertion / removal / reorder, remap every affected `AliasEntry.CoveredOfficialIndices` in one
-   operation. This slice **owns** the remap. Unit tests: insert-before-covered shifts indices,
-   insert-after leaves them, removal, reorder, multi-run alias, and no-alias no-op. **Gate on this
-   slice: no extra-editing path (slice 5) may ship before it lands** — an extra insert without an
-   atomic remap silently corrupts stored combines.
+4. ✅ **Alias index-remap component (D9a — MANDATORY PREREQUISITE) — LANDED.** The pure, atomic
+   remap (§3.3) as a **first-class, separately unit-tested** helper `Helpers/SetlistPositionRemap`:
+   given a canonical-`Position` insertion / removal / reorder over the flattened 0-based axis, remap
+   every position-indexed consumer in one operation. Per the §2.2 D9a obligation this covers **not just
+   `AliasEntry.CoveredOfficialIndices` but also `ClaimedPositions` and per-track `ClaimedSetlistPosition`**
+   (broader than this line's original blurb; the spec body governs). Atomic by purity — inputs are never
+   mutated, so a caller adopts a result only after it is produced exception-free. The D13 removed-covered
+   case throws `SetlistRemapUnsupportedException` as a backstop (see D13). 35 unit tests: insert/remove
+   at head/middle/tail, insert-before/after/spanning a covered run, reorder, multi-run alias, claims on
+   removed positions, sequential composition, round-trip logical-entry coherence, cross-consumer
+   atomicity, and out-of-range robustness. **Gate held: no extra-editing path (slice 5) shipped before
+   this landed.**
 5. **Setlist-editor extras authoring** (§7). Type control + add/reorder extras, routing every
    position-shifting save through the slice-4 remap **atomically** (renumber + remap together, never
-   one alone). **Depends on:** slice 4 (hard). WPF gate = add a `false-start` Ripple + two `tuning`
-   entries to 1971-02-21, save, re-open, verify persistence **and** that an alias-bearing concert's
-   combines survive the extra insert unshifted.
+   one alone). **Depends on:** slice 4 (hard). **D13 gate:** the remove path must **block removing a
+   combine-covered entry** (until combine-dissolve authoring ships, that entry is un-removable, with a
+   message saying why) — the remap's `SetlistRemapUnsupportedException` is only the backstop, never the
+   user-facing failure. WPF gate = add a `false-start` Ripple + two `tuning` entries to 1971-02-21,
+   save, re-open, verify persistence **and** that an alias-bearing concert's combines survive the extra
+   insert unshifted.
 6. **Edit-side deep-link unbank** (§8) — **pulled forward on lived demand, ahead of slices 4–5.**
    Direct-to-editor navigation (`EditMetadataView.OnEditSetlistRequested` →
    `ShellWindow.NavigateToSetlistEditor`, not Import's ConcertDetail hop) + a guarded refresh-on-return.
@@ -447,7 +455,7 @@ authoring, gated on 4) → 7 (write-back). Slice 6 moved ahead of 4/5 because th
 only needs to *invalidate* claims, which has no dependency on the remap; the remap is required only to
 *preserve* claims across an edit, a later refinement.
 
-## 11. Decision record (RESOLVED 2026-07-03; addendum D10–D12 2026-07-05)
+## 11. Decision record (RESOLVED 2026-07-03; addenda D10–D12 2026-07-05, D13 2026-07-07)
 
 All nine core decisions were ratified 2026-07-03; the spec body above is written as settled design
 against them. Three sub-decisions (D10–D12) were ratified 2026-07-05 during the Phase-A reconciliation
@@ -498,6 +506,16 @@ here as a one-line "considered, rejected" note.
     append is banked (`PersistAliasSetlist` template, gated on the slice-4 remap) (§6.1). _Considered,
     rejected: a direct-append accept path now — a second canon write seam with no review-for-free and
     the same slice-4 dependency._
+13. **D13 — removed-covered-entry remap semantics — RESOLVED: forbid upstream (2026-07-07).** A
+    position-shifting edit that would remove a setlist entry an alias combine covers is **blocked in the
+    editor** until the combine is dissolved — the edit never reaches the remap, so no covered index is
+    ever orphaned. The pure `SetlistPositionRemap` refuses this case with
+    `SetlistRemapUnsupportedException` as the enforcement **backstop** if the editor check is ever
+    bypassed. **Honest gap:** combine-dissolve authoring does not exist yet (aliases are write-only —
+    alias-setlists-spec.md "Removal is deferred"), so a combine-covered entry is currently
+    **un-removable** until it ships; the editor block message must say why. _Considered, rejected: (a)
+    shrink the covered run — silently changes an authored combine's meaning; (b) drop the alias —
+    destroys curation as a side effect of an unrelated edit._
 
 ## 12. Out of scope / banked
 

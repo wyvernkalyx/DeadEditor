@@ -224,6 +224,16 @@ the same file and would leave a phantom alias in the cache on Cancel):
 - **Read-only display:** a read-only line shows the union of recorded + pending combines (covered song
   names + position range), so authoring is not blind and dedup is visible. Removal is deferred
   (follow-ups.md).
+- **Position-shift remap + removed-covered rule (D13, setlist-extras-writeback-spec.md §3.3).** When a
+  setlist edit shifts flattened positions (an extra insert / removal / reorder), covered runs survive
+  via the pure `Helpers/SetlistPositionRemap` (extras slice 4), which remaps every
+  `CoveredOfficialIndices` in the same atomic operation as the position renumber. **Removing an entry a
+  combine covers is forbidden upstream** (extras-spec D13): the editor blocks it until the combine is
+  dissolved, so the remap never meets an orphaned covered index — `SetlistRemapUnsupportedException` is
+  only a backstop. Combine-dissolve authoring is not built yet (removal deferred, above), so a
+  combine-covered entry is currently un-removable. **Known + unguarded:** an insert/reorder that
+  interleaves a non-covered slot into the middle of a covered run remaps faithfully but yields a
+  non-contiguous run; banked (lived-demand), since realistic extras reorders are local.
 
 ## 7. Display - P1 fix (slice 4) -- UNBUILT (design under review)
 
