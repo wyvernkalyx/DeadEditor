@@ -419,14 +419,64 @@ One concern per commit; WPF manual gate on every UI-visible slice; pure helpers 
    removed positions, sequential composition, round-trip logical-entry coherence, cross-consumer
    atomicity, and out-of-range robustness. **Gate held: no extra-editing path (slice 5) shipped before
    this landed.**
-5. **Setlist-editor extras authoring** (§7). Type control + add/reorder extras, routing every
-   position-shifting save through the slice-4 remap **atomically** (renumber + remap together, never
-   one alone). **Depends on:** slice 4 (hard). **D13 gate:** the remove path must **block removing a
-   combine-covered entry** (until combine-dissolve authoring ships, that entry is un-removable, with a
-   message saying why) — the remap's `SetlistRemapUnsupportedException` is only the backstop, never the
-   user-facing failure. WPF gate = add a `false-start` Ripple + two `tuning` entries to 1971-02-21,
-   save, re-open, verify persistence **and** that an alias-bearing concert's combines survive the extra
-   insert unshifted.
+5. **Setlist-editor extras authoring** (§7) — **expanded per the owner's lived-demand requirements
+   (2026-07-06 session on 1971-04-08); split into 5a/5b, each with its own WPF gate.** The editor as it
+   stands is **append-only** (`AddSongButton_Click` appends with `Position = _tracks.Count + 1`,
+   EditSetlistView.xaml.cs:184-207), removes with a full renumber (`RemoveSelectedTracks`, :218-231),
+   and stages combines applied at Save (`CombineSelectedButton_Click`, :249) — with **no
+   insert-at-position, no move/reorder, no song-name autocomplete**, and it constructs
+   `ConcertTrackInput` **without a Type** so every saved entry rides the `"song"` default
+   (`BuildTrackInputs`, :579-580 — the slice-1 banked note, even though `ConcertTrackInput.Type` and
+   `ConcertSnapshot.Project` already carry a type through). Slice 5 closes all of that. **Depends on:**
+   slice 4 (hard — every position shift routes through `SetlistPositionRemap`).
+
+   **Remap model — remap-at-save, not remap-per-operation (chosen).** Positions are assigned in exactly
+   one place today: `ConcertSnapshot.Project`'s contiguous renumber at Save (ConcertSnapshot.cs:50-83);
+   nothing tracks position mid-session. The remap therefore lands **at Save, beside that renumber**
+   (§3.3's ratified "a save projection that renumbers positions and remaps covered indices together,
+   never one without the other"): the Save path derives the old→new mapping from **surviving-row
+   identity** (each loaded `EditableTrack` keeps its origin; inserted rows have none; removed rows map to
+   null), builds a `SetlistPositionRemap`, and applies it to the persisted `_concert.AliasSetlists` (and
+   any live claim state) inside the same whole-object write that already applies staged combines. One
+   place changes positions, the same breath remaps the indices — atomic by construction — and **Cancel
+   stays trivial** (drop the in-memory edits; no alias mutation to unwind). Deriving the composite
+   old→new map at Save may add a small row-identity factory (e.g. `FromSurvivingOrder(oldCount,
+   newRowOrigins)`) to the pure `SetlistPositionRemap`, unit-tested in 5a and staying **inside the one
+   atomic component** — not a new write seam. _Considered, rejected: remap-per-operation on live editor
+   state — it can call the discrete `ForInsert`/`ForRemove`/`ForReorder` factories directly, but it must
+   continuously mutate `_concert.AliasSetlists` in memory, unwind those mutations on Cancel, and fight
+   the assign-positions-only-at-save model; the dirty-block that already forbids combine authoring during
+   unsaved structural edits (alias-setlists-spec.md §6) exists precisely because live positional indices
+   are unstable mid-session._ The existing combine dirty-block **stays** — the at-save remap keeps
+   already-persisted aliases coherent across a structural-edit Save; relaxing the dirty-block so new
+   combines can be authored amid unsaved structural edits is out of scope (banked).
+
+   - **5a — structural authoring + atomic remap + D13 block + visual parity.** Insert-at-position and
+     move/reorder of rows (alongside the existing add/remove); the Save projection routes every position
+     shift through `SetlistPositionRemap`, remapping persisted `aliasSetlists` covered indices and any
+     live claim state (§2.2 D9a). **D13 lives here, with the remove path** (moved from the original
+     slice-5 blurb: the remove+remap path is exactly where a combine-covered entry can be hit, so the
+     user-facing block must ship *with* it, not a sub-slice later) — removing a combine-covered entry is
+     **refused with a message naming the covering combine and stating dissolve-first** (and that
+     combine-dissolve authoring is not yet built, alias-setlists-spec.md §6); `SetlistRemapUnsupportedException`
+     is the backstop, never the user-facing failure. **Song-name entry gains autocomplete** from
+     `songs.json`'s canonical list as the user types, with **free text always allowed** (extras like
+     "Tuning" / banter are off-list; D10 requires only a non-empty label). **Visual parity with Edit
+     Metadata** — the owner's finding, verbatim: *"the Edit Setlist view should look like the Edit
+     Metadata view. Instead, it looks like a different program."* Parity is a requirement (grid styling,
+     header/action layout, control chrome), pixels unpinned. Segue editing is **unchanged** (already
+     works — the 1971-03-03 Set 2 curation precedent). **WPF gate:** on a date that HAS a combine, insert
+     a row ahead of the combine's covered run, Save, reopen → the combine's covered song names are
+     unchanged (survived the shift); attempt to remove a combine-covered entry → blocked with the D13
+     message; the view reads as a sibling of Edit Metadata.
+   - **5b — typed-extra authoring.** A per-row **type selector** (D1 vocabulary; default `song`);
+     `EditableTrack` gains `Type`; **`BuildTrackInputs` passes `Type` explicitly** (closing the slice-1
+     default-ride at EditSetlistView.xaml.cs:579-580 so a retyped row actually persists its type);
+     **D10 non-empty-label enforcement** for extras; extras render visually distinct (muted row / type
+     chip, §7). A type edit is a content edit that unverifies on Save (D3). **Depends on:** 5a (the remap
+     + D13 block must exist before extras can be authored). **WPF gate:** the two-Ripples round-trip — add
+     a `false-start` "Ripple" + two `tuning` entries to 1971-02-21, Save, reopen → types persist, and the
+     recording's false-start + tuning tracks now have canonical positions to claim (§1, §4).
 6. **Edit-side deep-link unbank** (§8) — **pulled forward on lived demand, ahead of slices 4–5.**
    Direct-to-editor navigation (`EditMetadataView.OnEditSetlistRequested` →
    `ShellWindow.NavigateToSetlistEditor`, not Import's ConcertDetail hop) + a guarded refresh-on-return.
@@ -450,8 +500,8 @@ now landed** — so the sequencing precondition (a placement gesture must exist 
 and displayed) is **satisfied**, not pending. **This arc therefore starts cleanly at its own slice 1**;
 the unified `AssignEntryToTrack → Reassign → Apply` seam (§4) is already in place for extras to claim
 through. Global order from here: extras slice 1 → 2 → 3 → **6 (Edit deep-link unbank — pulled forward on lived
-demand; ships with the invalidate-on-return guard, not the slice-4 remap)** → 4 (remap) → 5 (editor
-authoring, gated on 4) → 7 (write-back). Slice 6 moved ahead of 4/5 because the deep-link's return path
+demand; ships with the invalidate-on-return guard, not the slice-4 remap)** → 4 (remap) → 5a → 5b
+(editor authoring, gated on 4) → 7 (write-back). Slice 6 moved ahead of 4/5 because the deep-link's return path
 only needs to *invalidate* claims, which has no dependency on the remap; the remap is required only to
 *preserve* claims across an edit, a later refinement.
 
