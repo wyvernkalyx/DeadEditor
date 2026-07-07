@@ -102,6 +102,38 @@ namespace DeadEditor.Helpers
         }
 
         /// <summary>
+        /// The composite at-save edit (setlist-extras-writeback-spec.md slice 5a): given the pre-edit
+        /// entry count and the surviving rows' origin identity <b>in their new order</b>, produce the
+        /// old→new map. Each element of <paramref name="newRowOrigins"/> is a surviving row's old
+        /// position, or <c>null</c> for a row inserted this session (which takes no old position); any
+        /// old position absent from the list was removed (→ maps to null). This is the one factory the
+        /// editor's Save uses — insert, move, and remove compose into a single map in one call, so the
+        /// alias remap runs exactly once per Save (§3.3 "renumber + remap together"). Throws
+        /// <see cref="ArgumentException"/> on a duplicate or out-of-range origin (a corrupt row-identity
+        /// set), before any map is built.
+        /// </summary>
+        public static SetlistPositionRemap FromSurvivingOrder(int oldCount, IReadOnlyList<int?> newRowOrigins)
+        {
+            if (oldCount < 0) throw new ArgumentOutOfRangeException(nameof(oldCount));
+            if (newRowOrigins == null) throw new ArgumentNullException(nameof(newRowOrigins));
+
+            var forward = new int?[oldCount];
+            var seen = new bool[oldCount];
+            for (int newPos = 0; newPos < newRowOrigins.Count; newPos++)
+            {
+                if (newRowOrigins[newPos] is not int origin) continue; // inserted row — no old position
+                if (origin < 0 || origin >= oldCount || seen[origin])
+                    throw new ArgumentException(
+                        $"newRowOrigins carries a duplicate or out-of-range origin ({origin}); expected distinct values in 0..{oldCount - 1}.",
+                        nameof(newRowOrigins));
+                seen[origin] = true;
+                forward[origin] = newPos;
+            }
+            // Any old position never claimed by a surviving row stays null → removed.
+            return new SetlistPositionRemap(forward, oldCount, newRowOrigins.Count);
+        }
+
+        /// <summary>
         /// General reorder: <paramref name="newOrder"/>[newPosition] = oldPosition, a permutation of
         /// 0..N-1. Insert/remove are the common cases with their own factories; this covers an arbitrary
         /// row re-sequence (e.g. the editor's save projection reassigning contiguous positions after a

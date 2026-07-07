@@ -399,6 +399,79 @@ public class SetlistPositionRemapTests
         Assert.Equal(new List<int> { 4, 5 }, result.AliasSetlists[0].Entries[0].CoveredOfficialIndices);
     }
 
+    // ===== FromSurvivingOrder: the composite at-save map =====
+
+    [Fact]
+    public void FromSurvivingOrder_Identity_WhenOrderUnchanged()
+    {
+        // 4 rows, none moved/inserted/removed → identity.
+        var r = SetlistPositionRemap.FromSurvivingOrder(4, new int?[] { 0, 1, 2, 3 });
+        Assert.Equal(0, r.MapPosition(0));
+        Assert.Equal(3, r.MapPosition(3));
+        Assert.Equal(4, r.NewCount);
+    }
+
+    [Fact]
+    public void FromSurvivingOrder_InsertMoveRemove_ComposedInOneSession()
+    {
+        // Old axis: 0,1,2,3,4. Session: remove old-2; move old-4 to the front; insert a new row
+        // in the middle. New order (origins): [4, 0, null, 1, 3].
+        var r = SetlistPositionRemap.FromSurvivingOrder(5, new int?[] { 4, 0, null, 1, 3 });
+
+        Assert.Equal(1, r.MapPosition(0)); // old-0 now at new index 1
+        Assert.Equal(3, r.MapPosition(1)); // old-1 → 3
+        Assert.Null(r.MapPosition(2));     // old-2 removed
+        Assert.Equal(4, r.MapPosition(3)); // old-3 → 4
+        Assert.Equal(0, r.MapPosition(4)); // old-4 moved to front
+        Assert.Equal(5, r.NewCount);       // 4 survivors + 1 inserted
+    }
+
+    [Fact]
+    public void FromSurvivingOrder_AllRemoved_EveryOldMapsToNull()
+    {
+        var r = SetlistPositionRemap.FromSurvivingOrder(3, new int?[] { });
+        Assert.Null(r.MapPosition(0));
+        Assert.Null(r.MapPosition(1));
+        Assert.Null(r.MapPosition(2));
+        Assert.Equal(0, r.NewCount);
+    }
+
+    [Fact]
+    public void FromSurvivingOrder_AllInserted_FromEmptyOld()
+    {
+        // Started empty (oldCount 0), three new rows inserted.
+        var r = SetlistPositionRemap.FromSurvivingOrder(0, new int?[] { null, null, null });
+        Assert.Equal(0, r.OldCount);
+        Assert.Equal(3, r.NewCount);
+        // A brand-new setlist has no aliases/claims to remap; MapClaims over empty is empty.
+        Assert.Empty(r.MapClaims(new HashSet<int>()));
+    }
+
+    [Fact]
+    public void FromSurvivingOrder_DuplicateOrigin_Throws()
+    {
+        Assert.Throws<ArgumentException>(
+            () => SetlistPositionRemap.FromSurvivingOrder(3, new int?[] { 0, 1, 0 }));
+    }
+
+    [Fact]
+    public void FromSurvivingOrder_OutOfRangeOrigin_Throws()
+    {
+        Assert.Throws<ArgumentException>(
+            () => SetlistPositionRemap.FromSurvivingOrder(3, new int?[] { 0, 5 }));
+        Assert.Throws<ArgumentException>(
+            () => SetlistPositionRemap.FromSurvivingOrder(3, new int?[] { 0, -1 }));
+    }
+
+    [Fact]
+    public void FromSurvivingOrder_InsertBeforeCombine_RemapsCoveredRun()
+    {
+        // Old axis 0..3 with a combine covering [1,2]. Insert a new row at the front:
+        // new order origins = [null, 0, 1, 2, 3] → covered [1,2] must become [2,3].
+        var r = SetlistPositionRemap.FromSurvivingOrder(4, new int?[] { null, 0, 1, 2, 3 });
+        Assert.Equal(new List<int> { 2, 3 }, r.MapCoveredIndices(new List<int> { 1, 2 }));
+    }
+
     // ===== Factory argument validation (out-of-range robustness) =====
 
     [Fact]

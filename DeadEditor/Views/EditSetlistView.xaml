@@ -26,7 +26,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -34,8 +34,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Row 0: Metadata fields -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <!-- Row 0: Metadata fields — bordered info bar matching EditMetadataView's album-info panel
+             (#2D2D30 fill, #555555 border) so the two editors read as one family (slice 5a parity). -->
+        <Border Grid.Row="0" Background="#2D2D30" BorderBrush="#555555" BorderThickness="1"
+                Padding="10" Margin="0,0,0,10">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="200"/>
@@ -60,6 +63,7 @@
                          TextChanged="MetadataField_TextChanged"/>
             </StackPanel>
         </Grid>
+        </Border>
 
         <!-- Row 1: Action buttons (left) + verification surface (right) -->
         <Grid Grid.Row="1" Margin="0,0,0,12">
@@ -69,24 +73,27 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <Button x:Name="AddSongButton" Content="＋ Add Song"
-                        Click="AddSongButton_Click"
-                        Background="#3E3E42" Foreground="#CCCCCC"
-                        BorderBrush="#555555" BorderThickness="1"
-                        Padding="12,6" Cursor="Hand" FontSize="14"
-                        Margin="0,0,8,0"/>
-                <Button x:Name="NormalizeButton" Content="Normalize"
-                        Click="NormalizeButton_Click"
-                        Background="#3E3E42" Foreground="#CCCCCC"
-                        BorderBrush="#555555" BorderThickness="1"
-                        Padding="12,6" Cursor="Hand" FontSize="14"
-                        Margin="0,0,8,0"/>
-                <Button x:Name="CombineSelectedButton" Content="Combine Selected"
-                        Click="CombineSelectedButton_Click"
-                        Background="#3E3E42" Foreground="#CCCCCC"
-                        BorderBrush="#555555" BorderThickness="1"
-                        Padding="12,6" Cursor="Hand" FontSize="14"
-                        Margin="0,0,8,0"
+                <Button x:Name="AddSongButton" Content="＋ Add Song" Height="32" FontSize="16"
+                        Style="{StaticResource AccentButton}"
+                        Click="AddSongButton_Click" Margin="0,0,6,0"/>
+                <Button x:Name="InsertAboveButton" Content="Insert Above" Height="32" FontSize="16"
+                        Style="{StaticResource TertiaryButton}"
+                        Click="InsertAboveButton_Click" Margin="0,0,6,0"
+                        ToolTip="Insert a new row above the selected row (same set)"/>
+                <Button x:Name="MoveUpButton" Content="▲" Height="32" FontSize="16"
+                        Style="{StaticResource TertiaryButton}"
+                        Click="MoveUpButton_Click" Margin="0,0,2,0"
+                        ToolTip="Move the selected row up within its set"/>
+                <Button x:Name="MoveDownButton" Content="▼" Height="32" FontSize="16"
+                        Style="{StaticResource TertiaryButton}"
+                        Click="MoveDownButton_Click" Margin="0,0,6,0"
+                        ToolTip="Move the selected row down within its set"/>
+                <Button x:Name="NormalizeButton" Content="Normalize" Height="32" FontSize="16"
+                        Style="{StaticResource AccentButton}"
+                        Click="NormalizeButton_Click" Margin="0,0,6,0"/>
+                <Button x:Name="CombineSelectedButton" Content="Combine Selected" Height="32" FontSize="16"
+                        Style="{StaticResource TertiaryButton}"
+                        Click="CombineSelectedButton_Click" Margin="0,0,6,0"
                         ToolTip="Select a contiguous run within one set, then combine it into an alias"/>
                 <TextBlock x:Name="StatusText" Text=""
                            Foreground="#888888" FontSize="14"
@@ -216,11 +223,16 @@
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
-                                         Background="#3C3C3C" Foreground="#FFFFFF"
-                                         CaretBrush="#FFFFFF"
-                                         BorderBrush="#007ACC" BorderThickness="1"
-                                         Padding="4,2"/>
+                                <!-- Autocomplete (slice 5a, Part 4): IsEditable so free text is ALWAYS
+                                     allowed (off-list extras like "Tuning" are kept verbatim), with
+                                     IsTextSearchEnabled type-ahead against the canonical song list bound
+                                     from the view (AllSongTitles). Two-way Text drives SongName. -->
+                                <ComboBox IsEditable="True" IsTextSearchEnabled="True" StaysOpenOnEdit="True"
+                                          Text="{Binding SongName, UpdateSourceTrigger=PropertyChanged}"
+                                          ItemsSource="{Binding AllSongTitles, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                          Background="#3C3C3C" Foreground="#FFFFFF"
+                                          BorderBrush="#007ACC" BorderThickness="1"
+                                          Padding="2,1" FontSize="16"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>

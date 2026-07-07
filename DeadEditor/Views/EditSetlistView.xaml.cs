@@ -60,12 +60,25 @@ namespace DeadEditor
         // this flag — multiple combines can be authored in one session.
         private bool _structuralEditsSinceSave;
 
+        // The size of the last-saved flattened axis — FromSurvivingOrder's oldCount (slice 5a). Captured
+        // at load and re-baselined on Save, alongside each row's OriginIndex. The persisted alias covered
+        // indices and any live claim live on this axis.
+        private int _persistedCount;
+
         // Structural labels for set assignment UI — these are display values, not song data
         private static readonly string[] SetChoices =
             { "Set 1", "Set 2", "Set 3", "Encore", "Encore 2" };
 
         public string VenueName => _concert.Venue;
         public bool HasUnsavedChanges => _hasUnsavedChanges;
+
+        /// <summary>
+        /// Canonical song titles for the Song Name cell's autocomplete (slice 5a, Part 4). Bound from
+        /// the editing ComboBox via RelativeSource; the ComboBox is <c>IsEditable</c> so **free text is
+        /// always allowed** — extras like "Tuning" / banter are off-list (D10 needs only a non-empty
+        /// label), and a typed value that matches no title is kept verbatim.
+        /// </summary>
+        public IReadOnlyList<string> AllSongTitles { get; }
 
         /// <summary>
         /// Drives the combine-row ✕/↺ controls' enabled state. Removal/un-stage is refused while
@@ -87,6 +100,9 @@ namespace DeadEditor
             _concert = concert;
             _originalDate = concert.Date ?? "";
             _normalizationService = new NormalizationService();
+            AllSongTitles = _normalizationService.GetAllTitles()
+                .OrderBy(t => t, StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
         private void EditSetlistView_Loaded(object sender, RoutedEventArgs e)
@@ -130,6 +146,9 @@ namespace DeadEditor
                     var track = new EditableTrack
                     {
                         Position = position,
+                        // Origin on the persisted flattened axis (0-based) — the stable identity the
+                        // at-save remap keys on (slice 5a). Loaded rows carry it; inserts get null.
+                        OriginIndex = position - 1,
                         SongName = song.Name,
                         Date = !string.IsNullOrEmpty(song.Date) ? song.Date : _concert.Date,
                         Segue = song.Segue,
@@ -141,6 +160,7 @@ namespace DeadEditor
                 }
             }
 
+            _persistedCount = _tracks.Count;
             TracksDataGrid.ItemsSource = _tracks;
             BottomStatusText.Text = $"{_tracks.Count} tracks";
 
@@ -184,18 +204,10 @@ namespace DeadEditor
         private void AddSongButton_Click(object sender, RoutedEventArgs e)
         {
             var lastSet = _tracks.LastOrDefault()?.Set ?? "Set 1";
-            var newTrack = new EditableTrack
-            {
-                Position = _tracks.Count + 1,
-                SongName = "",
-                Date = DateTextBox.Text.Trim(),
-                Segue = false,
-                Set = lastSet
-            };
-            newTrack.PropertyChanged += Track_PropertyChanged;
+            var newTrack = NewInsertedRow(lastSet);
             _tracks.Add(newTrack);
-            TracksDataGrid.ItemsSource = null;
-            TracksDataGrid.ItemsSource = _tracks;
+            RenumberTracks();
+            RebindGrid();
             OnEditorChanged();
 
             BottomStatusText.Text = $"{_tracks.Count} tracks";
@@ -204,6 +216,88 @@ namespace DeadEditor
             TracksDataGrid.UpdateLayout();
             TracksDataGrid.SelectedItem = newTrack;
             TracksDataGrid.ScrollIntoView(newTrack);
+        }
+
+        /// <summary>
+        /// Insert-at-position (slice 5a): a new blank row immediately ABOVE the selected row, inheriting
+        /// its set so the projection keeps it in that set group; with no selection it lands at the top.
+        /// Inserted rows carry no <see cref="EditableTrack.OriginIndex"/> — they take no old position, so
+        /// the at-save remap shifts every following persisted index by one.
+        /// </summary>
+        private void InsertAboveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var anchor = TracksDataGrid.SelectedItems.OfType<EditableTrack>().FirstOrDefault();
+            int insertAt = anchor != null ? _tracks.IndexOf(anchor) : 0;
+            string set = anchor?.Set ?? _tracks.FirstOrDefault()?.Set ?? "Set 1";
+
+            var row = NewInsertedRow(set);
+            _tracks.Insert(insertAt, row);
+            RenumberTracks();
+            RebindGrid();
+            OnEditorChanged();
+
+            BottomStatusText.Text = $"{_tracks.Count} tracks";
+            TracksDataGrid.UpdateLayout();
+            TracksDataGrid.SelectedItem = row;
+            TracksDataGrid.ScrollIntoView(row);
+        }
+
+        private void MoveUpButton_Click(object sender, RoutedEventArgs e) => MoveSelected(-1);
+        private void MoveDownButton_Click(object sender, RoutedEventArgs e) => MoveSelected(+1);
+
+        /// <summary>
+        /// Move the single selected row one slot within its set (slice 5a). Reordering is within-set —
+        /// the projection regroups by set anyway (ConcertSnapshot.GetSetOrder), so a move swaps the row
+        /// with its nearest same-set neighbour in the given direction and no-ops at the set's edge. The
+        /// swap changes display order and (at Save) the flattened axis; the remap keeps aliases coherent.
+        /// </summary>
+        private void MoveSelected(int direction)
+        {
+            var sel = TracksDataGrid.SelectedItems.OfType<EditableTrack>().ToList();
+            if (sel.Count != 1)
+            {
+                StatusText.Text = "Select one row to move.";
+                return;
+            }
+            var row = sel[0];
+            int idx = _tracks.IndexOf(row);
+            int j = idx + direction;
+            while (j >= 0 && j < _tracks.Count && _tracks[j].Set != row.Set) j += direction;
+            if (j < 0 || j >= _tracks.Count) return; // at the top/bottom of its set — no-op
+
+            (_tracks[idx], _tracks[j]) = (_tracks[j], _tracks[idx]);
+            RenumberTracks();
+            RebindGrid();
+            OnEditorChanged();
+            TracksDataGrid.SelectedItem = row;
+            TracksDataGrid.ScrollIntoView(row);
+        }
+
+        private EditableTrack NewInsertedRow(string set)
+        {
+            var row = new EditableTrack
+            {
+                Position = 0,          // set by RenumberTracks
+                OriginIndex = null,    // inserted this session — no old position
+                SongName = "",
+                Date = DateTextBox.Text.Trim(),
+                Segue = false,
+                Set = set
+            };
+            row.PropertyChanged += Track_PropertyChanged;
+            return row;
+        }
+
+        private void RenumberTracks()
+        {
+            for (int i = 0; i < _tracks.Count; i++)
+                _tracks[i].Position = i + 1;
+        }
+
+        private void RebindGrid()
+        {
+            TracksDataGrid.ItemsSource = null;
+            TracksDataGrid.ItemsSource = _tracks;
         }
 
         private void TracksDataGrid_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -220,20 +314,62 @@ namespace DeadEditor
             var selected = TracksDataGrid.SelectedItems.OfType<EditableTrack>().ToList();
             if (selected.Count == 0) return;
 
+            // D13 block (setlist-extras-writeback-spec.md): a row whose ORIGIN position is covered by any
+            // recorded or staged combine cannot be removed until that combine is dissolved. The check runs
+            // against origin (persisted) indices, not transient display order, so it is stable across
+            // moves/inserts — and it keeps SetlistRemapUnsupportedException unreachable through the UI (the
+            // remap never meets an orphaned covered index). All-or-nothing: one blocked row cancels the
+            // whole removal.
+            foreach (var track in selected)
+            {
+                if (track.OriginIndex is int origin && TryFindCoveringCombine(origin, out var coveredRun))
+                {
+                    var song = string.IsNullOrWhiteSpace(track.SongName) ? $"#{track.Position}" : track.SongName;
+                    var label = Helpers.CombineLabel.Describe(coveredRun,
+                        i => _tracks.FirstOrDefault(t => t.OriginIndex == i)?.SongName ?? $"#{i + 1}");
+                    App.Alerts.Notify(
+                        $"Can't remove “{song}” — it's part of the combined track {label}.\n\n" +
+                        "Dissolve that combine first. (Combine dissolving isn't built yet, so this entry " +
+                        "can't be removed until it is.)",
+                        AlertSeverity.Warning, "Entry Is Combined");
+                    return;
+                }
+            }
+
             foreach (var track in selected)
             {
                 track.PropertyChanged -= Track_PropertyChanged;
                 _tracks.Remove(track);
             }
 
-            // Renumber
-            for (int i = 0; i < _tracks.Count; i++)
-                _tracks[i].Position = i + 1;
-
-            TracksDataGrid.ItemsSource = null;
-            TracksDataGrid.ItemsSource = _tracks;
+            RenumberTracks();
+            RebindGrid();
             OnEditorChanged();
             BottomStatusText.Text = $"{_tracks.Count} tracks";
+        }
+
+        /// <summary>
+        /// True when <paramref name="origin"/> (a persisted flattened index) is covered by any recorded
+        /// (<c>_concert.AliasSetlists</c>) or staged (<c>_pendingAliasEntries</c>) combine; on a hit,
+        /// <paramref name="coveredRun"/> is that combine's covered run for the D13 message. Both buffers
+        /// carry indices on the same origin axis, so the union is checked directly.
+        /// </summary>
+        private bool TryFindCoveringCombine(int origin, out IReadOnlyList<int> coveredRun)
+        {
+            foreach (var entry in _concert.AliasSetlists.SelectMany(a => a.Entries))
+                if (entry.CoveredOfficialIndices.Contains(origin))
+                {
+                    coveredRun = entry.CoveredOfficialIndices;
+                    return true;
+                }
+            foreach (var entry in _pendingAliasEntries)
+                if (entry.CoveredOfficialIndices.Contains(origin))
+                {
+                    coveredRun = entry.CoveredOfficialIndices;
+                    return true;
+                }
+            coveredRun = System.Array.Empty<int>();
+            return false;
         }
 
         // ===== COMBINE AUTHORING (alias-setlists-spec.md §6.2) =====
@@ -474,6 +610,33 @@ namespace DeadEditor
                 var targetPath = Path.Combine(concertsDir, $"{date}.json");
                 var tempPath = targetPath + ".tmp";
 
+                // --- Slice 5a: atomic at-save position remap (setlist-extras-writeback-spec.md §3.3) ---
+                // Beside ConcertSnapshot.Project's contiguous renumber, remap every persisted alias
+                // covered index to its new flattened slot in the SAME breath (never one without the
+                // other). The new axis is the projected order — group by set in canonical order, stable
+                // within a group — matching Project exactly; the map is built from each surviving row's
+                // OriginIndex (inserted rows = null → new slots; removed origins → null, which D13 has
+                // already made unreachable for any covered index). Staged combine buffers ride the same
+                // map so their covered indices land on the new axis too. Pure + all-or-nothing: a throw
+                // here (the removed-covered backstop) leaves _concert untouched and aborts via catch.
+                var projectedOrder = _tracks
+                    .Select((t, i) => (t, i))
+                    .OrderBy(x => ConcertSnapshot.GetSetOrder(x.t.Set))
+                    .ThenBy(x => x.i)
+                    .Select(x => x.t)
+                    .ToList();
+                var remap = SetlistPositionRemap.FromSurvivingOrder(
+                    _persistedCount, projectedOrder.Select(t => t.OriginIndex).ToList());
+                _concert.AliasSetlists = remap.MapAliasSetlists(_concert.AliasSetlists);
+                foreach (var entry in _pendingAliasEntries)
+                    entry.CoveredOfficialIndices = remap.MapCoveredIndices(entry.CoveredOfficialIndices);
+                for (int i = 0; i < _pendingAliasRemovals.Count; i++)
+                    _pendingAliasRemovals[i] = remap.MapCoveredIndices(_pendingAliasRemovals[i]);
+                // Claim-state remap (ClaimedPositions / per-track ClaimedSetlistPosition) is NOT wired
+                // here: no live claim state is reachable from this save. The Edit-side deep-link's guarded
+                // return already invalidates claims on return (reference-side-panel-spec.md §9), so the
+                // banked claim-preserving refinement — not this slice — owns any future claim remap.
+
                 // Apply staged combine edits onto the live _concert immediately BEFORE serialize, so
                 // the authored/removed runs ride the existing whole-object write (alias-setlists-spec.md
                 // §6.2, staged authoring). ConcertSnapshot.Project does not touch AliasSetlists, so the
@@ -527,6 +690,14 @@ namespace DeadEditor
                 _pendingAliasEntries.Clear();
                 _pendingAliasRemovals.Clear();
                 _structuralEditsSinceSave = false;
+
+                // Re-baseline the remap axis: the saved order IS the new persisted axis, so each surviving
+                // row's OriginIndex becomes its new flattened position and inserted rows are now persisted.
+                // A subsequent structural-edit Save in the same session then remaps against this axis.
+                for (int k = 0; k < projectedOrder.Count; k++)
+                    projectedOrder[k].OriginIndex = k;
+                _persistedCount = projectedOrder.Count;
+
                 RefreshAliasDisplay();
 
                 // Re-baseline: the saved editor state is the new reference, so a reopened-or-reused
@@ -679,6 +850,16 @@ namespace DeadEditor
         private bool _segue;
         private string _set = "Set 1";
         private string _info = "";
+
+        /// <summary>
+        /// The row's ORIGIN position on the last-saved flattened axis (0-based), or <c>null</c> for a
+        /// row inserted this session (setlist-extras-writeback-spec.md slice 5a). This is the stable
+        /// identity the at-save remap keys on: display <see cref="Position"/> renumbers freely as rows
+        /// move, but <c>OriginIndex</c> stays fixed so <c>SetlistPositionRemap.FromSurvivingOrder</c> can
+        /// map each persisted alias covered index and claim to its new slot. Re-baselined on Save. Not a
+        /// bound/notify property — pure bookkeeping.
+        /// </summary>
+        public int? OriginIndex { get; set; }
 
         public int Position
         {
