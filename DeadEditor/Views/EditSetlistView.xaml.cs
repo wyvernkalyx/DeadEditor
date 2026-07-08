@@ -69,6 +69,17 @@ namespace DeadEditor
         private static readonly string[] SetChoices =
             { "Set 1", "Set 2", "Set 3", "Encore", "Encore 2" };
 
+        // The D1 typed-entry vocabulary for the per-row Type selector (slice 5b). Default is song; the
+        // others are extras (tuning / false-start / banter / other-extra).
+        private static readonly string[] TypeChoices =
+        {
+            Models.SetlistEntryType.Song,
+            Models.SetlistEntryType.Tuning,
+            Models.SetlistEntryType.FalseStart,
+            Models.SetlistEntryType.Banter,
+            Models.SetlistEntryType.OtherExtra,
+        };
+
         public string VenueName => _concert.Venue;
         public bool HasUnsavedChanges => _hasUnsavedChanges;
 
@@ -115,6 +126,10 @@ namespace DeadEditor
             {
                 setColumn.ItemsSource = SetChoices;
             }
+
+            // Type column selector items (slice 5b) — referenced by x:Name so it survives column reorders.
+            if (TypeColumn != null)
+                TypeColumn.ItemsSource = TypeChoices;
         }
 
         private void LoadTrackData()
@@ -153,7 +168,8 @@ namespace DeadEditor
                         Date = !string.IsNullOrEmpty(song.Date) ? song.Date : _concert.Date,
                         Segue = song.Segue,
                         Set = setName,
-                        Info = song.Info
+                        Info = song.Info,
+                        Type = string.IsNullOrEmpty(song.Type) ? "song" : song.Type
                     };
                     track.PropertyChanged += Track_PropertyChanged;
                     _tracks.Add(track);
@@ -544,6 +560,16 @@ namespace DeadEditor
 
         public async System.Threading.Tasks.Task SaveChangesAsync()
         {
+            // Commit any in-flight grid edit BEFORE reading _tracks. A DataGrid cell still in edit mode
+            // when Save is clicked (Save lives on the HeaderBar, outside the grid) has NOT pushed its
+            // value to the bound EditableTrack — so both validation and the persisted projection would
+            // read stale values. This was the slice-5b gate-b failure: the Type combo selection sat
+            // uncommitted, so BuildTrackInputs saw the default "song", D10 skipped the row, and a
+            // blank-named extra saved. Committing cell-then-row here also closes a pre-existing latent
+            // hole — any pending cell edit (name / set / date / segue) was silently dropped on save.
+            TracksDataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+            TracksDataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+
             // Validate
             var date = DateTextBox.Text.Trim();
             if (!Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$"))
@@ -574,6 +600,20 @@ namespace DeadEditor
             if (_tracks.Count == 0)
             {
                 App.Alerts.Notify("Setlist must have at least one song.", AlertSeverity.Warning, "Empty Setlist");
+                return;
+            }
+
+            // D10a (setlist-extras-writeback-spec.md §5, widened 2026-07-07): NO entry of any type may
+            // save with an empty/whitespace name. Save-time gate, matching the date/duplicate/empty-
+            // setlist validation idiom above (Notify + early return). Widened from the extras-only D10
+            // because a fresh row defaults to type "song", so an extras-only block left the front door
+            // open — an unnamed song row persisted to canon.
+            var unnamedRow = RowLabelRule.FirstUnnamedRow(BuildTrackInputs());
+            if (unnamedRow is int rowNum)
+            {
+                App.Alerts.Notify(
+                    $"Row {rowNum} has no song name — every entry needs a name before saving.",
+                    AlertSeverity.Warning, "Entry Needs a Name");
                 return;
             }
 
@@ -748,7 +788,7 @@ namespace DeadEditor
 
         /// <summary>Current editor rows as WPF-free projection inputs.</summary>
         private IReadOnlyList<ConcertTrackInput> BuildTrackInputs() =>
-            _tracks.Select(t => new ConcertTrackInput(t.SongName, t.Date, t.Segue, t.Set, t.Info)).ToList();
+            _tracks.Select(t => new ConcertTrackInput(t.SongName, t.Date, t.Segue, t.Set, t.Info, t.Type)).ToList();
 
         /// <summary>
         /// Serialized snapshot of the current editor state — the same projection the persisted
@@ -850,6 +890,7 @@ namespace DeadEditor
         private bool _segue;
         private string _set = "Set 1";
         private string _info = "";
+        private string _type = "song";
 
         /// <summary>
         /// The row's ORIGIN position on the last-saved flattened axis (0-based), or <c>null</c> for a
@@ -887,6 +928,33 @@ namespace DeadEditor
 
         public string SegueMarker => Segue ? " >" : "";
         public string DateDisplay => !string.IsNullOrEmpty(Date) ? $" ({Date})" : "";
+
+        /// <summary>
+        /// Typed-entry kind (setlist-extras-writeback-spec.md D1/§3.1): song / tuning / false-start /
+        /// banter / other-extra. Default "song". Persisted explicitly by BuildTrackInputs (slice 5b),
+        /// so a retype rides the diff-at-save baseline and unverifies (D3). Changing it notifies the
+        /// display helpers so the row's muted/italic treatment and type chip update live.
+        /// </summary>
+        public string Type
+        {
+            get => _type;
+            set
+            {
+                if (_type != value)
+                {
+                    _type = value;
+                    OnPropertyChanged(nameof(Type));
+                    OnPropertyChanged(nameof(IsExtra));
+                    OnPropertyChanged(nameof(TypeChip));
+                }
+            }
+        }
+
+        /// <summary>True for any non-song extra — drives the muted/italic row treatment (§7).</summary>
+        public bool IsExtra => DeadEditor.Models.SetlistEntryType.IsExtra(_type);
+
+        /// <summary>The amber type-chip label for an extra (e.g. "FALSE START"), empty for a song.</summary>
+        public string TypeChip => IsExtra ? DeadEditor.Models.SetlistEntryType.DisplayLabel(_type) : "";
 
         public string Set
         {

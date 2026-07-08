@@ -23,5 +23,13 @@ namespace DeadEditor.Models
 
         /// <summary>True when <paramref name="type"/> is any non-song extra kind.</summary>
         public static bool IsExtra(string? type) => !IsSong(type);
+
+        /// <summary>
+        /// Display label for an extra's type chip, e.g. "false-start" → "FALSE START"
+        /// (setlist-extras-writeback-spec.md §7). Shared by the reference panel and the setlist editor
+        /// so both render the D1 vocabulary identically.
+        /// </summary>
+        public static string DisplayLabel(string? type) =>
+            (type ?? "").Replace('-', ' ').ToUpperInvariant();
     }
 }

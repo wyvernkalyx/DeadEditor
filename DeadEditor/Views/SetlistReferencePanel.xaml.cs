@@ -221,9 +221,9 @@ namespace DeadEditor
             return $"{songText}, {extraText}";
         }
 
-        /// <summary>Display label for an extra's type chip, e.g. "false-start" → "FALSE START".</summary>
+        /// <summary>Display label for an extra's type chip — shared with the setlist editor.</summary>
         private static string FormatTypeLabel(string type) =>
-            (type ?? "").Replace('-', ' ').ToUpperInvariant();
+            DeadEditor.Models.SetlistEntryType.DisplayLabel(type);
 
         /// <summary>Display row bound by the Setlist view's ItemTemplate.</summary>
         public sealed class SetlistRow

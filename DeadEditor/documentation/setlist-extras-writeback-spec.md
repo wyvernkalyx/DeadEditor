@@ -472,8 +472,9 @@ One concern per commit; WPF manual gate on every UI-visible slice; pure helpers 
    - **5b — typed-extra authoring.** A per-row **type selector** (D1 vocabulary; default `song`);
      `EditableTrack` gains `Type`; **`BuildTrackInputs` passes `Type` explicitly** (closing the slice-1
      default-ride at EditSetlistView.xaml.cs:579-580 so a retyped row actually persists its type);
-     **D10 non-empty-label enforcement** for extras; extras render visually distinct (muted row / type
-     chip, §7). A type edit is a content edit that unverifies on Save (D3). **Depends on:** 5a (the remap
+     **D10a non-empty-label enforcement** for all rows of any type (widened 2026-07-07 from the
+     extras-only D10 — see the decision record; a fresh row defaults to `song`, so an unnamed song row
+     otherwise slips through); extras render visually distinct (muted row / type chip, §7). A type edit is a content edit that unverifies on Save (D3). **Depends on:** 5a (the remap
      + D13 block must exist before extras can be authored). **WPF gate:** the two-Ripples round-trip — add
      a `false-start` "Ripple" + two `tuning` entries to 1971-02-21, Save, reopen → types persist, and the
      recording's false-start + tuning tracks now have canonical positions to claim (§1, §4).
@@ -545,6 +546,16 @@ here as a one-line "considered, rejected" note.
     included, has a non-empty `SongName` label; `ConcertVerifyGate` stays pure and untouched (§5).
     _Considered, rejected: a type-aware gate exemption allowing nameless non-`song` entries — adds a
     type branch to a pure gate to store a row nothing can display._
+    - **D10a — save-time name gate widened to ALL rows — RESOLVED (2026-07-07, supersedes-not-reopens
+      D10).** The setlist editor's save-time name block covers **every entry of any type**, not just
+      extras. A fresh row defaults to type `song`, so the extras-only gate left the front door open:
+      the slice-5b gate authored an **unnamed `song` row that persisted to canon** (1971-02-21, the
+      nameless "(Set 2, #12)" candidate). No row of any type may save with an empty/whitespace name,
+      enforced by the pure `RowLabelRule.FirstUnnamedRow`; this closes the gap between save-legal and
+      verify-legal for names (`ConcertVerifyGate` already refuses a nameless row). The one behavior
+      change from D10's extras-only scope: a blank **song** name now blocks save too. _Considered,
+      rejected: leaving song rows unblocked — the default-`song` front door is exactly what failed the
+      gate._
 11. **D11 — recording→canon segue write-back — RESOLVED: banked (2026-07-05).** Write-back propagates
     typed extras, not recording-sourced segue corrections; no recording-side segue source of truth
     exists and the assign seam is set-true-only. The 1971-03-03 case was editor authoring, which is in
