@@ -26,19 +26,24 @@ historical events of the *concert*, but the canonical setlist — sourced from s
 match or verify against its own concert's setlist, because some of its tracks have no canonical home.
 
 **Motivating case — 1971-02-21 (Capitol Theatre).** The canonical file
-([Data/concerts/1971-02-21.json](../Data/concerts/1971-02-21.json)) has **23 song entries** (12 in
-Set 1, 11 in Set 2; "Ripple" is one song entry at flattened position 8). A common recording of this
-date has **26 tracks**: the 23 songs **plus two tuning passages and a second "Ripple" that is a false
-start** preceding the real Ripple. Under today's model those three tracks are unmatchable:
+([Data/concerts/1971-02-21.json](../Data/concerts/1971-02-21.json)) records the concert's **23 songs**
+across two sets and — as the committed worked example of this arc — now also carries **two typed
+extras**: one `tuning` entry (flattened position 1) and one `false-start` entry labelled **"Ripple
+false start"** (flattened position 9), preceding the real Ripple. The concert remains
+**`verified:false`**. Before those extras were authored into canon, a common recording of this date —
+the 23 songs plus a tuning passage and a second "Ripple" that is a false start — left two tracks
+unmatchable under the song-only model:
 
-- The tuning tracks normalize to the canonical song "Tuning" (it exists in `songs.json`) but there is
-  **no setlist position** for them → off-list (reference-side-panel-spec.md §7.5.2 class 2).
+- The tuning track normalizes to the canonical song "Tuning" (it exists in `songs.json`) but there was
+  **no setlist position** for it → off-list (reference-side-panel-spec.md §7.5.2 class 2).
 - The false-start "Ripple" normalizes to canonical "Ripple" (`IsMatched == true`) but the one Ripple
-  setlist position is already claimed by the real Ripple → **recognized-but-unclaimed**
+  setlist position was already claimed by the real Ripple → **recognized-but-unclaimed**
   (reference-side-panel-spec.md §7.5.2 class 1).
 
-So the album sits permanently at 23/26 matched and cannot reach a "complete" match or a verified
-state, no matter how correct it is.
+So the album sat permanently at 23/25 matched and could not reach a "complete" match or a verified
+state, no matter how correct it was. Authoring the tuning and false-start entries into the canonical
+setlist — exactly the two typed extras the committed fixture above now carries — is what gives those
+two tracks a home.
 
 **Principle.** The false start and the tuning **belong to the concert, not to any one recording** —
 they are historical facts about what happened on stage that night. There is **one canonical setlist
@@ -252,7 +257,7 @@ keeping a concert "verified" across a structural retype would violate the P1 pri
 
 **Every entry carries a non-empty label — including extras (D10, §11).** Every setlist entry, songs
 and non-song extras alike, carries a non-empty `SongName` label (e.g. `"Tuning"`, `"Banter"`,
-`"Crowd/Stage Talk"`, `"Ripple"` for the false start). A descriptive label is **not fabricated data** —
+`"Crowd/Stage Talk"`, `"Ripple false start"` for the false start). A descriptive label is **not fabricated data** —
 it is the display string the panel, editor grid, and Concerts grid already require for every row, and
 naming the event ("Tuning") is a truthful description of what the extra *is*. This keeps
 `ConcertVerifyGate` ([ConcertVerifyGate.cs:29-50](../Helpers/ConcertVerifyGate.cs)) **pure and
@@ -276,6 +281,19 @@ setlist** so all recordings of the date benefit. The three policies below are **
   offer is shown, the user opts in, and the change routes through the setlist editor (which then
   re-runs its own diff-at-save, unverifying pending re-attestation). This mirrors the `SetlistFetcher`
   skip-verified guard already in place.
+
+  - **Carve-out — combine-alias appends are exempt (D14, §11).** The combine-alias write path —
+    `ConcertLookupService.PersistAliasSetlist` ([ConcertLookupService.cs:362](../Services/ConcertLookupService.cs)),
+    the additive append that records a combine against a concert — is **exempt** from P1's "never
+    silently change a verified setlist," carries **no verified guard and no unverify**, and none will be
+    added. Rationale: `aliasSetlists[]` is **additive, idempotent, diff-excluded provenance** — excluded
+    from `ConcertSnapshot.Project` and therefore from the verification diff baseline by design
+    ([ConcertReference.cs:46](../Models/ConcertReference.cs), §2.1/§2.3) — so an append changes no
+    verified content and cannot trip diff-at-save. It is **match-derived metadata, not setlist
+    content**; gating it would add friction to every combine-confirm against a verified concert for a
+    write the verification model already treats as invisible. This is **documented, not guarded** (D14):
+    P1 governs edits to setlist *content* (entries, types, segues, positions), which still route through
+    explicit review; combine provenance sits outside that surface, so path B is unchanged.
 
 - **P2 — unverified setlists accept write-back VISIBLY, never silently (D6).** When the canonical
   setlist is *unverified*, a recording that reveals a missing extra (or a segue correction) surfaces a
@@ -329,6 +347,28 @@ without the editor). _Considered, rejected: a direct-append accept path now — 
 to build and test, no review-for-free, and the same slice-4 dependency, for a round-trip the editor
 already makes cheap._
 
+**D12 accept-path — build reality + interim costs (amended 2026-07-08, Q4/Q5/Q6).** The
+route-through-the-editor decision stands; delivering it in slice 7a (§10) has concrete costs, now
+documented:
+
+1. **A staged-extras entry parameter on `EditSetlistView` will be built** — it does **not** exist
+   today. Staged extras arrive as pre-populated **unsaved** rows, subject to the editor's normal
+   diff-at-save review and the slice-4 atomic remap; they are **never auto-saved**. The banked
+   direct-append seam (`PersistExtraEntry`-style, above) **stays banked** — 7a adds no second write
+   seam.
+2. **Import needs a new direct-to-editor accept navigation.** Import's existing setlist deep-link stops
+   at `ConcertDetailView` and is **one-way by ratified decision** — that decision **stands for the
+   non-offer path** (§8); the offer-accept path gets **its own editor navigation**, delivered with the
+   Import inline banner (§10 slice 7a).
+3. **Documented interim cost — the offer-accept round trip on Edit rides the slice-6 return guard**,
+   which **unconditionally invalidates match/claim state (including on Cancel)** and forces a
+   re-**Match Setlist** (§10 slice 6). This is **accepted for 7a**; the **claim-preserving return
+   upgrade remains banked** (available only once the slice-4 remap can preserve claims across a shifted
+   setlist, §10).
+4. **Affordance (Q6) — the P2 offer is actionable on both surfaces.** Edit reuses the existing
+   `ValidationBanner` inline notice; Import gets **new inline-banner XAML delivered alongside its
+   accept navigation, not before**.
+
 ---
 
 ## 7. Setlist-editor changes
@@ -372,8 +412,12 @@ unbanking it**, turning the old blocker into a design **requirement**:
   (not a full view rebuild) preserves the album edit buffer. _Considered, rejected: guarding the
   deep-link behind an unsaved-changes check that saves/stashes album edits before navigating — heavier
   and interrupts the edit flow._
-- **Import's convention stays as-is** — the user re-**Reads** after fixing a setlist and Read already
-  re-invokes `RefreshSetlistPanelAsync` (reference-side-panel-spec.md §9); no new hook there.
+- **Import's convention stays as-is for the non-offer path** — the user re-**Reads** after fixing a
+  setlist and Read already re-invokes `RefreshSetlistPanelAsync` (reference-side-panel-spec.md §9); no
+  new hook there. **Exception (2026-07-08, §6.1/§10 slice 7a):** the **P2 offer-accept** path is
+  distinct — Import's setlist deep-link stops one-way at `ConcertDetailView`, so accepting a write-back
+  offer gets its **own new direct-to-editor accept navigation** (delivered with the Import inline
+  banner), not the Read round-trip.
 
 This is the surface that makes the two-Ripples fix reachable from the Edit side, not just Import.
 
@@ -490,8 +534,30 @@ One concern per commit; WPF manual gate on every UI-visible slice; pure helpers 
    tag re-read cannot drop unsaved album edits (reference-side-panel-spec.md §9). When slice 4 lands, the
    invalidate-on-return MAY be upgraded to a position-preserving remap (optional; invalidation stays
    correct). WPF gate = Edit → edit setlist → back, album edits intact, panel refreshed, claims cleared.
-7. **Write-back offers** (§6) — P2-visible + P3 prompt + P1 explicit-review routing. WPF gate = the
-   full two-Ripples round-trip from a recording.
+7. **Write-back offers** (§6) — **split into 7a/7b per the owner's 2026-07-08 rulings, each with its
+   own WPF gate.**
+
+   - **7a — P1 carve-out documentation + P2 write-back offers.** P1's combine-alias carve-out (D14,
+     §6) needs **no code enforcement** — it is a documented exemption, not a guard. P2-visible offers
+     ship on **both surfaces, Edit-surface first, then Import** (§6.1/§8): Edit reuses the existing
+     `ValidationBanner` inline notice; Import gets **new inline-banner XAML delivered alongside its
+     accept navigation** (§6.1 affordance, Q6). Accept routes through the setlist editor via a **new
+     staged-extras entry parameter** on `EditSetlistView` (D12, §6.1) — staged extras arrive as
+     pre-populated **unsaved** rows subject to the editor's normal diff-at-save review and the slice-4
+     atomic remap, **never auto-saved**; the banked direct-append seam stays banked. **Interim cost
+     accepted (§6.1):** the Edit offer-accept round trip rides the slice-6 return guard, which
+     unconditionally invalidates match/claim state (even on Cancel) and forces a re-Match — the
+     claim-preserving upgrade stays banked. **WPF gate:** the two-Ripples P2 round-trip on Edit, then
+     Import, each landing staged extras through the editor's Save.
+   - **7b — P3 update-and-verify prompt — gated on a precursor.** P3 (§6) offers the combined "update
+     the canonical setlist and mark it verified?" prompt on import against an updated unverified
+     setlist. It **must render the diff it proposes**, which a change-detecting **hash cannot supply**;
+     7b therefore **depends on a precursor**: persisting an import-time setlist **snapshot** (not a
+     hash) in the **Layer B per-recording manifest**. **7b does not start until that precursor is
+     specced and landed.** The precursor's shape is **7b Phase-A work**, not specified here beyond
+     naming it. **WPF gate:** the full two-Ripples P3 round-trip from a recording — import against an
+     unverified, detail-corrected setlist → the combined update-and-verify prompt shows the snapshot
+     diff → accept updates canon and verifies.
 
 **Sequence reference — reference-side-panel arc slice 5b + 6 (LANDED).** Panel **click-to-assign**
 (5b, `7b2d635`) and **drag-and-drop** (slice 6, `dfa5673`) are specified in
@@ -502,11 +568,12 @@ and displayed) is **satisfied**, not pending. **This arc therefore starts cleanl
 the unified `AssignEntryToTrack → Reassign → Apply` seam (§4) is already in place for extras to claim
 through. Global order from here: extras slice 1 → 2 → 3 → **6 (Edit deep-link unbank — pulled forward on lived
 demand; ships with the invalidate-on-return guard, not the slice-4 remap)** → 4 (remap) → 5a → 5b
-(editor authoring, gated on 4) → 7 (write-back). Slice 6 moved ahead of 4/5 because the deep-link's return path
+(editor authoring, gated on 4) → **7a (P1 carve-out doc + P2 offers) → 7b (P3 prompt, gated on the
+Layer B import-time snapshot precursor)**. Slice 6 moved ahead of 4/5 because the deep-link's return path
 only needs to *invalidate* claims, which has no dependency on the remap; the remap is required only to
 *preserve* claims across an edit, a later refinement.
 
-## 11. Decision record (RESOLVED 2026-07-03; addenda D10–D12 2026-07-05, D13 2026-07-07)
+## 11. Decision record (RESOLVED 2026-07-03; addenda D10–D12 2026-07-05, D13 2026-07-07, D14 2026-07-08)
 
 All nine core decisions were ratified 2026-07-03; the spec body above is written as settled design
 against them. Three sub-decisions (D10–D12) were ratified 2026-07-05 during the Phase-A reconciliation
@@ -577,6 +644,16 @@ here as a one-line "considered, rejected" note.
     **un-removable** until it ships; the editor block message must say why. _Considered, rejected: (a)
     shrink the covered run — silently changes an authored combine's meaning; (b) drop the alias —
     destroys curation as a side effect of an unrelated edit._
+14. **D14 — combine-alias appends under P1 — RESOLVED: document the carve-out, don't guard
+    (2026-07-08).** Combine-alias appends via `ConcertLookupService.PersistAliasSetlist` are **exempt**
+    from P1's "never silently change a verified setlist" and get **no verified guard and no unverify**
+    (§6). `aliasSetlists[]` is additive, idempotent, diff-excluded provenance — outside
+    `ConcertSnapshot.Project` and the verification baseline by design
+    ([ConcertReference.cs:46](../Models/ConcertReference.cs), §2.1/§2.3) — so an append changes no
+    verified content; it is match-derived metadata, not setlist content. Gating it would add friction to
+    every combine-confirm against a verified concert for a write the verification model already treats
+    as invisible. _Considered, rejected: a verified guard / unverify on the alias append — friction on
+    an idempotent, diff-excluded write that can never alter verified setlist content._
 
 ## 12. Out of scope / banked
 
