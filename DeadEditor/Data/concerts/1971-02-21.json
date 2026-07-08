@@ -6,7 +6,7 @@
   "country": "US",
   "setlistFmId": "33dcfc1d",
   "setlistFmUrl": "https://www.setlist.fm/setlist/grateful-dead/1971/capitol-theatre-port-chester-ny-33dcfc1d.html",
-  "lastUpdated": "2026-07-03T03:09:00Z",
+  "lastUpdated": "2026-07-08T16:43:52Z",
   "hasSetlist": true,
   "multiShow": false,
   "verified": false,
@@ -14,6 +14,13 @@
     {
       "name": "Set 1",
       "songs": [
+        {
+          "name": "Tuning",
+          "date": "1971-02-21",
+          "segue": false,
+          "info": "",
+          "type": "tuning"
+        },
         {
           "name": "Cold Rain and Snow",
           "date": "1971-02-21",
@@ -55,6 +62,13 @@
           "date": "1971-02-21",
           "segue": false,
           "info": ""
+        },
+        {
+          "name": "Ripple false start",
+          "date": "1971-02-21",
+          "segue": false,
+          "info": "",
+          "type": "false-start"
         },
         {
           "name": "Ripple",
@@ -163,160 +177,176 @@
   "tracks": [
     {
       "position": 1,
+      "songName": "Tuning",
+      "date": "1971-02-21",
+      "segue": false,
+      "set": "Set 1",
+      "type": "tuning"
+    },
+    {
+      "position": 2,
       "songName": "Cold Rain and Snow",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 2,
+      "position": 3,
       "songName": "Me and Bobby McGee",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 3,
+      "position": 4,
       "songName": "Loser",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 4,
+      "position": 5,
       "songName": "Easy Wind",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 5,
+      "position": 6,
       "songName": "Playing in the Band",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 6,
+      "position": 7,
       "songName": "Bertha",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 7,
+      "position": 8,
       "songName": "Me and My Uncle",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 8,
+      "position": 9,
+      "songName": "Ripple false start",
+      "date": "1971-02-21",
+      "segue": false,
+      "set": "Set 1",
+      "type": "false-start"
+    },
+    {
+      "position": 10,
       "songName": "Ripple",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 9,
+      "position": 11,
       "songName": "Next Time You See Me",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 10,
+      "position": 12,
       "songName": "Sugar Magnolia",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 11,
+      "position": 13,
       "songName": "Greatest Story Ever Told",
       "date": "1971-02-21",
       "segue": true,
       "set": "Set 1"
     },
     {
-      "position": 12,
+      "position": 14,
       "songName": "Johnny B. Goode",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 1"
     },
     {
-      "position": 13,
+      "position": 15,
       "songName": "China Cat Sunflower",
       "date": "1971-02-21",
       "segue": true,
       "set": "Set 2"
     },
     {
-      "position": 14,
+      "position": 16,
       "songName": "I Know You Rider",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 15,
+      "position": 17,
       "songName": "Bird Song",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 16,
+      "position": 18,
       "songName": "Cumberland Blues",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 17,
+      "position": 19,
       "songName": "I'm a King Bee",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 18,
+      "position": 20,
       "songName": "Beat It on Down the Line",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 19,
+      "position": 21,
       "songName": "Wharf Rat",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 20,
+      "position": 22,
       "songName": "Truckin'",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 21,
+      "position": 23,
       "songName": "Casey Jones",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 22,
+      "position": 24,
       "songName": "Good Lovin'",
       "date": "1971-02-21",
       "segue": false,
       "set": "Set 2"
     },
     {
-      "position": 23,
+      "position": 25,
       "songName": "Uncle John's Band",
       "date": "1971-02-21",
       "segue": false,
