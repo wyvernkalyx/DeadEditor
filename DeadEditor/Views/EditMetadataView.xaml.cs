@@ -60,6 +60,12 @@ namespace DeadEditor
         private List<(string Name, string Canonical, int Position, bool Segue)>? _lastSetlistSongs;
         private HashSet<int>? _lastClaimedPositions;
 
+        // Write-back offer population (slice 7a, §6 P2): the post-Match unmatched tracks whose canonical
+        // title is in no setlist entry of any type. Recomputed at the end of each Match run; empty when
+        // the offer banner is hidden. Accepting stages these as extras in the setlist editor.
+        private IReadOnlyList<WriteBackOffer.OfferCandidate> _offerCandidates =
+            System.Array.Empty<WriteBackOffer.OfferCandidate>();
+
         // The setlist projection currently shown in the reference side-panel (spec §5). Stashed so a
         // manual/panel re-dim can reuse it without rebuilding, mirroring ImportView._lastSetlistProjection.
         private IReadOnlyList<SetlistEntryVm>? _lastSetlistProjection;
@@ -534,6 +540,87 @@ namespace DeadEditor
             {
                 vm.ShowUnmatchedWarning = _matchSetlistHasRun && vm.Track.IsMatched != true;
             }
+        }
+
+        /// <summary>
+        /// Recomputes the write-back offer against the just-run match (slice 7a, §6 P2) and shows or
+        /// hides the offer banner. The population is the pure <see cref="WriteBackOffer.ComputeOffer"/>
+        /// result — post-Match unmatched tracks whose canonical title is in no setlist entry of any type
+        /// — so a track sitting over an existing extra (D2 leaves it unmatched) never re-fires the offer.
+        /// The resolver is the matcher's own direct-match resolver, so the canonical comparison matches.
+        /// </summary>
+        private void RefreshWriteBackOffer(IReadOnlyList<SetlistEntryVm> projection)
+        {
+            var tracks = _tracks.Select(vm => vm.Track).ToList();
+            _offerCandidates = WriteBackOffer.ComputeOffer(
+                tracks,
+                projection,
+                trackName =>
+                {
+                    var normalized = _normalizationService.Normalize(trackName) ?? trackName;
+                    return _normalizationService.GetOfficialTitle(normalized) ?? normalized;
+                });
+
+            if (_offerCandidates.Count > 0)
+            {
+                int n = _offerCandidates.Count;
+                OfferText.Text =
+                    $"This recording has {n} track{(n == 1 ? "" : "s")} not in the setlist — add as extras?";
+                OfferBanner.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                HideWriteBackOffer();
+            }
+        }
+
+        /// <summary>Clears the offer population and hides the banner (dismiss / invalidate / empty).</summary>
+        private void HideWriteBackOffer()
+        {
+            _offerCandidates = System.Array.Empty<WriteBackOffer.OfferCandidate>();
+            OfferBanner.Visibility = Visibility.Collapsed;
+        }
+
+        private void OfferDismissButton_Click(object sender, RoutedEventArgs e) => HideWriteBackOffer();
+
+        /// <summary>
+        /// Accept the write-back offer (slice 7a, §6.1 D12): stage the offered titles as extras and
+        /// navigate to the setlist editor. The editor appends them as UNSAVED rows subject to its normal
+        /// diff-at-save review and the slice-4 remap; canon changes only if the user saves there. Routing
+        /// through the editor satisfies P1/D14 by construction — a verified concert unverifies on the
+        /// editor's own save-diff. The slice-6 return guard invalidates match state on return (the
+        /// ratified interim cost); accepting for verified and unverified concerts alike.
+        /// </summary>
+        private void OfferAddAsExtrasButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_offerCandidates.Count == 0)
+            {
+                HideWriteBackOffer();
+                return;
+            }
+
+            var date = AlbumDateTextBox.Text?.Trim();
+            if (string.IsNullOrEmpty(date))
+            {
+                StatusTextBlock.Text = "Enter a valid date (yyyy-MM-dd) to add extras to its setlist.";
+                return;
+            }
+
+            var concert = ConcertLookupService.Instance.GetConcertByDate(date);
+            if (concert == null)
+            {
+                StatusTextBlock.Text = $"No concert record for {date} to edit.";
+                return;
+            }
+
+            // Stage every offered title as an other-extra (D12); the editor lets the user retype/relabel.
+            var staged = _offerCandidates
+                .Select(c => new StagedSetlistExtra(c.CanonicalName, SetlistEntryType.OtherExtra))
+                .ToList();
+
+            HideWriteBackOffer();
+            _returningFromSetlistEdit = true;
+            _shell.NavigateToSetlistEditor(concert, staged);
         }
 
         /// <summary>
@@ -1525,6 +1612,10 @@ namespace DeadEditor
                 vm.ClaimedSetlistPosition = null;
             RecomputeUnmatchedHighlights(); // _matchSetlistHasRun now false -> clears amber warnings
 
+            // Match state is invalidated on return (slice-6 guard), so the offer — a product of the last
+            // match — is stale; clear it. A fresh Match Setlist run recomputes it (§6.1 banner lifecycle).
+            HideWriteBackOffer();
+
             await RefreshSetlistPanelAsync(); // claimed == null (no match has run) -> undimmed reference
         }
 
@@ -2022,6 +2113,10 @@ namespace DeadEditor
 
             // Match has run — paint unplaced tracks amber.
             RecomputeUnmatchedHighlights();
+
+            // Recompute the write-back offer (slice 7a, §6 P2): show it only when a track's title is in
+            // no setlist entry of any type — NOT on a bare unmatched count (extras stay unmatched by D2).
+            RefreshWriteBackOffer(projection);
 
             int unmatchedCount = _tracks.Count - matchCount;
             var segueMsg = segueCount > 0 ? $", {segueCount} segues" : "";

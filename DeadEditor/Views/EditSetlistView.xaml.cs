@@ -21,6 +21,12 @@ namespace DeadEditor
         private readonly ConcertReference _concert;
         private readonly NormalizationService _normalizationService;
 
+        // Extras staged by an accepted write-back offer (setlist-extras-writeback-spec.md §6.1 D12,
+        // slice 7a). Appended as pre-populated UNSAVED rows AFTER the diff-at-save baseline is captured,
+        // so they read as genuine additions in the review and unverify on Save. Null/empty for the
+        // plain deep-link. Never auto-saved; Cancel drops them with the rest of the in-memory edits.
+        private readonly IReadOnlyList<StagedSetlistExtra>? _stagedExtras;
+
         // The concert's date at view construction. The grid mutates the live cached
         // instance, so by save time _concert.Date already holds the NEW date — the
         // original must be snapshotted up front to detect a date change and rekey the cache.
@@ -104,11 +110,13 @@ namespace DeadEditor
         /// <summary>Fired when save completes so the shell can refresh the detail view.</summary>
         public event EventHandler? SaveCompleted;
 
-        public EditSetlistView(ShellWindow shell, ConcertReference concert)
+        public EditSetlistView(ShellWindow shell, ConcertReference concert,
+            IReadOnlyList<StagedSetlistExtra>? stagedExtras = null)
         {
             InitializeComponent();
             _shell = shell;
             _concert = concert;
+            _stagedExtras = stagedExtras;
             _originalDate = concert.Date ?? "";
             _normalizationService = new NormalizationService();
             AllSongTitles = _normalizationService.GetAllTitles()
@@ -187,6 +195,61 @@ namespace DeadEditor
             _baselineJson = BuildSnapshotJson();
             RefreshVerifyControls();
             RefreshAliasDisplay();
+
+            // Staged write-back extras (slice 7a) are appended AFTER the baseline so they read as real
+            // additions in the diff-at-save review and unverify on Save. Never auto-saved.
+            AppendStagedExtras();
+        }
+
+        /// <summary>
+        /// Appends each write-back-offer staged extra (setlist-extras-writeback-spec.md §6.1 D12) as a
+        /// pre-populated UNSAVED row at the end of the setlist: no OriginIndex (a session insert, so the
+        /// at-save remap treats it as a new slot), default type <c>other-extra</c>, label = the offered
+        /// canonical name. From here they are ordinary editor rows — retypeable, relabelable, movable,
+        /// deletable — and participate fully in D10a validation, diff-at-save review, and the remap.
+        /// Marks the session dirty (they are structural inserts) so the verify surface and Cancel-discard
+        /// behave exactly as for a hand-inserted row.
+        /// </summary>
+        private void AppendStagedExtras()
+        {
+            if (_stagedExtras == null || _stagedExtras.Count == 0) return;
+
+            foreach (var extra in _stagedExtras)
+            {
+                var set = _tracks.LastOrDefault()?.Set ?? "Set 1";
+                var row = new EditableTrack
+                {
+                    Position = 0,          // set by RenumberTracks below
+                    OriginIndex = null,    // staged this session — no persisted position
+                    SongName = extra.Label,
+                    Date = DateTextBox.Text.Trim(),
+                    Segue = false,
+                    Set = set,
+                    Type = extra.Type,
+                };
+                row.PropertyChanged += Track_PropertyChanged;
+                _tracks.Add(row);
+            }
+
+            RenumberTracks();
+            RebindGrid();
+
+            // Structural inserts: mark dirty by hand (adding to the list fires no property change) so the
+            // verify surface, combine dirty-block, and unsaved-changes guard all engage as usual.
+            _hasUnsavedChanges = true;
+            _structuralEditsSinceSave = true;
+            RefreshVerifyControls();
+            RefreshAliasDisplay();
+
+            BottomStatusText.Text = $"{_tracks.Count} tracks ({_stagedExtras.Count} staged from recording)";
+
+            // Bring the appended rows into view so the user sees what arrived.
+            var lastStaged = _tracks.LastOrDefault();
+            if (lastStaged != null)
+            {
+                TracksDataGrid.UpdateLayout();
+                TracksDataGrid.ScrollIntoView(lastStaged);
+            }
         }
 
         private void Track_PropertyChanged(object? sender, PropertyChangedEventArgs e)

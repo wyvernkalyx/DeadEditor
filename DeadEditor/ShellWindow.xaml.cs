@@ -749,10 +749,13 @@ namespace DeadEditor
         /// Opens the setlist editor directly on a concert (reference-side-panel-spec.md §9, Edit-side
         /// deep-link). Parallels <see cref="NavigateToConcertDetail"/> but targets the editor itself —
         /// Edit's link goes straight to editing, whereas Import's one-way link stops at ConcertDetail.
+        /// <paramref name="stagedExtras"/> (write-back offer accept, slice 7a) arrives as pre-populated
+        /// UNSAVED rows the editor appends; null/empty for the plain deep-link.
         /// </summary>
-        public void NavigateToSetlistEditor(ConcertReference concert)
+        public void NavigateToSetlistEditor(ConcertReference concert,
+            IReadOnlyList<StagedSetlistExtra>? stagedExtras = null)
         {
-            var editView = new EditSetlistView(this, concert);
+            var editView = new EditSetlistView(this, concert, stagedExtras);
             _navigationService.NavigateTo(editView, concert);
         }
 

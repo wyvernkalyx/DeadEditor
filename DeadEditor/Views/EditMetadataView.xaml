@@ -202,24 +202,74 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Validation banner: visible only when MetadataValidator surfaces issues. -->
-                <Border Grid.Row="0" x:Name="ValidationBanner"
-                        Background="#3F2D1A"
-                        BorderBrush="#7A5A2E"
-                        BorderThickness="0,0,0,1"
-                        Padding="10,6"
-                        Visibility="Collapsed">
-                    <ItemsControl x:Name="ValidationIssuesItemsControl">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}"
-                                           Foreground="#F0AD4E"
-                                           FontSize="13"
-                                           Margin="0,1,0,1"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
+                <!-- Row 0 stacks two independent inline notices: the validation banner and the
+                     write-back offer. Either or both may be visible at once, so they share a
+                     StackPanel rather than one Grid slot (setlist-extras-writeback-spec.md §6.1 Q6). -->
+                <StackPanel Grid.Row="0">
+
+                    <!-- Validation banner: visible only when MetadataValidator surfaces issues. -->
+                    <Border x:Name="ValidationBanner"
+                            Background="#3F2D1A"
+                            BorderBrush="#7A5A2E"
+                            BorderThickness="0,0,0,1"
+                            Padding="10,6"
+                            Visibility="Collapsed">
+                        <ItemsControl x:Name="ValidationIssuesItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               Foreground="#F0AD4E"
+                                               FontSize="13"
+                                               Margin="0,1,0,1"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+
+                    <!-- Write-back offer (slice 7a, P2): actionable notice when a Match run leaves tracks
+                         whose title is in no setlist entry of any type. Accept stages them as extras in
+                         the setlist editor; dismiss hides it until the next Match run recomputes. -->
+                    <Border x:Name="OfferBanner"
+                            Background="#17303F"
+                            BorderBrush="#2E6A8A"
+                            BorderThickness="0,0,0,1"
+                            Padding="10,6"
+                            Visibility="Collapsed">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="OfferText" Grid.Column="0"
+                                       Foreground="#5FB8E8"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                            <Button x:Name="OfferAddButton" Grid.Column="1"
+                                    Content="Add as extras"
+                                    Click="OfferAddAsExtrasButton_Click"
+                                    Margin="10,0,6,0"
+                                    Padding="10,3"
+                                    FontSize="13"
+                                    Cursor="Hand"
+                                    Background="#2E6A8A"
+                                    Foreground="#FFFFFF"
+                                    BorderThickness="0"/>
+                            <Button x:Name="OfferDismissButton" Grid.Column="2"
+                                    Content="&#x2715;"
+                                    Click="OfferDismissButton_Click"
+                                    ToolTip="Dismiss"
+                                    Width="24" Height="24"
+                                    FontSize="12"
+                                    Cursor="Hand"
+                                    Background="Transparent"
+                                    Foreground="#5FB8E8"
+                                    BorderThickness="0"/>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
 
                 <DataGrid Grid.Row="1" x:Name="TracksDataGrid"
                           AutoGenerateColumns="False"
